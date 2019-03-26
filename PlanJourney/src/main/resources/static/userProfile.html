@@ -1,0 +1,48 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title> Profile </title>
+        <link rel="stylesheet" href="bootstrap.min.css">
+ 
+    </head>
+    <body>
+        <h1> Your profile information:</h1>
+        
+        <div id = "userProfile">
+      
+        <form>
+            <table>
+                <tr>
+                    <td> First name: </td>
+                    <td>  <input type="text" name="firstName" v-model="firstName" > </td>
+                </tr>
+                <tr>
+                    <td> Last name: </td>
+                    <td>  <input type="text" name="lastName" v-model="lastName" > </td>
+                </tr>
+                <tr>
+                    <td> Email: </td>
+                    <td>  <input type="text" name="email" v-model="email" > </td>
+                </tr>
+                <tr>
+                    <td> Password: </td>
+                    <td>  <input type="password" name="password" v-model="password" > </td>
+                </tr>
+                 <tr>
+                    <td> Confirm password: </td>
+                    <td>  <input type="password" name="password" v-model="repeatedPassword"> </td>
+                </tr>
+                
+              
+            </table>
+        </form>
+        
+         <button v-on:click="updateUserProfile(firstName,lastName,email,password)">Edit</button>
+         
+        </div>
+        
+        <script src="vue.js"></script>
+		<script src="axios.js"></script>
+		<script src="userProfile.js"></script>
+    </body>
+</html>
