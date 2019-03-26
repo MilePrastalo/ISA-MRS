@@ -41,7 +41,7 @@ public class FlightCompanyController {
 	public @ResponseBody FlightCompany updateUserProfile(@RequestBody FlightCompany updatedFC) throws Exception {
 		//FlightCompany fc = new FlightCompany(1l, "FlightCompany","address","shdhasdhbsajknclklasnckldasnckakcnknckdnckdk");
 		fc.setName(updatedFC.getName());
-		fc.setAdress(updatedFC.getAdress());
+		fc.setAddress(updatedFC.getAddress());
 		fc.setDescription(updatedFC.getDescription());	
 		return fc;
 	}

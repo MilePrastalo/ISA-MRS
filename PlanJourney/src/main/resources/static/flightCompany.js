@@ -21,7 +21,7 @@ var flightComany = new Vue({
     methods: {
     	updateFlightCompanyProfile : function(name_,address_,description_) {
     		axios
-    		.post("api/updateFlightCompanyProfile", {"name" : name_,"adress": address_, "description": description_ })
+    		.post("api/updateFlightCompanyProfile", {"name" : name_,"address": address_, "description": description_ })
     		.then(function(response){
     			setAttributes(response.data);
     			
@@ -36,7 +36,7 @@ var flightComany = new Vue({
 function setAttributes(data){
 	console.log(data);
 	flightComany.name = data.name;
-	flightComany.address = data.adress;
+	flightComany.address = data.address;
 	flightComany.description = data.description;
 
 }
