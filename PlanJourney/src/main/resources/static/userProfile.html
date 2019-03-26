@@ -7,7 +7,7 @@
     </head>
     <body>
         <h1> Your profile information:</h1>
-        
+        <br>
         <div id = "userProfile">
       
         <form>
@@ -32,13 +32,15 @@
                     <td> Confirm password: </td>
                     <td>  <input type="password" name="password" v-model="repeatedPassword"> </td>
                 </tr>
+                <tr>
+                    <td> &nbsp </td>
+                    <td><button v-on:click="updateUserProfile(firstName,lastName,email,password)">Edit</button> </td>      
+                </tr>
                 
               
             </table>
         </form>
-        
-         <button v-on:click="updateUserProfile(firstName,lastName,email,password)">Edit</button>
-         
+
         </div>
         
         <script src="vue.js"></script>
