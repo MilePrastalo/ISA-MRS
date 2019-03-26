@@ -2,6 +2,7 @@ package com.tim9.PlanJourney.controller;
 
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,25 +12,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tim9.PlanJourney.beans.RentACarProfileBean;
 import com.tim9.PlanJourney.beans.VehicleSearchBean;
+import com.tim9.PlanJourney.models.RentACarService;
 import com.tim9.PlanJourney.models.Vehicle;
 
 @RestController
 
 public class RentACarController {
-
+	
+	private static RentACarService rentACarService;
+	
 	@RequestMapping(
 			value = "/api/vehicleSearch",
 			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ArrayList<Vehicle>  searchVehicles(@RequestBody VehicleSearchBean search) throws Exception {
-		System.out.println("Pozvana metoda");
-		System.out.println(search.getProducer());
-		System.out.println(search.getNewer());
-		System.out.println(search.getOlder());
-		System.out.println(search.getPriceFrom());
-		System.out.println(search.getPriceTo());
 		ArrayList<Vehicle> vehicles = new ArrayList<>();
 		Vehicle v1 = new Vehicle("Model3", "Tesla","Sedan", 2015, 200);
 		Vehicle v2 = new Vehicle("X3", "BMW","Hatchback", 2011, 400);
@@ -54,14 +53,14 @@ public class RentACarController {
 		ArrayList<Vehicle> foundVehicles = new ArrayList<>();
 		for (Vehicle vehicle : vehicles) {
 			
-			if(vehicle.getMaker().equals(search.getProducer()) &&
-					vehicle.getPrice() > search.getPriceFrom() &&
-					vehicle.getPrice() < search.getPriceTo() &&
-					vehicle.getYear() > search.getNewer() &&
-					vehicle.getYear() < search.getOlder()) {
+			if( (vehicle.getMaker().equals(search.getProducer()) ||search.getProducer().equals("")) &&
+					(vehicle.getPrice() > search.getPriceFrom() ||  search.getPriceFrom() == 0) &&
+					(vehicle.getPrice() < search.getPriceTo() || search.getPriceTo()==0  )&&
+					(vehicle.getYear() > search.getNewer() ||  search.getNewer()==0 )&&
+					(vehicle.getYear() < search.getOlder() ||  search.getOlder() == 0) && 
+					(vehicle.getType().equals(search.getType()) ||search.getType().equals("")))		{
 				foundVehicles.add(vehicle);
 			}
-			
 		}
 		
 		return foundVehicles;
@@ -95,5 +94,28 @@ public class RentACarController {
 		types.add("SUV");
 		types.add("Coupe");
 		return types;
+	}
+	
+	@RequestMapping(
+			value = "/api/getRentACarCompany",
+			method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody RentACarService getRentACarCompany() throws Exception {
+		if(rentACarService == null) {
+			rentACarService = new RentACarService();
+			rentACarService.setName("Super Car");
+			rentACarService.setAddress("Belgrade Nemanjina 11");
+			rentACarService.setDescription("Best rent-a-car service ever");
+		}
+		return rentACarService;
+	}
+	@RequestMapping(
+			value = "/api/updateRentACarProfile",
+			method = RequestMethod.POST,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void  updateRentACarProfile(@RequestBody RentACarProfileBean profile) throws Exception {
+		rentACarService.setName(profile.getName());
+		rentACarService.setDescription(profile.getDescription());
+		rentACarService.setAddress(profile.getAddress());
 	}
 }
