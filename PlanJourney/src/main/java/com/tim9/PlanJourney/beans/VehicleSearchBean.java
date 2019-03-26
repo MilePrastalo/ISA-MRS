@@ -40,6 +40,13 @@ public class VehicleSearchBean {
 	public void setPriceTo(int priceTo) {
 		this.priceTo = priceTo;
 	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	
 	
 	
 
