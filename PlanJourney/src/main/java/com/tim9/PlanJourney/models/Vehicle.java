@@ -3,6 +3,7 @@ package com.tim9.PlanJourney.models;
 public class Vehicle {
 	private String name;
 	private String maker;
+	private String type;
 	private int year;
 	private double price;
 	
@@ -11,11 +12,13 @@ public class Vehicle {
 		super();
 	}
 
+	
 
-	public Vehicle(String name, String maker, int year, double price) {
+	public Vehicle(String name, String maker, String type, int year, double price) {
 		super();
 		this.name = name;
 		this.maker = maker;
+		this.type = type;
 		this.year = year;
 		this.price = price;
 	}
@@ -59,4 +62,15 @@ public class Vehicle {
 	public void setPrice(double price) {
 		this.price = price;
 	}
+
+
+	public String getType() {
+		return type;
+	}
+
+
+	public void setType(String type) {
+		this.type = type;
+	}
+	
 }
