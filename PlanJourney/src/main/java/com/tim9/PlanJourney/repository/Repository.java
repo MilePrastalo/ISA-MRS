@@ -19,10 +19,21 @@ public class Repository {
 		systemAdmins.add(new SystemAdmin(0, "sys", "123", "System", "Admin", "system.admin@somemail.com",
 				new ArrayList<HotelAdmin>(), new ArrayList<FlightAdmin>(), new ArrayList<RentACarAdmin>()));
 
-		hotels.add(
-				new Hotel(0L, "Hotel1", "Pere Perica 0", "Test funkcionalnosti hotela.", new ArrayList<HotelAdmin>()));
-		hotels.add(
-				new Hotel(1L, "Hotel2", "Zike Zikica 1", "Test funkcionalnosti hotela.", new ArrayList<HotelAdmin>()));
+		Hotel h1 = new Hotel(0L, "Hotel1", "Pere Perica 0", "Test funkcionalnosti hotela.",
+				new ArrayList<HotelAdmin>());
+		Hotel h2 = new Hotel(1L, "Hotel2", "Zike Zikica 1", "Test funkcionalnosti hotela.",
+				new ArrayList<HotelAdmin>());
+
+		HotelAdmin hA1 = new HotelAdmin(0, "mika", "123", "Mika", "Mikic", "mika@mail.com", h1);
+		HotelAdmin hA2 = new HotelAdmin(1, "jeca", "321", "Jelena", "Jelenic", "jeca@mail.com", h2);
+		HotelAdmin hA3 = new HotelAdmin(2, "peca", "123", "Petar", "Petrovic", "peca@mail.com", h1);
+
+		hotelAdmins.add(hA1);
+		hotelAdmins.add(hA2);
+		hotelAdmins.add(hA3);
+		hotels.add(h1);
+		hotels.add(h2);
+
 	}
 
 	public Collection<Hotel> getAllHotels() {
@@ -60,11 +71,11 @@ public class Repository {
 		for (Hotel h : hotels) {
 			if (h.getName().equals(hotel.getName())) {
 				updated = true;
-				h = hotel;
+				hotels.remove(h);
+				hotels.add(hotel);
 				break;
 			}
 		}
-
 		return updated;
 	}
 
@@ -77,7 +88,6 @@ public class Repository {
 				break;
 			}
 		}
-
 		return removed;
 	}
 
@@ -116,11 +126,11 @@ public class Repository {
 		for (HotelAdmin h : hotelAdmins) {
 			if (h.getUsername().equals(hotelAdmin.getUsername())) {
 				updated = true;
-				h = hotelAdmin;
+				hotelAdmins.remove(h);
+				hotelAdmins.add(hotelAdmin);
 				break;
 			}
 		}
-
 		return updated;
 	}
 
@@ -133,7 +143,6 @@ public class Repository {
 				break;
 			}
 		}
-
 		return removed;
 	}
 }

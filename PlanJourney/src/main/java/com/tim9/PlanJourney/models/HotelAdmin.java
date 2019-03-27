@@ -7,8 +7,9 @@ public class HotelAdmin extends User {
 		super();
 	}
 
-	public HotelAdmin(Hotel hotel) {
-		super();
+	public HotelAdmin(int id, String username, String password, String firstName, String lastName, String email,
+			Hotel hotel) {
+		super(id, username, password, firstName, lastName, email);
 		this.hotel = hotel;
 	}
 
