@@ -16,13 +16,16 @@ import com.tim9.PlanJourney.models.User;
 @RestController
 public class UserController {
 	
+	private static RegisteredUser user;
 	
 	@RequestMapping(
 			value = "/api/getUser",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody User getUser() throws Exception {
-		User user = new RegisteredUser(1,"username","pass","Pera","Peric","pera@gmail.com");
+	public @ResponseBody RegisteredUser getUser() throws Exception {
+		if(user==null) {
+			user = new RegisteredUser(1,"username","pass","Pera","Peric","pera@gmail.com");
+		}
 		return user;
 	}
 	
@@ -32,8 +35,8 @@ public class UserController {
 			method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody User updateUserProfile(@RequestBody UserBean updatedUser) throws Exception {
-		User user = new RegisteredUser(1,"username","pass","Pera","Peric","pera@gmail.com");
+	public @ResponseBody RegisteredUser updateUserProfile(@RequestBody UserBean updatedUser) throws Exception {
+		//user = new RegisteredUser(1,"username","pass","Pera","Peric","pera@gmail.com");
 		user.setFirstName(updatedUser.getFirstName());
 		user.setLastName(updatedUser.getLastName());
 		user.setEmail(updatedUser.getEmail());

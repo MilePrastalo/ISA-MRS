@@ -14,6 +14,7 @@ var user = new Vue({
     },
 
     mounted () {
+    	console.log("Called");
         axios
           .get('api/getUser')
           .then(function(response){
