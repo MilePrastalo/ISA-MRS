@@ -17,13 +17,15 @@ import com.tim9.PlanJourney.beans.RentACarProfileBean;
 import com.tim9.PlanJourney.beans.VehicleSearchBean;
 import com.tim9.PlanJourney.models.RentACarService;
 import com.tim9.PlanJourney.models.Vehicle;
+import com.tim9.PlanJourney.service.VehicleService;
 
 @RestController
 
 public class RentACarController {
 	
 	private static RentACarService rentACarService;
-	
+	@Autowired
+	private VehicleService vehicleService;
 	@RequestMapping(
 			value = "/api/vehicleSearch",
 			method = RequestMethod.POST,
@@ -53,7 +55,8 @@ public class RentACarController {
 		vehicles.add(v9);
 		vehicles.add(v10);
 		ArrayList<Vehicle> foundVehicles = new ArrayList<>();
-		for (Vehicle vehicle : vehicles) {
+		foundVehicles = (ArrayList<Vehicle>)vehicleService.findAll();
+		/*for (Vehicle vehicle : vehicles) {
 			
 			if( (vehicle.getMaker().equals(search.getProducer()) ||search.getProducer().equals("")) &&
 					(vehicle.getPrice() > search.getPriceFrom() ||  search.getPriceFrom() == 0) &&
@@ -63,7 +66,7 @@ public class RentACarController {
 					(vehicle.getType().equals(search.getType()) ||search.getType().equals("")))		{
 				foundVehicles.add(vehicle);
 			}
-		}
+		}*/
 		
 		return foundVehicles;
 	}

@@ -1,10 +1,29 @@
 package com.tim9.PlanJourney.models;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class Vehicle {
+	@Id
+	@GeneratedValue
+	private Long id;
+	
+	@Column(name = "name", nullable = false)
 	private String name;
+	
+	@Column(name = "maker", nullable = false)
 	private String maker;
+	
+	@Column(name = "type", nullable = false)
 	private String type;
+	
+	@Column(name = "year", nullable = false)
 	private int year;
+	
+	@Column(name = "price", nullable = false)
 	private double price;
 	
 	
