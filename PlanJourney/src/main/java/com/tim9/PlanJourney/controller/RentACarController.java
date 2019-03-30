@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,6 +29,7 @@ public class RentACarController {
 			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
 	public @ResponseBody ArrayList<Vehicle>  searchVehicles(@RequestBody VehicleSearchBean search) throws Exception {
 		ArrayList<Vehicle> vehicles = new ArrayList<>();
 		Vehicle v1 = new Vehicle("Model3", "Tesla","Sedan", 2015, 200);
@@ -70,6 +72,7 @@ public class RentACarController {
 			value = "/api/getProducers",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
 	public @ResponseBody ArrayList<String> getProducers() throws Exception {
 		ArrayList<String> producers = new ArrayList<>();
 		producers.add("Tesla");
@@ -85,6 +88,7 @@ public class RentACarController {
 			value = "/api/getTypes",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
 	public @ResponseBody ArrayList<String> getTypes() throws Exception {
 		ArrayList<String> types = new ArrayList<>();
 		types.add("Sedan");
@@ -100,6 +104,7 @@ public class RentACarController {
 			value = "/api/getRentACarCompany",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
 	public @ResponseBody RentACarService getRentACarCompany() throws Exception {
 		if(rentACarService == null) {
 			rentACarService = new RentACarService();
@@ -109,10 +114,12 @@ public class RentACarController {
 		}
 		return rentACarService;
 	}
+	
 	@RequestMapping(
 			value = "/api/updateRentACarProfile",
 			method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
 	public void  updateRentACarProfile(@RequestBody RentACarProfileBean profile) throws Exception {
 		rentACarService.setName(profile.getName());
 		rentACarService.setDescription(profile.getDescription());
