@@ -1,9 +1,14 @@
 package com.tim9.PlanJourney.models;
 
+import java.util.ArrayList;
+
+import javax.persistence.Entity;
+
+@Entity
 public class FlightCompany extends Company {
 	
-	//lista admina
-	//destinacije
+	private ArrayList<FlightAdmin> flightAdmins;
+	private ArrayList<Destination> destinations;
 	//letovi
 	
 	public FlightCompany() {

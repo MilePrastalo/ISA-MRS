@@ -16,7 +16,7 @@ public class Repository {
 	private static ArrayList<Hotel> hotels = new ArrayList<Hotel>();
 
 	public Repository() {
-		systemAdmins.add(new SystemAdmin(0, "sys", "123", "System", "Admin", "system.admin@somemail.com",
+		systemAdmins.add(new SystemAdmin( "sys", "123", "System", "Admin", "system.admin@somemail.com",
 				new ArrayList<HotelAdmin>(), new ArrayList<FlightAdmin>(), new ArrayList<RentACarAdmin>()));
 
 		Hotel h1 = new Hotel(0L, "Hotel1", "Pere Perica 0", "Test funkcionalnosti hotela.",
@@ -24,9 +24,9 @@ public class Repository {
 		Hotel h2 = new Hotel(1L, "Hotel2", "Zike Zikica 1", "Test funkcionalnosti hotela.",
 				new ArrayList<HotelAdmin>());
 
-		HotelAdmin hA1 = new HotelAdmin(0, "mika", "123", "Mika", "Mikic", "mika@mail.com", h1);
-		HotelAdmin hA2 = new HotelAdmin(1, "jeca", "321", "Jelena", "Jelenic", "jeca@mail.com", h2);
-		HotelAdmin hA3 = new HotelAdmin(2, "peca", "123", "Petar", "Petrovic", "peca@mail.com", h1);
+		HotelAdmin hA1 = new HotelAdmin( "mika", "123", "Mika", "Mikic", "mika@mail.com", h1);
+		HotelAdmin hA2 = new HotelAdmin( "jeca", "321", "Jelena", "Jelenic", "jeca@mail.com", h2);
+		HotelAdmin hA3 = new HotelAdmin( "peca", "123", "Petar", "Petrovic", "peca@mail.com", h1);
 
 		hotelAdmins.add(hA1);
 		hotelAdmins.add(hA2);

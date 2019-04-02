@@ -14,8 +14,8 @@ public class RegisteredUser extends User {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public RegisteredUser(int id, String username, String password, String firstName, String lastName, String email) {
-		super(id,username,password,firstName,lastName,email);
+	public RegisteredUser( String username, String password, String firstName, String lastName, String email) {
+		super(username,password,firstName,lastName,email);
 	}
 
 }
