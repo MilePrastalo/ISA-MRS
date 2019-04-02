@@ -20,9 +20,9 @@ export default new Router({
       component: () => import('./views/About.vue')
     },
     {
-      path: '/addVehicle',
-      name: 'addVehicle',
-      component: () => import('./components/addVehicle.vue')
+      path: '/searchVehicle',
+      name: 'searchVehicle',
+      component: () => import('./components/searchVehicle.vue')
     },
     {
       path: '/userProfile',
@@ -33,6 +33,11 @@ export default new Router({
       path: '/flightCompanyProfile',
       name: 'flightCompanyProfile',
       component: () => import('./components/flightCompanyProfile.vue')
+    },
+    {
+      path: '/rentacarprofile',
+      name: 'rentacarprofile',
+      component: () => import('./components/rentacarprofile.vue')
     }
   ]
 })
