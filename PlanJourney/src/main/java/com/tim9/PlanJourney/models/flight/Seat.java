@@ -17,60 +17,20 @@ public class Seat {
 	private Long id;
 	
 	@Column(name = "taken", unique = false, nullable = false)
-	private Boolean taken;
+	private boolean taken;
 	
-	@Column(name = "row", unique = false, nullable = false)
-	private int row;
+	@Column(name = "SeatRow", unique = false, nullable = false)
+	private int SeatRow;
 	
-	@Column(name = "column", unique = false, nullable = false)
-	private int column;
+	@Column(name = "SeatColumn", unique = false, nullable = false)
+	private int SeatColumn;
 	
-	@Enumerated(EnumType.STRING)
-    @Column(name = "travelClass")
-	private TravelClass travelClass;
+    @Column(name = "travelClassa")
+	private String travelClassa;
+	
 	
 	public Seat() {
 		// TODO Auto-generated constructor stub
-	}
-
-	public Seat(Boolean taken, int row, int column, TravelClass travelClass) {
-		super();
-		this.taken = taken;
-		this.row = row;
-		this.column = column;
-		this.travelClass = travelClass;
-	}
-
-	public Boolean getTaken() {
-		return taken;
-	}
-
-	public void setTaken(Boolean taken) {
-		this.taken = taken;
-	}
-
-	public int getRow() {
-		return row;
-	}
-
-	public void setRow(int row) {
-		this.row = row;
-	}
-
-	public int getColumn() {
-		return column;
-	}
-
-	public void setColumn(int column) {
-		this.column = column;
-	}
-
-	public TravelClass getTravelClass() {
-		return travelClass;
-	}
-
-	public void setTravelClass(TravelClass travelClass) {
-		this.travelClass = travelClass;
 	}
 
 	public Long getId() {
@@ -80,6 +40,44 @@ public class Seat {
 	public void setId(Long id) {
 		this.id = id;
 	}
+
+	
+
+	public boolean isTaken() {
+		return taken;
+	}
+
+	public void setTaken(boolean taken) {
+		this.taken = taken;
+	}
+
+	public int getSeatRow() {
+		return SeatRow;
+	}
+
+	public void setSeatRow(int seatRow) {
+		SeatRow = seatRow;
+	}
+
+	public int getSeatColumn() {
+		return SeatColumn;
+	}
+
+	public void setSeatColumn(int seatColumn) {
+		SeatColumn = seatColumn;
+	}
+
+	public String getTravelClassa() {
+		return travelClassa;
+	}
+
+	public void setTravelClassa(String travelClassa) {
+		this.travelClassa = travelClassa;
+	}
+
+	
+
+	
 	
 	
 

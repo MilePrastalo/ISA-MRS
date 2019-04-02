@@ -7,9 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
+import javax.persistence.Table;
 
 @Entity
 @Inheritance(strategy=TABLE_PER_CLASS)
+@Table(name="UserTable")
 public abstract class User {
 	
 	@Id
@@ -17,12 +19,16 @@ public abstract class User {
 	private Long id;
 	@Column(name="username", unique=true, nullable=false)
 	private String username;
+	
 	@Column(name="password", unique=false, nullable=false)
 	private String password;
+	
 	@Column(name="firstName", unique=false, nullable=false)
 	private String firstName;
+	
 	@Column(name="lastName", unique=false, nullable=false)
 	private String lastName;
+	
 	@Column(name="email", unique=false, nullable=false)
 	private String email;
 	

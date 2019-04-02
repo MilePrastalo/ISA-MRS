@@ -10,8 +10,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import com.tim9.PlanJourney.models.RegisteredUser;
-
 @Entity
+
 public class VehicleReservation {
 	@Id
 	@GeneratedValue
@@ -20,9 +20,12 @@ public class VehicleReservation {
 	private Vehicle vehicle;
 	@ManyToOne
 	private RegisteredUser user;
+	
 	@Column(name = "date", nullable = false)
+
 	private Date date;
 	@Column(name = "cena", nullable = false)
+
 	private double cena;
 	public VehicleReservation() {
 		super();
@@ -31,7 +34,7 @@ public class VehicleReservation {
 		super();
 		this.id = id;
 		this.vehicle = vehicle;
-		this.user = user;
+		//this.user = user;
 		this.date = date;
 		this.cena = cena;
 	}

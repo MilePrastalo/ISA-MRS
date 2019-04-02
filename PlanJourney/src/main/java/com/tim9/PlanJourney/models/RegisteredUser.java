@@ -1,6 +1,7 @@
 package com.tim9.PlanJourney.models;
 
 import java.util.HashSet;
+
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -37,6 +38,15 @@ public class RegisteredUser extends User {
 	public void setVehicleReservations(Set<VehicleReservation> vehicleReservations) {
 		this.vehicleReservations = vehicleReservations;
 	}
+
+	public Set<Ticket> getFlightReservations() {
+		return flightReservations;
+	}
+
+	public void setFlightReservations(Set<Ticket> flightReservations) {
+		this.flightReservations = flightReservations;
+	}
+	
 	
 
 }

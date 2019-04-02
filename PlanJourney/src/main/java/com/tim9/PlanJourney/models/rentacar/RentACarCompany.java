@@ -15,15 +15,15 @@ import com.tim9.PlanJourney.models.Company;
 
 @Entity
 public class RentACarCompany extends Company {
-	@Id
-	@GeneratedValue
-	private Long id;
-	@OneToMany(mappedBy = "service", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<RentACarAdmin> admins = new HashSet<>();
 	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<BranchOffice> offices = new HashSet<>();
+	
+	@OneToMany(mappedBy = "service", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<RentACarAdmin> admins = new HashSet<>();
+
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Vehicle> vehicles  = new HashSet<Vehicle>();
+	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<VehicleReservation> reservations = new HashSet<VehicleReservation>();
 	public RentACarCompany() {
@@ -32,18 +32,12 @@ public class RentACarCompany extends Company {
 	public RentACarCompany(Long id, Set<RentACarAdmin> admins, Set<BranchOffice> offices, Set<Vehicle> vehicles,
 			Set<VehicleReservation> reservations) {
 		super();
-		this.id = id;
-		this.admins = admins;
+		/*this.admins = admins;
 		this.offices = offices;
 		this.vehicles = vehicles;
-		this.reservations = reservations;
+		this.reservations = reservations;*/
 	}
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
+	
 	public Set<RentACarAdmin> getAdmins() {
 		return admins;
 	}

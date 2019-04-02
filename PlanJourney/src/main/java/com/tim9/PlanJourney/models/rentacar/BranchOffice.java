@@ -11,16 +11,18 @@ import javax.persistence.ManyToOne;
 
 
 @Entity
-public class BranchOffice {
+
+public class BranchOffice {	
 	@Id
 	@GeneratedValue
 	private Long id;
+	
 	@Column(name="name",nullable=false)
 	private String name;
+	
 	@ManyToOne(fetch = FetchType.EAGER)
 	private RentACarCompany company;
-	/*@ForeignKey(name="location")
-	private Destination location;*/
+	
 	public BranchOffice() {
 		super();
 	}

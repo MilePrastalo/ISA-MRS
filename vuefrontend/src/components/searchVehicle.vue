@@ -1,5 +1,5 @@
 <template>
-  <div id="addVehicle">
+  <div id="searchVehicle">
     <div>
         <table>
             <tr>
@@ -43,7 +43,7 @@
 <script>
 
 export default {
-  name: 'addVehicle',
+  name: 'searchVehicle',
   components: {
   },
   data: function () {

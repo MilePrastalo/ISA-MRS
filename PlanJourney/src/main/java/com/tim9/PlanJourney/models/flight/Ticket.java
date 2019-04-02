@@ -20,6 +20,7 @@ import com.tim9.PlanJourney.models.RegisteredUser;
 @Table(name = "ticket")
 public class Ticket {
 	
+
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -46,7 +47,6 @@ public class Ticket {
 	private Flight flight;
 	
 	@OneToOne()
-	@JoinColumn(columnDefinition = "seat")
 	private Seat seat;
 	
 	public Ticket() {
@@ -55,6 +55,7 @@ public class Ticket {
 
 	public Ticket(Long id, double price, int discount, Date issueDate, Boolean onDiscounnt, int rating,
 			RegisteredUser user, Flight flight, Seat seat) {
+		/*
 		super();
 		this.id = id;
 		this.price = price;
@@ -65,6 +66,7 @@ public class Ticket {
 		this.user = user;
 		this.flight = flight;
 		this.seat = seat;
+		*/
 	}
 
 	public Long getId() {

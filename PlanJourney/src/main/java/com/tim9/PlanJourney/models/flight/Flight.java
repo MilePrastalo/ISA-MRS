@@ -16,7 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Flight")
+@Table(name = "flight")
 public class Flight {
 	
 	@Id
@@ -61,6 +61,7 @@ public class Flight {
 	public Flight(Long id, Date startDate, Date endDate, int flightDuration, int flightLength,
 			Set<String> destinationsOnTheWay, Set<Ticket> tickets, Set<Seat> seats, double businessPrice,
 			double economicPrice, double firstClassPrice) {
+		/*
 		super();
 		this.id = id;
 		this.startDate = startDate;
@@ -72,6 +73,7 @@ public class Flight {
 		this.businessPrice = businessPrice;
 		this.economicPrice = economicPrice;
 		this.firstClassPrice = firstClassPrice;
+		*/
 	}
 
 
@@ -114,8 +116,8 @@ public class Flight {
 
 	public void setDestinationsOnTheWay(Set<String> destinationsOnTheWay) {
 		this.destinationsOnTheWay = destinationsOnTheWay;
-	}*/
-
+	}
+*/
 	public Set<Seat> getSeats() {
 		return seats;
 	}
@@ -161,7 +163,7 @@ public class Flight {
 	}
 
 
-
+/*
 	public Set<Ticket> getTickets() {
 		return tickets;
 	}
@@ -171,7 +173,7 @@ public class Flight {
 	public void setTickets(Set<Ticket> tickets) {
 		this.tickets = tickets;
 	}
-	
+	*/
 	
 
 }

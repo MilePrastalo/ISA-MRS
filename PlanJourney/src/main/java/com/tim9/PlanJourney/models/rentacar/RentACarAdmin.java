@@ -9,7 +9,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.tim9.PlanJourney.models.User;
-
 @Entity
 @Table(name="RentACarAdmin")
 public class RentACarAdmin extends User {
@@ -22,7 +21,7 @@ public class RentACarAdmin extends User {
 
 	public RentACarAdmin(RentACarCompany service) {
 		super();
-		this.service = service;
+		//this.service = service;
 	}
 
 	public RentACarCompany getService() {

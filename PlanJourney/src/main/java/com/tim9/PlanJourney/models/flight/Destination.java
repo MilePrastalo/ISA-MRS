@@ -7,14 +7,13 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "destination")
 public class Destination {
 	
 	@Id
 	@GeneratedValue
 	private Long id;
 	
-	@Column(name = "name", unique = false, nullable = true)
+	@Column(name = "name", unique = false, nullable = false)
 	private String name;
 	
 	@Column(name = "description", unique = false, nullable = true)

@@ -1,5 +1,6 @@
 package com.tim9.PlanJourney.controller;
 
+
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -7,11 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import com.tim9.PlanJourney.beans.UserBean;
-import com.tim9.PlanJourney.models.Company;
-import com.tim9.PlanJourney.models.RegisteredUser;
-import com.tim9.PlanJourney.models.User;
-import com.tim9.PlanJourney.models.flight.FlightAdmin;
 import com.tim9.PlanJourney.models.flight.FlightCompany;
 
 

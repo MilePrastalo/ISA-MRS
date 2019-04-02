@@ -10,7 +10,6 @@ import com.tim9.PlanJourney.models.User;
 @Entity
 public class FlightAdmin extends User {
 	
-	
 	@ManyToOne()
 	FlightCompany flightCompany;
 	

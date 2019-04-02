@@ -15,7 +15,7 @@ import javax.persistence.InheritanceType;
 public abstract class Company {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue
 	private Long id;
 	
 	@Column(name="name", unique=false, nullable=false)
