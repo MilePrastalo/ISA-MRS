@@ -138,6 +138,10 @@ public class Ticket {
 	public void setSeat(Seat seat) {
 		this.seat = seat;
 	}
+
+	public void setOnDiscount(boolean onDiscount) {
+		this.onDiscount = onDiscount;
+	}
 	
 	
 	

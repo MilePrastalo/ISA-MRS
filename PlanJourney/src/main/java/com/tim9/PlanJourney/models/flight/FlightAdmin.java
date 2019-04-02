@@ -28,4 +28,16 @@ public class FlightAdmin extends User {
 		this.flightCompany = fc;
 	}
 
+
+	public FlightCompany getFlightCompany() {
+		return flightCompany;
+	}
+
+
+	public void setFlightCompany(FlightCompany flightCompany) {
+		this.flightCompany = flightCompany;
+	}
+	
+	
+
 }
