@@ -3,6 +3,7 @@ package com.tim9.PlanJourney.controller;
 import java.util.ArrayList;
 
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,6 +23,7 @@ public class UserController {
 			value = "/api/getUser",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
 	public @ResponseBody RegisteredUser getUser() throws Exception {
 		if(user==null) {
 			user = new RegisteredUser(1,"username","pass","Pera","Peric","pera@gmail.com");
@@ -35,8 +37,10 @@ public class UserController {
 			method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody RegisteredUser updateUserProfile(@RequestBody UserBean updatedUser) throws Exception {
+	@CrossOrigin()
+	public @ResponseBody RegisteredUser updateUserProfile(@RequestBody User updatedUser) throws Exception {
 		//user = new RegisteredUser(1,"username","pass","Pera","Peric","pera@gmail.com");
+		System.out.println("UPDATE");
 		user.setFirstName(updatedUser.getFirstName());
 		user.setLastName(updatedUser.getLastName());
 		user.setEmail(updatedUser.getEmail());

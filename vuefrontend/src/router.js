@@ -23,6 +23,16 @@ export default new Router({
       path: '/addVehicle',
       name: 'addVehicle',
       component: () => import('./components/addVehicle.vue')
+    },
+    {
+      path: '/userProfile',
+      name: 'userProfile',
+      component: () => import('./components/userProfile.vue')
+    },
+    {
+      path: '/flightCompanyProfile',
+      name: 'flightCompanyProfile',
+      component: () => import('./components/flightCompanyProfile.vue')
     }
   ]
 })
