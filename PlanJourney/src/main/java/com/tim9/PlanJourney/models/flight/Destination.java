@@ -1,11 +1,13 @@
-package com.tim9.PlanJourney.models;
+package com.tim9.PlanJourney.models.flight;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "destination")
 public class Destination {
 	
 	@Id

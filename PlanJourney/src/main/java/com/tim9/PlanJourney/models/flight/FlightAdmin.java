@@ -1,14 +1,17 @@
-package com.tim9.PlanJourney.models;
+package com.tim9.PlanJourney.models.flight;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+
+import com.tim9.PlanJourney.models.User;
 
 @Entity
 public class FlightAdmin extends User {
 	
 	
-	@OneToOne( fetch = FetchType.LAZY)
+	@ManyToOne()
 	FlightCompany flightCompany;
 	
 	

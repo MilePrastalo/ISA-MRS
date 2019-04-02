@@ -1,15 +1,19 @@
 package com.tim9.PlanJourney.models;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
+import com.tim9.PlanJourney.models.flight.Flight;
+import com.tim9.PlanJourney.models.flight.Ticket;
 import com.tim9.PlanJourney.models.rentacar.VehicleReservation;
 @Entity
 public class RegisteredUser extends User {
 	
-	//lista rezervacija  letova
+	@OneToMany(mappedBy="user")
+	private Set<Ticket> flightReservations = new HashSet<Ticket>(); 
 	//lista rezervacija  hotela
 	//lista rezervacija  rent-a-car
 	
