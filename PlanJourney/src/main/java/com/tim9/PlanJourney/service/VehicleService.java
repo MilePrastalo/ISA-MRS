@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.tim9.PlanJourney.models.Vehicle;
+import com.tim9.PlanJourney.models.rentacar.Vehicle;
 import com.tim9.PlanJourney.repository.VehicleRepository;
 
 @Service
@@ -16,7 +16,7 @@ public class VehicleService {
 	VehicleRepository repository;
 	
 	public Vehicle findOne(Long id) {
-		return null;//repository.findOne();
+		return repository.getOne(id);//repository.findOne();
 	}
 
 	public List<Vehicle> findAll() {
@@ -27,11 +27,11 @@ public class VehicleService {
 		return repository.findAll(page);
 	}
 
-	public Vehicle save(Vehicle course) {
-		return repository.save(course);
+	public Vehicle save(Vehicle vehicle) {
+		return repository.save(vehicle);
 	}
 
 	public void remove(Long id) {
-		//repository.delete(id);
+		repository.deleteById(id);
 	}
 }

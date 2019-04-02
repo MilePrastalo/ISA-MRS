@@ -2,6 +2,8 @@ package com.tim9.PlanJourney.models;
 
 import java.util.ArrayList;
 
+import com.tim9.PlanJourney.models.rentacar.RentACarAdmin;
+
 public class SystemAdmin extends User {
 	private ArrayList<HotelAdmin> hotelAdmins;
 	private ArrayList<FlightAdmin> flightAdmins;

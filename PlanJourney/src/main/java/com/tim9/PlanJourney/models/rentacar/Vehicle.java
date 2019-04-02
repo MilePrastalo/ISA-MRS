@@ -1,4 +1,4 @@
-package com.tim9.PlanJourney.models;
+package com.tim9.PlanJourney.models.rentacar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,6 +26,11 @@ public class Vehicle {
 	@Column(name = "price", nullable = false)
 	private double price;
 	
+	@Column(name = "onDiscount", nullable = true)
+	private boolean onDiscount;
+	
+	@Column(name = "discount", nullable = true)
+	private int discount;
 	
 	public Vehicle() {
 		super();
@@ -91,5 +96,42 @@ public class Vehicle {
 	public void setType(String type) {
 		this.type = type;
 	}
+
+
+
+	public Long getId() {
+		return id;
+	}
+
+
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+
+
+	public boolean isOnDiscount() {
+		return onDiscount;
+	}
+
+
+
+	public void setOnDiscount(boolean onDiscount) {
+		this.onDiscount = onDiscount;
+	}
+
+
+
+	public int getDiscount() {
+		return discount;
+	}
+
+
+
+	public void setDiscount(int discount) {
+		this.discount = discount;
+	}
+	
 	
 }
