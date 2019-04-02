@@ -1,20 +1,36 @@
 package com.tim9.PlanJourney.models;
 
+import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+
+@Entity
+@Inheritance(strategy=TABLE_PER_CLASS)
 public abstract class User {
 	
-	private Integer id;
+	@Id
+	@GeneratedValue
+	private Long id;
+	@Column(name="username", unique=true, nullable=false)
 	private String username;
+	@Column(name="password", unique=false, nullable=false)
 	private String password;
+	@Column(name="firstName", unique=false, nullable=false)
 	private String firstName;
+	@Column(name="lastName", unique=false, nullable=false)
 	private String lastName;
+	@Column(name="email", unique=false, nullable=false)
 	private String email;
 	
 	public User() {
 	}
 	
-	public User(int id, String username, String password, String firstName, String lastName, String email) {
+	public User(String username, String password, String firstName, String lastName, String email) {
 		super();
-		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.firstName = firstName;
@@ -23,12 +39,12 @@ public abstract class User {
 	}
 
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

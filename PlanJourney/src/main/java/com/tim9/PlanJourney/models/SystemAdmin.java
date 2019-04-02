@@ -11,10 +11,10 @@ public class SystemAdmin extends User {
 		super();
 	}
 
-	public SystemAdmin(int id, String username, String password, String firstName, String lastName, String email,
+	public SystemAdmin( String username, String password, String firstName, String lastName, String email,
 			ArrayList<HotelAdmin> hotelAdmins, ArrayList<FlightAdmin> flightAdmins,
 			ArrayList<RentACarAdmin> rentACarAdmins) {
-		super(id, username, password, firstName, lastName, email);
+		super( username, password, firstName, lastName, email);
 		this.hotelAdmins = hotelAdmins;
 		this.flightAdmins = flightAdmins;
 		this.rentACarAdmins = rentACarAdmins;
