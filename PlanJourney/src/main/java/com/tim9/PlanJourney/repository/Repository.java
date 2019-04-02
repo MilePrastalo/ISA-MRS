@@ -6,8 +6,8 @@ import java.util.Collection;
 import com.tim9.PlanJourney.models.FlightAdmin;
 import com.tim9.PlanJourney.models.Hotel;
 import com.tim9.PlanJourney.models.HotelAdmin;
-import com.tim9.PlanJourney.models.RentACarAdmin;
 import com.tim9.PlanJourney.models.SystemAdmin;
+import com.tim9.PlanJourney.models.rentacar.RentACarAdmin;
 
 @org.springframework.stereotype.Repository
 public class Repository {

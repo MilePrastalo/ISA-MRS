@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.beans.RentACarProfileBean;
 import com.tim9.PlanJourney.beans.VehicleSearchBean;
-import com.tim9.PlanJourney.models.RentACarService;
-import com.tim9.PlanJourney.models.Vehicle;
+import com.tim9.PlanJourney.models.rentacar.RentACarCompany;
+import com.tim9.PlanJourney.models.rentacar.Vehicle;
 import com.tim9.PlanJourney.service.VehicleService;
 
 @RestController
 
 public class RentACarController {
 	
-	private static RentACarService rentACarService;
+	private static RentACarCompany rentACarService;
 	@Autowired
 	private VehicleService vehicleService;
 	@RequestMapping(
@@ -32,32 +32,13 @@ public class RentACarController {
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
+	//Recieves parameters for search and returns list of found vehicles
 	public @ResponseBody ArrayList<Vehicle>  searchVehicles(@RequestBody VehicleSearchBean search) throws Exception {
 		ArrayList<Vehicle> vehicles = new ArrayList<>();
-		Vehicle v1 = new Vehicle("Model3", "Tesla","Sedan", 2015, 200);
-		Vehicle v2 = new Vehicle("X3", "BMW","Hatchback", 2011, 400);
-		Vehicle v3 = new Vehicle("A3", "Mercedes","Sedan", 2018, 100);
-		Vehicle v4 = new Vehicle("C1", "Mercedes","Hatchback", 2008, 150);
-		Vehicle v5 = new Vehicle("B1", "Mercedes","Sedan", 2009, 100);
-		Vehicle v6 = new Vehicle("S", "Tesla","Sedan", 2018, 300);
-		Vehicle v7 = new Vehicle("X", "Tesla","Sedan", 2018, 300);
-		Vehicle v8 = new Vehicle("X2", "BMW","Hatchback", 2017, 200);
-		Vehicle v9 = new Vehicle("X1", "BMW","Sedan", 2014, 100);
-		Vehicle v10 = new Vehicle("A8", "Mercedes","Crossover", 2015, 200);
-		vehicles.add(v1);
-		vehicles.add(v2);
-		vehicles.add(v3);
-		vehicles.add(v4);
-		vehicles.add(v5);
-		vehicles.add(v6);
-		vehicles.add(v7);
-		vehicles.add(v8);
-		vehicles.add(v9);
-		vehicles.add(v10);
+		vehicles = (ArrayList<Vehicle>)vehicleService.findAll();
 		ArrayList<Vehicle> foundVehicles = new ArrayList<>();
-		foundVehicles = (ArrayList<Vehicle>)vehicleService.findAll();
-		/*for (Vehicle vehicle : vehicles) {
-			
+		//Needs optimisation
+		for (Vehicle vehicle : vehicles) {	
 			if( (vehicle.getMaker().equals(search.getProducer()) ||search.getProducer().equals("")) &&
 					(vehicle.getPrice() > search.getPriceFrom() ||  search.getPriceFrom() == 0) &&
 					(vehicle.getPrice() < search.getPriceTo() || search.getPriceTo()==0  )&&
@@ -66,7 +47,7 @@ public class RentACarController {
 					(vehicle.getType().equals(search.getType()) ||search.getType().equals("")))		{
 				foundVehicles.add(vehicle);
 			}
-		}*/
+		}
 		
 		return foundVehicles;
 	}
@@ -76,6 +57,8 @@ public class RentACarController {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
+	//Returns list of producers/makers
+	//Probably will create table in database in the future - priority low
 	public @ResponseBody ArrayList<String> getProducers() throws Exception {
 		ArrayList<String> producers = new ArrayList<>();
 		producers.add("Tesla");
@@ -92,6 +75,8 @@ public class RentACarController {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
+	//Returns list of types of vehicles
+	//Probably will create table in database in the future - priority low
 	public @ResponseBody ArrayList<String> getTypes() throws Exception {
 		ArrayList<String> types = new ArrayList<>();
 		types.add("Sedan");
@@ -108,9 +93,9 @@ public class RentACarController {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	public @ResponseBody RentACarService getRentACarCompany() throws Exception {
+	public @ResponseBody RentACarCompany getRentACarCompany() throws Exception {
 		if(rentACarService == null) {
-			rentACarService = new RentACarService();
+			rentACarService = new RentACarCompany();
 			rentACarService.setName("Super Car");
 			rentACarService.setAddress("Belgrade Nemanjina 11");
 			rentACarService.setDescription("Best rent-a-car service ever");

@@ -1,9 +1,30 @@
 package com.tim9.PlanJourney.models;
 
+import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+
+@Entity
+@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 public abstract class Company {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE)
 	private Long id;
+	
+	@Column(name="name", unique=false, nullable=false)
 	private String name;
+	
+	@Column(name="address", unique=false, nullable=false)
 	private String address;
+	
+	@Column(name="description", unique=false, nullable=false)
 	private String description;
 	
 	public Company() {
