@@ -35,6 +35,7 @@ public class VehicleReservation {
 		this.date = date;
 		this.cena = cena;
 	}
+	
 	public Long getId() {
 		return id;
 	}

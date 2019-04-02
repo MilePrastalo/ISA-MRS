@@ -1,31 +1,36 @@
 package com.tim9.PlanJourney.models.rentacar;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.tim9.PlanJourney.models.Company;
+
 @Entity
 public class RentACarCompany extends Company {
 	@Id
 	@GeneratedValue
 	private Long id;
-	@OneToMany
-	private ArrayList<RentACarAdmin> admins;
-	@OneToMany
-	private ArrayList<BranchOffice> offices;
-	@OneToMany
-	private ArrayList<Vehicle> vehicles;
-	@OneToMany
-	private ArrayList<VehicleReservation> reservations;
+	@OneToMany(mappedBy = "service", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<RentACarAdmin> admins = new HashSet<>();
+	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<BranchOffice> offices = new HashSet<>();
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Vehicle> vehicles  = new HashSet<Vehicle>();
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<VehicleReservation> reservations = new HashSet<VehicleReservation>();
 	public RentACarCompany() {
 		super();
 	}
-	public RentACarCompany(Long id, ArrayList<RentACarAdmin> admins, ArrayList<BranchOffice> offices,
-			ArrayList<Vehicle> vehicles, ArrayList<VehicleReservation> reservations) {
+	public RentACarCompany(Long id, Set<RentACarAdmin> admins, Set<BranchOffice> offices, Set<Vehicle> vehicles,
+			Set<VehicleReservation> reservations) {
 		super();
 		this.id = id;
 		this.admins = admins;
@@ -39,29 +44,33 @@ public class RentACarCompany extends Company {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public ArrayList<RentACarAdmin> getAdmins() {
+	public Set<RentACarAdmin> getAdmins() {
 		return admins;
 	}
-	public void setAdmins(ArrayList<RentACarAdmin> admins) {
+	
+	public void setAdmins(Set<RentACarAdmin> admins) {
 		this.admins = admins;
 	}
-	public ArrayList<BranchOffice> getOffices() {
+	public Set<BranchOffice> getOffices() {
 		return offices;
 	}
-	public void setOffices(ArrayList<BranchOffice> offices) {
+	public void setOffices(Set<BranchOffice> offices) {
 		this.offices = offices;
 	}
-	public ArrayList<Vehicle> getVehicles() {
+	public Set<Vehicle> getVehicles() {
 		return vehicles;
 	}
-	public void setVehicles(ArrayList<Vehicle> vehicles) {
+	public void setVehicles(Set<Vehicle> vehicles) {
 		this.vehicles = vehicles;
 	}
-	public ArrayList<VehicleReservation> getReservations() {
+	public Set<VehicleReservation> getReservations() {
 		return reservations;
 	}
-	public void setReservations(ArrayList<VehicleReservation> reservations) {
+	public void setReservations(Set<VehicleReservation> reservations) {
 		this.reservations = reservations;
 	}
+	
+	
+	
 	
 }
