@@ -27,6 +27,10 @@ public abstract class Company {
 	@Column(name="description", unique=false, nullable=false)
 	private String description;
 	
+	
+	@Column(name="rating")
+	private double rating;
+	
 	public Company() {
 		super();
 	}
@@ -69,6 +73,12 @@ public abstract class Company {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public double getRating() {
+		return rating;
+	}
+	public void setRating(double rating) {
+		this.rating = rating;
 	}
 	
 	

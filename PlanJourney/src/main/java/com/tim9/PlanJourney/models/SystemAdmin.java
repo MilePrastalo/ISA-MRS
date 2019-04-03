@@ -2,12 +2,14 @@ package com.tim9.PlanJourney.models;
 
 import java.util.ArrayList;
 
+import javax.persistence.Entity;
+
 import com.tim9.PlanJourney.hotel.HotelAdmin;
 import com.tim9.PlanJourney.models.flight.FlightAdmin;
 import com.tim9.PlanJourney.models.rentacar.RentACarAdmin;
-
+@Entity
 public class SystemAdmin extends User {
-	private ArrayList<HotelAdmin> hotelAdmins;
+	/*private ArrayList<HotelAdmin> hotelAdmins;
 	private ArrayList<FlightAdmin> flightAdmins;
 	private ArrayList<RentACarAdmin> rentACarAdmins;
 
@@ -47,5 +49,5 @@ public class SystemAdmin extends User {
 	public void setRentACarAdmins(ArrayList<RentACarAdmin> rentACarAdmins) {
 		this.rentACarAdmins = rentACarAdmins;
 	}
-
+*/
 }

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -26,6 +27,7 @@ public class RentACarCompany extends Company {
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<VehicleReservation> reservations = new HashSet<VehicleReservation>();
+
 	public RentACarCompany() {
 		super();
 	}
@@ -38,6 +40,10 @@ public class RentACarCompany extends Company {
 		this.reservations = reservations;*/
 	}
 	
+	public RentACarCompany(String name, String address, String description) {
+		super(0l, name, address, description);
+		offices = new HashSet<>();
+	}
 	public Set<RentACarAdmin> getAdmins() {
 		return admins;
 	}
@@ -63,6 +69,8 @@ public class RentACarCompany extends Company {
 	public void setReservations(Set<VehicleReservation> reservations) {
 		this.reservations = reservations;
 	}
+	
+	
 	
 	
 	
