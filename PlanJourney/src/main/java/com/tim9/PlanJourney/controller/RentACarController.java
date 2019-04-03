@@ -15,17 +15,31 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.beans.RentACarProfileBean;
 import com.tim9.PlanJourney.beans.VehicleSearchBean;
+import com.tim9.PlanJourney.beans.VehicleSearchReturnBean;
+import com.tim9.PlanJourney.models.rentacar.RentACarAdmin;
 import com.tim9.PlanJourney.models.rentacar.RentACarCompany;
 import com.tim9.PlanJourney.models.rentacar.Vehicle;
+import com.tim9.PlanJourney.service.RentACarAdminService;
+import com.tim9.PlanJourney.service.RentACarCompanyService;
 import com.tim9.PlanJourney.service.VehicleService;
 
 @RestController
 
 public class RentACarController {
 	
-	private static RentACarCompany rentACarService;
+	
+	private static RentACarAdmin admin;
+	
 	@Autowired
 	private VehicleService vehicleService;
+	
+	@Autowired
+	private RentACarAdminService adminService;
+	
+	@Autowired
+	private RentACarCompanyService companyService;
+	
+	
 	@RequestMapping(
 			value = "/api/vehicleSearch",
 			method = RequestMethod.POST,
@@ -33,10 +47,11 @@ public class RentACarController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	//Recieves parameters for search and returns list of found vehicles
-	public @ResponseBody ArrayList<Vehicle>  searchVehicles(@RequestBody VehicleSearchBean search) throws Exception {
+	public @ResponseBody ArrayList<VehicleSearchReturnBean>  searchVehicles(@RequestBody VehicleSearchBean search) throws Exception {
 		ArrayList<Vehicle> vehicles = new ArrayList<>();
 		vehicles = (ArrayList<Vehicle>)vehicleService.findAll();
-		ArrayList<Vehicle> foundVehicles = new ArrayList<>();
+		ArrayList<VehicleSearchReturnBean> foundVehicles = new ArrayList<>();
+		System.out.println("Poziv");
 		//Needs optimisation
 		for (Vehicle vehicle : vehicles) {	
 			if( (vehicle.getMaker().equals(search.getProducer()) ||search.getProducer().equals("")) &&
@@ -45,10 +60,9 @@ public class RentACarController {
 					(vehicle.getYear() > search.getNewer() ||  search.getNewer()==0 )&&
 					(vehicle.getYear() < search.getOlder() ||  search.getOlder() == 0) && 
 					(vehicle.getType().equals(search.getType()) ||search.getType().equals("")))		{
-				foundVehicles.add(vehicle);
+				foundVehicles.add(new VehicleSearchReturnBean(vehicle.getName(), vehicle.getMaker(), vehicle.getType(), vehicle.getYear(), vehicle.getPrice()));
 			}
 		}
-		
 		return foundVehicles;
 	}
 	
@@ -93,14 +107,19 @@ public class RentACarController {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	public @ResponseBody RentACarCompany getRentACarCompany() throws Exception {
+	public @ResponseBody RentACarProfileBean getRentACarCompany() throws Exception {
+		if (admin == null) {
+			admin = adminService.findOne(1l);
+		}
+		RentACarCompany rentACarService = admin.getService();
 		if(rentACarService == null) {
 			rentACarService = new RentACarCompany();
 			rentACarService.setName("Super Car");
 			rentACarService.setAddress("Belgrade Nemanjina 11");
 			rentACarService.setDescription("Best rent-a-car service ever");
 		}
-		return rentACarService;
+		return new RentACarProfileBean(rentACarService.getName(), rentACarService.getAddress(), rentACarService.getDescription());
+	
 	}
 	
 	@RequestMapping(
@@ -109,8 +128,13 @@ public class RentACarController {
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	public void  updateRentACarProfile(@RequestBody RentACarProfileBean profile) throws Exception {
+		if (admin == null) {
+			admin = adminService.findOne(1l);
+		}
+		RentACarCompany rentACarService = admin.getService();
 		rentACarService.setName(profile.getName());
 		rentACarService.setDescription(profile.getDescription());
 		rentACarService.setAddress(profile.getAddress());
+		companyService.save(rentACarService);
 	}
 }

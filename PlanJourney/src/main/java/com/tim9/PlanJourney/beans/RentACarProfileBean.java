@@ -7,6 +7,14 @@ public class RentACarProfileBean {
 	public RentACarProfileBean() {
 		super();
 	}
+	
+	public RentACarProfileBean(String name, String address, String description) {
+		super();
+		this.name = name;
+		this.address = address;
+		this.description = description;
+	}
+
 	public String getName() {
 		return name;
 	}
