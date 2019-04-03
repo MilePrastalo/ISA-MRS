@@ -23,13 +23,13 @@ public class Vehicle {
 	private int year;
 	
 	@Column(name = "price", nullable = false)
-	private double price;
+	private Double price;
 	
 	@Column(name = "onDiscount", nullable = true)
-	private boolean onDiscount;
+	private Boolean onDiscount;
 	
 	@Column(name = "discount", nullable = true)
-	private int discount;
+	private Integer discount;
 	
 	public Vehicle() {
 		super();

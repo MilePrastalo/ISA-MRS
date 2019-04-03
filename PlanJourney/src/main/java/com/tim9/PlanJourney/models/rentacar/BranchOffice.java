@@ -9,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import com.tim9.PlanJourney.models.flight.Destination;
+
 
 @Entity
 
@@ -22,6 +24,9 @@ public class BranchOffice {
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	private RentACarCompany company;
+	
+	@ManyToOne(fetch=FetchType.EAGER)
+	private Destination destination;
 	
 	public BranchOffice() {
 		super();
@@ -44,6 +49,12 @@ public class BranchOffice {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public Destination getDestination() {
+		return destination;
+	}
+	public void setDestination(Destination destination) {
+		this.destination = destination;
 	}
 	
 	
