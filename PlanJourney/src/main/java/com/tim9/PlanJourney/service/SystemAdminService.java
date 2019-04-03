@@ -2,8 +2,8 @@ package com.tim9.PlanJourney.service;
 
 import java.util.Collection;
 
-import com.tim9.PlanJourney.models.Hotel;
-import com.tim9.PlanJourney.models.HotelAdmin;
+import com.tim9.PlanJourney.hotel.Hotel;
+import com.tim9.PlanJourney.hotel.HotelAdmin;
 
 public interface SystemAdminService {
 

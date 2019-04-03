@@ -2,6 +2,7 @@ package com.tim9.PlanJourney.models;
 
 import java.util.ArrayList;
 
+import com.tim9.PlanJourney.hotel.HotelAdmin;
 import com.tim9.PlanJourney.models.flight.FlightAdmin;
 import com.tim9.PlanJourney.models.rentacar.RentACarAdmin;
 
