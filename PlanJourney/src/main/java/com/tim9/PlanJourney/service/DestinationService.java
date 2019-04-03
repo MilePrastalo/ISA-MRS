@@ -19,6 +19,10 @@ public class DestinationService {
 	public Destination findOne(Long id) {
 		return repository.getOne(id);//repository.findOne();
 	}
+	
+	public Destination findByName(String name) {
+		return repository.findByName(name);
+	}
 
 	public List<Destination> findAll() {
 		return repository.findAll();
