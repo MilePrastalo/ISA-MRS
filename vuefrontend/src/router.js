@@ -43,6 +43,11 @@ export default new Router({
       path: '/flight',
       name: 'flight',
       component: () => import('./components/flight.vue')
+    },
+    {
+      path: '/searchRentACarCompany',
+      name: 'searchRentACarCompany',
+      component: () => import('./components/searchRentACarCompany.vue')
     }
   ]
 })
