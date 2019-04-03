@@ -1,5 +1,8 @@
 <template>
    <div id = "flightCompanyProfile">
+            <br>
+            <h1>Flight Company Profile: </h1>
+            <br>
             <table>
                 <tr>
                     <td> Name: </td>
@@ -49,7 +52,8 @@ mounted(){
                 this.name = response.data.name
                 this.address = response.data.address
                 this.description = response.data.description
-            });  
+            });
+            alert("Successfuly updated!")
         }     
     }
 }

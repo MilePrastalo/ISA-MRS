@@ -1,6 +1,6 @@
 package com.tim9.PlanJourney.controller;
 
-import java.util.ArrayList;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tim9.PlanJourney.beans.UserBean;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.User;
-import com.tim9.PlanJourney.models.flight.FlightAdmin;
-//import com.tim9.PlanJourney.service.UserService;
 import com.tim9.PlanJourney.service.UserService;
 
 @RestController
@@ -25,16 +23,19 @@ public class UserController {
 	@Autowired
 	UserService service;
 	
+	private static UserBean user;
+	
 	@RequestMapping(
-			value = "/api/getUser",
+			value = "/api/getLogUser",
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	public @ResponseBody FlightAdmin getUser() throws Exception {
-		FlightAdmin user = (FlightAdmin) service.findOneByUsername("pera");
+	public @ResponseBody UserBean getUser() throws Exception {
+		//FlightAdmin user = (FlightAdmin) service.findOneByUsername("pera");
 		if(user==null) {
-			user = new FlightAdmin("username","pass","Pera","Peric","pera@gmail.com");
-			service.save(user);	
+			user = new UserBean("username","pass","Pera","Peric","pera@gmail.com");
+			
+			//service.save(user);	
 		}
 		return user;
 	}
@@ -46,13 +47,13 @@ public class UserController {
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	public @ResponseBody FlightAdmin  updateUserProfile(@RequestBody User updatedUser) throws Exception {
-		FlightAdmin user = (FlightAdmin) service.findOneByUsername("pera");
+	public @ResponseBody UserBean  updateUserProfile(@RequestBody UserBean updatedUser) throws Exception {
+		//FlightAdmin user = (FlightAdmin) service.findOneByUsername("pera");
 		user.setFirstName(updatedUser.getFirstName());
 		user.setLastName(updatedUser.getLastName());
 		user.setEmail(updatedUser.getEmail());
 		user.setPassword(updatedUser.getPassword());
-		service.save(user);
+		//service.save(user);
 		return user;
 	}
 

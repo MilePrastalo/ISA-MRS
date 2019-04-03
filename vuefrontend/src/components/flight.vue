@@ -1,0 +1,127 @@
+<template>
+   <div id = "addFlight">
+            <br>
+            <h1>New Flight: </h1>
+            <br>
+            <table>
+
+                <tr>
+                    <td> Start destination: </td>
+                     <td><select v-model="startDestination" name="startDestination" id="startDestination" required>
+                        <option v-for="startDestination in destinations" v-bind:value= startDestination :key="startDestination.id">{{startDestination}}</option>
+                    </select></td>
+                </tr>
+                <tr>
+                    <td> End destination: </td>
+                    <td><select v-model="endDestination" name="endDestination" id="endDestination" required>
+                        <option v-for="endDestination in destinations" v-bind:value=endDestination :key="endDestination.id">{{endDestination}}</option>
+                    </select></td>
+                </tr>
+                <tr>
+                    <td> Start date: </td>
+                    <td>  <input type="date" name="startDate" v-model="startDate" required> </td>
+                </tr>
+                <tr>
+                    <td> End date: </td>
+                    <td>  <input type="date" name="endDate" v-model="endDate" required > </td>
+                </tr>
+                 <tr>
+                    <td> Flight duration: </td>
+                    <td> <input type="text" name="flightDuration" v-model="flightDuration" required >  </td>        
+                </tr>
+                 <tr>
+                    <td> Flight length: </td>
+                    <td> <input type="text" name="flightLength" v-model="flightLength" required >  </td>        
+                </tr>
+                <tr>
+                    <td> Buisiness class price: </td>
+                    <td> <input type="text" name="buisinesssPrice" v-model="buisinesssPrice" required >  </td>        
+                </tr>
+                <tr>
+                    <td> First class price: </td>
+                    <td> <input type="text" name="firstClassPrice" v-model="firstClassPrice" required>  </td>        
+                </tr>
+                <tr>
+                    <td> Economic class price: </td>
+                    <td> <input type="text" name="economicPrice" v-model="economicPrice" required > </td>        
+                </tr>
+                <tr>
+                    <td>  </td>
+                    <td><button v-on:click="addFlight()">Add</button> </td>      
+                </tr>
+            </table>      
+        </div>
+</template>
+
+<script>
+
+export default {
+  name: 'addFlight',
+  components: {
+  },
+  data: function () {
+  return {
+     startDestination: "",
+     endDestination: "",
+     startDate: "",
+     endDate: "",
+     flightDuration: "",
+     flightLength: "",
+     buisinesssPrice: "",
+     firstClassPrice: "",
+     economicPrice: "",
+
+     destinations:[]
+  }
+},
+mounted(){
+    axios.get("http://localhost:8080/api/getDestinations")
+        .then(response => {
+            this.destinations = response.data
+          }); 
+    },
+    methods:{
+        addFlight: function(){
+            if (this.startDestination == this.endDestination){
+                alert("Start and end destinations can not be the same!");
+                return
+            }
+            if( isNaN(this.buisinesssPrice) || isNaN(this.firstClassPrice) || isNaN(this.economicPrice)  ){
+                alert("All prices must be numbers!");
+                return
+            }
+            if( this.buisinesssPrice < 0 || this.economicPrice < 0 || this.firstClassPrice < 0 ){
+                alert("Price can not have negative value!");
+                return
+            }
+            if( isNaN(this.flightDuration) || isNaN(this.flightLength) || isNaN(this.economicPrice)  ){
+                alert("Both, duration and length of flihts must be numbers!");
+                return
+            }
+            if( this.flightDuration < 0 || this.flightLength < 0){
+                alert("Both, duration and length of flihts can not have negative value!");
+            }
+            var newFlight = {startDestination: this.startDestination, endDestination: this.endDestination, startDate: this.startDate, endDate: this.endDate, flightDuration: this.flightDuration, flightLength: this.flightLength, businesssPrice: this.buisinesssPrice, economicPrice: this.economicPrice, firstClassPrice: this.firstClassPrice }
+            axios.post("http://localhost:8080/api/addFlight", newFlight)
+                .then(response => {
+                if (response.data.startDestination == null){
+                    alert("Something went wrong, probably with dates!");
+                    return
+                }
+                alert("Successfuly added!");
+            });
+        }     
+    }
+}
+
+</script>
+
+<style>
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+</style>
