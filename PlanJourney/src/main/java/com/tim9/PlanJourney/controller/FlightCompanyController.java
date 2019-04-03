@@ -26,6 +26,7 @@ public class FlightCompanyController {
 		if(fc == null) {
 			fc = new FlightCompany(1l, "FlightCompany","address","shdhasdhbsajknclklasnckldasnckakcnknckdnckdk");
 		}
+		
 		return fc;
 		
 	}

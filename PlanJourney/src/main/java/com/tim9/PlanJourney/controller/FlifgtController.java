@@ -34,16 +34,27 @@ public class FlifgtController {
 			method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	public @ResponseBody ArrayList<String> getProducers() throws Exception {
-		//destinationService.findAll()
-		ArrayList<String> destinations = new ArrayList<>();
-		destinations.add("New York");
-		destinations.add("Belgrade");
-		destinations.add("Paris");
-		destinations.add("London");
-		destinations.add("Lisabon");
-		destinations.add("Moscow");
-		return destinations;
+	public @ResponseBody ArrayList<String> getDestinations() throws Exception {
+		
+		//adding to datebase because there is no destinations yet
+		
+		
+		ArrayList<String> destinationNames = new ArrayList<>();
+		ArrayList<Destination> destinations_ = new ArrayList<>();
+		destinations_ = (ArrayList<Destination>) destinationService.findAll();
+		if (destinations_.size() == 0) {
+			System.out.println("\tUSAO");
+			Destination dest1 = new Destination("Belgrade", "opis","coords");
+			destinationService.save(dest1);
+			Destination dest2 = new Destination("Moscow", "opis","coords");
+			destinationService.save(dest2);
+			destinations_ = (ArrayList<Destination>) destinationService.findAll();
+		}
+		
+		for (Destination dest : destinations_) {
+			destinationNames.add(dest.getName());
+		}
+		return destinationNames;
 	}
 	
 	@RequestMapping(
@@ -59,17 +70,23 @@ public class FlifgtController {
 		Date startDate = newFlightInfo.getStartDate();
 		
 		if (endDate.before(startDate)) {
+			System.out.println("\tend pre start");
 			return null;
 		}
 		Date today = new Date();
 		if (startDate.before(today) || endDate.before(today)) {
+			System.out.println("\tpre danasnjeg");
 			return null;
 		}
-		Destination startDestination = new Destination(newFlightInfo.getStartDestination(), "opis","coords");
-		Destination endDestination = new Destination(newFlightInfo.getEndDestination(), "opis","coords");
-		//Destination startDestination = destinationService.findByName(newFlight.getStartDestination)
-		//Destination endDestination = destinationService.findByName(newFlight.getEndDestination)
-		if (! startDestination.getNaziv().equals(endDestination.getNaziv())) {
+		
+		if ( newFlightInfo.getStartDestination().equals(newFlightInfo.getEndDestination())) {
+			System.out.println("\tiste destinacije");
+			return null;
+		}
+		
+		Destination startDestination = destinationService.findByName(newFlightInfo.getStartDestination());
+		Destination endDestination = destinationService.findByName(newFlightInfo.getEndDestination());
+		if ( startDestination == null || endDestination == null) {
 			return null;
 		}
 		
@@ -77,7 +94,7 @@ public class FlifgtController {
 				startDestination, endDestination, new HashSet<Ticket>(), new HashSet<Seat>(), 
 				newFlightInfo.getBusinessPrice(), newFlightInfo.getEconomicPrice(), newFlightInfo.getFirstClassPrice());;
 		
-		//flightService.save(newFlight)
+		flightService.save(newFlight);
 		return newFlight;
 	}
 
