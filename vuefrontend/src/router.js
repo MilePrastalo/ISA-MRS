@@ -38,6 +38,11 @@ export default new Router({
       path: '/rentacarprofile',
       name: 'rentacarprofile',
       component: () => import('./components/rentacarprofile.vue')
+    },
+    {
+      path: '/flight',
+      name: 'flight',
+      component: () => import('./components/flight.vue')
     }
   ]
 })

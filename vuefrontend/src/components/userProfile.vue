@@ -1,6 +1,8 @@
 <template>
    <div id = "userProfile">
-      
+            <br>
+            <h1>Your Profile: </h1>
+            <br>
             <table>
                 <tr>
                     <td> First name: </td>
@@ -47,14 +49,18 @@ export default {
   }
 },
 mounted(){
-    axios.get("http://localhost:8080/api/getUser")
+    axios.get("http://localhost:8080/api/getLogUser")
         .then(response => {
             this.firstName = response.data.firstName
             this.lastName = response.data.lastName
             this.email = response.data.email
             this.password = response.data.password
             this.repeatedPassword = this.password
-          });   
+          }).catch(
+    error =>{ if(error.response){
+    console.log(error.response.data)
+}}
+);   
     },
     methods:{
         updateUserProfile: function(pass, repeated_pass){

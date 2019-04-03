@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -36,6 +37,11 @@ public class Flight {
 	private int flightLength;
 	
 	//private Set<String> destinationsOnTheWay =  new HashSet<String>();
+	@OneToOne()
+	private Destination startDestination;
+	
+	@OneToOne()
+	private Destination endDestination;
 	
 	@OneToMany(mappedBy = "flight", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Ticket> tickets = new HashSet<Ticket>();
@@ -57,24 +63,26 @@ public class Flight {
 	}
 
 	
-
-	public Flight(Long id, Date startDate, Date endDate, int flightDuration, int flightLength,
-			Set<String> destinationsOnTheWay, Set<Ticket> tickets, Set<Seat> seats, double businessPrice,
-			double economicPrice, double firstClassPrice) {
-		/*
+	public Flight( Date startDate, Date endDate, int flightDuration, int flightLength,
+			Destination startDestination, Destination endDestination, Set<Ticket> tickets, Set<Seat> seats,
+			double businessPrice, double economicPrice, double firstClassPrice) {
 		super();
-		this.id = id;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.flightDuration = flightDuration;
 		this.flightLength = flightLength;
+		this.startDestination = startDestination;
+		this.endDestination = endDestination;
 		this.tickets = tickets;
 		this.seats = seats;
 		this.businessPrice = businessPrice;
 		this.economicPrice = economicPrice;
 		this.firstClassPrice = firstClassPrice;
-		*/
 	}
+
+
+
+
 
 
 
@@ -160,6 +168,66 @@ public class Flight {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+
+
+
+
+
+
+	public Destination getStartDestination() {
+		return startDestination;
+	}
+
+
+
+
+
+
+
+	public void setStartDestination(Destination startDestination) {
+		this.startDestination = startDestination;
+	}
+
+
+
+
+
+
+
+	public Destination getEndDestination() {
+		return endDestination;
+	}
+
+
+
+
+
+
+
+	public void setEndDestination(Destination endDestination) {
+		this.endDestination = endDestination;
+	}
+
+
+
+
+
+
+
+	public Set<Ticket> getTickets() {
+		return tickets;
+	}
+
+
+
+
+
+
+
+	public void setTickets(Set<Ticket> tickets) {
+		this.tickets = tickets;
 	}
 
 

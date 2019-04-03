@@ -26,9 +26,8 @@ public class Destination {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Destination(Long id, String naziv, String opis, String coordinates) {
+	public Destination( String naziv, String opis, String coordinates) {
 		super();
-		this.id = id;
 		this.name = naziv;
 		this.description = opis;
 		this.coordinates = coordinates;
