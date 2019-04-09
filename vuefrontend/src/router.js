@@ -45,6 +45,11 @@ export default new Router({
       component: () => import('./components/flight.vue')
     },
     {
+      path: '/searchFlights',
+      name: 'searchFlights',
+      component: () => import('./components/searchFlights.vue')
+    },
+    {
       path: '/searchRentACarCompany',
       name: 'searchRentACarCompany',
       component: () => import('./components/searchRentACarCompany.vue')

@@ -19,6 +19,10 @@ public class FlightCompanyService {
 	public FlightCompany findOne(Long id) {
 		return repository.getOne(id);//repository.findOne();
 	}
+	
+	public FlightCompany findByName(String name) {
+		return repository.findByName(name);//repository.findOne();
+	}
 
 	public List<FlightCompany> findAll() {
 		return repository.findAll();

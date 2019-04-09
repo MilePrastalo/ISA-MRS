@@ -18,6 +18,7 @@ import com.tim9.PlanJourney.models.flight.Flight;
 import com.tim9.PlanJourney.models.flight.Seat;
 import com.tim9.PlanJourney.models.flight.Ticket;
 import com.tim9.PlanJourney.service.DestinationService;
+import com.tim9.PlanJourney.service.FlightCompanyService;
 import com.tim9.PlanJourney.service.FlightService;
 
 @RestController
@@ -27,35 +28,11 @@ public class FlifgtController {
 	FlightService flightService;
 	@Autowired
 	DestinationService destinationService;
+	@Autowired
+	FlightCompanyService FCservice;
 	
 	
-	@RequestMapping(
-			value = "/api/getDestinations",
-			method = RequestMethod.GET,
-			produces = MediaType.APPLICATION_JSON_VALUE)
-	@CrossOrigin()
-	public @ResponseBody ArrayList<String> getDestinations() throws Exception {
-		
-		//adding to datebase because there is no destinations yet
-		
-		
-		ArrayList<String> destinationNames = new ArrayList<>();
-		ArrayList<Destination> destinations_ = new ArrayList<>();
-		destinations_ = (ArrayList<Destination>) destinationService.findAll();
-		if (destinations_.size() == 0) {
-			System.out.println("\tUSAO");
-			Destination dest1 = new Destination("Belgrade", "opis","coords");
-			destinationService.save(dest1);
-			Destination dest2 = new Destination("Moscow", "opis","coords");
-			destinationService.save(dest2);
-			destinations_ = (ArrayList<Destination>) destinationService.findAll();
-		}
-		
-		for (Destination dest : destinations_) {
-			destinationNames.add(dest.getName());
-		}
-		return destinationNames;
-	}
+	
 	
 	@RequestMapping(
 			value = "/api/addFlight",
@@ -96,6 +73,27 @@ public class FlifgtController {
 		
 		flightService.save(newFlight);
 		return newFlight;
+	}
+	
+	@RequestMapping(
+			value = "/api/flightSearch",
+			method = RequestMethod.POST,
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	public @ResponseBody ArrayList<Flight>  searchVehicles(@RequestBody FlightBean search) throws Exception {
+		ArrayList<Flight> flights = new ArrayList<>();
+		flights = (ArrayList<Flight>)flightService.findAll();
+		ArrayList<Flight> foundFlights = new ArrayList<>();
+		for (Flight f : flights) {	
+			if( (f.getStartDestination().getName().equals(search.getStartDestination()) ||search.getStartDestination().equals("")) &&
+				(f.getEndDestination().getName().equals(search.getEndDestination()) ||search.getEndDestination().equals(""))) 
+			{
+				foundFlights.add(f);
+			}
+		}
+		
+		return foundFlights;
 	}
 
 }

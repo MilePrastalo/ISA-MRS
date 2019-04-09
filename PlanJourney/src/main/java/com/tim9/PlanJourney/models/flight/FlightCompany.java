@@ -37,12 +37,26 @@ public class FlightCompany extends Company {
 		super();
 	}
 	
-	public FlightCompany(Long id, String name, String adress, String description,double rating) {
-		super(id,name,adress, description, rating);
+	public FlightCompany( String name, String address, String description,double rating) {
+		this.setName(name);
+		this.setAddress(address);
+		this.setDescription(description);
+		this.setRating(rating);
 	}
-
+	
 	
 
+	public FlightCompany( String name, String address, String description,double rating, Set<FlightAdmin> flightAdmins, Set<Destination> destinations, Set<Flight> flights,
+			Set<Ticket> tickets) {
+		this.setName(name);
+		this.setAddress(address);
+		this.setDescription(description);
+		this.setRating(rating);
+		this.flightAdmins = flightAdmins;
+		this.destinations = destinations;
+		this.flights = flights;
+		this.tickets = tickets;
+	}
 
 	public Set<FlightAdmin> getFlightAdmins() {
 		return flightAdmins;
