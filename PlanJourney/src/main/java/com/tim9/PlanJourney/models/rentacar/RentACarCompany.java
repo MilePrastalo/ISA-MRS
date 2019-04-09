@@ -40,8 +40,8 @@ public class RentACarCompany extends Company {
 		this.reservations = reservations;*/
 	}
 	
-	public RentACarCompany(String name, String address, String description) {
-		super(0l, name, address, description);
+	public RentACarCompany(String name, String address, String description,double rating) {
+		super(0l, name, address, description, rating);
 		offices = new HashSet<>();
 	}
 	public Set<RentACarAdmin> getAdmins() {

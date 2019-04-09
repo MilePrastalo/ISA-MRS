@@ -26,8 +26,8 @@ public class Hotel extends Company {
 		super();
 	}
 
-	public Hotel(Long id, String name, String adress, String description) {
-		super(id, name, adress, description);
+	public Hotel(Long id, String name, String adress, String description,double rating) {
+		super(id, name, adress, description,rating);
 	}
 
 	public Set<HotelAdmin> getAdmins() {

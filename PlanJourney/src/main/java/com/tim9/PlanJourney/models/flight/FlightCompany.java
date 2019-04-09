@@ -37,8 +37,8 @@ public class FlightCompany extends Company {
 		super();
 	}
 	
-	public FlightCompany(Long id, String name, String adress, String description) {
-		super(id,name,adress, description);
+	public FlightCompany(Long id, String name, String adress, String description,double rating) {
+		super(id,name,adress, description, rating);
 	}
 
 	
