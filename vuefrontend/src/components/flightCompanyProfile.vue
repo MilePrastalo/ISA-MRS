@@ -1,40 +1,68 @@
 <template>
    <div id = "flightCompanyProfile">
-            <br>
-            <h1>Flight Company Profile: </h1>
-            <br>
-            <table>
-                <tr>
-                    <td> Name: </td>
-                    <td>  <input type="text" name="name" v-model="name" > </td>
-                </tr>
-                <tr>
-                    <td> Address: </td>
-                    <td>  <input type="text" name="address" v-model="address" > </td>
-                </tr>
-                <tr>
-                    <td> Description: </td>
-                    <td> <textarea  rows="5" cols="22" name="description"  v-model="description" style="overflow:scroll;"></textarea> </td>        
-                </tr>
-                <tr>
-                    <td>  </td>
-                    <td><button v-on:click="updateFlightCompanyProfile()">Edit</button> </td>      
-                </tr>
-            </table>      
+
+            <h1>Flight Company Profile</h1>
+            <div id = "tabs">
+                <button v-on:click="selectTab(1)">Information</button>
+                <button v-on:click="selectTab(2)">Destinations</button>
+                <button v-on:click="selectTab(3)">Flights</button>
+                <button v-on:click="selectTab(4)">New Flight</button>
+            </div>
+            
+            <div v-if="currentTab == 1" id = "editProfile">
+                <br>
+                <br>
+                <table>
+                    <tr>
+                        <td> Name: </td>
+                        <td>  <input type="text" name="name" v-model="name" > </td>
+                    </tr>
+                    <tr>
+                        <td> Address: </td>
+                        <td>  <input type="text" name="address" v-model="address" > </td>
+                    </tr>
+                    <tr>
+                        <td> Description: </td>
+                        <td> <textarea  rows="5" cols="22" name="description"  v-model="description" style="overflow:scroll;"></textarea> </td>        
+                    </tr>
+                    <tr>
+                        <td>  </td>
+                        <td><button v-on:click="updateFlightCompanyProfile()">Edit</button> </td>      
+                    </tr>
+                </table>
+            </div>
+
+            <div  v-if="currentTab == 2" id = "destinations"> 
+                <destinations></destinations>
+            </div> 
+
+            <div  v-if="currentTab == 3" id = "flights">
+                <all-flights></all-flights>
+            </div>
+
+            <div  v-if="currentTab == 4" id = "newFlight">
+                <new-flight></new-flight>
+            </div>
         </div>
 </template>
 
 <script>
-
+import NewFlight from  './newFlight.vue'
+import Destinations from './destinations.vue'
+import AllFlights from './allFlights.vue'
 export default {
   name: 'flightCompanyProfile',
   components: {
+      newFlight: NewFlight,
+      destinations: Destinations,
+      allFlights: AllFlights
   },
   data: function () {
   return {
     name: "",
     address: "",
-    description: ""
+    description: "",
+    currentTab: 1,
   }
 },
 mounted(){
@@ -43,9 +71,12 @@ mounted(){
             this.name = response.data.name
             this.address = response.data.address
             this.description = response.data.description
-          });   
+          });
     },
     methods:{
+        selectTab: function(tabId){
+            this.currentTab = tabId;
+        },
         updateFlightCompanyProfile: function(){
              axios.post("http://localhost:8080/api/updateFlightCompanyProfile",{name:this.name, address: this.address, description: this.description})
             .then(response => {
@@ -54,7 +85,7 @@ mounted(){
                 this.description = response.data.description
             });
             alert("Successfuly updated!")
-        }     
+        }      
     }
 }
 
