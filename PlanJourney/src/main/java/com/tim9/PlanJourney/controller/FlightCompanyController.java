@@ -24,7 +24,7 @@ public class FlightCompanyController {
 	public @ResponseBody FlightCompany getFlightCompanyProfile() throws Exception {		
 		//prvo bi trebalo dobaviti sa sesije ulogovanog korisnika i uzeti njegovu aviokompaniju
 		if(fc == null) {
-			fc = new FlightCompany(1l, "FlightCompany","address","shdhasdhbsajknclklasnckldasnckakcnknckdnckdk");
+			fc = new FlightCompany(1l, "FlightCompany","address","shdhasdhbsajknclklasnckldasnckakcnknckdnckdk",1);
 		}
 		
 		return fc;

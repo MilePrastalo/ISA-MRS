@@ -28,19 +28,20 @@ public abstract class Company {
 	private String description;
 	
 	
-	@Column(name="rating")
+	@Column(name="rating", unique=false, nullable=false)
 	private double rating;
 	
 	public Company() {
 		super();
 	}
 	
-	public Company(Long id, String name, String address, String description) {
+	public Company(Long id, String name, String address, String description, double rating) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.address = address;
 		this.description = description;
+		this.rating = rating;
 	}
 
 	public Long getId() {

@@ -48,6 +48,36 @@ export default new Router({
       path: '/searchRentACarCompany',
       name: 'searchRentACarCompany',
       component: () => import('./components/searchRentACarCompany.vue')
+    },
+    {
+      path: '/hotelProfile',
+      name: 'hotelProfile',
+      component: () => import('./components/hotelProfile.vue')
+    },
+    {
+      path: '/hotelAdminProfile',
+      name: 'hotelAdminProfile',
+      component: () => import('./components/hotelAdminProfile.vue')
+    },
+    {
+      path: '/unregisteredUserFrontPage',
+      name: 'unregisteredUserFrontPage',
+      component: () => import('./components/unregisteredUserFrontPage.vue')
+    },
+    {
+      path: '/loginPage',
+      name: 'loginPage',
+      component: () => import('./components/loginPage.vue')
+    },
+    {
+      path: '/registerPage',
+      name: 'registerPage',
+      component: () => import('./components/registerPage.vue')
+    },
+    {
+      path: '/addHotel',
+      name: 'addHotel',
+      component: () => import('./components/addHotel.vue')
     }
   ]
 })

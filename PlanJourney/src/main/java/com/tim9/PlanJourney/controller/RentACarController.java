@@ -174,15 +174,15 @@ public class RentACarController {
 		b6.setName("si office");
 		b6.setDestination(d3);
 		
-		RentACarCompany rc1 = new RentACarCompany("First Company", "adr", "Cool");
+		RentACarCompany rc1 = new RentACarCompany("First Company", "adr", "Cool",1);
 		rc1.getOffices().add(b1);
 		rc1.getOffices().add(b2);
 		rc1.setRating(4);
-		RentACarCompany rc2 = new RentACarCompany("Second Company", "adr", "Cool");
+		RentACarCompany rc2 = new RentACarCompany("Second Company", "adr", "Cool",2);
 		rc2.getOffices().add(b3);
 		rc2.getOffices().add(b4);
 		rc1.setRating(4.5);
-		RentACarCompany rc3 = new RentACarCompany("Third Company", "adr", "Cool");
+		RentACarCompany rc3 = new RentACarCompany("Third Company", "adr", "Cool",3);
 		rc3.getOffices().add(b5);
 		rc3.getOffices().add(b6);
 		rc3.setRating(5);

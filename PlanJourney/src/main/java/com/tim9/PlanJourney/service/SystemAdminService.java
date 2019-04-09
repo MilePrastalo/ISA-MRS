@@ -1,41 +1,35 @@
 package com.tim9.PlanJourney.service;
 
-import java.util.Collection;
+import java.util.List;
 
-import com.tim9.PlanJourney.hotel.Hotel;
-import com.tim9.PlanJourney.hotel.HotelAdmin;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-public interface SystemAdminService {
+import com.tim9.PlanJourney.models.SystemAdmin;
+import com.tim9.PlanJourney.repository.SystemAdminRepository;
 
-	// SystemAdmin poseduje CRUD metode za kompanije i admine tih kompanija.
+public class SystemAdminService {
+	@Autowired
+	private SystemAdminRepository repository;
 
-	// CRUD metode za system admine.
-//	Collection<SystemAdmin> getAllSystemAdmins();
-//	SystemAdmin getSystemAdmin(String username);
-//	boolean addSystemAdmin(SystemAdmin systemAdmin);
-//	boolean updateSystemAdmin(SystemAdmin systemAdmin);
-//	boolean removeSystemAdmin(String username);
+	public SystemAdmin findOne(Long id) {
+		return repository.getOne(id);// repository.findOne();
+	}
 
-	// CRUD metode za Hotel klasu.
-	Collection<Hotel> getAllHotels();
+	public List<SystemAdmin> findAll() {
+		return repository.findAll();
+	}
 
-	Hotel getHotel(String name);
+	public Page<SystemAdmin> findAll(Pageable page) {
+		return repository.findAll(page);
+	}
 
-	boolean addHotel(Hotel hotel);
+	public SystemAdmin save(SystemAdmin systemAdmin) {
+		return repository.save(systemAdmin);
+	}
 
-	boolean updateHotel(Hotel hotel);
-
-	boolean removeHotel(String name);
-
-	// CRUD metode za HotelAdmin klasu.
-	Collection<HotelAdmin> getAllHotelAdmins();
-
-	HotelAdmin getHotelAdmin(String username);
-
-	boolean addHotelAdmin(HotelAdmin hotelAdmin);
-
-	boolean updateHotelAdmin(HotelAdmin hotelAdmin);
-
-	boolean removeHotelAdmin(String username);
-
+	public void remove(Long id) {
+		repository.deleteById(id);
+	}
 }
