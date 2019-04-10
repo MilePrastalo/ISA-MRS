@@ -1,14 +1,47 @@
 package com.tim9.PlanJourney.models;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.persistence.Entity;
+
+import org.springframework.security.core.GrantedAuthority;
 
 import com.tim9.PlanJourney.hotel.HotelAdmin;
 import com.tim9.PlanJourney.models.flight.FlightAdmin;
 import com.tim9.PlanJourney.models.rentacar.RentACarAdmin;
 @Entity
 public class SystemAdmin extends User {
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
+	}
 	/*private ArrayList<HotelAdmin> hotelAdmins;
 	private ArrayList<FlightAdmin> flightAdmins;
 	private ArrayList<RentACarAdmin> rentACarAdmins;

@@ -2,6 +2,8 @@ package com.tim9.PlanJourney.models;
 
 import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,10 +12,16 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
+import org.springframework.security.core.userdetails.UserDetails;
+
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class User {
+public abstract class User implements UserDetails{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4644559044905144046L;
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -31,6 +39,9 @@ public abstract class User {
 
 	@Column(name = "email", unique = false, nullable = false)
 	private String email;
+	
+	@Column(name = "last_password_reset_date")
+    private Timestamp lastPasswordResetDate;
 
 	public User() {
 	}
@@ -92,5 +103,13 @@ public abstract class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public Timestamp getLastPasswordResetDate() {
+        return lastPasswordResetDate;
+    }
+
+    public void setLastPasswordResetDate(Timestamp lastPasswordResetDate) {
+        this.lastPasswordResetDate = lastPasswordResetDate;
+    }
+
 
 }
