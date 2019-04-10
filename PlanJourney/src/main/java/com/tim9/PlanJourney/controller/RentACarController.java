@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,53 +30,45 @@ import com.tim9.PlanJourney.service.VehicleService;
 @RestController
 
 public class RentACarController {
-	
-	
 	private static RentACarAdmin admin;
-	
+
 	@Autowired
 	private VehicleService vehicleService;
-	
+
 	@Autowired
 	private RentACarAdminService adminService;
-	
+
 	@Autowired
 	private RentACarCompanyService companyService;
-	
-	
-	@RequestMapping(
-			value = "/api/vehicleSearch",
-			method = RequestMethod.POST,
-			consumes = MediaType.APPLICATION_JSON_VALUE,
-			produces = MediaType.APPLICATION_JSON_VALUE)
+
+	@RequestMapping(value = "/api/vehicleSearch", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	//Recieves parameters for search and returns list of found vehicles
-	public @ResponseBody ArrayList<VehicleSearchReturnBean>  searchVehicles(@RequestBody VehicleSearchBean search) throws Exception {
+	// Recieves parameters for search and returns list of found vehicles
+	public @ResponseBody ArrayList<VehicleSearchReturnBean> searchVehicles(@RequestBody VehicleSearchBean search)
+			throws Exception {
 		ArrayList<Vehicle> vehicles = new ArrayList<>();
-		vehicles = (ArrayList<Vehicle>)vehicleService.findAll();
+		vehicles = (ArrayList<Vehicle>) vehicleService.findAll();
 		ArrayList<VehicleSearchReturnBean> foundVehicles = new ArrayList<>();
 		System.out.println("Poziv");
-		//Needs optimisation
-		for (Vehicle vehicle : vehicles) {	
-			if( (vehicle.getMaker().equals(search.getProducer()) ||search.getProducer().equals("")) &&
-					(vehicle.getPrice() > search.getPriceFrom() ||  search.getPriceFrom() == 0) &&
-					(vehicle.getPrice() < search.getPriceTo() || search.getPriceTo()==0  )&&
-					(vehicle.getYear() > search.getNewer() ||  search.getNewer()==0 )&&
-					(vehicle.getYear() < search.getOlder() ||  search.getOlder() == 0) && 
-					(vehicle.getType().equals(search.getType()) ||search.getType().equals("")))		{
-				foundVehicles.add(new VehicleSearchReturnBean(vehicle.getName(), vehicle.getMaker(), vehicle.getType(), vehicle.getYear(), vehicle.getPrice()));
+		// Needs optimisation
+		for (Vehicle vehicle : vehicles) {
+			if ((vehicle.getMaker().equals(search.getProducer()) || search.getProducer().equals(""))
+					&& (vehicle.getPrice() > search.getPriceFrom() || search.getPriceFrom() == 0)
+					&& (vehicle.getPrice() < search.getPriceTo() || search.getPriceTo() == 0)
+					&& (vehicle.getYear() > search.getNewer() || search.getNewer() == 0)
+					&& (vehicle.getYear() < search.getOlder() || search.getOlder() == 0)
+					&& (vehicle.getType().equals(search.getType()) || search.getType().equals(""))) {
+				foundVehicles.add(new VehicleSearchReturnBean(vehicle.getName(), vehicle.getMaker(), vehicle.getType(),
+						vehicle.getYear(), vehicle.getPrice()));
 			}
 		}
 		return foundVehicles;
 	}
-	
-	@RequestMapping(
-			value = "/api/getProducers",
-			method = RequestMethod.GET,
-			produces = MediaType.APPLICATION_JSON_VALUE)
+
+	@RequestMapping(value = "/api/getProducers", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	//Returns list of producers/makers
-	//Probably will create table in database in the future - priority low
+	// Returns list of producers/makers
+	// Probably will create table in database in the future - priority low
 	public @ResponseBody ArrayList<String> getProducers() throws Exception {
 		ArrayList<String> producers = new ArrayList<>();
 		producers.add("Tesla");
@@ -86,14 +79,11 @@ public class RentACarController {
 		producers.add("Fiat");
 		return producers;
 	}
-	
-	@RequestMapping(
-			value = "/api/getTypes",
-			method = RequestMethod.GET,
-			produces = MediaType.APPLICATION_JSON_VALUE)
+
+	@RequestMapping(value = "/api/getTypes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	//Returns list of types of vehicles
-	//Probably will create table in database in the future - priority low
+	// Returns list of types of vehicles
+	// Probably will create table in database in the future - priority low
 	public @ResponseBody ArrayList<String> getTypes() throws Exception {
 		ArrayList<String> types = new ArrayList<>();
 		types.add("Sedan");
@@ -104,33 +94,28 @@ public class RentACarController {
 		types.add("Coupe");
 		return types;
 	}
-	
-	@RequestMapping(
-			value = "/api/getRentACarCompany",
-			method = RequestMethod.GET,
-			produces = MediaType.APPLICATION_JSON_VALUE)
+
+	@RequestMapping(value = "/api/getRentACarCompany", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	public @ResponseBody RentACarProfileBean getRentACarCompany() throws Exception {
 		if (admin == null) {
 			admin = adminService.findOne(1l);
 		}
 		RentACarCompany rentACarService = admin.getService();
-		if(rentACarService == null) {
+		if (rentACarService == null) {
 			rentACarService = new RentACarCompany();
 			rentACarService.setName("Super Car");
 			rentACarService.setAddress("Belgrade Nemanjina 11");
 			rentACarService.setDescription("Best rent-a-car service ever");
 		}
-		return new RentACarProfileBean(rentACarService.getName(), rentACarService.getAddress(), rentACarService.getDescription());
-	
+		return new RentACarProfileBean(rentACarService.getName(), rentACarService.getAddress(),
+				rentACarService.getDescription());
+
 	}
-	
-	@RequestMapping(
-			value = "/api/updateRentACarProfile",
-			method = RequestMethod.POST,
-			consumes = MediaType.APPLICATION_JSON_VALUE)
+
+	@RequestMapping(value = "/api/updateRentACarProfile", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	public void  updateRentACarProfile(@RequestBody RentACarProfileBean profile) throws Exception {
+	public void updateRentACarProfile(@RequestBody RentACarProfileBean profile) throws Exception {
 		if (admin == null) {
 			admin = adminService.findOne(1l);
 		}
@@ -140,16 +125,13 @@ public class RentACarController {
 		rentACarService.setAddress(profile.getAddress());
 		companyService.save(rentACarService);
 	}
-	
-	@RequestMapping(
-			value = "/api/getRentACarCompanies",
-			method = RequestMethod.POST,
-			produces = MediaType.APPLICATION_JSON_VALUE,
-			consumes = MediaType.APPLICATION_JSON_VALUE)
+
+	@RequestMapping(value = "/api/getRentACarCompanies", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	//Returns list of types of vehicles
-	//Probably will create table in database in the future - priority low
-	public @ResponseBody ArrayList<RentACarCompanySearchBean> getCompanies(@RequestBody RentACarCompanySearchBean search) throws Exception {
+	// Returns list of types of vehicles
+	// Probably will create table in database in the future - priority low
+	public @ResponseBody ArrayList<RentACarCompanySearchBean> getCompanies(
+			@RequestBody RentACarCompanySearchBean search) throws Exception {
 		ArrayList<RentACarCompanySearchBean> companies = new ArrayList<>();
 		Destination d1 = new Destination("Novi Sad", "Super grad", "021");
 		Destination d2 = new Destination("Beograd", "ok", "1111");
@@ -173,16 +155,16 @@ public class RentACarController {
 		BranchOffice b6 = new BranchOffice();
 		b6.setName("si office");
 		b6.setDestination(d3);
-		
-		RentACarCompany rc1 = new RentACarCompany("First Company", "adr", "Cool",1);
+
+		RentACarCompany rc1 = new RentACarCompany("First Company", "adr", "Cool", 1);
 		rc1.getOffices().add(b1);
 		rc1.getOffices().add(b2);
 		rc1.setRating(4);
-		RentACarCompany rc2 = new RentACarCompany("Second Company", "adr", "Cool",2);
+		RentACarCompany rc2 = new RentACarCompany("Second Company", "adr", "Cool", 2);
 		rc2.getOffices().add(b3);
 		rc2.getOffices().add(b4);
 		rc1.setRating(4.5);
-		RentACarCompany rc3 = new RentACarCompany("Third Company", "adr", "Cool",3);
+		RentACarCompany rc3 = new RentACarCompany("Third Company", "adr", "Cool", 3);
 		rc3.getOffices().add(b5);
 		rc3.getOffices().add(b6);
 		rc3.setRating(5);
@@ -193,22 +175,20 @@ public class RentACarController {
 		ArrayList<RentACarCompany> foundCOmpanies = new ArrayList<>();
 		for (RentACarCompany rentACarCompany : companiesAll) {
 			boolean containsLocation = false;
-			if( (rentACarCompany.getName().equals(search.getName()) ||search.getName().equals("")) ) {
+			if ((rentACarCompany.getName().equals(search.getName()) || search.getName().equals(""))) {
 				if (!search.getLocation().equals("")) {
 					for (BranchOffice des : rentACarCompany.getOffices()) {
-						if(des.getDestination().getName().equals(search.getLocation())) {
+						if (des.getDestination().getName().equals(search.getLocation())) {
 							foundCOmpanies.add(rentACarCompany);
 							break;
 						}
 					}
-				}
-				else
-				{
+				} else {
 					foundCOmpanies.add(rentACarCompany);
 				}
-			} 
+			}
 		}
-		
+
 		for (RentACarCompany rentACarCompany : foundCOmpanies) {
 			ArrayList<String> locs = new ArrayList<>();
 			for (BranchOffice office : rentACarCompany.getOffices()) {
@@ -217,5 +197,32 @@ public class RentACarController {
 			companies.add(new RentACarCompanySearchBean(rentACarCompany.getName(), locs, rentACarCompany.getRating()));
 		}
 		return companies;
+	}
+
+	@RequestMapping(value = "/api/addRentACarCompany", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	public @ResponseBody ResponseEntity<RentACarCompany> addRentACarCompany(
+			@RequestBody RentACarCompany rentACarCompany) {
+		if (companyService.findByAddress(rentACarCompany.getAddress()) == null
+				&& companyService.findByName(rentACarCompany.getName()) == null) {
+			RentACarCompany r = (RentACarCompany) companyService.save(rentACarCompany);
+			return new ResponseEntity<RentACarCompany>(r, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<RentACarCompany>(rentACarCompany, HttpStatus.CONFLICT);
+		}
+	}
+
+	@RequestMapping(value = "/api/removeRentACarCompany/{name}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	public ResponseEntity<RentACarCompany> removeRentACarCompany(@PathVariable("name") String name) {
+
+		RentACarCompany rentACarCompany = companyService.findByName(name);
+
+		if (rentACarCompany == null) {
+			return new ResponseEntity<RentACarCompany>(rentACarCompany, HttpStatus.CONFLICT);
+		}
+
+		companyService.remove(rentACarCompany.getId());
+		return new ResponseEntity<RentACarCompany>(rentACarCompany, HttpStatus.OK);
 	}
 }

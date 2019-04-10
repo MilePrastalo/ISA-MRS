@@ -6,4 +6,7 @@ import com.tim9.PlanJourney.models.flight.FlightCompany;
 
 public interface FlightCompanyRepository extends JpaRepository<FlightCompany, Long> {
 
+	FlightCompany findByAddress(String address);
+
+	FlightCompany findByName(String name);
 }

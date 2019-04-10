@@ -6,4 +6,6 @@ import com.tim9.PlanJourney.models.rentacar.RentACarAdmin;
 
 public interface RentACarAdminRepository extends JpaRepository<RentACarAdmin, Long> {
 
+	RentACarAdmin findByUsername(String username);
+
 }

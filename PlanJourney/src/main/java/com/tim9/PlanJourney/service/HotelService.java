@@ -38,4 +38,12 @@ public class HotelService {
 	public void remove(Long id) {
 		hotelRepository.deleteById(id);
 	}
+
+	public Hotel findByAddress(String address) {
+		return hotelRepository.findByAddress(address);
+	}
+
+	public Hotel findByName(String name) {
+		return hotelRepository.findByName(name);
+	}
 }

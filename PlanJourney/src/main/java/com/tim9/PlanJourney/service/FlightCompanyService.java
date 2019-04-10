@@ -12,18 +12,18 @@ import com.tim9.PlanJourney.repository.FlightCompanyRepository;
 
 @Service
 public class FlightCompanyService {
-	
+
 	@Autowired
 	FlightCompanyRepository repository;
-	
+
 	public FlightCompany findOne(Long id) {
-		return repository.getOne(id);//repository.findOne();
+		return repository.getOne(id);// repository.findOne();
 	}
 
 	public List<FlightCompany> findAll() {
 		return repository.findAll();
 	}
-	
+
 	public Page<FlightCompany> findAll(Pageable page) {
 		return repository.findAll(page);
 	}
@@ -34,6 +34,14 @@ public class FlightCompanyService {
 
 	public void remove(Long id) {
 		repository.deleteById(id);
+	}
+
+	public FlightCompany findByAddress(String address) {
+		return repository.findByAddress(address);
+	}
+
+	public FlightCompany findByName(String name) {
+		return repository.findByName(name);
 	}
 
 }
