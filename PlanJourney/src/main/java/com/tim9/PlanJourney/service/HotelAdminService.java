@@ -35,4 +35,8 @@ public class HotelAdminService {
 	public void remove(Long id) {
 		hotelAdminRepository.deleteById(id);
 	}
+	
+	public HotelAdmin findByUsername(String username) {
+		return hotelAdminRepository.findByUsername(username);
+	}
 }

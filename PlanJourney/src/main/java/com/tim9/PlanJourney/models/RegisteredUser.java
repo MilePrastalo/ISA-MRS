@@ -28,7 +28,7 @@ public class RegisteredUser extends User {
 	}
 	
 	public RegisteredUser( String username, String password, String firstName, String lastName, String email) {
-		super(username,password,firstName,lastName,email);
+		super(0l,username,password,firstName,lastName,email);
 	}
 
 	public Set<VehicleReservation> getVehicleReservations() {

@@ -5,12 +5,14 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tim9.PlanJourney.models.User;
 
 @Entity
 public class FlightAdmin extends User {
 	
 	@ManyToOne()
+	@JsonIgnoreProperties("flightAdmins")
 	FlightCompany flightCompany;
 	
 	
@@ -19,11 +21,11 @@ public class FlightAdmin extends User {
 	
 	
 	public FlightAdmin( String username, String password, String firstName, String lastName, String email) {
-		super(username,password,firstName,lastName,email);
+		super(0l,username,password,firstName,lastName,email);
 	}
 	
 	public FlightAdmin( String username, String password, String firstName, String lastName, String email, FlightCompany fc) {
-		super(username,password,firstName,lastName,email);
+		super(0l,username,password,firstName,lastName,email);
 		this.flightCompany = fc;
 	}
 

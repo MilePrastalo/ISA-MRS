@@ -8,4 +8,7 @@ public interface FlightCompanyRepository extends JpaRepository<FlightCompany, Lo
 	
 	public FlightCompany findByName(String name);
 
+	FlightCompany findByAddress(String address);
+
+	FlightCompany findByName(String name);
 }

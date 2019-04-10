@@ -6,4 +6,7 @@ import com.tim9.PlanJourney.models.rentacar.RentACarCompany;
 
 public interface RentACarCompanyRepository extends JpaRepository<RentACarCompany, Long> {
 
+	RentACarCompany findByAddress(String address);
+
+	RentACarCompany findByName(String name);
 }

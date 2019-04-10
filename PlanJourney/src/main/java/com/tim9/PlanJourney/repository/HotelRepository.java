@@ -6,4 +6,7 @@ import com.tim9.PlanJourney.hotel.Hotel;
 
 public interface HotelRepository extends JpaRepository<Hotel, Long> {
 
+	Hotel findByAddress(String address);
+	
+	Hotel findByName(String name);
 }
