@@ -1,18 +1,6 @@
 package com.tim9.PlanJourney.beans;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-
-import com.tim9.PlanJourney.models.flight.Seat;
-import com.tim9.PlanJourney.models.flight.Ticket;
 
 public class FlightBean {
 	
@@ -26,14 +14,22 @@ public class FlightBean {
 	private double businessPrice;
 	private double economicPrice;
 	private double firstClassPrice;
+	private double minBusiness;
+	private double minEconomic;
+	private double minFirstClass;
+	private double maxBusiness;
+	private double maxEconomic;
+	private double maxFirstClass;
+	private String flightCompany;
 	
 	public FlightBean() {
 		// TODO Auto-generated constructor stub
 	}
 
-	
 	public FlightBean(String startDestination, String endDestination, Date startDate, Date endDate, int flightDuration,
-			int flightLength, double businessPrice, double economicPrice, double firstClassPrice) {
+			int flightLength, double businessPrice, double economicPrice, double firstClassPrice, double minBusiness,
+			double minEconomic, double minFirstClass, double maxBusiness, double maxEconomic, double maxFirstClass,
+			String flightCompany) {
 		super();
 		this.startDestination = startDestination;
 		this.endDestination = endDestination;
@@ -44,6 +40,29 @@ public class FlightBean {
 		this.businessPrice = businessPrice;
 		this.economicPrice = economicPrice;
 		this.firstClassPrice = firstClassPrice;
+		this.minBusiness = minBusiness;
+		this.minEconomic = minEconomic;
+		this.minFirstClass = minFirstClass;
+		this.maxBusiness = maxBusiness;
+		this.maxEconomic = maxEconomic;
+		this.maxFirstClass = maxFirstClass;
+		this.flightCompany = flightCompany;
+	}
+
+	public String getStartDestination() {
+		return startDestination;
+	}
+
+	public void setStartDestination(String startDestination) {
+		this.startDestination = startDestination;
+	}
+
+	public String getEndDestination() {
+		return endDestination;
+	}
+
+	public void setEndDestination(String endDestination) {
+		this.endDestination = endDestination;
 	}
 
 	public Date getStartDate() {
@@ -102,31 +121,60 @@ public class FlightBean {
 		this.firstClassPrice = firstClassPrice;
 	}
 
-
-
-	public String getStartDestination() {
-		return startDestination;
+	public double getMinBusiness() {
+		return minBusiness;
 	}
 
-
-
-	public void setStartDestination(String startDestination) {
-		this.startDestination = startDestination;
+	public void setMinBusiness(double minBusiness) {
+		this.minBusiness = minBusiness;
 	}
 
-
-
-	public String getEndDestination() {
-		return endDestination;
+	public double getMinEconomic() {
+		return minEconomic;
 	}
 
-
-
-	public void setEndDestination(String endDestination) {
-		this.endDestination = endDestination;
+	public void setMinEconomic(double minEconomic) {
+		this.minEconomic = minEconomic;
 	}
-	
-	
-	
+
+	public double getMinFirstClass() {
+		return minFirstClass;
+	}
+
+	public void setMinFirstClass(double minFirstClass) {
+		this.minFirstClass = minFirstClass;
+	}
+
+	public double getMaxBusiness() {
+		return maxBusiness;
+	}
+
+	public void setMaxBusiness(double maxBusiness) {
+		this.maxBusiness = maxBusiness;
+	}
+
+	public double getMaxEconomic() {
+		return maxEconomic;
+	}
+
+	public void setMaxEconomic(double maxEconomic) {
+		this.maxEconomic = maxEconomic;
+	}
+
+	public double getMaxFirstClass() {
+		return maxFirstClass;
+	}
+
+	public void setMaxFirstClass(double maxFirstClass) {
+		this.maxFirstClass = maxFirstClass;
+	}
+
+	public String getFlightCompany() {
+		return flightCompany;
+	}
+
+	public void setFlightCompany(String flightCompany) {
+		this.flightCompany = flightCompany;
+	}
 
 }
