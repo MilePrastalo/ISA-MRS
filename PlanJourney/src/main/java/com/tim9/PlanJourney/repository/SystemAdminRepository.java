@@ -6,4 +6,5 @@ import com.tim9.PlanJourney.models.SystemAdmin;
 
 public interface SystemAdminRepository extends JpaRepository<SystemAdmin, Long> {
 
+	SystemAdmin findByUsername(String username);
 }

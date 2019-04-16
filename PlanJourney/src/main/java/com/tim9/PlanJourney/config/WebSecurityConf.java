@@ -69,6 +69,9 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
 				.authorizeRequests()
 				.antMatchers("/auth/**").permitAll()
 				.antMatchers("/h2-console/**").permitAll()
+				.antMatchers("/api/addHotelAdmin/**").permitAll()
+				.antMatchers("/api/getAllHotels/**").permitAll()
+				.antMatchers("/api/**").permitAll()
 				
 				// svaki zahtev mora biti autorizovan
 				.anyRequest().authenticated().and()

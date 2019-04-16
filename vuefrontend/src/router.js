@@ -65,11 +65,6 @@ export default new Router({
       component: () => import('./components/hotelAdminProfile.vue')
     },
     {
-      path: '/unregisteredUserFrontPage',
-      name: 'unregisteredUserFrontPage',
-      component: () => import('./components/unregisteredUserFrontPage.vue')
-    },
-    {
       path: '/loginPage',
       name: 'loginPage',
       component: () => import('./components/loginPage.vue')
