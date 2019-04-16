@@ -45,6 +45,34 @@
                     <td> Economic class price: </td>
                     <td> <input type="text" name="economicPrice" v-model="economicPrice" required > </td>        
                 </tr>
+                <br>
+                <tr>
+                    <td> Economic class capacity </td>       
+                </tr>
+                <tr>
+                    <td> Rows: </td> 
+                    <td> <input type="number"  v-model="economicCapacity_rows" required >  </td>
+                    <td> Columns: </td> 
+                    <td> <input type="number"  v-model="economicCapacity_columns" required >  </td>        
+                </tr>
+                <tr>
+                    <td> Buisiness class capacity </td>       
+                </tr>
+                <tr>
+                    <td> Rows: </td> 
+                     <td> <input type="number"  v-model="buisinesssCapacity_rows" required >  </td>
+                     <td> Columns: </td> 
+                     <td> <input type="number"  v-model="buisinesssCapacity_columns" required >  </td>       
+                </tr>
+                <tr>
+                    <td> First class capacity </td>       
+                </tr>
+                <tr>
+                    <td> Rows: </td>
+                    <td> <input type="number"  v-model="firstClassCapacity_rows" required >  </td> 
+                    <td> Columns: </td>
+                    <td> <input type="number"  v-model="firstClassCapacity_columns" required >  </td>       
+                </tr>
                 <tr>
                     <td>  </td>
                     <td><button v-on:click="addFlight()">Add</button> </td>      
@@ -70,7 +98,12 @@ export default {
      buisinesssPrice: "",
      firstClassPrice: "",
      economicPrice: "",
-
+     economicCapacity_rows: "",
+     economicCapacity_columns: "",
+     buisinesssCapacity_rows: "",
+     buisinesssCapacity_columns: "",
+     firstClassCapacity_rows: "",
+    firstClassCapacity_columns: "",
      destinations:[]
   }
 },
@@ -101,7 +134,15 @@ mounted(){
             if( this.flightDuration < 0 || this.flightLength < 0){
                 alert("Both, duration and length of flihts can not have negative value!");
             }
-            var newFlight = {startDestination: this.startDestination, endDestination: this.endDestination, startDate: this.startDate, endDate: this.endDate, flightDuration: this.flightDuration, flightLength: this.flightLength, businesssPrice: this.buisinesssPrice, economicPrice: this.economicPrice, firstClassPrice: this.firstClassPrice }
+            var economicCapacity = this.economicCapacity_rows + "|" + this.economicCapacity_columns;
+            var buisinesssCapacity = this.buisinesssCapacity_rows + "|" + this.buisinesssCapacity_columns;
+            var firstClassCapacity = this.firstClassCapacity_rows + "|" + this.firstClassCapacity_columns;
+            alert(this.startDestination);
+            var newFlight = {startDestination: this.startDestination.name, endDestination: this.endDestination.name,
+                startDate: this.startDate, endDate: this.endDate, 
+                flightDuration: this.flightDuration, flightLength: this.flightLength, 
+                businessPrice: this.buisinesssPrice, economicPrice: this.economicPrice, firstClassPrice: this.firstClassPrice,
+                economicCapacity: economicCapacity, buisinesssCapacity: buisinesssCapacity, firstClassCapacity: firstClassCapacity }
             axios.post("http://localhost:8080/api/addFlight", newFlight)
                 .then(response => {
                 if (response.data.startDestination == null){
@@ -109,7 +150,21 @@ mounted(){
                     return
                 }
                 alert("Successfuly added!");
-            });
+            }) .catch(function (error) {
+    if (error.response) {
+      // Request made and server responded
+      console.log(error.response.data);
+      console.log(error.response.status);
+      console.log(error.response.headers);
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.log(error.request);
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.log('Error', error.message);
+    }
+
+  });
         }     
     }
 }

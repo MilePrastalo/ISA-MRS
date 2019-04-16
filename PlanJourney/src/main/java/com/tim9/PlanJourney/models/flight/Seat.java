@@ -33,6 +33,16 @@ public class Seat {
 		// TODO Auto-generated constructor stub
 	}
 
+	
+	public Seat(boolean taken, int seatRow, int seatColumn, String travelClassa) {
+		super();
+		this.taken = taken;
+		SeatRow = seatRow;
+		SeatColumn = seatColumn;
+		this.travelClassa = travelClassa;
+	}
+
+
 	public Long getId() {
 		return id;
 	}
