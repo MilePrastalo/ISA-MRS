@@ -2,10 +2,10 @@
     <div id="unregisteredUserFrontPage">
         <table>
             <tr>
-                <td><a href="http://localhost:8081/loginPage">LogIn</a></td>
+                <td><a href="./loginPage">LogIn</a></td>
             </tr>
             <tr>
-                <td><a href="http://localhost:8081/registerPage">Register</a></td>
+                <td><a href="./registerPage">Register</a></td>
             </tr>
         </table>
     </div>

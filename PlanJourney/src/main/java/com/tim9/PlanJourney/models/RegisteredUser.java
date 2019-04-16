@@ -1,11 +1,14 @@
 package com.tim9.PlanJourney.models;
 
+import java.util.Collection;
 import java.util.HashSet;
 
 import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+
+import org.springframework.security.core.GrantedAuthority;
 
 import com.tim9.PlanJourney.models.flight.Flight;
 import com.tim9.PlanJourney.models.flight.Ticket;
@@ -45,6 +48,36 @@ public class RegisteredUser extends User {
 
 	public void setFlightReservations(Set<Ticket> flightReservations) {
 		this.flightReservations = flightReservations;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 	
 	

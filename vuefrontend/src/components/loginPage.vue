@@ -1,9 +1,17 @@
 <template>
     <div id="loginPage">
         <table>
+          <tr>
+            <td>Username</td>
+            <td><input type="text" id="username" v-model="username"></td>
+          </tr>
+          <tr>
+            <td>Password</td>
+            <td><input type="password" id="password" v-model="password"></td>
+          </tr>
             <tr>
-                <th>LogIn page mock-up!</th>
-                <td><a href="http://localhost:8081/unregisteredUserFrontPage">Back</a></td>
+              <td><button><a href="./unregisteredUserFrontPage">Back</a></button></td>
+              <td><button @click="login" type="submit">Log in</button></td>
             </tr>
         </table>
     </div>
@@ -12,7 +20,31 @@
 <script>
 
 export default {
-  name: 'loginPage'
+  name: 'loginPage',
+  data:function(){
+    return {
+      username:"",
+      password:""
+    }
+  },
+  methods:{
+    login:function(){
+      if(this.username != "" && this.password != ""){
+        axios.post("http://localhost:8080/auth/login",{username : this.username, password: this.password})
+                    .then(response => {
+                        if(response.status == 200){
+                          window.location="/index";
+                        }
+                        else{
+                          alert("Wrong username or password");
+                        }
+                    }); 
+      }else{
+        alert("All fields must be filled");
+      }
+     
+    }
+  }
 }
 
 </script>

@@ -10,8 +10,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home
+      name: 'unregisteredUserFrontPage',
+      component: () => import('./components/unregisteredUserFrontPage.vue')
     },
     {
       path: '/about',
@@ -83,6 +83,16 @@ export default new Router({
       path: '/addHotel',
       name: 'addHotel',
       component: () => import('./components/addHotel.vue')
+    },
+    {
+      path: '/addVehicle',
+      name: 'addbehicle',
+      component: () => import('./components/addvehicle.vue')
+    },
+    {
+      path: '/index',
+      name: 'registeredFrontPage',
+      component: () => import('./components/registeredFrontPage.vue')
     }
   ]
 })
