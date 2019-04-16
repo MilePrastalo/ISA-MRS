@@ -1,6 +1,10 @@
 package com.tim9.PlanJourney.controller;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
+
+import static org.mockito.Mockito.lenient;
+
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,18 +45,16 @@ public class FlifgtController {
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	public @ResponseBody Flight addFlight(@RequestBody FlightBean newFlightInfo) throws Exception {
-		
+
 		//security checks on backend side
 		Date endDate = newFlightInfo.getEndDate();
 		Date startDate = newFlightInfo.getStartDate();
 		
 		if (endDate.before(startDate)) {
-			System.out.println("\tend pre start");
 			return null;
 		}
 		Date today = new Date();
 		if (startDate.before(today) || endDate.before(today)) {
-			System.out.println("\tpre danasnjeg");
 			return null;
 		}
 		
@@ -67,13 +69,20 @@ public class FlifgtController {
 			return null;
 		}
 		
+		Set<Seat> seats = new HashSet<Seat>();
+		makeSeats(seats, newFlightInfo.getEconomicCapacity(), "economic");
+		makeSeats(seats, newFlightInfo.getBuisinesssCapacity(), "business");
+		makeSeats(seats, newFlightInfo.getFirstClassCapacity(), "first class");
+		
 		Flight newFlight = new Flight(startDate, endDate,newFlightInfo.getFlightDuration(), newFlightInfo.getFlightLength(),
-				startDestination, endDestination, new HashSet<Ticket>(), new HashSet<Seat>(), 
+				startDestination, endDestination, new HashSet<Ticket>(), seats, 
 				newFlightInfo.getBusinessPrice(), newFlightInfo.getEconomicPrice(), newFlightInfo.getFirstClassPrice());;
 		
 		flightService.save(newFlight);
 		return newFlight;
 	}
+	
+	
 	
 	@RequestMapping(
 			value = "/api/flightSearch",
@@ -119,6 +128,17 @@ public class FlifgtController {
 			System.out.println("\t" + f.getStartDestination().getName());
 		}
 		return foundFlights;
+	}
+	
+	private Set<Seat> makeSeats(Set<Seat> seats, String capacity, String flightClass){
+		int rows = Integer.parseInt(capacity.split("|")[0]);
+		int columns = Integer.parseInt(capacity.split("|")[2]);
+		for (int row = 1; row <= rows; row++ ) {
+			for (int col = 1; col <= columns; col++ ) {
+				seats.add(new Seat(false, row,col, flightClass));
+			}
+		}
+		return seats;
 	}
 
 }
