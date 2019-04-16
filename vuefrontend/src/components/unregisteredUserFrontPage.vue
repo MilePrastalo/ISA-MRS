@@ -8,13 +8,19 @@
                 <td><a href="./registerPage">Register</a></td>
             </tr>
         </table>
+    <SearchFlights />
     </div>
+    
 </template>
 
 <script>
+import SearchFlights from './searchFlights';
 
 export default {
-  name: 'unregisteredUserFrontPage'
+  name: 'unregisteredUserFrontPage',
+  components: {
+      SearchFlights
+  }
 }
 
 </script>
