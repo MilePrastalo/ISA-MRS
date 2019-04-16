@@ -36,7 +36,6 @@ public class Authority implements GrantedAuthority {
     public void setName(String name) {
         this.name = name;
     }
-
     @JsonIgnore
     public String getName() {
         return name;
