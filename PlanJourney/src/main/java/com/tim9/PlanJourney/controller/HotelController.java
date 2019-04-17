@@ -29,6 +29,18 @@ public class HotelController {
 
 		return hotel;
 	}
+	
+	@RequestMapping(value = "/api/getHotel/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	public ResponseEntity<Hotel> getHotel(@PathVariable("name") String name) {
+
+		Hotel hotel = service.findByName(name);
+
+		if (hotel == null) {
+			return new ResponseEntity<Hotel>(hotel, HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<Hotel>(hotel, HttpStatus.OK);
+	}
 
 	@RequestMapping(value = "/api/addHotel", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -54,5 +66,17 @@ public class HotelController {
 		service.remove(hotel.getId());
 		return new ResponseEntity<Hotel>(hotel, HttpStatus.OK);
 	}
-
+	
+	// Metod za izmenu hotela, dodavanje soba, rezervacija...
+	@RequestMapping(value = "/api/updateHotel", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	public @ResponseBody ResponseEntity<Hotel> updateHotel(@RequestBody Hotel hotel) {
+		Hotel existingHotel = service.findOne(hotel.getId());
+		if (existingHotel.getAddress().equals(hotel.getAddress()) && existingHotel.getName().equals(hotel.getName())) {
+			Hotel h = (Hotel) service.save(hotel);
+			return new ResponseEntity<Hotel>(h, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<Hotel>(hotel, HttpStatus.CONFLICT);
+		}
+	}
 }

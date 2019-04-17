@@ -88,6 +88,11 @@ export default new Router({
       path: '/index',
       name: 'registeredFrontPage',
       component: () => import('./components/registeredFrontPage.vue')
+    },
+    {
+      path: '/addHotelRooms',
+      name: 'addHotelRooms',
+      component: () => import('./components/addHotelRooms.vue')
     }
   ]
 })

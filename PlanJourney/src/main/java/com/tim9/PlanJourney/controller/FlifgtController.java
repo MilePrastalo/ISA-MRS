@@ -3,8 +3,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.mockito.Mockito.lenient;
-
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
