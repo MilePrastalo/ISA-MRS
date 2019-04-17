@@ -61,7 +61,11 @@ export default {
 },
 mounted(){
     var responseData;
-    axios.get("http://localhost:8080/api/getProducers")
+      var getJwtToken = function() {
+    return localStorage.getItem('jwtToken');
+  };
+    axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+    axios.get("http://localhost:8080/api/getProducers",)
         .then(response => {
             this.producers = response.data
           }); 

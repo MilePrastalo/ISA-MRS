@@ -5,6 +5,7 @@ import static javax.persistence.InheritanceType.TABLE_PER_CLASS;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -28,11 +29,12 @@ public abstract class User implements UserDetails{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4644559044905144046L;
+	private static final long serialVersionUID = -1177615221724552433L;
+
 	@Id
 	@GeneratedValue
 	private Long id;
-	@Column(name = "username", unique = true, nullable = false)
+	@Column(name = "username", unique = false, nullable = false)
 	private String username;
 
 	@Column(name = "password", unique = false, nullable = false)
@@ -59,9 +61,8 @@ public abstract class User implements UserDetails{
 	public User() {
 	}
 
-	public User(Long id, String username, String password, String firstName, String lastName, String email) {
+	public User(String username, String password, String firstName, String lastName, String email) {
 		super();
-		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.firstName = firstName;

@@ -31,6 +31,15 @@ public class BranchOffice {
 	public BranchOffice() {
 		super();
 	}
+	
+	public BranchOffice(Long id, String name, RentACarCompany company, Destination destination) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.company = company;
+		this.destination = destination;
+	}
+
 	public Long getId() {
 		return id;
 	}

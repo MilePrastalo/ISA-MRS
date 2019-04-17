@@ -33,7 +33,8 @@ export default {
         axios.post("http://localhost:8080/auth/login",{username : this.username, password: this.password})
                     .then(response => {
                         if(response.status == 200){
-                          window.location="/index";
+                          console.log(response.data.accessToken);
+                          localStorage.setItem('jwtToken',response.data.accessToken)
                         }
                         else{
                           alert("Wrong username or password");

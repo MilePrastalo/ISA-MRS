@@ -25,11 +25,11 @@ public class FlightAdmin extends User {
 	
 	
 	public FlightAdmin( String username, String password, String firstName, String lastName, String email) {
-		super(0l,username,password,firstName,lastName,email);
+		super(username,password,firstName,lastName,email);
 	}
 	
 	public FlightAdmin( String username, String password, String firstName, String lastName, String email, FlightCompany fc) {
-		super(0l,username,password,firstName,lastName,email);
+		super(username,password,firstName,lastName,email);
 		this.flightCompany = fc;
 	}
 

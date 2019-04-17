@@ -21,11 +21,11 @@ public class HotelAdmin extends User {
 	}
 
 	public HotelAdmin(String username, String password, String firstName, String lastName, String email) {
-		super(0l,username, password, firstName, lastName, email);
+		super(username, password, firstName, lastName, email);
 	}
 
 	public HotelAdmin(String username, String password, String firstName, String lastName, String email, Hotel h) {
-		super(0l,username, password, firstName, lastName, email);
+		super(username, password, firstName, lastName, email);
 		this.hotel = h;
 	}
 	

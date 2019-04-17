@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -62,14 +63,13 @@ public class AuthenticationController {
 
 		// Ubaci username + password u kontext
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-
 		// Kreiraj token
 		User user = (User) authentication.getPrincipal();
 		System.out.println(user.getFirstName());
 
 		String jwt = tokenUtils.generateToken(user.getUsername());
 		int expiresIn = tokenUtils.getExpiredIn();
-
+		response.setHeader("Authorization", "Bearer jwt_token");
 		// Vrati token kao odgovor na uspesno autentifikaciju
 		return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
 	}
