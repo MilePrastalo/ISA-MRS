@@ -93,6 +93,11 @@ export default new Router({
       path: '/addHotelRooms',
       name: 'addHotelRooms',
       component: () => import('./components/addHotelRooms.vue')
+    },
+    {
+      path: '/searchHotels',
+      name: 'searchHotels',
+      component: () => import('./components/searchHotels.vue')
     }
   ]
 })
