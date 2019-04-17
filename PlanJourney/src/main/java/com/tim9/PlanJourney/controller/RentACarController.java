@@ -139,6 +139,7 @@ public class RentACarController {
 	//Renturns profile of admins rent a car company
 	public @ResponseBody RentACarProfileBean getRentACarCompany() throws Exception {
 		
+		
 		RentACarAdmin admin = getAdmin();
 		if (admin == null) {
 			return null;
@@ -151,8 +152,9 @@ public class RentACarController {
 	}
 
 	@RequestMapping(value = "/api/updateRentACarProfile", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	@CrossOrigin()
-	@PreAuthorize("hasRole('RENT_ADMIN')")
+	@CrossOrigin()	
+	@PreAuthorize("hasAuthority('RENT_ADMIN')")
+
 	//Updates profile of rent a car company and saves in database
 	public void updateRentACarProfile(@RequestBody RentACarProfileBean profile) throws Exception {
 		RentACarAdmin admin = getAdmin();

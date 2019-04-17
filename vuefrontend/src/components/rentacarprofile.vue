@@ -35,6 +35,10 @@ export default {
   }
 },
 mounted(){
+  var getJwtToken = function() {
+    return localStorage.getItem('jwtToken');
+  };
+  axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
     axios.get("http://localhost:8080/api/getRentACarCompany")
             .then(response => {
                 this.name = response.data.name;
@@ -44,6 +48,10 @@ mounted(){
     },
     methods:{
         update: function(){
+          var getJwtToken = function() {
+    return localStorage.getItem('jwtToken');
+  };
+            axios.defaults.headers.post['Authorization'] = "Bearer " + getJwtToken();
             axios.post("http://localhost:8080/api/updateRentACarProfile",{name : this.name, address: this.address, description:this.description});
             ; 
         }   
