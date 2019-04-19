@@ -34,4 +34,8 @@ public class VehicleService {
 	public void remove(Long id) {
 		repository.deleteById(id);
 	}
+	public List<Vehicle>findByServiceId(Long id){
+		return repository.findByServiceId(id);
+		
+	}
 }

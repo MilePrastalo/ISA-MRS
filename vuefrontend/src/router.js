@@ -93,6 +93,11 @@ export default new Router({
       path: '/index',
       name: 'registeredFrontPage',
       component: () => import('./components/registeredFrontPage.vue')
+    },
+    {
+      path: '/RAindex',
+      name: 'rentACarAdminIndex',
+      component: () => import('./components/rentACarAdminIndex.vue')
     }
   ]
 })
