@@ -1,12 +1,27 @@
 <template>
    <div id = "flightCompanyProfile">
 
-            <h1>Flight Company Profile</h1>
-            <div id = "tabs">
-                <button v-on:click="selectTab(1)">Information</button>
-                <button v-on:click="selectTab(2)">Destinations</button>
-                <button v-on:click="selectTab(3)">Flights</button>
-                <button v-on:click="selectTab(4)">New Flight</button>
+            <br>
+             <div class="row"> 
+                <h1>Flight Company Profile</h1>
+            </div>
+             <br>
+             <div class="row">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a  class="nav-link active" href="#" @click="selectTab(1)">Information</a>
+                    </li>
+                    <li class="nav-item">
+                        <a  class="nav-link" href="#" @click="selectTab(2)">Destinations</a>
+                        
+                    </li>
+                    <li class="nav-item">
+                        <a  class="nav-link" href="#" @click="selectTab(3)">Flights</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" @click="selectTab(4)">New Flight</a>
+                    </li>
+                </ul>
             </div>
             
             <div v-if="currentTab == 1" id = "editProfile">
@@ -66,26 +81,34 @@ export default {
   }
 },
 mounted(){
-    axios.get("http://localhost:8080/api/getFlightCompanyProfile")
-        .then(response => {
-            this.name = response.data.name
-            this.address = response.data.address
-            this.description = response.data.description
-          });
+        var getJwtToken = function() {
+            return localStorage.getItem('jwtToken');
+        };
+        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.get("http://localhost:8080/api/getFlightCompanyProfile")
+            .then(response => {
+                this.name = response.data.name
+                this.address = response.data.address
+                this.description = response.data.description
+            });
     },
     methods:{
         selectTab: function(tabId){
             this.currentTab = tabId;
         },
         updateFlightCompanyProfile: function(){
-             axios.post("http://localhost:8080/api/updateFlightCompanyProfile",{name:this.name, address: this.address, description: this.description})
+            var getJwtToken = function() {
+              return localStorage.getItem('jwtToken');
+            };
+            axios.defaults.headers.post['Authorization'] = "Bearer " + getJwtToken();
+            axios.post("http://localhost:8080/api/updateFlightCompanyProfile",{name:this.name, address: this.address, description: this.description})
             .then(response => {
                 this.name = response.data.name
                 this.address = response.data.address
                 this.description = response.data.description
             });
             alert("Successfuly updated!")
-        }      
+        }    
     }
 }
 
@@ -98,5 +121,6 @@ mounted(){
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  margin-left: 5%;
 }
 </style>

@@ -9,6 +9,7 @@ import javax.persistence.OneToOne;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tim9.PlanJourney.models.User;
 
@@ -44,39 +45,30 @@ public class FlightAdmin extends User {
 	}
 
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	 @JsonIgnore
+		@Override
+		public boolean isAccountNonExpired() {
+			// TODO Auto-generated method stub
+			return true;
+		}
+	    @JsonIgnore
+		@Override
+		public boolean isAccountNonLocked() {
+			// TODO Auto-generated method stub
+			return true;
+		}
+	    @JsonIgnore
+		@Override
+		public boolean isCredentialsNonExpired() {
+			// TODO Auto-generated method stub
+			return true;
+		}
 
-
-	@Override
-	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-
-	@Override
-	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-
-	@Override
-	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return true;
-	}
+		@Override
+		public boolean isEnabled() {
+			// TODO Auto-generated method stub
+			return true;
+		}
 	
 	
 

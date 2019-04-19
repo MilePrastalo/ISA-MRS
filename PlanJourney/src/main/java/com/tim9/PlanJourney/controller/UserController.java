@@ -1,9 +1,11 @@
 package com.tim9.PlanJourney.controller;
 
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,43 +22,45 @@ import com.tim9.PlanJourney.service.UserService;
 
 @RestController
 public class UserController {
-	
 
 	@Autowired
-	UserService service;
-	
-	private static UserBean user;
-	
-	@RequestMapping(
-			value = "/api/getLogUser",
-			method = RequestMethod.GET,
-			produces = MediaType.APPLICATION_JSON_VALUE)
+	UserService userService;
+
+	@RequestMapping(value = "/api/getLogUser", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	public @ResponseBody UserBean getUser() throws Exception {
-		//FlightAdmin user = (FlightAdmin) service.findOneByUsername("pera");
-		if(user==null) {
-			user = new UserBean("username","pass","Pera","Peric","pera@gmail.com");
-			
-			//service.save(user);	
+	@PreAuthorize("hasAnyAuthority('FLIGHT_ADMIN','SYS_ADMIN','FLIGHT_ADMIN','REGISTERED')")
+	// Method returns logged user info
+	public @ResponseBody User getUser() throws Exception {
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String username = authentication.getName();
+			User user = (User) userService.findOneByUsername(username);
+			return user;
 		}
-		return user;
+		return null;
 	}
-	
-	
-	@RequestMapping(
-			value = "/api/updateUserProfile",
-			method = RequestMethod.POST,
-			produces = MediaType.APPLICATION_JSON_VALUE,
-			consumes = MediaType.APPLICATION_JSON_VALUE)
+
+	@RequestMapping(value = "/api/updateUserProfile", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	public @ResponseBody UserBean  updateUserProfile(@RequestBody UserBean updatedUser) throws Exception {
-		//FlightAdmin user = (FlightAdmin) service.findOneByUsername("pera");
-		user.setFirstName(updatedUser.getFirstName());
-		user.setLastName(updatedUser.getLastName());
-		user.setEmail(updatedUser.getEmail());
-		user.setPassword(updatedUser.getPassword());
-		//service.save(user);
-		return user;
+	@PreAuthorize("hasAnyAuthority('FLIGHT_ADMIN','SYS_ADMIN','FLIGHT_ADMIN','REGISTERED')")
+	// Method for changing user profile information
+	public @ResponseBody User updateUserProfile(@RequestBody UserBean updatedUser) throws Exception {
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String username = authentication.getName();
+			User user = (User) userService.findOneByUsername(username);
+			user.setFirstName(updatedUser.getFirstName());
+			user.setLastName(updatedUser.getLastName());
+			user.setEmail(updatedUser.getEmail());
+
+			BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
+			user.setPassword(bc.encode(updatedUser.getPassword()));
+			userService.save(user);
+			return user;
+		}
+		return null;
 	}
 
 }
