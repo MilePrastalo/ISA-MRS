@@ -1,33 +1,48 @@
 package com.tim9.PlanJourney.controller;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.beans.AddVehicleBean;
+import com.tim9.PlanJourney.beans.EditVehicleBean;
 import com.tim9.PlanJourney.beans.RentACarCompanySearchBean;
 import com.tim9.PlanJourney.beans.RentACarProfileBean;
 import com.tim9.PlanJourney.beans.VehicleSearchBean;
 import com.tim9.PlanJourney.beans.VehicleSearchReturnBean;
+import com.tim9.PlanJourney.models.Authority;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.models.rentacar.BranchOffice;
 import com.tim9.PlanJourney.models.rentacar.RentACarAdmin;
 import com.tim9.PlanJourney.models.rentacar.RentACarCompany;
 import com.tim9.PlanJourney.models.rentacar.Vehicle;
+import com.tim9.PlanJourney.service.AuthorityService;
+import com.tim9.PlanJourney.service.BranchOfficeService;
+import com.tim9.PlanJourney.service.DestinationService;
 import com.tim9.PlanJourney.service.RentACarAdminService;
 import com.tim9.PlanJourney.service.RentACarCompanyService;
 import com.tim9.PlanJourney.service.VehicleService;
@@ -35,13 +50,19 @@ import com.tim9.PlanJourney.service.VehicleService;
 @RestController
 
 public class RentACarController {
-	private static RentACarAdmin admin;
 
 	@Autowired
 	private VehicleService vehicleService;
 
 	@Autowired
 	private RentACarAdminService adminService;
+	@Autowired
+	private DestinationService ds;
+	@Autowired
+	private BranchOfficeService bs;
+	@Autowired
+	private AuthorityService as;
+
 
 	@Autowired
 	private RentACarCompanyService companyService;
@@ -49,13 +70,14 @@ public class RentACarController {
 	@RequestMapping(value = "/api/vehicleSearch", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	// Recieves parameters for search and returns list of found vehicles
+	//Visible to everyone
 	public @ResponseBody ArrayList<VehicleSearchReturnBean> searchVehicles(@RequestBody VehicleSearchBean search)
 			throws Exception {
 		ArrayList<Vehicle> vehicles = new ArrayList<>();
 		vehicles = (ArrayList<Vehicle>) vehicleService.findAll();
 		ArrayList<VehicleSearchReturnBean> foundVehicles = new ArrayList<>();
 		System.out.println("Poziv");
-		// Needs optimisation
+		// Needs optimization
 		for (Vehicle vehicle : vehicles) {
 			if ((vehicle.getMaker().equals(search.getProducer()) || search.getProducer().equals(""))
 					&& (vehicle.getPrice() > search.getPriceFrom() || search.getPriceFrom() == 0)
@@ -71,10 +93,12 @@ public class RentACarController {
 	}
 
 	@RequestMapping(value = "/api/getProducers", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	@CrossOrigin()
+	@CrossOrigin("*")
 	// Returns list of producers/makers
 	// Probably will create table in database in the future - priority low
+	//Visible to everyone
 	public @ResponseBody ArrayList<String> getProducers() throws Exception {
+		//System.out.println(jwt);
 		ArrayList<String> producers = new ArrayList<>();
 		producers.add("Tesla");
 		producers.add("Mercedes");
@@ -89,6 +113,7 @@ public class RentACarController {
 	@CrossOrigin()
 	// Returns list of types of vehicles
 	// Probably will create table in database in the future - priority low
+	//Visible to everyone
 	public @ResponseBody ArrayList<String> getTypes() throws Exception {
 		ArrayList<String> types = new ArrayList<>();
 		types.add("Sedan");
@@ -99,31 +124,40 @@ public class RentACarController {
 		types.add("Coupe");
 		return types;
 	}
-
+	//Function used to get Rent a car admin from token
+	private RentACarAdmin getAdmin() {
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		String username = currentUser.getName();
+		RentACarAdmin admin = (RentACarAdmin) adminService.findByUsername(username);
+		
+		return admin;
+		
+	}
 	@RequestMapping(value = "/api/getRentACarCompany", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
+	@PreAuthorize("hasAuthority('RENT_ADMIN')")
+	//Renturns profile of admins rent a car company
 	public @ResponseBody RentACarProfileBean getRentACarCompany() throws Exception {
+		
+		
+		RentACarAdmin admin = getAdmin();
 		if (admin == null) {
-			admin = adminService.findOne(1l);
+			return null;
 		}
 		RentACarCompany rentACarService = admin.getService();
-		if (rentACarService == null) {
-			rentACarService = new RentACarCompany();
-			rentACarService.setName("Super Car");
-			rentACarService.setAddress("Belgrade Nemanjina 11");
-			rentACarService.setDescription("Best rent-a-car service ever");
-		}
+
 		return new RentACarProfileBean(rentACarService.getName(), rentACarService.getAddress(),
 				rentACarService.getDescription());
 
 	}
 
 	@RequestMapping(value = "/api/updateRentACarProfile", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	@CrossOrigin()
+	@CrossOrigin()	
+	@PreAuthorize("hasAuthority('RENT_ADMIN')")
+
+	//Updates profile of rent a car company and saves in database
 	public void updateRentACarProfile(@RequestBody RentACarProfileBean profile) throws Exception {
-		if (admin == null) {
-			admin = adminService.findOne(1l);
-		}
+		RentACarAdmin admin = getAdmin();
 		RentACarCompany rentACarService = admin.getService();
 		rentACarService.setName(profile.getName());
 		rentACarService.setDescription(profile.getDescription());
@@ -137,48 +171,10 @@ public class RentACarController {
 	// Probably will create table in database in the future - priority low
 	public @ResponseBody ArrayList<RentACarCompanySearchBean> getCompanies(
 			@RequestBody RentACarCompanySearchBean search) throws Exception {
-		ArrayList<RentACarCompanySearchBean> companies = new ArrayList<>();
-		Destination d1 = new Destination("Novi Sad", "Super grad", "021");
-		Destination d2 = new Destination("Beograd", "ok", "1111");
-		Destination d3 = new Destination("Nis", "ok", "521");
-
-		BranchOffice b1 = new BranchOffice();
-		b1.setName("first office");
-		b1.setDestination(d1);
-		BranchOffice b2 = new BranchOffice();
-		b2.setName("sec office");
-		b2.setDestination(d2);
-		BranchOffice b3 = new BranchOffice();
-		b3.setName("thi office");
-		b3.setDestination(d2);
-		BranchOffice b4 = new BranchOffice();
-		b4.setName("fo office");
-		b4.setDestination(d3);
-		BranchOffice b5 = new BranchOffice();
-		b5.setName("fi office");
-		b5.setDestination(d1);
-		BranchOffice b6 = new BranchOffice();
-		b6.setName("si office");
-		b6.setDestination(d3);
-
-		RentACarCompany rc1 = new RentACarCompany("First Company", "adr", "Cool", 1);
-		rc1.getOffices().add(b1);
-		rc1.getOffices().add(b2);
-		rc1.setRating(4);
-		RentACarCompany rc2 = new RentACarCompany("Second Company", "adr", "Cool", 2);
-		rc2.getOffices().add(b3);
-		rc2.getOffices().add(b4);
-		rc1.setRating(4.5);
-		RentACarCompany rc3 = new RentACarCompany("Third Company", "adr", "Cool", 3);
-		rc3.getOffices().add(b5);
-		rc3.getOffices().add(b6);
-		rc3.setRating(5);
-		ArrayList<RentACarCompany> companiesAll = new ArrayList<>();
-		companiesAll.add(rc1);
-		companiesAll.add(rc2);
-		companiesAll.add(rc3);
+		List<RentACarCompany> companies = companyService.findAll();
+		
 		ArrayList<RentACarCompany> foundCOmpanies = new ArrayList<>();
-		for (RentACarCompany rentACarCompany : companiesAll) {
+		for (RentACarCompany rentACarCompany : companies) {
 			boolean containsLocation = false;
 			if ((rentACarCompany.getName().equals(search.getName()) || search.getName().equals(""))) {
 				if (!search.getLocation().equals("")) {
@@ -193,15 +189,15 @@ public class RentACarController {
 				}
 			}
 		}
-
+		ArrayList<RentACarCompanySearchBean> returnBean = new ArrayList<>();
 		for (RentACarCompany rentACarCompany : foundCOmpanies) {
 			ArrayList<String> locs = new ArrayList<>();
 			for (BranchOffice office : rentACarCompany.getOffices()) {
 				locs.add(office.getDestination().getName());
 			}
-			companies.add(new RentACarCompanySearchBean(rentACarCompany.getName(), locs, rentACarCompany.getRating()));
+			returnBean.add(new RentACarCompanySearchBean(rentACarCompany.getName(), locs, rentACarCompany.getRating()));
 		}
-		return companies;
+		return returnBean;
 	}
 
 	@RequestMapping(value = "/api/addRentACarCompany", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -236,6 +232,7 @@ public class RentACarController {
 	///Saves company and vehicle in database
 	@RequestMapping(value = "/api/addCar", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
+	@PreAuthorize("hasRole('RENT_ADMIN')")
 	public void addCar(@RequestBody AddVehicleBean vehicleBean) throws Exception {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
@@ -248,8 +245,52 @@ public class RentACarController {
 		    companyService.save(company);
 		}
 	}
-	
-	
+	@RequestMapping(value = "/api/editCar", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasRole('RENT_ADMIN')")
+	public void editCar(@RequestBody EditVehicleBean vehicleBean) throws Exception {
+	    RentACarAdmin admin = getAdmin();
+	    RentACarCompany company = admin.getService();
+	    Vehicle v = vehicleService.findOne(vehicleBean.getId());
+	    v.setName(vehicleBean.getName());
+	    v.setMaker(vehicleBean.getMaker());
+	    v.setType(vehicleBean.getType()); 
+	    v.setYear(Integer.parseInt(vehicleBean.getYear()));
+	    v.setPrice(Double.valueOf(vehicleBean.getPrice()));
+	    vehicleService.save(v);		
+	}
+	@RequestMapping(value = "/api/removeCar/{id}", method = RequestMethod.DELETE)
+	@CrossOrigin()
+	@PreAuthorize("hasRole('RENT_ADMIN')")
+	public void removeCar(@PathVariable Long id) throws Exception {
+	    vehicleService.remove(id);
+	}
+
+	//TEST ONLY Writes some rent a car companies in database
+	@RequestMapping(value = "/api/addRC", method = RequestMethod.GET)
+	@CrossOrigin()
+	public void addRC() throws Exception {
+		RentACarCompany rc1 = new RentACarCompany("Company1", "Bulevar Pere Perica", "Best rent a car company", 5);
+		BCryptPasswordEncoder crypt = new BCryptPasswordEncoder();
+		RentACarAdmin admin1 = new RentACarAdmin("RentMarko",crypt.encode("markovic"),"Marko","Markovic","marko@marko.marko");
+		Authority authority = (Authority) as.findOne(4l);
+		ArrayList<Authority> authorities = new ArrayList<>();
+		authorities.add(authority);
+		admin1.setAuthorities(authorities);
+		admin1.setService(rc1);
+		adminService.save(admin1);
+		rc1.setAdmins(new HashSet<>());
+		rc1.getAdmins().add(admin1);
+		rc1.setOffices(new HashSet<>());
+		Destination d1 = new Destination("Belgrade", "Beograd", "44.51 , 51.21");
+		ds.save(d1);
+		BranchOffice office1 = new BranchOffice(null,"Beogradski rent1",rc1,d1);
+		rc1.getOffices().add(office1);
+		bs.save(office1);
+		rc1.setReservations(new HashSet<>());
+		rc1.setVehicles(new HashSet<>());
+		companyService.save(rc1);
+	}
 	
 	
 }

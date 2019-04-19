@@ -1,6 +1,7 @@
 package com.tim9.PlanJourney.models;
 
 public class UserTokenState {
+	
 	private String accessToken;
     private Long expiresIn;
 

@@ -2,18 +2,20 @@ package com.tim9.PlanJourney.security;
 
 import java.util.Date;
 
-import javax.servlet.http.HttpServletRequest;
-
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+
 import com.tim9.PlanJourney.models.User;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+
 
 @Component
 public class TokenUtils {
@@ -44,13 +46,16 @@ public class TokenUtils {
 		return Jwts.builder()
 				.setIssuer(APP_NAME)
 				.setSubject(username)
-				.setAudience(AUDIENCE_WEB)
+				.setAudience(generateAudience())
 				.setIssuedAt(timeProvider.now())
 				.setExpiration(generateExpirationDate())
 				.signWith(SIGNATURE_ALGORITHM, SECRET).compact();
 	}
 
+	private String generateAudience() {
 
+		return AUDIENCE_WEB;
+	}
 
 	private Date generateExpirationDate() {
 		long expiresIn = EXPIRES_IN;
@@ -81,6 +86,7 @@ public class TokenUtils {
 	}
 
 	// Functions for validating JWT token data
+
 
 	public Boolean validateToken(String token, UserDetails userDetails) {
 		User user = (User) userDetails;

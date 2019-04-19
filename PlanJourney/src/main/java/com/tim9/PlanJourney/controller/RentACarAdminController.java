@@ -1,5 +1,3 @@
-package com.tim9.PlanJourney.controller;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -69,3 +67,4 @@ public class RentACarAdminController {
 		return new ResponseEntity<RentACarAdmin>(admin, HttpStatus.OK);
 	}
 }
+
