@@ -77,6 +77,7 @@
                 <td>{{flight.economicPrice}}</td>
                 <td>{{flight.businessPrice}}</td>
                 <td>{{flight.firstClassPrice}}</td>
+                <td> <Button>Details</Button></td>
             </tr>
             </table>
         </div>        

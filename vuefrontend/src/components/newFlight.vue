@@ -1,8 +1,11 @@
 <template>
    <div id = "addFlight">
             <br>
+            <div class = "row">
             <h1>New Flight: </h1>
+            </div>
             <br>
+            <div class = "row">
             <table>
 
                 <tr>
@@ -77,7 +80,8 @@
                     <td>  </td>
                     <td><button v-on:click="addFlight()">Add</button> </td>      
                 </tr>
-            </table>      
+            </table>
+            </div>      
         </div>
 </template>
 
@@ -108,6 +112,10 @@ export default {
   }
 },
 mounted(){
+     var getJwtToken = function() {
+        return localStorage.getItem('jwtToken');
+    };
+    axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
     axios.get("http://localhost:8080/api/getDestinations")
         .then(response => {
             this.destinations = response.data
@@ -143,28 +151,11 @@ mounted(){
                 flightDuration: this.flightDuration, flightLength: this.flightLength, 
                 businessPrice: this.buisinesssPrice, economicPrice: this.economicPrice, firstClassPrice: this.firstClassPrice,
                 economicCapacity: economicCapacity, buisinesssCapacity: buisinesssCapacity, firstClassCapacity: firstClassCapacity }
-            axios.post("http://localhost:8080/api/addFlight", newFlight)
-                .then(response => {
-                if (response.data.startDestination == null){
-                    alert("Something went wrong, probably with dates!");
-                    return
-                }
-                alert("Successfuly added!");
-            }) .catch(function (error) {
-    if (error.response) {
-      // Request made and server responded
-      console.log(error.response.data);
-      console.log(error.response.status);
-      console.log(error.response.headers);
-    } else if (error.request) {
-      // The request was made but no response was received
-      console.log(error.request);
-    } else {
-      // Something happened in setting up the request that triggered an Error
-      console.log('Error', error.message);
-    }
-
-  });
+            var getJwtToken = function() {
+                return localStorage.getItem('jwtToken');
+            };
+            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.post("http://localhost:8080/api/addFlight", newFlight);
         }     
     }
 }
