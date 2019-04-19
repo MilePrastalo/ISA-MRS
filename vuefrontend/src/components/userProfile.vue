@@ -49,6 +49,10 @@ export default {
   }
 },
 mounted(){
+    var getJwtToken = function() {
+            return localStorage.getItem('jwtToken');
+        };
+        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
     axios.get("http://localhost:8080/api/getLogUser")
         .then(response => {
             this.firstName = response.data.firstName
