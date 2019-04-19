@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,13 +46,14 @@ public class RentACarAdminController {
 		RentACarCompany r = companyService.findByName(admin.getService().getName());
 
 		if (adminService.findByUsername(admin.getUsername()) == null && r != null) {
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			admin.setPassword(encoder.encode(admin.getPassword()));
 			RentACarAdmin a = (RentACarAdmin) adminService.save(admin);
 			return new ResponseEntity<RentACarAdmin>(a, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<RentACarAdmin>(admin, HttpStatus.CONFLICT);
 		}
 	}
-	
 
 	@RequestMapping(value = "/api/removeRentACarAdmin/{username}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -63,15 +64,9 @@ public class RentACarAdminController {
 		if (admin == null) {
 			return new ResponseEntity<RentACarAdmin>(admin, HttpStatus.CONFLICT);
 		}
-		// If admin exists remove him from his hotel's admins list and remove him from
-		// database.
-		RentACarCompany company = companyService.findOne(admin.getService().getId());
-		for (RentACarAdmin a : company.getAdmins()) {
-			if (a.getId() == admin.getId()) {
-				company.getAdmins().remove(a);
-			}
-		}
+
 		adminService.remove(admin.getId());
 		return new ResponseEntity<RentACarAdmin>(admin, HttpStatus.OK);
 	}
 }
+

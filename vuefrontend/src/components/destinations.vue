@@ -21,7 +21,11 @@
                     </tr>
                 </table>
                 <br>
+                <div class = "row">
                 <h1>Destinations: </h1>
+                </div>
+
+                <div class = "row">
                 <table border="1">
                     <tr>
                         <td>Name</td>
@@ -35,7 +39,8 @@
                     <td>{{destination.description}}</td>
                     <td><button>Delete</button></td>
                     </tr>
-                </table>  
+                </table>
+                </div>  
         </div>
 </template>
 
@@ -52,7 +57,11 @@ export default {
   }
 },
 mounted(){
-     axios.get("http://localhost:8080/api/getDestinations")
+    var getJwtToken = function() {
+         return localStorage.getItem('jwtToken');
+    };
+    axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+    axios.get("http://localhost:8080/api/getDestinations")
         .then(response => {
             this.destinations = response.data
           });  
@@ -60,6 +69,12 @@ mounted(){
     methods:{
         addNewDestination: function(){
             var newDestination = {name:this.DestName, description: this.DestDescription, coordinates: this.DestCoordinates}
+            var getJwtToken = function() {
+                return localStorage.getItem('jwtToken');
+            };
+            alert(this.DestName);
+            console.log(newDestination);
+            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
              axios.post("http://localhost:8080/api/addDestination",newDestination)
             .then(response => {
                 alert("New destination added!")

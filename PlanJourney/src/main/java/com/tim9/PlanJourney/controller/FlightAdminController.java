@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,6 +46,8 @@ public class FlightAdminController {
 		FlightCompany f = flightService.findByName(admin.getFlightCompany().getName());
 
 		if (adminService.findByUsername(admin.getUsername()) == null && f != null) {
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			admin.setPassword(encoder.encode(admin.getPassword()));
 			FlightAdmin a = (FlightAdmin) adminService.save(admin);
 			return new ResponseEntity<FlightAdmin>(a, HttpStatus.OK);
 		} else {
@@ -61,14 +64,7 @@ public class FlightAdminController {
 		if (admin == null) {
 			return new ResponseEntity<FlightAdmin>(admin, HttpStatus.CONFLICT);
 		}
-		// If admin exists remove him from his hotel's admins list and remove him from
-		// database.
-		FlightCompany fc = flightService.findOne(admin.getFlightCompany().getId());
-		for (FlightAdmin a : fc.getFlightAdmins()) {
-			if (a.getId() == admin.getId()) {
-				fc.getFlightAdmins().remove(a);
-			}
-		}
+
 		adminService.remove(admin.getId());
 		return new ResponseEntity<FlightAdmin>(admin, HttpStatus.OK);
 	}

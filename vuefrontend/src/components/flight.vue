@@ -75,6 +75,10 @@ export default {
   }
 },
 mounted(){
+    var getJwtToken = function() {
+        return localStorage.getItem('jwtToken');
+    };
+    axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
     axios.get("http://localhost:8080/api/getDestinations")
         .then(response => {
             this.destinations = response.data
@@ -102,6 +106,10 @@ mounted(){
                 alert("Both, duration and length of flihts can not have negative value!");
             }
             var newFlight = {startDestination: this.startDestination, endDestination: this.endDestination, startDate: this.startDate, endDate: this.endDate, flightDuration: this.flightDuration, flightLength: this.flightLength, businesssPrice: this.buisinesssPrice, economicPrice: this.economicPrice, firstClassPrice: this.firstClassPrice }
+            var getJwtToken = function() {
+                return localStorage.getItem('jwtToken');
+            };
+            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
             axios.post("http://localhost:8080/api/addFlight", newFlight)
                 .then(response => {
                 if (response.data.startDestination == null){

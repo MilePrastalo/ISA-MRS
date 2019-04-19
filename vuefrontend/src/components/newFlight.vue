@@ -1,8 +1,11 @@
 <template>
    <div id = "addFlight">
             <br>
+            <div class = "row">
             <h1>New Flight: </h1>
+            </div>
             <br>
+            <div class = "row">
             <table>
 
                 <tr>
@@ -45,11 +48,40 @@
                     <td> Economic class price: </td>
                     <td> <input type="text" name="economicPrice" v-model="economicPrice" required > </td>        
                 </tr>
+                <br>
+                <tr>
+                    <td> Economic class capacity </td>       
+                </tr>
+                <tr>
+                    <td> Rows: </td> 
+                    <td> <input type="number"  v-model="economicCapacity_rows" required >  </td>
+                    <td> Columns: </td> 
+                    <td> <input type="number"  v-model="economicCapacity_columns" required >  </td>        
+                </tr>
+                <tr>
+                    <td> Buisiness class capacity </td>       
+                </tr>
+                <tr>
+                    <td> Rows: </td> 
+                     <td> <input type="number"  v-model="buisinesssCapacity_rows" required >  </td>
+                     <td> Columns: </td> 
+                     <td> <input type="number"  v-model="buisinesssCapacity_columns" required >  </td>       
+                </tr>
+                <tr>
+                    <td> First class capacity </td>       
+                </tr>
+                <tr>
+                    <td> Rows: </td>
+                    <td> <input type="number"  v-model="firstClassCapacity_rows" required >  </td> 
+                    <td> Columns: </td>
+                    <td> <input type="number"  v-model="firstClassCapacity_columns" required >  </td>       
+                </tr>
                 <tr>
                     <td>  </td>
                     <td><button v-on:click="addFlight()">Add</button> </td>      
                 </tr>
-            </table>      
+            </table>
+            </div>      
         </div>
 </template>
 
@@ -70,11 +102,20 @@ export default {
      buisinesssPrice: "",
      firstClassPrice: "",
      economicPrice: "",
-
+     economicCapacity_rows: "",
+     economicCapacity_columns: "",
+     buisinesssCapacity_rows: "",
+     buisinesssCapacity_columns: "",
+     firstClassCapacity_rows: "",
+    firstClassCapacity_columns: "",
      destinations:[]
   }
 },
 mounted(){
+     var getJwtToken = function() {
+        return localStorage.getItem('jwtToken');
+    };
+    axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
     axios.get("http://localhost:8080/api/getDestinations")
         .then(response => {
             this.destinations = response.data
@@ -101,15 +142,20 @@ mounted(){
             if( this.flightDuration < 0 || this.flightLength < 0){
                 alert("Both, duration and length of flihts can not have negative value!");
             }
-            var newFlight = {startDestination: this.startDestination, endDestination: this.endDestination, startDate: this.startDate, endDate: this.endDate, flightDuration: this.flightDuration, flightLength: this.flightLength, businesssPrice: this.buisinesssPrice, economicPrice: this.economicPrice, firstClassPrice: this.firstClassPrice }
-            axios.post("http://localhost:8080/api/addFlight", newFlight)
-                .then(response => {
-                if (response.data.startDestination == null){
-                    alert("Something went wrong, probably with dates!");
-                    return
-                }
-                alert("Successfuly added!");
-            });
+            var economicCapacity = this.economicCapacity_rows + "|" + this.economicCapacity_columns;
+            var buisinesssCapacity = this.buisinesssCapacity_rows + "|" + this.buisinesssCapacity_columns;
+            var firstClassCapacity = this.firstClassCapacity_rows + "|" + this.firstClassCapacity_columns;
+            alert(this.startDestination);
+            var newFlight = {startDestination: this.startDestination.name, endDestination: this.endDestination.name,
+                startDate: this.startDate, endDate: this.endDate, 
+                flightDuration: this.flightDuration, flightLength: this.flightLength, 
+                businessPrice: this.buisinesssPrice, economicPrice: this.economicPrice, firstClassPrice: this.firstClassPrice,
+                economicCapacity: economicCapacity, buisinesssCapacity: buisinesssCapacity, firstClassCapacity: firstClassCapacity }
+            var getJwtToken = function() {
+                return localStorage.getItem('jwtToken');
+            };
+            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.post("http://localhost:8080/api/addFlight", newFlight);
         }     
     }
 }

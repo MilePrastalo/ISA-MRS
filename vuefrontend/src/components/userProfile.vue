@@ -52,7 +52,7 @@ mounted(){
     var getJwtToken = function() {
             return localStorage.getItem('jwtToken');
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+    axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
     axios.get("http://localhost:8080/api/getLogUser")
         .then(response => {
             this.firstName = response.data.firstName
@@ -69,6 +69,10 @@ mounted(){
     methods:{
         updateUserProfile: function(pass, repeated_pass){
             if (pass == repeated_pass){
+                var getJwtToken = function() {
+                    return localStorage.getItem('jwtToken');
+                };
+                axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
                 axios.post("http://localhost:8080/api/updateUserProfile",{firstName : this.firstName, lastName: this.lastName, email:this.email, password:this.password})
             .then(response => {
                 this.firstName = response.data.firstName
