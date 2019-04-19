@@ -65,11 +65,6 @@ export default new Router({
       component: () => import('./components/hotelAdminProfile.vue')
     },
     {
-      path: '/unregisteredUserFrontPage',
-      name: 'unregisteredUserFrontPage',
-      component: () => import('./components/unregisteredUserFrontPage.vue')
-    },
-    {
       path: '/loginPage',
       name: 'loginPage',
       component: () => import('./components/loginPage.vue')
@@ -93,6 +88,16 @@ export default new Router({
       path: '/index',
       name: 'registeredFrontPage',
       component: () => import('./components/registeredFrontPage.vue')
+    },
+    {
+      path: '/addHotelRooms',
+      name: 'addHotelRooms',
+      component: () => import('./components/addHotelRooms.vue')
+    },
+    {
+      path: '/searchHotels',
+      name: 'searchHotels',
+      component: () => import('./components/searchHotels.vue')
     }
   ]
 })
