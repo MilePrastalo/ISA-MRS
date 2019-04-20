@@ -99,5 +99,11 @@ export default new Router({
       name: 'searchHotels',
       component: () => import('./components/searchHotels.vue')
     }
+    ,
+    {
+      path: '/systemAdminPage',
+      name: 'systemAdminPage',
+      component: () => import('./components/SystemAdmin/systemAdminPage.vue')
+    }
   ]
 })
