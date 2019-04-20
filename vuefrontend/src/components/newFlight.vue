@@ -1,13 +1,15 @@
 <template>
    <div id = "addFlight">
-            <br>
-            <div class = "row">
-            <h1>New Flight: </h1>
-            </div>
-            <br>
-            <div class = "row">
-            <table>
 
+        <br>
+        <div class = "row">
+            <h2>New Flight: </h2>
+        </div>
+        <br>
+
+        <div class = "row">
+            <table  style="text-align: left">
+                <th  colspan="2" style="text-align: center">Basic Info</th>
                 <tr>
                     <td> Start destination: </td>
                      <td><select v-model="startDestination" name="startDestination" id="startDestination" required>
@@ -16,69 +18,60 @@
                 </tr>
                 <tr>
                     <td> End destination: </td>
-                    <td><select v-model="endDestination" name="endDestination" id="endDestination" required>
+                    <td><select v-model="endDestination" name="endDestination" id="endDestination"  required>
                         <option v-for="endDestination in destinations" v-bind:value=endDestination :key="endDestination.id">{{endDestination.name}}</option>
                     </select></td>
                 </tr>
                 <tr>
                     <td> Start date: </td>
-                    <td>  <input type="date" name="startDate" v-model="startDate" required> </td>
+                    <td>  <input type="date" name="startDate" v-model="startDate"  required> </td>
                 </tr>
-                <tr>
+                 <tr>
                     <td> End date: </td>
                     <td>  <input type="date" name="endDate" v-model="endDate" required > </td>
                 </tr>
                  <tr>
                     <td> Flight duration: </td>
-                    <td> <input type="text" name="flightDuration" v-model="flightDuration" required >  </td>        
+                    <td> <input type="text" name="flightDuration" v-model="flightDuration" required >  </td>      
                 </tr>
-                 <tr>
+                <tr>
                     <td> Flight length: </td>
                     <td> <input type="text" name="flightLength" v-model="flightLength" required >  </td>        
                 </tr>
+                <th colspan="2" style="text-align: center">Price</th>                
                 <tr>
-                    <td> Buisiness class price: </td>
+                    <td> Economic class: </td>
+                    <td> <input type="text" name="economicPrice" v-model="economicPrice" required > </td>        
+                </tr>
+                <tr>
+                    <td> Buisiness class: </td>
                     <td> <input type="text" name="buisinesssPrice" v-model="buisinesssPrice" required >  </td>        
                 </tr>
                 <tr>
-                    <td> First class price: </td>
+                    <td> First class: </td>
                     <td> <input type="text" name="firstClassPrice" v-model="firstClassPrice" required>  </td>        
                 </tr>
+                <th colspan="2" style="text-align: center">Capacity</th>
                 <tr>
-                    <td> Economic class price: </td>
-                    <td> <input type="text" name="economicPrice" v-model="economicPrice" required > </td>        
+                    <td> Economic class:</td>
+                    <td> <input type="number"  v-model="economicCapacity_rows" required  placeholder="Rows" >  </td>
+                    <td> <input type="number"  v-model="economicCapacity_rows" required placeholder="Columns" >  </td>       
                 </tr>
+                <tr>
+                    <td> Buisiness class:</td>
+                    <td> <input type="number"  v-model="economicCapacity_rows" required  placeholder="Rows" >  </td>
+                    <td> <input type="number"  v-model="economicCapacity_rows" required placeholder="Columns" >  </td>       
+                </tr>
+                <tr>
+                    <td> First class:</td>
+                    <td> <input type="number"  v-model="economicCapacity_rows" required  placeholder="Rows" >  </td>
+                    <td> <input type="number"  v-model="economicCapacity_rows" required placeholder="Columns" >  </td>       
+                </tr>
+                <th  colspan="2" style="text-align: center"></th>
                 <br>
                 <tr>
-                    <td> Economic class capacity </td>       
-                </tr>
-                <tr>
-                    <td> Rows: </td> 
-                    <td> <input type="number"  v-model="economicCapacity_rows" required >  </td>
-                    <td> Columns: </td> 
-                    <td> <input type="number"  v-model="economicCapacity_columns" required >  </td>        
-                </tr>
-                <tr>
-                    <td> Buisiness class capacity </td>       
-                </tr>
-                <tr>
-                    <td> Rows: </td> 
-                     <td> <input type="number"  v-model="buisinesssCapacity_rows" required >  </td>
-                     <td> Columns: </td> 
-                     <td> <input type="number"  v-model="buisinesssCapacity_columns" required >  </td>       
-                </tr>
-                <tr>
-                    <td> First class capacity </td>       
-                </tr>
-                <tr>
-                    <td> Rows: </td>
-                    <td> <input type="number"  v-model="firstClassCapacity_rows" required >  </td> 
-                    <td> Columns: </td>
-                    <td> <input type="number"  v-model="firstClassCapacity_columns" required >  </td>       
-                </tr>
-                <tr>
-                    <td>  </td>
-                    <td><button v-on:click="addFlight()">Add</button> </td>      
+                    <td></td>
+                    <td><button v-on:click="addFlight()">Add New flight</button> </td>      
                 </tr>
             </table>
             </div>      

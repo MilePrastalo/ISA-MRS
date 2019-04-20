@@ -1,9 +1,14 @@
 <template>
    <div id = "searchFlights">
-       <h1>Flight Search</h1>
-       <br>
-       <div>
-        <table>
+
+
+        <div class = "row">
+            <h2>Flight Search </h2>
+        </div>
+        <br>
+
+       <div class = "row">
+        <table  style="text-align: left">
            <tr>
                 <td>Start destination:</td>
                 <td><input v-model="startDestination" type="text"></td>
@@ -17,43 +22,42 @@
                 <td><input v-model="endDate" type="date"></td>
             </tr>
             <tr>
-                <td>Flight company:</td>
-                <td><input v-model="flightCompany" type="number"></td>
-            </tr>
-            <tr>
                 <td>Flight duration:</td>
                 <td><input v-model="flightDuration" type="number"></td>
-            </tr>
-            <tr>
                 <td>Flight length:</td>
                 <td><input v-model="flightLength" type="number"></td>
             </tr>
             <tr>
-                <td>Economic class: min price</td>
-                <td><input v-model="MineconomicPrice" type="text"></td>
-                <td>max price:</td>
-                <td><input v-model="MaxeconomicPrice" type="number"></td>
+                <td>Min price:</td>
+                <td><input v-model="MinPrice" type="number"></td>
+                <td>Max price:</td>
+                <td><input v-model="MaxPrice" type="number"></td>
+            </tr>
+            <tr style="text-align: center">
+                     <td><div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" id="eco" checked @click="checkedClass(1)" name="inlineDefaultRadiosExample">
+                        <label class="custom-control-label" for="eco">Economic class</label>
+                        </div>
+                     </td>
+                     <td><div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" id="bus" @click="checkedClass(2)" name="inlineDefaultRadiosExample">
+                        <label class="custom-control-label" for="bus">Business class</label>
+                        </div>
+                     </td>
+                     <td><div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" id="first" @click="checkedClass(3)" name="inlineDefaultRadiosExample">
+                        <label class="custom-control-label" for="first">First class</label>
+                        </div>
+                     </td>
             </tr>
             <tr>
-                <td>Buisiness class: min price</td>
-                <td><input v-model="MinbuisinesssPrice" type="number"></td>
-                <td>max price:</td>
-                <td><input v-model="MaxbuisinesssPrice" type="number"></td>
-            </tr>
-            <tr>
-                <td>First  class: min price</td>
-                <td><input v-model="MinfirstClassPrice" type="number"></td>
-                <td>max price:</td>
-                <td><input v-model="MaxfirstClassPrice" type="number"></td>
-            </tr>
-             <tr>
                 <td><Button v-on:click="search">Search</Button></td>
             </tr>  
         </table>
         </div>
         <br>
         <div>
-            <table border="1" >
+            <table border="1" hidden ref = "results" >
             <tr>
                         <td>Flight company</td>
                         <td>Start destination</td>
@@ -98,29 +102,47 @@ export default {
      endDate: "",
      flightDuration: "",
      flightLength: "",
-     MinbuisinesssPrice: "",
-     MinfirstClassPrice: "",
-     MineconomicPrice: "",
-     MaxbuisinesssPrice: "",
-     MaxfirstClassPrice: "",
-     MaxeconomicPrice: "",
+     MinPrice: "",
+     MaxPrice: "",
      flightCompany: "",
+     check: 1,
      flights:[]
   }
 },
 mounted(){
     },
     methods:{
+        checkedClass: function(option){
+            this.check = option;
+        },
         search: function(){
-            console.log(this.startDestination + " , " + this.MineconomicPrice + " , " + this.startDate);
+            var MineconomicPrice = 0;
+            var MaxeconomicPrice = 0;
+            var MinbuisinesssPrice = 0;
+            var MaxbuisinesssPrice = 0;
+            var MinfirstClassPrice = 0;
+            var MaxfirstClassPrice = 0;
+            if (this.check == 1){
+                MineconomicPrice = this.MinPrice;
+                MaxeconomicPrice = this.MaxPrice;
+            }
+            if (this.check == 2){
+                MinbuisinesssPrice = this.MinPrice;
+                MaxbuisinesssPrice = this.MaxPrice;
+            }
+            if (this.check == 3) {
+                MinfirstClassPrice = this.MinPrice;
+                MaxfirstClassPrice = this.MaxPrice;
+            }
             var flightForSearch = {startDestination: this.startDestination, endDestination: this.endDestination, startDate: this.startDate, endDate: this.endDate,
-            minEconomic : this.MineconomicPrice, minBusiness: this.MinbuisinesssPrice, minFirstClass :this.MinfirstClassPrice,
-            maxEconomic: this.MaxeconomicPrice, maxBusiness: this.MaxbuisinesssPrice, maxFirstClass:this.MaxfirstClassPrice,
+            minEconomic : MineconomicPrice, minBusiness: MinbuisinesssPrice, minFirstClass :MinfirstClassPrice,
+            maxEconomic: MaxeconomicPrice, maxBusiness: MaxbuisinesssPrice, maxFirstClass:MaxfirstClassPrice,
             flightDuration: this.flightDuration, flightLength:  this.flightLength }
             axios.post("http://localhost:8080/api/flightSearch",flightForSearch)
             .then(response => {
                 this.flights = response.data
             }); 
+            this.$refs["results"].hidden = false;
         }     
     }
 }
@@ -134,5 +156,6 @@ mounted(){
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  margin: 5%;
 }
 </style>
