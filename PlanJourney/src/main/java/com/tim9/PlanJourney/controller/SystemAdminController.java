@@ -4,6 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,13 +19,35 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.models.SystemAdmin;
 import com.tim9.PlanJourney.service.SystemAdminService;
+import com.tim9.PlanJourney.service.UserService;
 
 @RestController
 public class SystemAdminController {
 
 	@Autowired
 	private SystemAdminService service;
+	
+	@Autowired
+	private UserService userService;
 
+	
+	@RequestMapping(value = "/api/getSystemAdminProfile", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('SYS_ADMIN')")
+	// Method returns system admin information
+	public @ResponseBody SystemAdmin getSystemAdminProfile() throws Exception {
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+
+			String username = authentication.getName();
+			SystemAdmin user = (SystemAdmin) userService.findOneByUsername(username);
+			
+			return user;
+		}
+		return null;
+	}
+	
 	@RequestMapping(value = "/api/getSystemAdmin/{username}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	public ResponseEntity<SystemAdmin> getSystemAdmin(@PathVariable("username") String username) {
