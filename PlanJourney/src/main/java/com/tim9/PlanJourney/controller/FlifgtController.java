@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,6 +43,24 @@ public class FlifgtController {
 	FlightCompanyService flightCompanyService;
 	@Autowired
 	UserService userService;
+	
+	
+	@RequestMapping(value = "/api/getFlight/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	//Method returns flight which match given id
+	public @ResponseBody FlightBean getFlight(@PathVariable("id") Long id) throws Exception{
+		
+		Flight flight = flightService.findOne(id);
+		String companyName = "";
+		for ( FlightCompany fc : flightCompanyService.findAll()) {
+			if (fc.getFlights().contains(flight)) {
+				companyName = fc.getName();
+				break;
+			}
+		}
+		return new FlightBean(flight, companyName);
+	}
+	
 
 	@RequestMapping(value = "/api/addFlight", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
