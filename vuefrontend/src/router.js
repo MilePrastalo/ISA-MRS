@@ -98,6 +98,11 @@ export default new Router({
       path: '/searchHotels',
       name: 'searchHotels',
       component: () => import('./components/searchHotels.vue')
+    },
+    {
+      path: '/flightAdmin',
+      name: 'flightAdmin',
+      component: () => import('./components/flightAdmin.vue')
     }
     ,
     {

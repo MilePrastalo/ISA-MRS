@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.beans.DestinationBean;
+import com.tim9.PlanJourney.beans.FlightBean;
 import com.tim9.PlanJourney.models.Authority;
 import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.models.flight.Flight;
@@ -170,6 +171,57 @@ public class FlightCompanyController {
 				destinations.add(d);
 			}
 			return destinations;
+		}
+		return null;
+	}
+
+	@RequestMapping(value = "/api/flightsInCompany", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
+	// Method for searching flights in flight company
+	public @ResponseBody ArrayList<Flight> flightsInCompany(@RequestBody FlightBean search) throws Exception {
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+
+			String username = authentication.getName();
+			FlightAdmin user = (FlightAdmin) userService.findOneByUsername(username);
+			FlightCompany flightCompany = user.getFlightCompany();
+			if (flightCompany == null) {
+				System.out.println("Flight admin doesnt't have flight company.");
+				return null;
+			}
+			ArrayList<Flight> foundFlights = new ArrayList<>();
+			for (Flight f : flightCompany.getFlights()) {
+				if ((f.getStartDestination().getName().equals(search.getStartDestination())
+						|| search.getStartDestination().equals(""))
+						&& (f.getEndDestination().getName().equals(search.getEndDestination())
+								|| search.getEndDestination().equals(""))
+						&& (f.getEconomicPrice() >= search.getMinEconomic() || (search.getMinEconomic() == 0))
+						&& (f.getBusinessPrice() >= search.getMinBusiness() || (search.getMinBusiness() == 0))
+						&& (f.getFirstClassPrice() >= search.getMinFirstClass() || (search.getMinFirstClass() == 0))
+						&& (f.getEconomicPrice() <= search.getMaxEconomic() || (search.getMaxEconomic() == 0))
+						&& (f.getBusinessPrice() <= search.getMaxBusiness() || (search.getMaxBusiness() == 0))
+						&& (f.getFirstClassPrice() <= search.getMaxFirstClass() || (search.getMaxFirstClass() == 0))
+						&& (f.getFlightDuration() == search.getFlightDuration() || search.getFlightDuration() == 0)
+						&& (f.getFlightLength() == search.getFlightLength() || search.getFlightLength() == 0)) {
+					if (search.getStartDate() != null) {
+						System.out.println("bio");
+						if (f.getStartDate().equals(search.getStartDate())) {
+							foundFlights.add(f);
+							continue;
+						}
+					}
+					if (search.getEndDate() != null) {
+						if (f.getEndDate().equals(search.getEndDate())) {
+							foundFlights.add(f);
+							continue;
+						}
+					}
+					foundFlights.add(f);
+				}
+			}
+			return foundFlights;
 		}
 		return null;
 	}

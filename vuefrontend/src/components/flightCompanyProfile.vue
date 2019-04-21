@@ -1,83 +1,46 @@
 <template>
    <div id = "flightCompanyProfile">
 
-            <br>
-             <div class="row"> 
-                <h1>Flight Company Profile</h1>
-            </div>
-             <br>
-             <div class="row">
-                <ul class="nav nav-tabs">
-                    <li class="nav-item">
-                        <a  class="nav-link active" href="#" @click="selectTab(1)">Information</a>
-                    </li>
-                    <li class="nav-item">
-                        <a  class="nav-link" href="#" @click="selectTab(2)">Destinations</a>
-                        
-                    </li>
-                    <li class="nav-item">
-                        <a  class="nav-link" href="#" @click="selectTab(3)">Flights</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" @click="selectTab(4)">New Flight</a>
-                    </li>
-                </ul>
-            </div>
-            
-            <div v-if="currentTab == 1" id = "editProfile">
-                <br>
-                <br>
-                <table>
-                    <tr>
-                        <td> Name: </td>
-                        <td>  <input type="text" name="name" v-model="name" > </td>
-                    </tr>
-                    <tr>
-                        <td> Address: </td>
-                        <td>  <input type="text" name="address" v-model="address" > </td>
-                    </tr>
-                    <tr>
-                        <td> Description: </td>
-                        <td> <textarea  rows="5" cols="22" name="description"  v-model="description" style="overflow:scroll;"></textarea> </td>        
-                    </tr>
-                    <tr>
-                        <td>  </td>
-                        <td><button v-on:click="updateFlightCompanyProfile()">Edit</button> </td>      
-                    </tr>
-                </table>
-            </div>
-
-            <div  v-if="currentTab == 2" id = "destinations"> 
-                <destinations></destinations>
-            </div> 
-
-            <div  v-if="currentTab == 3" id = "flights">
-                <all-flights></all-flights>
-            </div>
-
-            <div  v-if="currentTab == 4" id = "newFlight">
-                <new-flight></new-flight>
-            </div>
+        <br>
+        <div class="row"> 
+                <h2> Company information: </h2>
         </div>
+        <br>
+
+        <div class = "row">
+                
+            <table  style="text-align: left">
+                <tr>
+                    <td> Name: </td>
+                    <td>  <input type="text" name="name" v-model="name" > </td>
+                </tr>
+                <tr>
+                    <td> Address: </td>
+                    <td>  <input type="text" name="address" v-model="address" > </td>
+                </tr>
+                <tr>
+                    <td> Description: </td>
+                    <td> <textarea  rows="5" cols="22" name="description"  v-model="description" style="overflow:scroll;"></textarea> </td>        
+                </tr>
+                <tr>
+                    <td>  </td>
+                    <td><button v-on:click="updateFlightCompanyProfile()">Edit</button> </td>      
+                </tr>
+            </table>
+        </div>
+
+    </div>
 </template>
 
 <script>
-import NewFlight from  './newFlight.vue'
-import Destinations from './destinations.vue'
-import AllFlights from './allFlights.vue'
 export default {
   name: 'flightCompanyProfile',
-  components: {
-      newFlight: NewFlight,
-      destinations: Destinations,
-      allFlights: AllFlights
-  },
+  components: {},
   data: function () {
   return {
     name: "",
     address: "",
     description: "",
-    currentTab: 1,
   }
 },
 mounted(){
@@ -93,9 +56,6 @@ mounted(){
             });
     },
     methods:{
-        selectTab: function(tabId){
-            this.currentTab = tabId;
-        },
         updateFlightCompanyProfile: function(){
             var getJwtToken = function() {
               return localStorage.getItem('jwtToken');

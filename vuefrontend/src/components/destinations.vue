@@ -1,8 +1,11 @@
 <template>
    <div id = "destinations">
                 <br>
+                <div class = "row">
+                <h2>New destination: </h2>
+                </div>
                 <br>
-                <table>
+                <table  style="text-align: left">
                     <tr>
                         <td> Name: </td>
                         <td>  <input type="text" name="DestName" v-model="DestName" > </td>
@@ -22,8 +25,9 @@
                 </table>
                 <br>
                 <div class = "row">
-                <h1>Destinations: </h1>
+                <h2>All destinations: </h2>
                 </div>
+                <br>
 
                 <div class = "row">
                 <table border="1">
@@ -37,6 +41,7 @@
                     <td>{{destination.name}}</td>
                     <td>{{destination.coordinates}}</td>
                     <td>{{destination.description}}</td>
+                    <td><button>Edit</button></td>
                     <td><button>Delete</button></td>
                     </tr>
                 </table>

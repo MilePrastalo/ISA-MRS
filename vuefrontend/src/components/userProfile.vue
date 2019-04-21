@@ -1,9 +1,14 @@
 <template>
    <div id = "userProfile">
-            <br>
-            <h1>Your Profile: </h1>
-            <br>
-            <table>
+
+        <br>
+        <div class="row"> 
+            <h2> Your profile: </h2>
+        </div>
+        <br>
+
+        <div class = "row">
+            <table  style="text-align: left">
                 <tr>
                     <td> First name: </td>
                     <td>  <input type="text" name="firstName" v-model="firstName" > </td>
@@ -27,10 +32,10 @@
                 <tr>
                     <td>  </td>
                     <td><button v-on:click="updateUserProfile(password,repeatedPassword)">Edit</button> </td>      
-                </tr>
-                  
+                </tr>  
             </table>
         </div>
+    </div>
 </template>
 
 <script>
