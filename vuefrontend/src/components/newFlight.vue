@@ -55,17 +55,17 @@
                 <tr>
                     <td> Economic class:</td>
                     <td> <input type="number"  v-model="economicCapacity_rows" required  placeholder="Rows" >  </td>
-                    <td> <input type="number"  v-model="economicCapacity_rows" required placeholder="Columns" >  </td>       
+                    <td> <input type="number"  v-model="economicCapacity_columns" required placeholder="Columns" >  </td>       
                 </tr>
                 <tr>
                     <td> Buisiness class:</td>
-                    <td> <input type="number"  v-model="economicCapacity_rows" required  placeholder="Rows" >  </td>
-                    <td> <input type="number"  v-model="economicCapacity_rows" required placeholder="Columns" >  </td>       
+                    <td> <input type="number"  v-model="buisinesssCapacity_rows" required  placeholder="Rows" >  </td>
+                    <td> <input type="number"  v-model="buisinesssCapacity_columns" required placeholder="Columns" >  </td>       
                 </tr>
                 <tr>
                     <td> First class:</td>
-                    <td> <input type="number"  v-model="economicCapacity_rows" required  placeholder="Rows" >  </td>
-                    <td> <input type="number"  v-model="economicCapacity_rows" required placeholder="Columns" >  </td>       
+                    <td> <input type="number"  v-model="firstClassCapacity_rows" required  placeholder="Rows" >  </td>
+                    <td> <input type="number"  v-model="firstClassCapacity_columns" required placeholder="Columns" >  </td>       
                 </tr>
                 <th  colspan="2" style="text-align: center"></th>
                 <br>
