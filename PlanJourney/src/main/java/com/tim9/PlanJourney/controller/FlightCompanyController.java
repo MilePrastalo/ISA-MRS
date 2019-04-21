@@ -240,11 +240,21 @@ public class FlightCompanyController {
 		destinations.add(destinatinon2);
 		destinations.add(destinatinon3);
 		destinations.add(destinatinon4);
+		
+		Set<Seat> seats1 = new HashSet<Seat>();
+		makeSeats(seats1, "6|4", "economic");
+		makeSeats(seats1, "5|4", "business");
+		makeSeats(seats1, "3|4", "first class");
+		
+		Set<Seat> seats2 = new HashSet<Seat>();
+		makeSeats(seats2, "7|4", "economic");
+		makeSeats(seats2, "5|4", "business");
+		makeSeats(seats2, "3|3", "first class");
 
 		Flight flight1 = new Flight(new Date(), new Date(), 3, 6000, destinatinon1, destinatinon2,
-				new HashSet<Ticket>(), new HashSet<Seat>(), 100, 120, 140);
+				new HashSet<Ticket>(), seats1, 100, 120, 140);
 		Flight flight2 = new Flight(new Date(), new Date(), 5, 3000, destinatinon3, destinatinon4,
-				new HashSet<Ticket>(), new HashSet<Seat>(), 546, 151, 84);
+				new HashSet<Ticket>(), seats2, 546, 151, 84);
 		Set<Flight> flights = new HashSet<Flight>();
 		flights.add(flight1);
 		flights.add(flight2);
@@ -259,6 +269,17 @@ public class FlightCompanyController {
 		flightAdmin.setAuthorities(authorities);
 		flightAdmin.setFlightCompany(fc);
 		userService.save(flightAdmin);
+	}
+	
+	private Set<Seat> makeSeats(Set<Seat> seats, String capacity, String flightClass) {
+		int rows = Integer.parseInt(capacity.split("|")[0]);
+		int columns = Integer.parseInt(capacity.split("|")[2]);
+		for (int row = 1; row <= rows; row++) {
+			for (int col = 1; col <= columns; col++) {
+				seats.add(new Seat(false, row, col, flightClass));
+			}
+		}
+		return seats;
 	}
 
 	@RequestMapping(value = "/api/addFlightCompany", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

@@ -1,5 +1,5 @@
 <template>
-   <div id = "searchFlights">
+   <div id = "flightForAdmin">
 
 
         <div class = "row">
@@ -90,7 +90,7 @@
 
 <script>
 export default {
-  name: 'searchFlights',
+  name: 'flightForAdmin',
   components: {
   },
   data: function () {
@@ -158,7 +158,7 @@ mounted(){
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #303e4d;
   margin: 5%;
 }
 </style>

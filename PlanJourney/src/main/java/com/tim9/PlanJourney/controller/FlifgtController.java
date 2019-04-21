@@ -2,9 +2,13 @@ package com.tim9.PlanJourney.controller;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -21,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.beans.FlightBean;
+import com.tim9.PlanJourney.beans.SeatsBean;
 import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.models.flight.Flight;
 import com.tim9.PlanJourney.models.flight.FlightAdmin;
@@ -59,6 +64,32 @@ public class FlifgtController {
 			}
 		}
 		return new FlightBean(flight, companyName);
+	}
+	
+	@RequestMapping(value = "/api/getSeatsOnFlight/{id}/{travelClass}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
+	public @ResponseBody SeatsBean getSeatsOnFlight(@PathVariable("id") Long id, @PathVariable("travelClass") String travelClass) throws Exception{
+
+		Flight flight = flightService.findOne(id);
+		List<Seat> seats = new ArrayList<Seat>();
+		int rows = 0;
+		int columns = 0;
+		for ( Seat seat : flight.getSeats()) {
+			
+			if (seat.getTravelClassa().equals(travelClass)) {
+				seats.add(seat);
+				if (seat.getSeatRow() > rows) {
+					rows = seat.getSeatRow();
+				}
+				if (seat.getSeatColumn() > columns) {
+					columns = seat.getSeatColumn();
+				}
+			}	
+		}
+		Collections.sort(seats, Comparator.comparing(Seat::getSeatRow));
+		SeatsBean sb = new SeatsBean(seats, rows, columns);
+		return sb;
 	}
 	
 
@@ -105,7 +136,8 @@ public class FlifgtController {
 					newFlightInfo.getFlightLength(), startDestination, endDestination, new HashSet<Ticket>(), seats,
 					newFlightInfo.getBusinessPrice(), newFlightInfo.getEconomicPrice(),
 					newFlightInfo.getFirstClassPrice());
-			flightService.save(newFlight);
+			flightCompany.getFlights().add(newFlight);
+			flightCompanyService.save(flightCompany);
 			return newFlight;
 		}
 		return null;

@@ -40,7 +40,7 @@ export default new Router({
       component: () => import('./components/rentacarprofile.vue')
     },
     {
-      path: '/flight/',
+      path: '/flight',
       name: 'flight',
       component: () => import('./components/flight.vue')
     },
@@ -103,6 +103,11 @@ export default new Router({
       path: '/flightAdmin',
       name: 'flightAdmin',
       component: () => import('./components/flightAdmin.vue')
+    },
+    {
+      path: '/flightForAdmin',
+      name: 'flightForAdmin',
+      component: () => import('./components/flightForAdmin.vue')
     }
   ]
 })

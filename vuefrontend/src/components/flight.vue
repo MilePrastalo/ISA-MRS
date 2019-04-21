@@ -61,8 +61,7 @@
 
         <div class = "row">
             <a href = "/searchVehicle">Search for rent a car services</a>
-        </div>
-                
+        </div>      
     </div>
 </template>
 
@@ -84,6 +83,13 @@ export default {
      firstClassPrice: "",
      economicPrice: "",
      flight: {},
+     items: [
+      { message: 'Foo' },
+       { message: 'Aoo' },
+        { message: 'Boo' },
+         { message: 'Doo' },
+      { message: 'Gar' }
+    ]
   }
 },
 mounted(){
