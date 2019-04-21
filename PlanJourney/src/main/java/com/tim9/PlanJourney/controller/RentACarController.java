@@ -265,7 +265,7 @@ public class RentACarController {
 		    vehicleService.save(v);
 		    companyService.save(company);
 	}
-
+	//Admin edits vehicle
 	@RequestMapping(value = "/api/editCar", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('RENT_ADMIN')")
@@ -329,6 +329,7 @@ public class RentACarController {
 	    	
 	}
 
+	//Edits office, saves to database
 	@RequestMapping(value = "/api/editOffice", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('RENT_ADMIN')")
@@ -342,6 +343,7 @@ public class RentACarController {
 	    bs.save(o);		
 	}
 	
+	//Adds officess to company , writes to database
 	@RequestMapping(value = "/api/addOffice", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('RENT_ADMIN')")
