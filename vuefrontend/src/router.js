@@ -109,6 +109,12 @@ export default new Router({
       path: '/systemAdminPage',
       name: 'systemAdminPage',
       component: () => import('./components/SystemAdmin/systemAdminPage.vue')
+    },
+    {
+      path: '/RAindex',
+      name: 'rentACarAdminIndex',
+      component: () => import('./components/rentACarAdminIndex.vue')
+
     }
   ]
 })

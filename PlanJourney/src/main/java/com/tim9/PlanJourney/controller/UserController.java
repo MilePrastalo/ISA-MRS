@@ -28,22 +28,24 @@ public class UserController {
 
 	@RequestMapping(value = "/api/getLogUser", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	@PreAuthorize("hasAnyAuthority('FLIGHT_ADMIN','SYS_ADMIN','FLIGHT_ADMIN','REGISTERED')")
+	@PreAuthorize("hasAnyAuthority('FLIGHT_ADMIN','SYS_ADMIN','HOTEL_ADMIN','REGISTERED','RENT_ADMIN')")
 	// Method returns logged user info
-	public @ResponseBody User getUser() throws Exception {
+	public @ResponseBody UserBean getUser() throws Exception {
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
 			String username = authentication.getName();
 			User user = (User) userService.findOneByUsername(username);
-			return user;
+			UserBean ub = new UserBean(user.getUsername(), "", user.getFirstName(), user.getLastName(), user.getEmail());
+
+			return ub;
 		}
 		return null;
 	}
 
 	@RequestMapping(value = "/api/updateUserProfile", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	@PreAuthorize("hasAnyAuthority('FLIGHT_ADMIN','SYS_ADMIN','FLIGHT_ADMIN','REGISTERED')")
+	@PreAuthorize("hasAnyAuthority('FLIGHT_ADMIN','SYS_ADMIN','FLIGHT_ADMIN','REGISTERED','RENT_ADMIN')")
 	// Method for changing user profile information
 	public @ResponseBody User updateUserProfile(@RequestBody UserBean updatedUser) throws Exception {
 
