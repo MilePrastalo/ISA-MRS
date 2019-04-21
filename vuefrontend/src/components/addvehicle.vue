@@ -47,6 +47,10 @@ export default {
         }
     },
     mounted(){
+        var getJwtToken = function() {
+            return localStorage.getItem('jwtToken');
+        };
+        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
         var responseData;
         axios.get("http://localhost:8080/api/getProducers")
             .then(response => {
@@ -59,6 +63,10 @@ export default {
     },
     methods:{
         add: function(){
+            var getJwtToken = function() {
+                return localStorage.getItem('jwtToken');
+            };
+            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
             axios.post("http://localhost:8080/api/addCar",{name:this.name,maker:this.maker,type:this.type,year:this.year,price:this.price})
             .then(function(){
               alert("Vehicle has been added");

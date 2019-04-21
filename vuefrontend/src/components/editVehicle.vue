@@ -1,5 +1,5 @@
 <template>
-  <div id="addVehicle">
+  <div id="editVehicle">
     <table>
         <tr>
             <td>Vehicle name</td>
@@ -23,7 +23,7 @@
         </tr>
         <tr>
             <td><button>Back</button></td>
-            <td><button @click="add">Add</button></td>
+            <td><button @click="edit">Edit</button></td>
         </tr>
     </table>
   </div>
@@ -32,21 +32,36 @@
 <script>
 
 export default {
-  name: 'addvehicle',
+  name: 'editVehicle',
   components: {
+  },
+  props: [
+  'iid' ,
+  'iname',
+  'imaker',
+  'itype',
+  'iyear',
+  'iprice'],
+  created:function(){
   },
     data: function () {
         return {
-            name:"",
-            maker:"",
-            type:"",
-            price:"",
-            year:"",
+            name:this.iname,
+            maker:this.imaker,
+            type:this.itype,
+            price:this.iprice,
+            year:this.iyear,
+            id:this.iid,
             makers:[],
             types:[]
         }
     },
     mounted(){
+        console.log(this.maker);
+        var getJwtToken = function() {
+            return localStorage.getItem('jwtToken');
+        };
+        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
         var responseData;
         axios.get("http://localhost:8080/api/getProducers")
             .then(response => {
@@ -56,23 +71,23 @@ export default {
             .then(response => {
                 this.types = response.data;
             }); 
-        axios.get("http://localhost:8080/api/getVehicle")
-            .then(response => {
-                this.name = response.name;
-                this.maker = response.maker;
-                this.type = response.type;
-                this.price = response.price;
-                this.year = response.year;
-            }); 
     },
     methods:{
-        add: function(){
-            axios.post("http://localhost:8080/api/addCar",{name:this.name,maker:this.maker,type:this.type,year:this.year,price:this.price})
+        edit: function(){
+            var a = this;
+            var getJwtToken = function() {
+            return localStorage.getItem('jwtToken');
+            };
+            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.post("http://localhost:8080/api/editCar",{id:this.id,name:this.name,maker:this.maker,type:this.type,year:this.year,price:this.price})
             .then(function(){
-              alert("Vehicle has been added");
-            }); 
+              alert("Vehicle has been edited");
+              a.$emit('vedited');
+            });
+            ///this.$emit('vedited'); 
         } 
-    }
+    },
+    
 }
 
 </script>
