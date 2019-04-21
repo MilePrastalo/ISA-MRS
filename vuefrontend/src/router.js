@@ -103,6 +103,11 @@ export default new Router({
       path: '/flightAdmin',
       name: 'flightAdmin',
       component: () => import('./components/flightAdmin.vue')
+    },
+    {
+      path: '/flightForAdmin',
+      name: 'flightForAdmin',
+      component: () => import('./components/flightForAdmin.vue')
     }
     ,
     {

@@ -2,6 +2,8 @@ package com.tim9.PlanJourney.beans;
 
 import java.util.Date;
 
+import com.tim9.PlanJourney.models.flight.Flight;
+
 public class FlightBean {
 	
 
@@ -55,6 +57,19 @@ public class FlightBean {
 		this.economicCapacity = economicCapacity;
 		this.buisinesssCapacity = buisinesssCapacity;
 		this.firstClassCapacity = firstClassCapacity;
+	}
+	
+	public FlightBean(Flight flight, String companyName) {
+		this.startDestination = flight.getStartDestination().getName();
+		this.endDestination = flight.getEndDestination().getName();;
+		this.startDate = flight.getStartDate();
+		this.endDate = flight.getEndDate();
+		this.flightDuration = flight.getFlightDuration();
+		this.flightLength = flight.getFlightLength();
+		this.businessPrice = flight.getBusinessPrice();
+		this.economicPrice = flight.getEconomicPrice();
+		this.firstClassPrice = flight.getFirstClassPrice();
+		this.flightCompany = companyName;
 	}
 
 

@@ -1,5 +1,5 @@
 <template>
-   <div id = "searchFlights">
+   <div id = "flightForAdmin">
 
 
         <div class = "row">
@@ -81,7 +81,7 @@
                 <td>{{flight.economicPrice}}</td>
                 <td>{{flight.businessPrice}}</td>
                 <td>{{flight.firstClassPrice}}</td>
-                <td> <Button>Details</Button></td>
+                <td> <Button @click="goToDetails(flight.id)" >Details</Button></td>
             </tr>
             </table>
         </div>        
@@ -89,9 +89,8 @@
 </template>
 
 <script>
-
 export default {
-  name: 'searchFlights',
+  name: 'flightForAdmin',
   components: {
   },
   data: function () {
@@ -143,7 +142,11 @@ mounted(){
                 this.flights = response.data
             }); 
             this.$refs["results"].hidden = false;
-        }     
+        },
+        goToDetails : function(flightID){
+            localStorage.setItem("flightID",flightID)
+            window.location = "/flight"
+        }
     }
 }
 
@@ -155,7 +158,7 @@ mounted(){
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #303e4d;
   margin: 5%;
 }
 </style>
