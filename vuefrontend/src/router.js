@@ -109,5 +109,17 @@ export default new Router({
       name: 'flightForAdmin',
       component: () => import('./components/flightForAdmin.vue')
     }
+    ,
+    {
+      path: '/systemAdminPage',
+      name: 'systemAdminPage',
+      component: () => import('./components/SystemAdmin/systemAdminPage.vue')
+    },
+    {
+      path: '/RAindex',
+      name: 'rentACarAdminIndex',
+      component: () => import('./components/rentACarAdminIndex.vue')
+
+    }
   ]
 })

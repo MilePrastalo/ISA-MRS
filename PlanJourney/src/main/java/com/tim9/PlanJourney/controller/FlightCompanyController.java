@@ -284,29 +284,50 @@ public class FlightCompanyController {
 
 	@RequestMapping(value = "/api/addFlightCompany", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
+	@PreAuthorize("hasAuthority('SYS_ADMIN')")
 	public @ResponseBody ResponseEntity<FlightCompany> addFlightCompany(@RequestBody FlightCompany flightCompany) {
-
-		if (flightCompanyService.findByAddress(flightCompany.getAddress()) == null
-				&& flightCompanyService.findByName(flightCompany.getName()) == null) {
-			FlightCompany f = (FlightCompany) flightCompanyService.save(flightCompany);
-			return new ResponseEntity<FlightCompany>(f, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<FlightCompany>(flightCompany, HttpStatus.CONFLICT);
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			if (flightCompanyService.findByAddress(flightCompany.getAddress()) == null
+					&& flightCompanyService.findByName(flightCompany.getName()) == null) {
+				FlightCompany f = (FlightCompany) flightCompanyService.save(flightCompany);
+				return new ResponseEntity<FlightCompany>(f, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<FlightCompany>(flightCompany, HttpStatus.CONFLICT);
+			}
 		}
+		return new ResponseEntity<FlightCompany>(flightCompany, HttpStatus.CONFLICT);
 	}
 
 	@RequestMapping(value = "/api/removeFlightCompany/{name}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
+	@PreAuthorize("hasAuthority('SYS_ADMIN')")
 	public ResponseEntity<FlightCompany> removeFlightCompany(@PathVariable("name") String name) {
 
 		FlightCompany flightCompany = flightCompanyService.findByName(name);
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			if (flightCompany == null) {
+				return new ResponseEntity<FlightCompany>(flightCompany, HttpStatus.CONFLICT);
+			}
 
-		if (flightCompany == null) {
-			return new ResponseEntity<FlightCompany>(flightCompany, HttpStatus.CONFLICT);
+			flightCompanyService.remove(flightCompany.getId());
+			return new ResponseEntity<FlightCompany>(flightCompany, HttpStatus.OK);
 		}
+		return new ResponseEntity<FlightCompany>(flightCompany, HttpStatus.CONFLICT);
+	}
 
-		flightCompanyService.remove(flightCompany.getId());
-		return new ResponseEntity<FlightCompany>(flightCompany, HttpStatus.OK);
+	@RequestMapping(value = "/api/getAllFlightCompanies", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('SYS_ADMIN')")
+	public @ResponseBody ArrayList<FlightCompany> getAllFlightCompanies() throws Exception {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			ArrayList<FlightCompany> fcs = (ArrayList<FlightCompany>) flightCompanyService.findAll();
+
+			return fcs;
+		}
+		return null;
 	}
 
 }

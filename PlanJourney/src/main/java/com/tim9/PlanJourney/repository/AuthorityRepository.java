@@ -6,5 +6,5 @@ import com.tim9.PlanJourney.models.Authority;
 
 
 public interface AuthorityRepository extends JpaRepository<Authority, Long> {
-
+	Authority findByName(String name);
 }
