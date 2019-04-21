@@ -21,6 +21,8 @@ public class BranchOffice {
 	
 	@Column(name="name",nullable=false)
 	private String name;
+	@Column(name="address",nullable=false)
+	private String address;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	private RentACarCompany company;
@@ -32,13 +34,17 @@ public class BranchOffice {
 		super();
 	}
 	
-	public BranchOffice(Long id, String name, RentACarCompany company, Destination destination) {
+	
+
+	public BranchOffice(String name, String address, RentACarCompany company, Destination destination) {
 		super();
-		this.id = id;
 		this.name = name;
+		this.address = address;
 		this.company = company;
 		this.destination = destination;
 	}
+
+
 
 	public Long getId() {
 		return id;
@@ -65,6 +71,15 @@ public class BranchOffice {
 	public void setDestination(Destination destination) {
 		this.destination = destination;
 	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	
 	
 	
 }

@@ -1,14 +1,21 @@
 <template>
     <div id="officeAdmin">
         <addOffice v-if="selected == 1"></addOffice>
-        <editOffice v-if="selected == 2"></editOffice>
+        <editOffice v-on:vedited="veditedDraw" v-if="selected == 2" :iid="id" v-bind:iname="name" v-bind:idestination="destination" v-bind:iaddress = "address"></editOffice>
         <table>
             <tr>
                 <th>Name</th>
-                <th>Address</th>
                 <th>Destination</th>
+                 <th>Address</th>
                 <th>Edit</th>
                 <th>Remove</th>
+            </tr>
+            <tr v-for="office in officess" :key="office.id">
+                <td>{{office.name}}</td>
+                <td>{{office.destination}}</td>
+                <td>{{office.address}}</td>
+                <td><Button @click="editOfficeMethod(office.id,office.name,office.destination,office.address)">Edit</Button></td>
+                <td><Button>Remove</Button></td>
             </tr>
         </table>
     </div>
@@ -27,11 +34,42 @@ export default {
   },
   data: function(){
       return {
-          selected : 1
+          selected : 1,
+          officess :[],
+          id:"",
+          name:"aa",
+          destination:"aaa",
+          address:""
       }
   },
+  mounted(){
+        var getJwtToken = function() {
+            return localStorage.getItem('jwtToken');
+        };
+        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.get("http://localhost:8080/api/getOfficessByAdmin")
+            .then(response => {
+                this.officess = response.data;
+            }); 
+  },
   methods : {
-      
+      editOfficeMethod : function(id_,name_,destination_,address_){
+          this.selected=2;
+          this.id = id_;
+          this.name = name_;
+          this.destination = destination_;
+          this.address = address_;
+      },
+      veditedDraw : function(){
+         var getJwtToken = function() {
+            return localStorage.getItem('jwtToken');
+        };
+        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.get("http://localhost:8080/api/getOfficessByAdmin")
+            .then(response => {
+                this.officess = response.data;
+            }); 
+      }
   }
 }
 

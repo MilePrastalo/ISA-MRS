@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.beans.AddVehicleBean;
+import com.tim9.PlanJourney.beans.BranchOfficeBean;
 import com.tim9.PlanJourney.beans.EditVehicleBean;
 import com.tim9.PlanJourney.beans.RentACarCompanySearchBean;
 import com.tim9.PlanJourney.beans.RentACarProfileBean;
@@ -307,32 +308,50 @@ public class RentACarController {
 	    return vehiclesToReturn;
 	    	
 	}
-
-	// TEST ONLY Writes some rent a car companies in database
-	@RequestMapping(value = "/api/addRC", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/getOfficessByAdmin", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	public void addRC() throws Exception {
-		RentACarCompany rc1 = new RentACarCompany("Company1", "Bulevar Pere Perica", "Best rent a car company", 5);
-		BCryptPasswordEncoder crypt = new BCryptPasswordEncoder();
-		RentACarAdmin admin1 = new RentACarAdmin("RentMarko", crypt.encode("markovic"), "Marko", "Markovic",
-				"marko@marko.marko");
-		Authority authority = (Authority) as.findOne(4l);
-		ArrayList<Authority> authorities = new ArrayList<>();
-		authorities.add(authority);
-		admin1.setAuthorities(authorities);
-		admin1.setService(rc1);
-		adminService.save(admin1);
-		rc1.setAdmins(new HashSet<>());
-		rc1.getAdmins().add(admin1);
-		rc1.setOffices(new HashSet<>());
-		Destination d1 = new Destination("Belgrade", "Beograd", "44.51 , 51.21");
-		ds.save(d1);
-		BranchOffice office1 = new BranchOffice(null, "Beogradski rent1", rc1, d1);
-		rc1.getOffices().add(office1);
-		bs.save(office1);
-		rc1.setReservations(new HashSet<>());
-		rc1.setVehicles(new HashSet<>());
-		companyService.save(rc1);
+	@PreAuthorize("hasAuthority('RENT_ADMIN')")
+	//Returns list of officess that are owned by admins company
+	public @ResponseBody ArrayList<BranchOfficeBean> getOfficess() throws Exception {
+	    RentACarAdmin admin = getAdmin();
+	    RentACarCompany company = admin.getService();
+	    Set<BranchOffice> officess = company.getOffices();
+	    ArrayList<BranchOfficeBean> officessToReturn = new ArrayList<>();
+	    for (BranchOffice office : officess) {
+	    	BranchOfficeBean ob = new BranchOfficeBean();
+	    	ob.setId(office.getId());
+	    	ob.setName(office.getName());
+	    	ob.setAddress(office.getAddress());
+	    	ob.setDestination(office.getDestination().getName());;
+	    	officessToReturn.add(ob);
+		}
+	    return officessToReturn;
+	    	
+	}
+
+	@RequestMapping(value = "/api/editOffice", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('RENT_ADMIN')")
+	public void editOffice(@RequestBody BranchOfficeBean officeBean) throws Exception {
+		RentACarAdmin admin = getAdmin();
+	    System.out.println(officeBean.getId());
+	    BranchOffice o = bs.findOne(officeBean.getId());
+	    o.setName(officeBean.getName());
+	    o.setAddress(officeBean.getAddress());
+	    o.setDestination(ds.findByName(officeBean.getDestination())); 
+	    bs.save(o);		
+	}
+	
+	@RequestMapping(value = "/api/addOffice", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('RENT_ADMIN')")
+	public void addOffice(@RequestBody BranchOfficeBean bean) throws Exception {
+		    RentACarAdmin admin =getAdmin();
+		    RentACarCompany company = admin.getService();
+		    Destination destination = ds.findByName(bean.getDestination());
+		    BranchOffice bo = new BranchOffice(bean.getName(), bean.getAddress(), company, destination);
+		    bs.save(bo);
+		    companyService.save(company);
 	}
 
 }
