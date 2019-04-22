@@ -34,7 +34,8 @@ export default {
                     .then(response => {
                         if(response.status == 200){
                           console.log(response.data.accessToken);
-                          localStorage.setItem('jwtToken',response.data.accessToken)
+                          localStorage.setItem('jwtToken',response.data.accessToken);
+                          this.getRole();
                         }
                         else{
                           alert("Wrong username or password");
@@ -44,6 +45,32 @@ export default {
         alert("All fields must be filled");
       }
      
+    },
+    getRole : function(){
+      console.log("GET ROLE");
+      var getJwtToken = function() {
+            return localStorage.getItem('jwtToken');
+            };
+      axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+      axios.get("http://localhost:8080/api/getUserRole")
+            .then(response => {
+                console.log(response);
+                if(response.data == "RENT_ADMIN"){
+                  window.location ="./RAindex";
+                }else if (response.data == "FLIGHT_ADMIN"){
+                  window.location ="./flightAdmin";
+                }else if (response.data == "SYS_ADMIN"){
+                  window.location ="./systemAdminPage";
+                }else if (response.data == "REGISTERED"){
+                  window.location ="./index";
+                }else if (response.data == "HOTEL_ADMIN"){
+                  window.location ="./hotelAdminPage";
+                }else{
+                  window.location ="./";
+                }
+                
+            });
+        
     }
   }
 }
