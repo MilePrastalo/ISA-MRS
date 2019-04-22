@@ -22,7 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tim9.PlanJourney.hotel.Hotel;
 import com.tim9.PlanJourney.hotel.HotelAdmin;
 import com.tim9.PlanJourney.models.Authority;
+import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.service.AuthorityService;
+import com.tim9.PlanJourney.service.DestinationService;
 import com.tim9.PlanJourney.service.HotelAdminService;
 import com.tim9.PlanJourney.service.HotelService;
 
@@ -37,6 +39,9 @@ public class HotelAdminController {
 
 	@Autowired
 	private AuthorityService authorityService;
+
+	@Autowired
+	private DestinationService destinationService;
 
 	@RequestMapping(value = "/api/getHotelAdmin/{username}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -93,6 +98,19 @@ public class HotelAdminController {
 			return new ResponseEntity<HotelAdmin>(admin, HttpStatus.OK);
 		}
 		return new ResponseEntity<HotelAdmin>(admin, HttpStatus.CONFLICT);
+	}
+
+	@RequestMapping(value = "/api/getAllDestinations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('SYS_ADMIN')")
+	public @ResponseBody ArrayList<Destination> getAllDestinations() throws Exception {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			ArrayList<Destination> destinations = (ArrayList<Destination>) destinationService.findAll();
+
+			return destinations;
+		}
+		return null;
 	}
 
 }

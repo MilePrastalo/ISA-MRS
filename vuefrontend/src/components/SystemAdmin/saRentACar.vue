@@ -79,27 +79,27 @@
                  <table>
                 <tr>
                     <td> Username: </td>
-                    <td>  <input type="text" admin.username="admin.username" v-model="admin.username" > </td>
+                    <td>  <input type="text" name="admin.username" v-model="admin.username" > </td>
                 </tr>
                 <tr>
                     <td> Password: </td>
-                    <td>  <input type="text" admin.password="admin.password" v-model="admin.password" > </td>
+                    <td>  <input type="text" name="admin.password" v-model="admin.password" > </td>
                 </tr>
                 <tr>
                     <td> First Name: </td>
-                    <td> <input type="text" admin.firstName="admin.firstName" v-model="admin.firstName" > </td>        
+                    <td> <input type="text" name="admin.firstName" v-model="admin.firstName" > </td>        
                 </tr>
                 <tr>
                     <td> Last Name: </td>
-                    <td> <input type="text" admin.lastName="admin.lastName" v-model="admin.lastName" > </td>        
+                    <td> <input type="text" name="admin.lastName" v-model="admin.lastName" > </td>        
                 </tr>
                 <tr>
                     <td> Email: </td>
-                    <td> <input type="text" admin.email="admin.email" v-model="admin.email" > </td>        
+                    <td> <input type="text" name="admin.email" v-model="admin.email" > </td>        
                 </tr>
                 <tr>
                     <td> Flight Company Name: </td>
-                    <td> <input type="text" rentACarName="rentACarName" v-model="rentACarName" > </td>        
+                    <td> <input type="text" name="rentACarName" v-model="rentACarName" > </td>        
                 </tr>
                 <tr>
                     <td>  </td>
@@ -111,7 +111,7 @@
                 <table>
                 <tr>
                     <td> Enter rent a car admin's username you want to remove: </td>
-                    <td>  <input type="text" admin.username="admin.username" v-model="admin.username" > </td>
+                    <td>  <input type="text" name="admin.username" v-model="admin.username" > </td>
                     <td><button v-on:click="removeRentACarAdmin()">Remove Rent A Car Admin</button> </td> 
                 </tr>
                 </table>
