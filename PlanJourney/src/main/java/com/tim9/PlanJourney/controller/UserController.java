@@ -1,5 +1,8 @@
 package com.tim9.PlanJourney.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,9 +19,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.beans.UserBean;
+import com.tim9.PlanJourney.models.Authority;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.User;
 import com.tim9.PlanJourney.service.UserService;
+
 
 @RestController
 public class UserController {
@@ -61,6 +66,19 @@ public class UserController {
 			user.setPassword(bc.encode(updatedUser.getPassword()));
 			userService.save(user);
 			return user;
+		}
+		return null;
+	}
+	@RequestMapping(value = "/api/getUserRole", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+	@CrossOrigin()
+	public @ResponseBody String updateUserRole() throws Exception {
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String username = authentication.getName();
+			User user = (User) userService.findOneByUsername(username);
+			List<Authority> aut = (List<Authority>) user.getAuthorities();
+			return aut.get(0).getName();
 		}
 		return null;
 	}
