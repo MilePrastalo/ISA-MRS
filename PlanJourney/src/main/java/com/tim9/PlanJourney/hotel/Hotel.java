@@ -6,10 +6,12 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tim9.PlanJourney.models.Company;
+import com.tim9.PlanJourney.models.flight.Destination;
 
 @Entity
 public class Hotel extends Company {
@@ -23,12 +25,15 @@ public class Hotel extends Company {
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<HotelReservation> reservations = new HashSet<HotelReservation>();
 
+	@ManyToOne(fetch = FetchType.EAGER)
+	private Destination destination;
+
 	public Hotel() {
 		super();
 	}
 
-	public Hotel(Long id, String name, String adress, String description,double rating) {
-		super(id, name, adress, description,rating);
+	public Hotel(Long id, String name, String adress, String description, double rating) {
+		super(id, name, adress, description, rating);
 	}
 
 	public Set<HotelAdmin> getAdmins() {
@@ -53,6 +58,14 @@ public class Hotel extends Company {
 
 	public void setReservations(Set<HotelReservation> reservations) {
 		this.reservations = reservations;
+	}
+
+	public Destination getDestination() {
+		return destination;
+	}
+
+	public void setDestination(Destination destination) {
+		this.destination = destination;
 	}
 
 }

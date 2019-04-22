@@ -30,19 +30,19 @@
                 <table>
                     <tr>
                         <td> Username </td>
-                        <td>  <input type="text" systemAdmin.username="systemAdmin.username" v-model="systemAdmin.username"> </td>
+                        <td>  <input type="text" name="systemAdmin.username" v-model="systemAdmin.username"> </td>
                     </tr>
                     <tr>
                         <td> First name: </td>
-                        <td>  <input type="text" systemAdmin.firstName="systemAdmin.firstName" v-model="systemAdmin.firstName" > </td>
+                        <td>  <input type="text" name="systemAdmin.firstName" v-model="systemAdmin.firstName" > </td>
                     </tr>
                     <tr>
                         <td> Last name: </td>
-                        <td> <input type="text" systemAdmin.lastName="systemAdmin.lastName"  v-model="systemAdmin.lastName" > </td>        
+                        <td> <input type="text" name="systemAdmin.lastName"  v-model="systemAdmin.lastName" > </td>        
                     </tr>
                     <tr>
                         <td> Email: </td>
-                        <td> <input type="text" systemAdmin.email="systemAdmin.email"  v-model="systemAdmin.email" > </td>        
+                        <td> <input type="text" name="systemAdmin.email"  v-model="systemAdmin.email" > </td>        
                     </tr>
                     <tr>
                         <td>  </td>

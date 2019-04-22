@@ -19,18 +19,25 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.hotel.Hotel;
+import com.tim9.PlanJourney.models.flight.Destination;
+import com.tim9.PlanJourney.service.DestinationService;
 import com.tim9.PlanJourney.service.HotelService;
 
 @RestController
 public class HotelController {
 	@Autowired
 	private HotelService service;
+	
+	@Autowired
+	private DestinationService destinationService;
 
 	@RequestMapping(value = "/api/getAllHotels", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	public @ResponseBody ArrayList<Hotel> getAllHotels() throws Exception {
 		ArrayList<Hotel> hotel = (ArrayList<Hotel>) service.findAll();
-
+		for(Hotel h :hotel) {
+			System.out.println(h.getName());
+		}
 		return hotel;
 	}
 
@@ -53,9 +60,19 @@ public class HotelController {
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
-			if (service.findByAddress(hotel.getAddress()) == null && service.findByName(hotel.getName()) == null) {
+			// checks if hotel already exists on given address and same destination.
+			Hotel addressCheck = service.findByAddress(hotel.getAddress());
+			Destination dest = destinationService.findOne(hotel.getDestination().getId());
+			boolean alreadyExists = false;
+			if (addressCheck != null) {
+				if (addressCheck.getDestination().getId() == hotel.getDestination().getId()) {
+					alreadyExists = true;
+				}
+			}
+			if (!alreadyExists && service.findByName(hotel.getName()) == null) {
+				hotel.setDestination(dest);
 				Hotel h = (Hotel) service.save(hotel);
-				return new ResponseEntity<Hotel>(h, HttpStatus.OK);
+				return new ResponseEntity<Hotel>(new Hotel(), HttpStatus.OK);
 			}
 		}
 		return new ResponseEntity<Hotel>(hotel, HttpStatus.CONFLICT);
