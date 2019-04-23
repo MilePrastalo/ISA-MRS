@@ -1,6 +1,7 @@
 <template>
   <div id="searchRentACarCompany">
-    <div>
+    <div id="inputfields">
+        <h2>Search Rent a Car companies</h2>
         <table>
             <tr>
                 <td>Rent a company name:</td>
@@ -18,12 +19,20 @@
         </table>
     </div>
     <div>
-        <table >
+        <table id="DataTable" >
+            <tr>
+                <th>Name</th>
+                <th>Offices</th>
+                <th>Rating</th>
+            </tr>
             <tr v-for="company in companies" :key="company.name">  
                 <td>{{company.name}}</td>
-                <td><ul>
-                    <li v-for="office in company.offices" :key="office">{{office}}</li>
-                    </ul></td>
+                <td><table>
+                    <tr><th>Office name</th>
+                    <th>Office address</th>
+                    <th>Office destination</th></tr>
+                    <tr v-for="office in company.offices" :key="office"><td>{{office.name}}</td><td>{{office.address}}</td><td>{{office.destination}}</td></tr>
+                    </table></td>
                 <td>{{company.rating}}</td>
             </tr>
         </table>
@@ -34,7 +43,7 @@
 <script>
 
 export default {
-  name: 'v',
+  name: 'searchRentACarCompany',
   components: {
   },
   data: function () {
@@ -51,10 +60,6 @@ mounted(){
     },
     methods:{
            search:function(){
-               var getJwtToken = function() {
-                    return localStorage.getItem('jwtToken');
-                };
-                axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
                axios.post("http://localhost:8080/api/getRentACarCompanies",{name : this.name, location: this.location, datefrom:this.datefrom, dateTo:this.dateTo})
                 .then(response => {
                     this.companies = response.data
@@ -65,12 +70,31 @@ mounted(){
 
 </script>
 
-<style>
+<style scoped>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+#DataTable{
+    border: 1px solid black;
+    margin:auto;
+    margin-top: 2%;
+}
+#DataTable td{
+    border:1px solid black;
+}
+#DataTable th{
+    border:1px solid black;
+}
+h2{
+    margin: auto;
+}
+#inputfields table{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2%;
 }
 </style>

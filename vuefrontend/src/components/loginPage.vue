@@ -1,5 +1,6 @@
 <template>
     <div id="loginPage">
+      <h2>Login</h2>
         <table>
           <tr>
             <td>Username</td>
@@ -10,7 +11,7 @@
             <td><input type="password" id="password" v-model="password"></td>
           </tr>
             <tr>
-              <td><button><a href="./unregisteredUserFrontPage">Back</a></button></td>
+              <td><button><a href="./">Back</a></button></td>
               <td><button @click="login" type="submit">Log in</button></td>
             </tr>
         </table>
@@ -88,7 +89,10 @@ export default {
 table{
   margin-left:auto;
   margin-right:auto;
-  margin-top:10%;
-  padding: 2%;
+  margin-top:2%;
+}
+h2{
+  margin: auto;
+  margin-bottom: 2%;
 }
 </style>

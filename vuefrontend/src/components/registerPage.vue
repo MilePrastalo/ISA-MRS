@@ -1,5 +1,6 @@
 <template>
     <div id="registerPage">
+      <h2>Register</h2>
         <table>
           <tr>
             <td>Username</td>
@@ -87,7 +88,12 @@ export default {
   color: #2c3e50;
 }
 table{
-  margin-left: 20%;
+  margin-left: auto;
+    margin-right: auto;
   margin-top: 5%
+}
+h2{
+  margin: auto;
+  margin-bottom: 2%;
 }
 </style>

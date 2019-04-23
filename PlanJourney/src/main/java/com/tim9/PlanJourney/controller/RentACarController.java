@@ -177,7 +177,6 @@ public class RentACarController {
 
 		ArrayList<RentACarCompany> foundCOmpanies = new ArrayList<>();
 		for (RentACarCompany rentACarCompany : companies) {
-			boolean containsLocation = false;
 			if ((rentACarCompany.getName().equals(search.getName()) || search.getName().equals(""))) {
 				if (!search.getLocation().equals("")) {
 					for (BranchOffice des : rentACarCompany.getOffices()) {
@@ -193,9 +192,9 @@ public class RentACarController {
 		}
 		ArrayList<RentACarCompanySearchBean> returnBean = new ArrayList<>();
 		for (RentACarCompany rentACarCompany : foundCOmpanies) {
-			ArrayList<String> locs = new ArrayList<>();
+			ArrayList<BranchOfficeBean> locs = new ArrayList<>();
 			for (BranchOffice office : rentACarCompany.getOffices()) {
-				locs.add(office.getDestination().getName());
+				locs.add(new BranchOfficeBean(office.getName(), office.getAddress(), office.getDestination().getName()));
 			}
 			returnBean.add(new RentACarCompanySearchBean(rentACarCompany.getName(), locs, rentACarCompany.getRating()));
 		}
