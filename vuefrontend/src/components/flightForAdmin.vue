@@ -23,11 +23,11 @@
                 </tr>
                 <tr>
                     <td>Start date: </td>
-                    <td> <input class = "edit" type = "text" v-model= "flight.startDate" > </td>
+                    <td> <input class = "edit" type = "text" v-model= "flight.startDate_str" > </td>
                 </tr>
                 <tr>
                     <td>End date: </td>
-                    <td> <input class = "edit" type = "text" v-model= "flight.endDate" > </td>
+                    <td> <input class = "edit" type = "text" v-model= "flight.endDate_str" > </td>
                 </tr>
                 <tr>
                     <td>Flight duration: </td>

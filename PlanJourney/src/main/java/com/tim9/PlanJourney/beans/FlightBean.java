@@ -10,6 +10,8 @@ public class FlightBean {
 	private String startDestination;
 	private String endDestination;
 	private Date startDate;
+	private String startDate_str;
+	private String endDate_str;
 	private Date endDate;
 	private int  flightDuration;
 	private int flightLength;
@@ -26,6 +28,7 @@ public class FlightBean {
 	private String  economicCapacity;
 	private String buisinesssCapacity;
 	private String firstClassCapacity;
+	private Long id;
 	
 	
 	public FlightBean() {
@@ -59,7 +62,7 @@ public class FlightBean {
 		this.firstClassCapacity = firstClassCapacity;
 	}
 	
-	public FlightBean(Flight flight, String companyName) {
+	public FlightBean(Flight flight, String companyName, String startDate, String endDate) {
 		this.startDestination = flight.getStartDestination().getName();
 		this.endDestination = flight.getEndDestination().getName();;
 		this.startDate = flight.getStartDate();
@@ -70,6 +73,9 @@ public class FlightBean {
 		this.economicPrice = flight.getEconomicPrice();
 		this.firstClassPrice = flight.getFirstClassPrice();
 		this.flightCompany = companyName;
+		this.id = flight.getId();
+		this.startDate_str = startDate;
+		this.endDate_str = endDate;
 	}
 
 
@@ -260,6 +266,36 @@ public class FlightBean {
 
 	public void setFirstClassCapacity(String firstClassCapacity) {
 		this.firstClassCapacity = firstClassCapacity;
+	}
+
+
+	public String getStartDate_str() {
+		return startDate_str;
+	}
+
+
+	public void setStartDate_str(String startDate_str) {
+		this.startDate_str = startDate_str;
+	}
+
+
+	public String getEndDate_str() {
+		return endDate_str;
+	}
+
+
+	public void setEndDate_str(String endDate_str) {
+		this.endDate_str = endDate_str;
+	}
+
+
+	public Long getId() {
+		return id;
+	}
+
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 	
 	

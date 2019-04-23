@@ -23,11 +23,11 @@
                 </tr>
                 <tr>
                     <td>Start date: </td>
-                    <td> {{flight.startDate}}</td>
+                    <td> {{flight.startDate_str}}</td>
                 </tr>
                 <tr>
                     <td>End date: </td>
-                    <td> {{flight.endDate}}</td>
+                    <td> {{flight.endDate_str}}</td>
                 </tr>
                 <tr>
                     <td>Flight duration: </td>
@@ -94,6 +94,7 @@ export default {
 },
 mounted(){
     var flightID = localStorage.getItem("flightID");
+    alert(this.flightID);
     axios.get("http://localhost:8080/api/getFlight/" + flightID)
         .then(response => {
             this.flight = response.data
