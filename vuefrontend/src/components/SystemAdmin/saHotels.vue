@@ -8,10 +8,10 @@
              <div class="row">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a  class="nav-link active" href="#" @click="selectTab(1)" v-on:click="loadHotels">Hotels</a>
+                        <a  class="nav-link active" href="#" @click="selectTab(1)">Hotels</a>
                     </li>
                     <li class="nav-item">
-                        <a  class="nav-link" href="#" @click="selectTab(2)" v-on:click="loadDestinations">Add Hotel</a>
+                        <a  class="nav-link" href="#" @click="selectTab(2)">Add Hotel</a>
                         
                     </li>
                     <li class="nav-item">
@@ -164,22 +164,18 @@ mounted(){
             return localStorage.getItem('jwtToken');
         };
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.get("http://localhost:8080/api/getAllHotels")
+            .then(response => {
+                this.hotels = response.data;
+            });
+            axios.get("http://localhost:8080/api/getAllDestinations")
+            .then(response => {
+                this.destinations = response.data;
+            });
     },
     methods:{
         selectTab: function(tabId){
             this.currentTab = tabId;
-        },
-        loadHotels: function() {
-            axios.get("http://localhost:8080/api/getAllHotels")
-            .then(response => {
-                this.hotels = response.data;
-            })
-        },
-        loadDestinations: function() {
-            axios.get("http://localhost:8080/api/getAllDestinations")
-            .then(response => {
-                this.destinations = response.data;
-            })
         },
         addHotel: function() {
             for(let d in this.destinations) {

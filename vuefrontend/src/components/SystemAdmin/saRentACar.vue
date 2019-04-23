@@ -8,7 +8,7 @@
              <div class="row">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a  class="nav-link active" href="#" @click="selectTab(1)" v-on:click="loadRentACars">Rent A Cars</a>
+                        <a  class="nav-link active" href="#" @click="selectTab(1)">Rent A Cars</a>
                     </li>
                     <li class="nav-item">
                         <a  class="nav-link" href="#" @click="selectTab(2)">Add Rent A Car</a>
@@ -141,16 +141,14 @@ mounted(){
             return localStorage.getItem('jwtToken');
         };
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.get("http://localhost:8080/api/getAllRentACars")
+            .then(response => {
+                this.racs = response.data;
+            })
     },
     methods:{
         selectTab: function(tabId){
             this.currentTab = tabId;
-        },
-        loadRentACars: function() {
-            axios.get("http://localhost:8080/api/getAllRentACars")
-            .then(response => {
-                this.racs = response.data;
-            })
         },
         addRentACar: function() {
             axios.post("http://localhost:8080/api/addRentACarCompany",{name:this.name,address:this.address,description:this.description}).

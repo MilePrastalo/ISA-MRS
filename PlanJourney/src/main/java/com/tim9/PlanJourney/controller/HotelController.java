@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.hotel.Hotel;
+import com.tim9.PlanJourney.hotel.HotelRoom;
 import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.service.DestinationService;
 import com.tim9.PlanJourney.service.HotelService;
@@ -27,7 +28,7 @@ import com.tim9.PlanJourney.service.HotelService;
 public class HotelController {
 	@Autowired
 	private HotelService service;
-	
+
 	@Autowired
 	private DestinationService destinationService;
 
@@ -35,7 +36,7 @@ public class HotelController {
 	@CrossOrigin()
 	public @ResponseBody ArrayList<Hotel> getAllHotels() throws Exception {
 		ArrayList<Hotel> hotel = (ArrayList<Hotel>) service.findAll();
-		for(Hotel h :hotel) {
+		for (Hotel h : hotel) {
 			System.out.println(h.getName());
 		}
 		return hotel;
@@ -85,7 +86,6 @@ public class HotelController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Hotel hotel = service.findByName(name);
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
-			
 
 			if (hotel == null) {
 				return new ResponseEntity<Hotel>(hotel, HttpStatus.CONFLICT);
@@ -100,13 +100,51 @@ public class HotelController {
 	// Metod za izmenu hotela, dodavanje soba, rezervacija...
 	@RequestMapping(value = "/api/updateHotel", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	public @ResponseBody ResponseEntity<Hotel> updateHotel(@RequestBody Hotel hotel) {
+	@PreAuthorize("hasAuthority('HOTEL_ADMIN')")
+	public @ResponseBody Hotel updateHotel(@RequestBody Hotel hotel) {
 		Hotel existingHotel = service.findOne(hotel.getId());
-		if (existingHotel.getAddress().equals(hotel.getAddress()) && existingHotel.getName().equals(hotel.getName())) {
-			Hotel h = (Hotel) service.save(hotel);
-			return new ResponseEntity<Hotel>(h, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<Hotel>(hotel, HttpStatus.CONFLICT);
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			if (existingHotel.getAddress().equals(hotel.getAddress())
+					&& existingHotel.getName().equals(hotel.getName())) {
+				Hotel h = (Hotel) service.save(hotel);
+				return null;
+			}
 		}
+		return null;
+	}
+
+	@RequestMapping(value = "/api/searchHotels/{values}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	public @ResponseBody ArrayList<Hotel> searchHotels(@PathVariable("values") String values) throws Exception {
+		ArrayList<Hotel> hotels = (ArrayList<Hotel>) service.findAll();
+		ArrayList<Hotel> foundHotels = new ArrayList<Hotel>();
+		String[] split = values.split("\\|");
+		System.out.println(values);
+		String crit = split[0];
+		String val = split[1];
+		if (crit.equals("name")) {
+			for (Hotel h : hotels) {
+				if (h.getName().equals(val)) {
+					foundHotels.add(h);
+				}
+			}
+		} else if (crit.equals("destination")) {
+			for (Hotel h : hotels) {
+				if (h.getDestination().getName().equals(val)) {
+					foundHotels.add(h);
+				}
+			}
+		} else if (crit.equals("nob")) {
+			for (Hotel h : hotels) {
+				for (HotelRoom r : h.getRooms()) {
+					if (r.getNumberOfBeds() == Integer.parseInt(val)) {
+						if (!foundHotels.contains(h))
+							foundHotels.add(h);
+					}
+				}
+			}
+		}
+		return foundHotels;
 	}
 }
