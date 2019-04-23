@@ -25,10 +25,12 @@
                 <tr>
                     <td> Start date: </td>
                     <td>  <input type="date" name="startDate" v-model="startDate"  required> </td>
+                    <td>  <input type="text" name="time_startDate"  placeholder="hh:mm"  required> </td>
                 </tr>
                  <tr>
                     <td> End date: </td>
                     <td>  <input type="date" name="endDate" v-model="endDate" required > </td>
+                    <td>  <input type="text" name="time_endDate"  placeholder="hh:mm" required> </td>
                 </tr>
                  <tr>
                     <td> Flight duration: </td>

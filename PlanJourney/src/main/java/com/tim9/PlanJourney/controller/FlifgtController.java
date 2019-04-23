@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -50,6 +50,8 @@ public class FlifgtController {
 	@Autowired
 	UserService userService;
 	
+	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MMyyyy. HH:mm");
+	
 	
 	@RequestMapping(value = "/api/getFlight/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -64,7 +66,8 @@ public class FlifgtController {
 				break;
 			}
 		}
-		return new FlightBean(flight, companyName);
+		
+		return new FlightBean(flight, companyName, sdf.format(flight.getStartDate()), sdf.format(flight.getEndDate()));
 	}
 	
 	
@@ -173,7 +176,7 @@ public class FlifgtController {
 				)
 					 {
 				
-				foundFlights.add(new FlightBean(f,companyName));
+				foundFlights.add(new FlightBean(f,companyName, sdf.format(f.getStartDate()), sdf.format(f.getEndDate())));
 			}
 		}
 		System.out.println("\tREZ = " + foundFlights.size());

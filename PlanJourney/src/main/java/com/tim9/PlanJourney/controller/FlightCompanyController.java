@@ -1,10 +1,12 @@
 package com.tim9.PlanJourney.controller;
 
+import org.joda.time.DateTimeComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -50,6 +52,8 @@ public class FlightCompanyController {
 	private UserService userService;
 	@Autowired
 	private AuthorityService authorityService;
+	
+	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MMyyyy. HH:mm");
 
 	@RequestMapping(value = "/api/getFlightCompanyProfile", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -181,7 +185,7 @@ public class FlightCompanyController {
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
 	// Method for searching flights in flight company
-	public @ResponseBody ArrayList<Flight> flightsInCompany(@RequestBody FlightBean search) throws Exception {
+	public @ResponseBody ArrayList<FlightBean> flightsInCompany(@RequestBody FlightBean search) throws Exception {
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
@@ -193,12 +197,11 @@ public class FlightCompanyController {
 				System.out.println("Flight admin doesnt't have flight company.");
 				return null;
 			}
-			ArrayList<Flight> foundFlights = new ArrayList<>();
+			ArrayList<FlightBean> foundFlights = new ArrayList<>();
+			DateTimeComparator dateTimeComparator = DateTimeComparator.getDateOnlyInstance();
 			for (Flight f : flightCompany.getFlights()) {
-				if ((f.getStartDestination().getName().equals(search.getStartDestination())
-						|| search.getStartDestination().equals(""))
-						&& (f.getEndDestination().getName().equals(search.getEndDestination())
-								|| search.getEndDestination().equals(""))
+				if ( (f.getStartDestination().getName().equals(search.getStartDestination()) || search.getStartDestination().equals(""))
+						&& (f.getEndDestination().getName().equals(search.getEndDestination()) || search.getEndDestination().equals(""))
 						&& (f.getEconomicPrice() >= search.getMinEconomic() || (search.getMinEconomic() == 0))
 						&& (f.getBusinessPrice() >= search.getMinBusiness() || (search.getMinBusiness() == 0))
 						&& (f.getFirstClassPrice() >= search.getMinFirstClass() || (search.getMinFirstClass() == 0))
@@ -206,21 +209,12 @@ public class FlightCompanyController {
 						&& (f.getBusinessPrice() <= search.getMaxBusiness() || (search.getMaxBusiness() == 0))
 						&& (f.getFirstClassPrice() <= search.getMaxFirstClass() || (search.getMaxFirstClass() == 0))
 						&& (f.getFlightDuration() == search.getFlightDuration() || search.getFlightDuration() == 0)
-						&& (f.getFlightLength() == search.getFlightLength() || search.getFlightLength() == 0)) {
-					if (search.getStartDate() != null) {
-						System.out.println("bio");
-						if (f.getStartDate().equals(search.getStartDate())) {
-							foundFlights.add(f);
-							continue;
-						}
-					}
-					if (search.getEndDate() != null) {
-						if (f.getEndDate().equals(search.getEndDate())) {
-							foundFlights.add(f);
-							continue;
-						}
-					}
-					foundFlights.add(f);
+						&& (f.getFlightLength() == search.getFlightLength() || search.getFlightLength() == 0)
+						&& ( search.getStartDate()==null || dateTimeComparator.compare(f.getStartDate(),search.getStartDate()) == 0) 
+						&& (search.getEndDate() == null  || dateTimeComparator.compare(f.getEndDate(),search.getEndDate()) == 0)
+						)
+							 {
+					foundFlights.add(new FlightBean(f,"", sdf.format(f.getStartDate()), sdf.format(f.getEndDate())));
 				}
 			}
 			return foundFlights;
