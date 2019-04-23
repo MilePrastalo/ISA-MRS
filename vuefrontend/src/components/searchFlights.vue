@@ -8,7 +8,11 @@
         <br>
 
        <div class = "row">
-        <table  style="text-align: left">
+        <table class = "searchForm"  style="text-align: left">
+            <tr>
+                <td>Flight company:</td>
+                <td><input v-model="flightCompany" type="text"></td>
+            </tr>
            <tr>
                 <td>Start destination:</td>
                 <td><input v-model="startDestination" type="text"></td>
@@ -71,9 +75,9 @@
                         <td>First class price</td>
                     </tr>
             <tr v-for="flight in flights" :key="flight.id"> 
-                <td>xxx</td> 
-                <td>{{flight.startDestination.name}}</td>
-                <td>{{flight.endDestination.name}}</td>
+                <td>{{flight.flightCompany}}</td> 
+                <td>{{flight.startDestination}}</td>
+                <td>{{flight.endDestination}}</td>
                 <td>{{flight.startDate}}</td>
                 <td>{{flight.endDate}}</td>
                 <td>{{flight.flightDuration}}</td>
@@ -136,7 +140,7 @@ mounted(){
             var flightForSearch = {startDestination: this.startDestination, endDestination: this.endDestination, startDate: this.startDate, endDate: this.endDate,
             minEconomic : MineconomicPrice, minBusiness: MinbuisinesssPrice, minFirstClass :MinfirstClassPrice,
             maxEconomic: MaxeconomicPrice, maxBusiness: MaxbuisinesssPrice, maxFirstClass:MaxfirstClassPrice,
-            flightDuration: this.flightDuration, flightLength:  this.flightLength }
+            flightDuration: this.flightDuration, flightLength:  this.flightLength, flightCompany: this.flightCompany }
             axios.post("http://localhost:8080/api/flightSearch",flightForSearch)
             .then(response => {
                 this.flights = response.data
@@ -161,4 +165,5 @@ mounted(){
   color: #303e4d;
   margin: 5%;
 }
+
 </style>

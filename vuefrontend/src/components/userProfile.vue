@@ -63,8 +63,6 @@ mounted(){
             this.firstName = response.data.firstName
             this.lastName = response.data.lastName
             this.email = response.data.email
-            this.password = response.data.password
-            this.repeatedPassword = this.password
           }).catch(
     error =>{ if(error.response){
     console.log(error.response.data)
@@ -78,13 +76,11 @@ mounted(){
                     return localStorage.getItem('jwtToken');
                 };
             axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-                axios.post("http://localhost:8080/api/updateUserProfile",{firstName : this.firstName, lastName: this.lastName, email:this.email, password:this.password})
+                axios.post("http://localhost:8080/api/updateUserProfile",{firstName : this.firstName, lastName: this.lastName, email:this.email, password:this.password, repeatedPass: this.password})
             .then(response => {
                 this.firstName = response.data.firstName
                 this.lastName = response.data.lastName
                 this.email = response.data.email
-                this.password = response.data.password
-                this.repeatedPassword = this.password
             }); 
             alert("Your profile has been successfuly updated!");  
             }

@@ -61,9 +61,16 @@ public class UserController {
 			user.setFirstName(updatedUser.getFirstName());
 			user.setLastName(updatedUser.getLastName());
 			user.setEmail(updatedUser.getEmail());
-
+			
+			if (updatedUser.getPassword().equals(updatedUser.getRepeatedPass()) == false) {
+				System.out.println("aaaaaaaaaa");
+				return null;
+			}
 			BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
-			user.setPassword(bc.encode(updatedUser.getPassword()));
+			if (! updatedUser.getPassword().equals("")) {
+				user.setPassword(bc.encode(updatedUser.getPassword()));
+			}
+			
 			userService.save(user);
 			return user;
 		}

@@ -119,6 +119,11 @@ export default new Router({
       path: '/RAindex',
       name: 'rentACarAdminIndex',
       component: () => import('./components/rentACarAdminIndex.vue')
+    },
+    {
+      path: '/searchFlightCompany',
+      name: 'searchFlightCompany',
+      component: () => import('./components/searchFlightCompany.vue')
 
     }
   ]
