@@ -22,11 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tim9.PlanJourney.hotel.Hotel;
 import com.tim9.PlanJourney.hotel.HotelAdmin;
 import com.tim9.PlanJourney.models.Authority;
-import com.tim9.PlanJourney.models.flight.Destination;
+import com.tim9.PlanJourney.models.SystemAdmin;
 import com.tim9.PlanJourney.service.AuthorityService;
-import com.tim9.PlanJourney.service.DestinationService;
 import com.tim9.PlanJourney.service.HotelAdminService;
 import com.tim9.PlanJourney.service.HotelService;
+import com.tim9.PlanJourney.service.UserService;
 
 @RestController
 public class HotelAdminController {
@@ -39,20 +39,42 @@ public class HotelAdminController {
 
 	@Autowired
 	private AuthorityService authorityService;
-
+	
 	@Autowired
-	private DestinationService destinationService;
+	private UserService userService;
 
 	@RequestMapping(value = "/api/getHotelAdmin/{username}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
+	@PreAuthorize("hasAuthority('HOTEL_ADMIN')")
 	public ResponseEntity<HotelAdmin> getHotelAdmin(@PathVariable("username") String username) {
-
 		HotelAdmin admin = adminService.findByUsername(username);
-		// Checks if admin exists.
-		if (admin == null) {
-			return new ResponseEntity<HotelAdmin>(admin, HttpStatus.CONFLICT);
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			// Checks if admin exists.
+			if (admin == null) {
+				return new ResponseEntity<HotelAdmin>(admin, HttpStatus.CONFLICT);
+			}
+			return new ResponseEntity<HotelAdmin>(admin, HttpStatus.OK);
 		}
-		return new ResponseEntity<HotelAdmin>(admin, HttpStatus.OK);
+		return new ResponseEntity<HotelAdmin>(admin, HttpStatus.CONFLICT);
+	}
+	
+	@RequestMapping(value = "/api/getHotelAdminProfile", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('HOTEL_ADMIN')")
+	// Method returns hotel admin information
+	public @ResponseBody HotelAdmin getHotelAdminProfile() throws Exception {
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+
+			String username = authentication.getName();
+			HotelAdmin user = (HotelAdmin) userService.findOneByUsername(username);
+			System.out.println(user.getHotel().getName());
+			System.out.println(user.getHotel().getDestination().getName());
+			return user;
+		}
+		return null;
 	}
 
 	@RequestMapping(value = "/api/addHotelAdmin", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -99,16 +121,18 @@ public class HotelAdminController {
 		}
 		return new ResponseEntity<HotelAdmin>(admin, HttpStatus.CONFLICT);
 	}
-
-	@RequestMapping(value = "/api/getAllDestinations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	
+	@RequestMapping(value = "/api/updateHotelAdmin", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	@PreAuthorize("hasAuthority('SYS_ADMIN')")
-	public @ResponseBody ArrayList<Destination> getAllDestinations() throws Exception {
+	@PreAuthorize("hasAuthority('HOTEL_ADMIN')")
+	public @ResponseBody HotelAdmin updateHotelAdmin(@RequestBody HotelAdmin hotelAdmin) {
+		HotelAdmin existingHotelAdmin = adminService.findOne(hotelAdmin.getId());
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
-			ArrayList<Destination> destinations = (ArrayList<Destination>) destinationService.findAll();
-
-			return destinations;
+			if (existingHotelAdmin.getUsername().equals(hotelAdmin.getUsername())) {
+				HotelAdmin h = (HotelAdmin) adminService.save(hotelAdmin);
+				return h;
+			}
 		}
 		return null;
 	}

@@ -21,6 +21,12 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#" @click="selectTab(4)">Rent A Cars</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" @click="selectTab(5)">Change Password</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" @click="selectTab(6)">Log Out</a>
+                    </li>
                 </ul>
             </div>
             
@@ -44,12 +50,6 @@
                         <td> Email: </td>
                         <td> <input type="text" name="systemAdmin.email"  v-model="systemAdmin.email" > </td>        
                     </tr>
-                    <tr>
-                        <td>  </td>
-                        <td><button v-on:click="updateSystemAdminProfile()">Edit</button> </td>      
-                        <td>  </td>
-                        <td><button>Change Password</button> </td>   
-                    </tr>
                 </table>
             </div>
 
@@ -61,6 +61,10 @@
             </div>
             <div  v-if="currentTab == 4" id = "rent a cars">
                 <sa-rent-a-car></sa-rent-a-car>
+            </div>
+            <div  v-if="currentTab == 5" id = "change password">
+            </div>
+            <div  v-if="currentTab == 6" id = "log out" v-on="logOut()">
             </div>
         </div>
 </template>
@@ -115,6 +119,9 @@ mounted(){
             .then(response => {
                 this.hotels = response.data;
             })
+        },
+        logOut: function() {
+            this.$router.push('/');
         }    
     }
 }
