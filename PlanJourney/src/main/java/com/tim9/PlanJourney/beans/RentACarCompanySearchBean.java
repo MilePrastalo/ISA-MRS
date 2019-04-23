@@ -7,12 +7,12 @@ import com.tim9.PlanJourney.models.rentacar.BranchOffice;
 
 public class RentACarCompanySearchBean {
 	private String name;
-	private ArrayList<String> offices;
+	private ArrayList<BranchOfficeBean> offices;
 	private double rating;
 	private String location;
 	private String dateFrom;
 	private String dateTo;
-	public RentACarCompanySearchBean(String name, ArrayList<String> offices, double rating, String location,
+	public RentACarCompanySearchBean(String name, ArrayList<BranchOfficeBean> offices, double rating, String location,
 			String dateFrom, String dateTo) {
 		super();
 		this.name = name;
@@ -25,7 +25,7 @@ public class RentACarCompanySearchBean {
 	public RentACarCompanySearchBean() {
 		super();
 	}
-	public RentACarCompanySearchBean(String name, ArrayList<String> offices, double rating) {
+	public RentACarCompanySearchBean(String name, ArrayList<BranchOfficeBean> offices, double rating) {
 		super();
 		this.name = name;
 		this.offices = offices;
@@ -37,10 +37,10 @@ public class RentACarCompanySearchBean {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public ArrayList<String> getOffices() {
+	public ArrayList<BranchOfficeBean> getOffices() {
 		return offices;
 	}
-	public void setOffices(ArrayList<String> offices) {
+	public void setOffices(ArrayList<BranchOfficeBean> offices) {
 		this.offices = offices;
 	}
 	public double getRating() {

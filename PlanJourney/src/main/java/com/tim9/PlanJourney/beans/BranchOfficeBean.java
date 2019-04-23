@@ -10,6 +10,14 @@ public class BranchOfficeBean {
 		this.name = name;
 		this.destination = destination;
 	}
+	
+	public BranchOfficeBean(String name, String address, String destination) {
+		super();
+		this.name = name;
+		this.address = address;
+		this.destination = destination;
+	}
+
 	public BranchOfficeBean() {
 		super();
 	}
