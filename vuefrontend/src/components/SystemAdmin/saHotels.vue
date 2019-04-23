@@ -8,7 +8,7 @@
              <div class="row">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a  class="nav-link active" href="#" @click="selectTab(1)" v-on:click="loadHotels">Hotels</a>
+                        <a  class="nav-link active" href="#" @click="selectTab(1)">Hotels</a>
                     </li>
                     <li class="nav-item">
                         <a  class="nav-link" href="#" @click="selectTab(2)">Add Hotel</a>
@@ -32,12 +32,14 @@
                 <table border="1" >
                     <tr>
                         <td>Hotel name</td>
+                        <td>Destination</td>
                         <td>Adress</td>
                         <td>Description</td>
                         <td>Rating</td>
                     </tr>
             <tr v-for="h in this.hotels" :key="h.id">  
                 <td>{{h.name}}</td>
+                <td>{{h.destination.name}}</td>
                 <td>{{h.address}}</td>
                 <td>{{h.description}}</td>
                 <td>{{h.rating}}</td>
@@ -56,6 +58,10 @@
                     <td>  <input type="text" name="address" v-model="address" > </td>
                 </tr>
                 <tr>
+                    <td> Destination ID: </td>
+                    <td>  <input type="text" name="destinationID" v-model="destinationID" > </td>
+                </tr>
+                <tr>
                     <td> Description: </td>
                     <td> <textarea  rows="5" cols="22" name="description"  v-model="description" style="overflow:scroll;"></textarea> </td>        
                 </tr>
@@ -63,7 +69,21 @@
                     <td>  </td>
                     <td><button v-on:click="addHotel()">Add Hotel</button> </td>      
                 </tr>
-            </table>      
+            </table>   
+            <div>
+                <table border="1" >
+                    <tr>
+                        <td>ID</td>
+                        <td>Destination name</td>
+                        <td>Description</td>
+                    </tr>
+            <tr v-for="d in this.destinations" :key="d.id">  
+                <td>{{d.id}}</td>
+                <td>{{d.name}}</td>
+                <td>{{d.description}}</td>
+            </tr>
+            </table>
+            </div>   
             </div> 
 
             <div  v-if="currentTab == 3">
@@ -79,27 +99,27 @@
                  <table>
                 <tr>
                     <td> Username: </td>
-                    <td>  <input type="text" admin.username="admin.username" v-model="admin.username" > </td>
+                    <td>  <input type="text" name="admin.username" v-model="admin.username" > </td>
                 </tr>
                 <tr>
                     <td> Password: </td>
-                    <td>  <input type="text" admin.password="admin.password" v-model="admin.password" > </td>
+                    <td>  <input type="text" name="admin.password" v-model="admin.password" > </td>
                 </tr>
                 <tr>
                     <td> First Name: </td>
-                    <td> <input type="text" admin.firstName="admin.firstName" v-model="admin.firstName" > </td>        
+                    <td> <input type="text" name="admin.firstName" v-model="admin.firstName" > </td>        
                 </tr>
                 <tr>
                     <td> Last Name: </td>
-                    <td> <input type="text" admin.lastName="admin.lastName" v-model="admin.lastName" > </td>        
+                    <td> <input type="text" name="admin.lastName" v-model="admin.lastName" > </td>        
                 </tr>
                 <tr>
                     <td> Email: </td>
-                    <td> <input type="text" admin.email="admin.email" v-model="admin.email" > </td>        
+                    <td> <input type="text" name="admin.email" v-model="admin.email" > </td>        
                 </tr>
                 <tr>
                     <td> Hotel Name: </td>
-                    <td> <input type="text" hotelName="hotelName" v-model="hotelName" > </td>        
+                    <td> <input type="text" name="hotelName" v-model="hotelName" > </td>        
                 </tr>
                 <tr>
                     <td>  </td>
@@ -111,7 +131,7 @@
                 <table>
                 <tr>
                     <td> Enter hotel admin's username you want to remove: </td>
-                    <td>  <input type="text" admin.username="admin.username" v-model="admin.username" > </td>
+                    <td>  <input type="text" name="admin.username" v-model="admin.username" > </td>
                     <td><button v-on:click="removeHotelAdmin()">Remove Hotel Admin</button> </td> 
                 </tr>
                 </table>
@@ -129,8 +149,11 @@ export default {
   return {
     hotels: [],
     admin: [],
+    destinations: [],
+    destination: [],
     hotelName: "",
     name: "",
+    destinationID: 0,
     address: "",
     description: "",
     currentTab: 1
@@ -141,19 +164,29 @@ mounted(){
             return localStorage.getItem('jwtToken');
         };
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.get("http://localhost:8080/api/getAllHotels")
+            .then(response => {
+                this.hotels = response.data;
+            });
+            axios.get("http://localhost:8080/api/getAllDestinations")
+            .then(response => {
+                this.destinations = response.data;
+            });
     },
     methods:{
         selectTab: function(tabId){
             this.currentTab = tabId;
         },
-        loadHotels: function() {
-            axios.get("http://localhost:8080/api/getAllHotels")
-            .then(response => {
-                this.hotels = response.data;
-            })
-        },
         addHotel: function() {
-            axios.post("http://localhost:8080/api/addHotel",{name:this.name,address:this.address,description:this.description}).
+            for(let d in this.destinations) {
+                console.log(d.id);
+                if(d.id == this.destinationID){
+                    this.destination = d;
+                }
+            }
+            console.log(this.destinations);
+            console.log(this.destinationID)
+            axios.post("http://localhost:8080/api/addHotel",{name:this.name,address:this.address,description:this.description,destination:{id:this.destinationID}}).
             then(response =>{
                 alert(response.data.name + " has been successfully added.");
             })

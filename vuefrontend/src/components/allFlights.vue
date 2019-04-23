@@ -80,8 +80,9 @@
                     <td>{{flight.flightDuration}}</td>
                     <td>{{flight.flightLength}}</td>
                     <td>{{flight.economicPrice}}</td>
-                    <td>{{flight.buisinessPrice}}</td>
+                    <td>{{flight.businessPrice}}</td>
                     <td>{{flight.firstClassPrice}}</td>
+                    <td> <Button @click="goToDetails(flight.id)" >Details</Button></td>
                     <td><button>Edit</button></td>
                     <td><button>Delete</button></td>
                 </tr>              
@@ -153,6 +154,10 @@ mounted(){
             .then(response => {
                 this.flights = response.data
             }); 
+        },
+        goToDetails : function(flightID){
+            localStorage.setItem("flightID",flightID)
+            window.location = "/flightForAdmin"
         }       
     }
 }

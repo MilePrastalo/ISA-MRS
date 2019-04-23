@@ -21,6 +21,12 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#" @click="selectTab(4)">Rent A Cars</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" @click="selectTab(5)">Change Password</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" @click="selectTab(6)">Log Out</a>
+                    </li>
                 </ul>
             </div>
             
@@ -30,25 +36,19 @@
                 <table>
                     <tr>
                         <td> Username </td>
-                        <td>  <input type="text" systemAdmin.username="systemAdmin.username" v-model="systemAdmin.username"> </td>
+                        <td>  <input type="text" name="systemAdmin.username" v-model="systemAdmin.username"> </td>
                     </tr>
                     <tr>
                         <td> First name: </td>
-                        <td>  <input type="text" systemAdmin.firstName="systemAdmin.firstName" v-model="systemAdmin.firstName" > </td>
+                        <td>  <input type="text" name="systemAdmin.firstName" v-model="systemAdmin.firstName" > </td>
                     </tr>
                     <tr>
                         <td> Last name: </td>
-                        <td> <input type="text" systemAdmin.lastName="systemAdmin.lastName"  v-model="systemAdmin.lastName" > </td>        
+                        <td> <input type="text" name="systemAdmin.lastName"  v-model="systemAdmin.lastName" > </td>        
                     </tr>
                     <tr>
                         <td> Email: </td>
-                        <td> <input type="text" systemAdmin.email="systemAdmin.email"  v-model="systemAdmin.email" > </td>        
-                    </tr>
-                    <tr>
-                        <td>  </td>
-                        <td><button v-on:click="updateSystemAdminProfile()">Edit</button> </td>      
-                        <td>  </td>
-                        <td><button>Change Password</button> </td>   
+                        <td> <input type="text" name="systemAdmin.email"  v-model="systemAdmin.email" > </td>        
                     </tr>
                 </table>
             </div>
@@ -61,6 +61,10 @@
             </div>
             <div  v-if="currentTab == 4" id = "rent a cars">
                 <sa-rent-a-car></sa-rent-a-car>
+            </div>
+            <div  v-if="currentTab == 5" id = "change password">
+            </div>
+            <div  v-if="currentTab == 6" id = "log out" v-on="logOut()">
             </div>
         </div>
 </template>
@@ -115,6 +119,9 @@ mounted(){
             .then(response => {
                 this.hotels = response.data;
             })
+        },
+        logOut: function() {
+            this.$router.push('/');
         }    
     }
 }

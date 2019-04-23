@@ -8,7 +8,7 @@
              <div class="row">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a  class="nav-link active" href="#" @click="selectTab(1)" v-on:click="loadFlightCompanies">Flight Companies</a>
+                        <a  class="nav-link active" href="#" @click="selectTab(1)">Flight Companies</a>
                     </li>
                     <li class="nav-item">
                         <a  class="nav-link" href="#" @click="selectTab(2)">Add Flight Company</a>
@@ -79,27 +79,27 @@
                  <table>
                 <tr>
                     <td> Username: </td>
-                    <td>  <input type="text" admin.username="admin.username" v-model="admin.username" > </td>
+                    <td>  <input type="text" name="admin.username" v-model="admin.username" > </td>
                 </tr>
                 <tr>
                     <td> Password: </td>
-                    <td>  <input type="text" admin.password="admin.password" v-model="admin.password" > </td>
+                    <td>  <input type="text" name="admin.password" v-model="admin.password" > </td>
                 </tr>
                 <tr>
                     <td> First Name: </td>
-                    <td> <input type="text" admin.firstName="admin.firstName" v-model="admin.firstName" > </td>        
+                    <td> <input type="text" name="admin.firstName" v-model="admin.firstName" > </td>        
                 </tr>
                 <tr>
                     <td> Last Name: </td>
-                    <td> <input type="text" admin.lastName="admin.lastName" v-model="admin.lastName" > </td>        
+                    <td> <input type="text" name="admin.lastName" v-model="admin.lastName" > </td>        
                 </tr>
                 <tr>
                     <td> Email: </td>
-                    <td> <input type="text" admin.email="admin.email" v-model="admin.email" > </td>        
+                    <td> <input type="text" name="admin.email" v-model="admin.email" > </td>        
                 </tr>
                 <tr>
                     <td> Flight Company Name: </td>
-                    <td> <input type="text" flightCompanyName="flightCompanyName" v-model="flightCompanyName" > </td>        
+                    <td> <input type="text" name="flightCompanyName" v-model="flightCompanyName" > </td>        
                 </tr>
                 <tr>
                     <td>  </td>
@@ -111,7 +111,7 @@
                 <table>
                 <tr>
                     <td> Enter flight company admin's username you want to remove: </td>
-                    <td>  <input type="text" admin.username="admin.username" v-model="admin.username" > </td>
+                    <td>  <input type="text" name="admin.username" v-model="admin.username" > </td>
                     <td><button v-on:click="removeFlightCompanyAdmin()">Remove Flight Company Admin</button> </td> 
                 </tr>
                 </table>
@@ -141,16 +141,14 @@ mounted(){
             return localStorage.getItem('jwtToken');
         };
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.get("http://localhost:8080/api/getAllFlightCompanies")
+            .then(response => {
+                this.fcs = response.data;
+            })
     },
     methods:{
         selectTab: function(tabId){
             this.currentTab = tabId;
-        },
-        loadFlightCompanies: function() {
-            axios.get("http://localhost:8080/api/getAllFlightCompanies")
-            .then(response => {
-                this.fcs = response.data;
-            })
         },
         addFlightCompany: function() {
             axios.post("http://localhost:8080/api/addFlightCompany",{name:this.name,address:this.address,description:this.description}).

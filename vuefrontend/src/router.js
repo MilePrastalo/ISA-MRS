@@ -90,11 +90,6 @@ export default new Router({
       component: () => import('./components/registeredFrontPage.vue')
     },
     {
-      path: '/addHotelRooms',
-      name: 'addHotelRooms',
-      component: () => import('./components/addHotelRooms.vue')
-    },
-    {
       path: '/searchHotels',
       name: 'searchHotels',
       component: () => import('./components/searchHotels.vue')
@@ -103,6 +98,11 @@ export default new Router({
       path: '/flightAdmin',
       name: 'flightAdmin',
       component: () => import('./components/flightAdmin.vue')
+    },
+    {
+      path: '/flightForAdmin',
+      name: 'flightForAdmin',
+      component: () => import('./components/flightForAdmin.vue')
     }
     ,
     {
@@ -115,6 +115,11 @@ export default new Router({
       name: 'rentACarAdminIndex',
       component: () => import('./components/rentACarAdminIndex.vue')
 
+    },
+    {
+      path: '/hotelAdminPage',
+      name: 'hotelAdminPage',
+      component: () => import('./components/HotelAdmin/hotelAdminPage.vue')
     }
   ]
 })

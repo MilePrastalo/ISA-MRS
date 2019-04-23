@@ -14,7 +14,7 @@
                     <td> <textarea  rows="5" cols="22" name="destination"  v-model="destination" style="overflow:scroll;"></textarea> </td>        
                 </tr>
                 <tr>
-                    <td>  </td>
+                    <td><Button @click="backAdd()">Back to adding</Button>  </td>
                     <td><button v-on:click="edit()">Edit Office</button> </td>   
                 </tr>
             </table>      
@@ -53,13 +53,16 @@ export default {
               a.$emit('vedited');
             });
             ///this.$emit('vedited'); 
+        },
+        backAdd:function(){
+            this.$emit('backadd');
         }     
     }
 }
 
 </script>
 
-<style>
+<style scoped>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

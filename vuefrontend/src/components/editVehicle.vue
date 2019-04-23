@@ -22,7 +22,7 @@
             <td><input v-model="year" type="number"></td>
         </tr>
         <tr>
-            <td><button>Back</button></td>
+            <td><button @click="back">Back</button></td>
             <td><button @click="edit">Edit</button></td>
         </tr>
     </table>
@@ -85,6 +85,9 @@ export default {
               a.$emit('vedited');
             });
             ///this.$emit('vedited'); 
+        },
+        back:function(){
+            this.$emit('back');
         } 
     },
     
@@ -92,7 +95,7 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

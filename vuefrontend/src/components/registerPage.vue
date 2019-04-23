@@ -27,7 +27,7 @@
           </tr>
           <tr>
             
-            <td><button><a href="./unregisteredUserFrontPage">Back</a></button></td>
+            <td><button><a href="./">Back</a></button></td>
             <td><button @click="register"  type="submit">Register</button></td>
           </tr>
         </table>
@@ -61,7 +61,7 @@ export default {
                         console.log(response);
                           if(response == 200){
                             alert("Registration is successfull");
-                            //window.location="/";
+                            window.location="/";
                           }
                           else{
                             alert("User with that username already exists");
