@@ -102,4 +102,7 @@ mounted(){
   text-align: center;
   color: #2c3e50;
 }
+.row{
+    margin:auto;
+}
 </style>

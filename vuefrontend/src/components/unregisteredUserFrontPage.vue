@@ -1,13 +1,19 @@
 <template>
     <div id="unregisteredUserFrontPage">
-        <table>
+        <div>
+            <h1 id="planjourney">PlanJourney</h1>
+
+            <table align="center">
+            <br>
             <tr>
-                <td><a href="./loginPage">LogIn</a></td>
+                <td><button v-on:click="logIn()">Login</button></td>
+                <td><button v-on:click="register()">Register</button></td>
             </tr>
-            <tr>
-                <td><a href="./registerPage">Register</a></td>
-            </tr>
+            <br>
+            <br>
         </table>
+        </div>
+        
     <SearchFlights />
     </div>
     
@@ -20,7 +26,15 @@ export default {
   name: 'unregisteredUserFrontPage',
   components: {
       SearchFlights
-  }
+  },
+  methods: {
+        logIn: function() {
+            this.$router.push('/loginPage');
+        },
+        register: function() {
+            this.$router.push('/registerPage');
+        }  
+    }
 }
 
 </script>
@@ -32,5 +46,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+#planjourney {
+    font-size: 3.175em!important;
 }
 </style>

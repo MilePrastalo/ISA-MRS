@@ -1,5 +1,6 @@
 <template>
   <div id="rentacarprofile">
+    <h2>Company profile</h2>
     <table>
         <tr>
             <td>Name</td>
@@ -60,12 +61,15 @@ mounted(){
 
 </script>
 
-<style>
+<style scoped>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+h2{
+  margin-top: 5%;
 }
 </style>

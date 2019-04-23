@@ -1,7 +1,8 @@
 <template>
     <div id="vehicleAdmin">
+        <h2>Vehicles</h2>
         <addvehicle v-if="selected == 1"></addvehicle>
-        <editVehicle v-on:vedited="veditedDraw" v-if="selected == 2" :iid="id" v-bind:iname="name" v-bind:imaker="maker" v-bind:itype="type" :iyear="year" v-bind:iprice="price"></editVehicle>
+        <editVehicle v-on:back="back" v-on:vedited="veditedDraw" v-if="selected == 2" :iid="id" v-bind:iname="name" v-bind:imaker="maker" v-bind:itype="type" :iyear="year" v-bind:iprice="price"></editVehicle>
         <table>
             <tr>
                 <th>Name</th>
@@ -78,6 +79,9 @@ export default {
             .then(response => {
                 this.cars = response.data;
             }); 
+      },
+      back:function(){
+        this.selected=1;
       }
   }
 }

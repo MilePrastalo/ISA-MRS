@@ -17,6 +17,8 @@
                         <a id="Vehicles" class="nav-link" href="#" @click="showVehicles">Vehicles</a>
                     </li>
                 </ul>
+                <Button @click = "logout">Log Out</Button>
+                
             </div>
             <div class="row">
                 <div id="Profile" v-if="tabSelected==1">
@@ -83,6 +85,10 @@ export default {
             document.getElementById("Branch_offices").className="nav-link";
             document.getElementById("Vehicles").className="nav-link active";
 
+      },
+      logout :function(){
+            localStorage.setItem('jwtToken',"");
+            window.location="./";
       }
   }
 }

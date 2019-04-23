@@ -77,12 +77,18 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+table{
+  margin-left:auto;
+  margin-right:auto;
+  margin-top:10%;
+  padding: 2%;
 }
 </style>

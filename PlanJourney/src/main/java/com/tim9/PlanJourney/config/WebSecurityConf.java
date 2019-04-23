@@ -70,6 +70,8 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
 				.antMatchers("/auth/**").permitAll()
 				.antMatchers(HttpMethod.OPTIONS,"/api/**").permitAll()
 				.antMatchers("/h2-console/**").permitAll()
+				//.antMatchers("/api/**").permitAll()
+				.antMatchers(HttpMethod.GET,"/api/searchHotels/**").permitAll()
 				
 				// svaki zahtev mora biti autorizovan
 				.anyRequest().authenticated().and()
@@ -85,8 +87,8 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
 		public void configure(WebSecurity web) throws Exception {
 			
 			// TokenAuthenticationFilter ce ignorisati sve ispod navedene putanje
-			web.ignoring().antMatchers(HttpMethod.POST,"/","/api/flightSearch");
-			web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js","/api/addRC","/api/testFlightData","/api/vehicleSearch","/api/getFlight/{id}","/api/searchFlightCompanies/{companyName}");
+			web.ignoring().antMatchers(HttpMethod.POST,"/","/api/flightSearch","/api/vehicleSearch","/api/getRentACarCompanies");
+			web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js","/api/addRC","/api/testFlightData","/api/getFlight/{id}","/api/searchFlightCompanies/{companyName}");
 			web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**","/","/api/*");
 		}
 

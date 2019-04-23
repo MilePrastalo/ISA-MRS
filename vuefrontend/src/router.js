@@ -90,11 +90,6 @@ export default new Router({
       component: () => import('./components/registeredFrontPage.vue')
     },
     {
-      path: '/addHotelRooms',
-      name: 'addHotelRooms',
-      component: () => import('./components/addHotelRooms.vue')
-    },
-    {
       path: '/searchHotels',
       name: 'searchHotels',
       component: () => import('./components/searchHotels.vue')
@@ -125,6 +120,11 @@ export default new Router({
       name: 'searchFlightCompany',
       component: () => import('./components/searchFlightCompany.vue')
 
+    },
+    {
+      path: '/hotelAdminPage',
+      name: 'hotelAdminPage',
+      component: () => import('./components/HotelAdmin/hotelAdminPage.vue')
     }
   ]
 })

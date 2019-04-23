@@ -51,6 +51,10 @@ mounted(){
     },
     methods:{
            search:function(){
+               var getJwtToken = function() {
+                    return localStorage.getItem('jwtToken');
+                };
+                axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
                axios.post("http://localhost:8080/api/getRentACarCompanies",{name : this.name, location: this.location, datefrom:this.datefrom, dateTo:this.dateTo})
                 .then(response => {
                     this.companies = response.data
