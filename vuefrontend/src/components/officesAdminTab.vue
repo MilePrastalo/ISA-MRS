@@ -1,7 +1,8 @@
 <template>
     <div id="officeAdmin">
+        <h2>Branch Offices</h2>
         <addOffice v-if="selected == 1"></addOffice>
-        <editOffice v-on:vedited="veditedDraw" v-if="selected == 2" :iid="id" v-bind:iname="name" v-bind:idestination="destination" v-bind:iaddress = "address"></editOffice>
+        <editOffice v-on:backadd="backAdd" v-on:vedited="veditedDraw" v-if="selected == 2" :iid="id" v-bind:iname="name" v-bind:idestination="destination" v-bind:iaddress = "address"></editOffice>
         <table>
             <tr>
                 <th>Name</th>
@@ -69,6 +70,10 @@ export default {
             .then(response => {
                 this.officess = response.data;
             }); 
+      },
+      backAdd:function(){
+          console.log("Called");
+          this.selected = 1;
       }
   }
 }

@@ -1,22 +1,22 @@
 <template>
     <div id="registeredUserFrontPage">
         <div class="container">
-            <div class="row"> 
-                <button>Pozivnice</button>
-                <button>Profil</button>
-                <button>Log Out</button>
+            <div class="row" id="firstrow"> 
+                <button class="col-lg-4">Invites</button>
+                <button @click="profile" class="col-lg-4">Profil</button>
+                <button @click="logout" id="logoutbt" class="col-lg-2">Log Out</button>
             </div>
             <div class="row"> 
-                <button>Airlines</button>
-                <button>Hotels</button>
-                <button>Rent a car</button>
-                <button>Friends</button>
+                <button class="col-lg-2">Airlines</button>
+                <button class="col-lg-2">Hotels</button>
+                <button class="col-lg-2">Rent a car</button>
+                <button class="col-lg-2">Friends</button>
             </div>
-            <div class="row"> 
+            <div class="row" id="title"> 
                 <h2>Reservations</h2>
             </div>
             <div class="row">
-                <ul class="nav nav-tabs">
+                <ul class="nav nav-tabs col-lg-10">
                     <li class="nav-item">
                         <a id="flights" class="nav-link active" href="#" @click="showFlights">Flights</a>
                     </li>
@@ -30,19 +30,40 @@
                 </ul>
             </div>
             <div class="row">
-                <div id="FlightsReservations">
+                <div id="FlightsReservations" class="centered col-lg-10">
                     <table>
                         <tr>
                             <th>Origin</th>
                             <th>Destination</th>
                             <th>Date</th>
                             <th>Price</th>
+                            <th>Details</th>
                             <th>Cancel</th>
                         </tr>
                     </table>
                 </div>
-                <div id="HotelsReservations" hidden="true">Hotel reservations</div>
-                <div id="CarsReservations" hidden="true">Rent a car rezervations</div>
+                <div id="HotelsReservations" class="centered col-lg-10" hidden="true"><table>
+                        <tr>
+                            <th>Destination</th>
+                            <th>Date</th>
+                            <th>Price</th>
+                            <th>Details</th>
+                            <th>Cancel</th>
+                        </tr>
+                    </table>
+                </div>
+                <div id="CarsReservations" class="centered col-lg-10" hidden="true">
+                    <table>
+                        <tr>
+                            <th>Location</th>
+                            <th>Model</th>
+                            <th>Date</th>
+                            <th>Price</th>
+                            <th>Details</th>
+                            <th>Cancel</th>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -77,7 +98,13 @@ export default {
             document.getElementById("flights").className="nav-link";
             document.getElementById("hotels").className="nav-link";
             document.getElementById("cars").className="nav-link active";
-      }
+      },
+    logout:function(){
+      window.location="./";
+  },
+  profile:function(){
+      window.location="./userProfile";
+  }
   }
 }
 
@@ -93,16 +120,64 @@ export default {
 }
 table{
     border: 1px solid darkgray;
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 70%;
 }
 th{
     border: 1px solid darkgray;
+    
 }
 ul{
     align-self: center;
     align-content: center;
     align-items: center;
+    margin-right: 2%;
+    margin:auto;
+}
+li{
+    margin: auto;
+    min-width: 30%;
+}
+button{
+    padding-left: 2%;
+    padding-right: 2%;
+    margin:2%;
+    margin-top: 0%;
+}
+
+#title{
+    text-align: center;
+    align-content: center;
+}
+#title h2{
+    text-align: center;
+    margin:auto;
 }
 .row{
-    margin-left: 30%;
+    text-align: center;
+    align-content: center;
+    margin-left: auto;
+    margin-right: auto;
 }
+.centered{
+    margin-left:auto;
+    margin-right: auto;
+}
+#FlightsReservations table{
+    margin-left:auto;
+    margin-right: auto;
+    margin-top: 2%;
+}
+#HotelsReservations table{
+    margin-left:auto;
+    margin-right: auto;
+    margin-top: 2%;
+}
+#CarsReservations table{
+    margin-left:auto;
+    margin-right: auto;
+    margin-top: 2%;
+}
+
 </style>
