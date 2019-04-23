@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.websocket.server.PathParam;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -224,6 +226,25 @@ public class FlightCompanyController {
 			return foundFlights;
 		}
 		return null;
+	}
+	
+	@RequestMapping(value = "/api/searchFlightCompanies/{companyName}", method = RequestMethod.GET,   produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	// Method for searching flight companies 
+	public @ResponseBody ArrayList<FlightCompany> searchFlightCompanies(@PathVariable("companyName") String companyName) throws Exception {
+		
+		ArrayList<FlightCompany> companies = (ArrayList<FlightCompany>) flightCompanyService.findAll();
+		ArrayList<FlightCompany> found = new ArrayList<FlightCompany>();
+		if (companyName.equals("-")) {
+			return companies;
+		}
+		for (FlightCompany c : companies) {
+			if ( c.getName().equalsIgnoreCase(companyName)) {
+				found.add(c);
+			}
+		}
+		System.out.println("\t pronasao je: " + found.size());
+		return found;
 	}
 
 	// Method puts some test data into database

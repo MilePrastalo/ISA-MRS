@@ -7,7 +7,7 @@ public class UserBean {
 	private String firstName;
 	private String lastName;
 	private String email;
-	
+	private String repeatedPass;
 	public UserBean() {
 		// TODO Auto-generated constructor stub
 	}
@@ -20,6 +20,7 @@ public class UserBean {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
+
 	}
 	public String getUsername() {
 		return username;
@@ -50,6 +51,16 @@ public class UserBean {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+
+	public String getRepeatedPass() {
+		return repeatedPass;
+	}
+
+
+	public void setRepeatedPass(String repeatedPass) {
+		this.repeatedPass = repeatedPass;
 	}
 	
 	

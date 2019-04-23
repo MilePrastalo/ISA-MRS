@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
+import org.joda.time.DateTimeComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -65,6 +66,7 @@ public class FlifgtController {
 		}
 		return new FlightBean(flight, companyName);
 	}
+	
 	
 	@RequestMapping(value = "/api/getSeatsOnFlight/{id}/{travelClass}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -145,42 +147,48 @@ public class FlifgtController {
 
 	@RequestMapping(value = "/api/flightSearch", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	public @ResponseBody ArrayList<Flight> searchFlights(@RequestBody FlightBean search) throws Exception {
-
+	public @ResponseBody ArrayList<FlightBean> searchFlights(@RequestBody FlightBean search) throws Exception {
+		System.out.println("Company = " + search.getEndDestination());
 		ArrayList<Flight> flights = new ArrayList<>();
 		flights = (ArrayList<Flight>) flightService.findAll();
-		ArrayList<Flight> foundFlights = new ArrayList<>();
+		ArrayList<FlightBean> foundFlights = new ArrayList<>();
+		DateTimeComparator dateTimeComparator = DateTimeComparator.getDateOnlyInstance();
+		String companyName = "";
 		for (Flight f : flights) {
-			if ((f.getStartDestination().getName().equals(search.getStartDestination())
-					|| search.getStartDestination().equals(""))
-					&& (f.getEndDestination().getName().equals(search.getEndDestination())
-							|| search.getEndDestination().equals(""))
-					&& (f.getEconomicPrice() >= search.getMinEconomic() || (search.getMinEconomic() == 0))
-					&& (f.getBusinessPrice() >= search.getMinBusiness() || (search.getMinBusiness() == 0))
-					&& (f.getFirstClassPrice() >= search.getMinFirstClass() || (search.getMinFirstClass() == 0))
-					&& (f.getEconomicPrice() <= search.getMaxEconomic() || (search.getMaxEconomic() == 0))
-					&& (f.getBusinessPrice() <= search.getMaxBusiness() || (search.getMaxBusiness() == 0))
-					&& (f.getFirstClassPrice() <= search.getMaxFirstClass() || (search.getMaxFirstClass() == 0))
-					&& (f.getFlightDuration() == search.getFlightDuration() || search.getFlightDuration() == 0)
-					&& (f.getFlightLength() == search.getFlightLength() || search.getFlightLength() == 0)) {
-				if (search.getStartDate() != null) {
-					System.out.println("bio");
-					if (f.getStartDate().equals(search.getStartDate())) {
-						foundFlights.add(f);
-						continue;
-					}
-				}
-				if (search.getEndDate() != null) {
-					if (f.getEndDate().equals(search.getEndDate())) {
-						foundFlights.add(f);
-						continue;
-					}
-				}
-				foundFlights.add(f);
+			companyName = getCompanyNameForFlight(f);
+			System.out.println("\t>>>" + f.getEndDestination().getName());
+			if ( (f.getStartDestination().getName().equals(search.getStartDestination()) || search.getStartDestination().equals(""))
+				&& (f.getEndDestination().getName().equals(search.getEndDestination()) || search.getEndDestination().equals(""))
+				&&  (companyName.equals(search.getFlightCompany()) || search.getFlightCompany().equals(""))
+				&& (f.getEconomicPrice() >= search.getMinEconomic() || (search.getMinEconomic() == 0))
+				&& (f.getBusinessPrice() >= search.getMinBusiness() || (search.getMinBusiness() == 0))
+				&& (f.getFirstClassPrice() >= search.getMinFirstClass() || (search.getMinFirstClass() == 0))
+				&& (f.getEconomicPrice() <= search.getMaxEconomic() || (search.getMaxEconomic() == 0))
+				&& (f.getBusinessPrice() <= search.getMaxBusiness() || (search.getMaxBusiness() == 0))
+				&& (f.getFirstClassPrice() <= search.getMaxFirstClass() || (search.getMaxFirstClass() == 0))
+				&& (f.getFlightDuration() == search.getFlightDuration() || search.getFlightDuration() == 0)
+				&& (f.getFlightLength() == search.getFlightLength() || search.getFlightLength() == 0)
+				&& ( search.getStartDate()==null || dateTimeComparator.compare(f.getStartDate(),search.getStartDate()) == 0) 
+				&& (search.getEndDate() == null  || dateTimeComparator.compare(f.getEndDate(),search.getEndDate()) == 0)
+				)
+					 {
+				
+				foundFlights.add(new FlightBean(f,companyName));
 			}
 		}
+		System.out.println("\tREZ = " + foundFlights.size());
 		return foundFlights;
 
+	}
+	private String getCompanyNameForFlight(Flight flight) {
+		String companyName = "";
+		for ( FlightCompany fc : flightCompanyService.findAll()) {
+			if (fc.getFlights().contains(flight)) {
+				companyName = fc.getName();
+				break;
+			}
+		}
+		return companyName;
 	}
 
 	private Set<Seat> makeSeats(Set<Seat> seats, String capacity, String flightClass) {
