@@ -19,9 +19,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.beans.UserBean;
+import com.tim9.PlanJourney.hotel.HotelAdmin;
 import com.tim9.PlanJourney.models.Authority;
 import com.tim9.PlanJourney.models.RegisteredUser;
+import com.tim9.PlanJourney.models.SystemAdmin;
 import com.tim9.PlanJourney.models.User;
+import com.tim9.PlanJourney.models.flight.FlightAdmin;
+import com.tim9.PlanJourney.models.rentacar.RentACarAdmin;
 import com.tim9.PlanJourney.service.UserService;
 
 
@@ -84,8 +88,23 @@ public class UserController {
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
 			String username = authentication.getName();
 			User user = (User) userService.findOneByUsername(username);
-			List<Authority> aut = (List<Authority>) user.getAuthorities();
-			return aut.get(0).getName();
+			if (user instanceof RegisteredUser) {
+				return "REGISTERED";
+			}
+			else if (user instanceof FlightAdmin) {
+				return "FLIGHT_ADMIN";
+			}
+			else if (user instanceof SystemAdmin) {
+				return "SYS_ADMIN";
+			}
+			else if (user instanceof HotelAdmin) {
+				return "HOTEL_ADMIN";
+			}
+			else if (user instanceof RentACarAdmin) {
+				return "RENT_ADMIN";
+			}
+			/*List<GrantedAuthority> aut = (List<GrantedAuthority>) user.getAuthorities();
+			return ((Authority)aut.get(0)).getName();*/
 		}
 		return null;
 	}

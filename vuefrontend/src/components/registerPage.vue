@@ -60,7 +60,7 @@ export default {
           firstName : this.firstName, lastName: this.lastName, email: this.email})
                       .then(response => {
                         console.log(response);
-                          if(response == 200){
+                          if(response.data =="OK"){
                             alert("Registration is successfull");
                             window.location="/";
                           }
