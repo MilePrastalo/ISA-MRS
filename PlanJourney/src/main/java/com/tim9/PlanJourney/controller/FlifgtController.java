@@ -73,7 +73,6 @@ public class FlifgtController {
 	
 	@RequestMapping(value = "/api/getSeatsOnFlight/{id}/{travelClass}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
 	public @ResponseBody SeatsBean getSeatsOnFlight(@PathVariable("id") Long id, @PathVariable("travelClass") String travelClass) throws Exception{
 
 		Flight flight = flightService.findOne(id);

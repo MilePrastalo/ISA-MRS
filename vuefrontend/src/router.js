@@ -130,6 +130,11 @@ export default new Router({
       path: '/friends',
       name: 'friends',
       component: () => import('./components/s1_friends/friends.vue')
+    },
+    {
+      path: '/flightReservation',
+      name: 'flightReservation',
+      component: () => import('./components/s1_flightReservation/flightReservation.vue')
     }
   ]
 })

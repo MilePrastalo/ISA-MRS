@@ -27,6 +27,9 @@ public class Seat {
 	
     @Column(name = "travelClassa")
 	private String travelClassa;
+    
+    @Column(name = "active", unique = false, nullable = false)
+	private boolean active;
 	
 	
 	public Seat() {
@@ -40,6 +43,7 @@ public class Seat {
 		SeatRow = seatRow;
 		SeatColumn = seatColumn;
 		this.travelClassa = travelClassa;
+		this.active = false;
 	}
 
 
@@ -83,6 +87,16 @@ public class Seat {
 
 	public void setTravelClassa(String travelClassa) {
 		this.travelClassa = travelClassa;
+	}
+
+
+	public boolean isActive() {
+		return active;
+	}
+
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	
