@@ -25,7 +25,7 @@ public class RegisteredUser extends User {
 	//lista poslatih zahteva
 	//lista primljenih zahteva
 	@OneToMany(mappedBy="user")
-	private Set<VehicleReservation> vehicleReservations;
+	private Set<VehicleReservation> vehicleReservations = new HashSet<>();;
 	public RegisteredUser() {
 		// TODO Auto-generated constructor stub
 	}

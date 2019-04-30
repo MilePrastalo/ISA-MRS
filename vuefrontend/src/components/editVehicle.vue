@@ -22,6 +22,14 @@
             <td><input v-model="year" type="number"></td>
         </tr>
         <tr>
+            <td>Date from</td>
+            <td><input v-model="datefrom" type="date"></td>
+        </tr>
+        <tr>
+            <td>Date to</td>
+            <td><input v-model="dateto" type="date"></td>
+        </tr>
+        <tr>
             <td><button @click="back">Back</button></td>
             <td><button @click="edit">Edit</button></td>
         </tr>
@@ -41,7 +49,9 @@ export default {
   'imaker',
   'itype',
   'iyear',
-  'iprice'],
+  'iprice',
+  'idateto',
+  'idatefrom'],
   created:function(){
   },
     data: function () {
@@ -52,6 +62,8 @@ export default {
             price:this.iprice,
             year:this.iyear,
             id:this.iid,
+            dateto:this.idateto,
+            datefrom:this.idatefrom,
             makers:[],
             types:[]
         }
@@ -79,7 +91,7 @@ export default {
             return localStorage.getItem('jwtToken');
             };
             axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-            axios.post("http://localhost:8080/api/editCar",{id:this.id,name:this.name,maker:this.maker,type:this.type,year:this.year,price:this.price})
+            axios.post("http://localhost:8080/api/editCar",{id:this.id,name:this.name,maker:this.maker,type:this.type,year:this.year,price:this.price,dateFrom:this.datefrom,dateTo:this.dateto})
             .then(function(){
               alert("Vehicle has been edited");
               a.$emit('vedited');
