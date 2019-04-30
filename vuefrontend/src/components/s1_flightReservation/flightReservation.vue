@@ -7,6 +7,7 @@
         </div>
 
         <div v-if="currentStep == 2">
+             <button> Next >> </button>
             <calledFriends></calledFriends>
         </div>		
          
@@ -36,13 +37,15 @@ export default {
     mounted(){
 
         var flightID = 6;
+        localStorage.setItem("selected_seats",[]);
+        localStorage.setItem("called_friends",[]);
     }, 
     methods: {
 
         goToNextStep: function(option){
             if (option == 2){
                 this.selected = localStorage.getItem('selected_seats');
-                if (this.selected.length == 0){
+                if (this.selected.length == 0  ){
                     alert("You must choose at least one seat!");
                 }
                 else{

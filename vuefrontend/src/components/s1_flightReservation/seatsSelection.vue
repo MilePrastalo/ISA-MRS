@@ -17,7 +17,7 @@
                 <table class = "seats">
                     <caption style="caption-side: top; font-weight: bold">Business class</caption>
                     <tr v-for="r in seatsB.rows" :key ="r"> 
-                        <td  v-for="c in seatsB.columns" :key ="c" v-bind:class = "{active: seatsB.seats[(c-1)+(r-1)*seatsB.columns].active, booked: seatsB.seats[(c-1)+(r-1)*seatsE.columns].taken}" @click="addSeat(seatsB.seats[(c-1)+(r-1)*seatsB.columns])">
+                        <td  v-for="c in seatsB.columns" :key ="c" v-bind:class = "{active: seatsB.seats[(c-1)+(r-1)*seatsB.columns].active, booked: seatsB.seats[(c-1)+(r-1)*seatsB.columns].taken}" @click="addSeat(seatsB.seats[(c-1)+(r-1)*seatsB.columns])">
                             ( {{ seatsB.seats[(c-1)+(r-1)*seatsB.columns].seatRow}} , {{ seatsB.seats[(c-1)+(r-1)*seatsB.columns].seatColumn}} )	
                         </td>
                     </tr>
