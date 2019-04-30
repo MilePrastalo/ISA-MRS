@@ -12,15 +12,17 @@ import com.tim9.PlanJourney.repository.RegisteredUserRepository;
 
 @Service
 public class RegisteredUserService {
-	@Autowired
-	RegisteredUserRepository repository;
+
 	
+	@Autowired
+	private RegisteredUserRepository repository;
 	
 	public RegisteredUser findOne(Long id) {
-		return repository.getOne(id);
+		return repository.getOne(id);//repository.findOne();
 	}
-	public RegisteredUser findOneByUsername(String username) {
-		return repository.findOneByUsername(username);
+	
+	public RegisteredUser findByUsername(String username) {
+		return repository.findByUsername(username);
 	}
 
 	public List<RegisteredUser> findAll() {
@@ -36,6 +38,6 @@ public class RegisteredUserService {
 	}
 
 	public void remove(Long id) {
-		//repository.delete(id);
+		repository.deleteById(id);
 	}
 }

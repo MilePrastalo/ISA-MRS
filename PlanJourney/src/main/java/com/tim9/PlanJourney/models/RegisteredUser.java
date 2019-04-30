@@ -5,12 +5,14 @@ import java.util.HashSet;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
 import org.springframework.security.core.GrantedAuthority;
 
-import com.tim9.PlanJourney.models.flight.Flight;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tim9.PlanJourney.models.flight.Ticket;
 import com.tim9.PlanJourney.models.rentacar.VehicleReservation;
 @Entity
@@ -21,9 +23,15 @@ public class RegisteredUser extends User {
 	//lista rezervacija  hotela
 	//lista rezervacija  rent-a-car
 	
-	//lista prijatelja
-	//lista poslatih zahteva
-	//lista primljenih zahteva
+	@JsonIgnore
+	@OneToMany(mappedBy = "sender")
+	private Set<FriendRequest> sendRequests = new HashSet<FriendRequest>();
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "reciever")
+	private Set<FriendRequest> receivedRequests = new HashSet<FriendRequest>();
+	 
+	
 	@OneToMany(mappedBy="user")
 	private Set<VehicleReservation> vehicleReservations = new HashSet<>();;
 	public RegisteredUser() {
@@ -50,24 +58,35 @@ public class RegisteredUser extends User {
 		this.flightReservations = flightReservations;
 	}
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<FriendRequest> getSendRequests() {
+		return sendRequests;
 	}
 
+	public void setSendRequests(Set<FriendRequest> sendRequests) {
+		this.sendRequests = sendRequests;
+	}
+
+	public Set<FriendRequest> getReceivedRequests() {
+		return receivedRequests;
+	}
+
+	public void setReceivedRequests(Set<FriendRequest> receivedRequests) {
+		this.receivedRequests = receivedRequests;
+	}
+	
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonExpired() {
 		// TODO Auto-generated method stub
 		return true;
 	}
-
+    @JsonIgnore
 	@Override
 	public boolean isAccountNonLocked() {
 		// TODO Auto-generated method stub
 		return true;
 	}
-
+    @JsonIgnore
 	@Override
 	public boolean isCredentialsNonExpired() {
 		// TODO Auto-generated method stub

@@ -267,7 +267,7 @@ public class RentACarController {
 	private RegisteredUser getRegisteredUser() {
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 		String username = currentUser.getName();
-		RegisteredUser user = (RegisteredUser) userService.findOneByUsername(username);
+		RegisteredUser user = (RegisteredUser) userService.findByUsername(username);
 
 		return user;
 	}
