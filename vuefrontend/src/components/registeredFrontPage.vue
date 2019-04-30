@@ -9,7 +9,7 @@
             <div class="row"> 
                 <button class="col-lg-2">Airlines</button>
                 <button class="col-lg-2">Hotels</button>
-                <button class="col-lg-2">Rent a car</button>
+                <button class="col-lg-2" @click="rentACar">Rent a car</button>
                 <button class="col-lg-2">Friends</button>
             </div>
             <div class="row" id="title"> 
@@ -101,10 +101,13 @@ export default {
       },
     logout:function(){
       window.location="./";
-  },
-  profile:function(){
-      window.location="./userProfile";
-  }
+    },
+    profile:function(){
+        window.location="./userProfile";
+    },
+    rentACar:function(){
+        window.location="./rentacar";
+    }
   }
 }
 

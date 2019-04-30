@@ -1,7 +1,10 @@
 package com.tim9.PlanJourney.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -9,6 +12,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.joda.time.Days;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,6 +36,7 @@ import com.tim9.PlanJourney.beans.BranchOfficeBean;
 import com.tim9.PlanJourney.beans.EditVehicleBean;
 import com.tim9.PlanJourney.beans.RentACarCompanySearchBean;
 import com.tim9.PlanJourney.beans.RentACarProfileBean;
+import com.tim9.PlanJourney.beans.VehicleReservationSearchBean;
 import com.tim9.PlanJourney.beans.VehicleSearchBean;
 import com.tim9.PlanJourney.beans.VehicleSearchReturnBean;
 import com.tim9.PlanJourney.models.Authority;
@@ -42,11 +47,15 @@ import com.tim9.PlanJourney.models.rentacar.BranchOffice;
 import com.tim9.PlanJourney.models.rentacar.RentACarAdmin;
 import com.tim9.PlanJourney.models.rentacar.RentACarCompany;
 import com.tim9.PlanJourney.models.rentacar.Vehicle;
+import com.tim9.PlanJourney.models.rentacar.VehicleReservation;
 import com.tim9.PlanJourney.service.AuthorityService;
 import com.tim9.PlanJourney.service.BranchOfficeService;
 import com.tim9.PlanJourney.service.DestinationService;
+import com.tim9.PlanJourney.service.RegisteredUserService;
 import com.tim9.PlanJourney.service.RentACarAdminService;
 import com.tim9.PlanJourney.service.RentACarCompanyService;
+import com.tim9.PlanJourney.service.UserService;
+import com.tim9.PlanJourney.service.VehicleReservationService;
 import com.tim9.PlanJourney.service.VehicleService;
 
 @RestController
@@ -66,7 +75,13 @@ public class RentACarController {
 	private AuthorityService as;
 
 	@Autowired
+	private VehicleReservationService reservationService;
+	
+	@Autowired
 	private RentACarCompanyService companyService;
+	@Autowired
+	private RegisteredUserService userService;
+	
 
 	@RequestMapping(value = "/api/vehicleSearch", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -169,24 +184,29 @@ public class RentACarController {
 
 	@RequestMapping(value = "/api/getRentACarCompanies", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	// Returns list of types of vehicles
-	// Probably will create table in database in the future - priority low
+	//Returns companies that match search criteria
 	public @ResponseBody ArrayList<RentACarCompanySearchBean> getCompanies(
 			@RequestBody RentACarCompanySearchBean search) throws Exception {
 		List<RentACarCompany> companies = companyService.findAll();
-
+		System.out.println(search.getDateTo());
+		System.out.println(search.getDateFrom());
 		ArrayList<RentACarCompany> foundCOmpanies = new ArrayList<>();
 		for (RentACarCompany rentACarCompany : companies) {
 			if ((rentACarCompany.getName().equals(search.getName()) || search.getName().equals(""))) {
 				if (!search.getLocation().equals("")) {
 					for (BranchOffice des : rentACarCompany.getOffices()) {
 						if (des.getDestination().getName().equals(search.getLocation())) {
-							foundCOmpanies.add(rentACarCompany);
-							break;
+							if(hasVehicle(rentACarCompany,search.getDateFrom(),search.getDateTo())) {
+								foundCOmpanies.add(rentACarCompany);
+								break;
+							}
+							
 						}
 					}
 				} else {
-					foundCOmpanies.add(rentACarCompany);
+					if(hasVehicle(rentACarCompany,search.getDateFrom(),search.getDateTo())) {
+						foundCOmpanies.add(rentACarCompany);
+					}
 				}
 			}
 		}
@@ -194,13 +214,111 @@ public class RentACarController {
 		for (RentACarCompany rentACarCompany : foundCOmpanies) {
 			ArrayList<BranchOfficeBean> locs = new ArrayList<>();
 			for (BranchOffice office : rentACarCompany.getOffices()) {
-				locs.add(new BranchOfficeBean(office.getName(), office.getAddress(), office.getDestination().getName()));
+				BranchOfficeBean be = new BranchOfficeBean(office.getName(), office.getAddress(), office.getDestination().getName());
+				be.setId(office.getId());
+				locs.add(be);
 			}
-			returnBean.add(new RentACarCompanySearchBean(rentACarCompany.getName(), locs, rentACarCompany.getRating()));
+			RentACarCompanySearchBean be = new RentACarCompanySearchBean(rentACarCompany.getName(), locs, rentACarCompany.getRating());
+			be.setId(rentACarCompany.getId());
+			returnBean.add(be);
 		}
 		return returnBean;
 	}
+	@RequestMapping(value = "/api/getAvaiableVehicles", method = RequestMethod.POST, produces= MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	//Returns vehicles that are avaiable for reservation in selected company
+	public @ResponseBody ArrayList<VehicleSearchReturnBean>  getAvaiableVehicles(@RequestBody VehicleReservationSearchBean search) throws Exception { 
+		ArrayList<VehicleSearchReturnBean> found = new ArrayList<>();
+		ArrayList<Vehicle> vehicles = new ArrayList<>();
+		RentACarCompany company = companyService.findOne(Long.parseLong(search.getId()));
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String from = search.getDateFrom();
+		String to = search.getDateTo();
+		if(from.equals("") || to.equals("")) {
+			vehicles.addAll(company.getVehicles());
+		}
+		else {
+			Date fromDate = sdf.parse(from);
+			Date toDate = sdf.parse(to);
+			for (Vehicle vehicle : company.getVehicles()) {
+				boolean isAvaiable = false;
+				if (vehicle.getAvaiableFrom().before(fromDate) && vehicle.getAvaiableTo().after(toDate)) {
+					isAvaiable = true;
+					for (VehicleReservation reservation : vehicle.getReservations()) {
+						if(!((toDate.before(reservation.getDateFrom()) && toDate.after(fromDate)) || 
+								(fromDate.after(reservation.getDateTo()) && toDate.after(fromDate)))) {
+							isAvaiable = false;
+						}
+					}
+					if(isAvaiable) {
+						vehicles.add(vehicle);
+					}	
+				}
+			}
+		}
+		for (Vehicle vehicle : vehicles) {
+			VehicleSearchReturnBean be = new VehicleSearchReturnBean(vehicle.getName(), vehicle.getMaker(), vehicle.getType(), vehicle.getYear(), vehicle.getPrice());
+			be.setId(Long.toString(vehicle.getId()));
+			found.add(be);
+		}
+		return found;
+		
+	}
+	private RegisteredUser getRegisteredUser() {
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		String username = currentUser.getName();
+		RegisteredUser user = (RegisteredUser) userService.findByUsername(username);
 
+		return user;
+	}
+	@RequestMapping(value = "/api/reserveVehicle", method = RequestMethod.POST, produces= MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	//Returns vehicles that are avaiable for reservation in selected company
+	public @ResponseBody boolean reserveVehicle(@RequestBody VehicleReservationSearchBean search) throws Exception { 
+		Vehicle vehicle = vehicleService.findOne(Long.parseLong(search.getId()));
+		RegisteredUser user = getRegisteredUser();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date dateFrom = sdf.parse(search.getDateFrom());
+		Date dateTo = sdf.parse(search.getDateTo());
+		BranchOffice pick = bs.findOne(Long.parseLong(search.getOfficePick()));
+		BranchOffice ret = bs.findOne(Long.parseLong(search.getOfficeReturn()));
+		VehicleReservation reservation = new VehicleReservation(vehicle, user,new Date(), dateFrom, dateTo, (double)( (dateTo.getTime() - dateFrom.getTime()) / (1000 * 60 * 60 * 24)) * vehicle.getPrice() );
+		reservation.setOfficePick(pick);
+		reservation.setOfficeReturn(ret);
+		reservationService.save(reservation);
+		user.getVehicleReservations().add(reservation);
+		vehicle.getReservations().add(reservation);
+		
+		userService.save(user);
+		vehicleService.save(vehicle);
+		reservationService.save(reservation);
+
+		return true;
+	}
+	private boolean hasVehicle(RentACarCompany company,String from, String to) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		if(from.equals("") || to.equals("")) {
+			return true;
+		}
+		Date fromDate = sdf.parse(from);
+		Date toDate = sdf.parse(to);
+		for (Vehicle vehicle : company.getVehicles()) {
+			boolean isAvaiable = false;
+			if (vehicle.getAvaiableFrom().before(fromDate) && vehicle.getAvaiableTo().after(toDate)) {
+				isAvaiable = true;
+				for (VehicleReservation reservation : vehicle.getReservations()) {
+					if(!((toDate.before(reservation.getDateFrom()) && toDate.after(fromDate)) || 
+							(fromDate.after(reservation.getDateTo()) && toDate.after(fromDate)))) {
+						isAvaiable = false;
+					}
+				}
+				if(isAvaiable) {
+					return true;
+				}	
+			}
+		}
+		return false;
+	}
 	@RequestMapping(value = "/api/addRentACarCompany", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('SYS_ADMIN')")
@@ -260,7 +378,11 @@ public class RentACarController {
 		    RentACarAdmin admin =getAdmin();
 		    RentACarCompany company = admin.getService();
 		    Vehicle v = new Vehicle(vehicleBean.getName(), vehicleBean.getMaker(), vehicleBean.getType(), Integer.parseInt(vehicleBean.getYear()), Double.valueOf(vehicleBean.getPrice()));
+		    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		    v.setAvaiableFrom(sdf.parse(vehicleBean.getDateFrom()));
+		    v.setAvaiableTo(sdf.parse(vehicleBean.getDateTo()));
 		    company.getVehicles().add(v);
+		    
 		    vehicleService.save(v);
 		    companyService.save(company);
 	}
@@ -277,6 +399,9 @@ public class RentACarController {
 	    v.setType(vehicleBean.getType()); 
 	    v.setYear(Integer.parseInt(vehicleBean.getYear()));
 	    v.setPrice(Double.valueOf(vehicleBean.getPrice()));
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	    v.setAvaiableFrom(sdf.parse(vehicleBean.getDateFrom()));
+	    v.setAvaiableTo(sdf.parse(vehicleBean.getDateTo()));
 	    vehicleService.save(v);		
 	}
 
@@ -296,12 +421,22 @@ public class RentACarController {
 	    ArrayList<EditVehicleBean> vehiclesToReturn = new ArrayList<>();
 	    for (Vehicle vehicle : vehicles) {
 	    	EditVehicleBean eb = new EditVehicleBean();
+	    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	    	eb.setId(vehicle.getId());
 	    	eb.setMaker(vehicle.getMaker());
 	    	eb.setName(vehicle.getName());
 	    	eb.setPrice(Double.toString(vehicle.getPrice()));
 	    	eb.setType(vehicle.getType());
 	    	eb.setYear(Integer.toString(vehicle.getYear()));
+	    	try {
+	    		eb.setDateFrom(sdf.format(vehicle.getAvaiableFrom()));
+		    	eb.setDateTo(sdf.format(vehicle.getAvaiableTo()));
+	    	}
+	    	catch (Exception e) {
+				eb.setDateFrom("");
+				eb.setDateTo("");
+			}
+	    	
 	    	vehiclesToReturn.add(eb);
 		}
 	    return vehiclesToReturn;
@@ -354,5 +489,6 @@ public class RentACarController {
 		    bs.save(bo);
 		    companyService.save(company);
 	}
+	
 
 }

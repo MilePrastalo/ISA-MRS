@@ -12,6 +12,7 @@ import com.tim9.PlanJourney.repository.RegisteredUserRepository;
 
 @Service
 public class RegisteredUserService {
+
 	
 	@Autowired
 	private RegisteredUserRepository repository;
@@ -39,5 +40,4 @@ public class RegisteredUserService {
 	public void remove(Long id) {
 		repository.deleteById(id);
 	}
-
 }

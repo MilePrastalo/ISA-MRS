@@ -3,6 +3,7 @@ package com.tim9.PlanJourney.beans;
 
 public class VehicleSearchReturnBean {
 	
+	private String id;
 	private String name;
 	private String maker;
 	private String type;
@@ -10,6 +11,15 @@ public class VehicleSearchReturnBean {
 	private Double price;
 	public VehicleSearchReturnBean(String name, String maker, String type, int year, Double price) {
 		super();
+		this.name = name;
+		this.maker = maker;
+		this.type = type;
+		this.year = year;
+		this.price = price;
+	}
+	public VehicleSearchReturnBean(String id,String name, String maker, String type, int year, Double price) {
+		super();
+		this.id = id;
 		this.name = name;
 		this.maker = maker;
 		this.type = type;
@@ -49,5 +59,12 @@ public class VehicleSearchReturnBean {
 	public void setPrice(Double price) {
 		this.price = price;
 	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	
 	
 }

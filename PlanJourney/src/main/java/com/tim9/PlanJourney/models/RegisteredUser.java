@@ -33,7 +33,7 @@ public class RegisteredUser extends User {
 	 
 	
 	@OneToMany(mappedBy="user")
-	private Set<VehicleReservation> vehicleReservations;
+	private Set<VehicleReservation> vehicleReservations = new HashSet<>();;
 	public RegisteredUser() {
 		// TODO Auto-generated constructor stub
 	}

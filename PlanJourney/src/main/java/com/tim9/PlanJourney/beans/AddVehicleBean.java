@@ -6,6 +6,8 @@ public class AddVehicleBean {
 	private String type;
 	private String year;
 	private String price;
+	private String dateTo;
+	private String dateFrom;
 	public AddVehicleBean() {
 		super();
 	}
@@ -39,5 +41,18 @@ public class AddVehicleBean {
 	public void setPrice(String price) {
 		this.price = price;
 	}
+	public String getDateTo() {
+		return dateTo;
+	}
+	public void setDateTo(String dateTo) {
+		this.dateTo = dateTo;
+	}
+	public String getDateFrom() {
+		return dateFrom;
+	}
+	public void setDateFrom(String dateFrom) {
+		this.dateFrom = dateFrom;
+	}
+	
 	
 }

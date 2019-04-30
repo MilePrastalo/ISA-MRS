@@ -7,6 +7,7 @@ import com.tim9.PlanJourney.models.rentacar.BranchOffice;
 
 public class RentACarCompanySearchBean {
 	private String name;
+	private Long id;
 	private ArrayList<BranchOfficeBean> offices;
 	private double rating;
 	private String location;
@@ -67,6 +68,13 @@ public class RentACarCompanySearchBean {
 	public void setDateTo(String dateTo) {
 		this.dateTo = dateTo;
 	}
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
 	
 	
 	
