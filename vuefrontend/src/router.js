@@ -125,6 +125,11 @@ export default new Router({
       path: '/hotelAdminPage',
       name: 'hotelAdminPage',
       component: () => import('./components/HotelAdmin/hotelAdminPage.vue')
+    },
+    {
+      path: '/friends',
+      name: 'friends',
+      component: () => import('./components/s1_friends/friends.vue')
     }
   ]
 })
