@@ -34,7 +34,7 @@ public class RegisteredUser extends User {
 	 
 	
 	@OneToMany(mappedBy="user")
-	private Set<VehicleReservation> vehicleReservations;
+	private Set<VehicleReservation> vehicleReservations  = new HashSet<>();;
 	
 	@OneToMany(mappedBy="user")
 	private Set<HotelReservation> hotelReservations;

@@ -6,7 +6,6 @@ import com.tim9.PlanJourney.models.RegisteredUser;
 
 public interface RegisteredUserRepository extends JpaRepository<RegisteredUser, Long> {
 	
-	
 	RegisteredUser findByUsername(String username);
 
 }

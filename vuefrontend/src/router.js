@@ -127,6 +127,11 @@ export default new Router({
       component: () => import('./components/HotelAdmin/hotelAdminPage.vue')
     },
     {
+      path:'/rentacar',
+      name: 'rentACarReservation',
+      component: () => import('./components/rentACarReservation.vue')
+    },
+    {
       path: '/friends',
       name: 'friends',
       component: () => import('./components/s1_friends/friends.vue')

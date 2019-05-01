@@ -22,7 +22,15 @@
             <td><input v-model="year" type="number"></td>
         </tr>
         <tr>
-            <td><button>Back</button></td>
+            <td>Date from</td>
+            <td><input v-model="datefrom" type="date"></td>
+        </tr>
+        <tr>
+            <td>Date to</td>
+            <td><input v-model="dateto" type="date"></td>
+        </tr>
+        <tr>
+            <td></td>
             <td><button @click="add">Add</button></td>
         </tr>
     </table>
@@ -42,6 +50,8 @@ export default {
             type:"",
             price:"",
             year:"",
+            dateto:"",
+            datefrom:"",
             makers:[],
             types:[]
         }
@@ -67,7 +77,7 @@ export default {
                 return localStorage.getItem('jwtToken');
             };
             axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-            axios.post("http://localhost:8080/api/addCar",{name:this.name,maker:this.maker,type:this.type,year:this.year,price:this.price})
+            axios.post("http://localhost:8080/api/addCar",{name:this.name,maker:this.maker,type:this.type,year:this.year,price:this.price,dateFrom:this.datefrom,dateTo:this.dateto})
             .then(function(){
               alert("Vehicle has been added");
             }); 

@@ -31,9 +31,14 @@
                     <tr><th>Office name</th>
                     <th>Office address</th>
                     <th>Office destination</th></tr>
-                    <tr v-for="office in company.offices" :key="office"><td>{{office.name}}</td><td>{{office.address}}</td><td>{{office.destination}}</td></tr>
+                    <tr v-for="office in company.offices" :key="office">
+                        <td>{{office.name}}</td>
+                        <td>{{office.address}}</td>
+                        <td>{{office.destination}}</td>
+                    </tr>
                     </table></td>
                 <td>{{company.rating}}</td>
+                <td><Button @click="select(company)">Select</Button></td>
             </tr>
         </table>
     </div>
@@ -60,10 +65,19 @@ mounted(){
     },
     methods:{
            search:function(){
-               axios.post("http://localhost:8080/api/getRentACarCompanies",{name : this.name, location: this.location, datefrom:this.datefrom, dateTo:this.dateTo})
+               axios.post("http://localhost:8080/api/getRentACarCompanies",{name : this.name, location: this.location, dateFrom:this.datefrom, dateTo:this.dateTo})
                 .then(response => {
+                    console.log(response.data);
                     this.companies = response.data
                 }); 
+           },
+           select:function(company){
+               var o = {};
+               o.id = company.id;
+               o.dateFrom = this.datefrom;
+               o.dateTo = this.dateTo;
+               o.offices = company.offices
+               this.$emit('selected',o);
            }
     }
 }
