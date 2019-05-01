@@ -55,7 +55,7 @@ export default new Router({
       component: () => import('./components/searchRentACarCompany.vue')
     },
     {
-      path: '/hotelProfile',
+      path: '/hotelProfile/:hotelName',
       name: 'hotelProfile',
       component: () => import('./components/hotelProfile.vue')
     },
@@ -127,6 +127,11 @@ export default new Router({
       component: () => import('./components/HotelAdmin/hotelAdminPage.vue')
     },
     {
+      path:'/rentacar',
+      name: 'rentACarReservation',
+      component: () => import('./components/rentACarReservation.vue')
+    },
+    {
       path: '/friends',
       name: 'friends',
       component: () => import('./components/s1_friends/friends.vue')
@@ -140,6 +145,11 @@ export default new Router({
       path: '/confirmationPage',
       name: 'confirmationPage',
       component: () => import('./components/s1_flightReservation/confirmationPage.vue')
+    },
+    {
+      path: '/hotelRoom/:hotelName/:roomNumber',
+      name: 'hotelRoom',
+      component: () => import('./components/hotelRoom.vue')
     }
   ]
 })

@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import org.springframework.security.core.GrantedAuthority;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.tim9.PlanJourney.hotel.HotelReservation;
 import com.tim9.PlanJourney.models.flight.Ticket;
 import com.tim9.PlanJourney.models.rentacar.VehicleReservation;
 @Entity
@@ -33,7 +34,11 @@ public class RegisteredUser extends User {
 	 
 	
 	@OneToMany(mappedBy="user")
-	private Set<VehicleReservation> vehicleReservations;
+	private Set<VehicleReservation> vehicleReservations  = new HashSet<>();;
+	
+	@OneToMany(mappedBy="user")
+	private Set<HotelReservation> hotelReservations;
+	
 	public RegisteredUser() {
 		// TODO Auto-generated constructor stub
 	}
@@ -74,6 +79,16 @@ public class RegisteredUser extends User {
 		this.receivedRequests = receivedRequests;
 	}
 	
+	
+	
+	public Set<HotelReservation> getHotelReservations() {
+		return hotelReservations;
+	}
+
+	public void setHotelReservations(Set<HotelReservation> hotelReservations) {
+		this.hotelReservations = hotelReservations;
+	}
+
 	@JsonIgnore
 	@Override
 	public boolean isAccountNonExpired() {
