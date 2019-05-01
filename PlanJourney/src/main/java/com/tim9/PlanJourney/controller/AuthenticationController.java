@@ -1,6 +1,7 @@
 package com.tim9.PlanJourney.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,11 +28,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.beans.LoginBean;
 import com.tim9.PlanJourney.beans.RegisterBean;
+import com.tim9.PlanJourney.models.Authority;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.User;
 import com.tim9.PlanJourney.models.UserTokenState;
 import com.tim9.PlanJourney.repository.UserRepository;
 import com.tim9.PlanJourney.security.TokenUtils;
+import com.tim9.PlanJourney.service.AuthorityService;
 import com.tim9.PlanJourney.service.UserService;
 import com.tim9.PlanJourney.service.impl.CustomUserDetailsService;
 
@@ -50,7 +53,8 @@ public class AuthenticationController {
 	
 	@Autowired
 	private  UserService userService;
-
+	@Autowired
+	private AuthorityService autService;
 	@CrossOrigin()
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody LoginBean authenticationRequest,
@@ -84,6 +88,10 @@ public class AuthenticationController {
 		}
 		BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
 		RegisteredUser user = new RegisteredUser(bean.getUsername(), bc.encode(bean.getPassword()), bean.getFirstName(), bean.getLastName(), bean.getEmail());
+		Authority aut = autService.findOne(5l);
+		ArrayList<Authority> authorities = new ArrayList<>();
+		authorities.add(aut);
+		user.setAuthorities(authorities);
 		userService.save(user);
 		return HttpStatus.OK;
 	}
