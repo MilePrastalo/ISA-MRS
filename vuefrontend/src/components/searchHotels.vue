@@ -39,12 +39,14 @@
                         <td>Destination</td>
                         <td>Adress</td>
                         <td>Description</td>
+                        <td>Options</td>
                     </tr>
                     <tr v-for="h in hotels" :key="h.id">  
                         <td>{{h.name}}</td>
                         <td>{{h.destination.name}}</td>
                         <td>{{h.address}}</td>
                         <td>{{h.description}}</td>
+                        <td><button @click="showDetails(h.name)">Details</button> </td>
                     </tr>
                 </table>
             </div>
@@ -70,12 +72,14 @@
                         <td>Destination</td>
                         <td>Adress</td>
                         <td>Description</td>
+                        <td>Options</td>
                     </tr>
                     <tr v-for="h in hotels" :key="h.id">  
                         <td>{{h.name}}</td>
                         <td>{{h.destination.name}}</td>
                         <td>{{h.address}}</td>
                         <td>{{h.description}}</td>
+                        <td><button @click="showDetails(h.name)">Details</button> </td>
                     </tr>
                 </table>
             </div>
@@ -100,12 +104,14 @@
                         <td>Destination</td>
                         <td>Adress</td>
                         <td>Description</td>
+                        <td>Options</td>
                     </tr>
                     <tr v-for="h in hotels" :key="h.id">  
                         <td>{{h.name}}</td>
                         <td>{{h.destination.name}}</td>
                         <td>{{h.address}}</td>
                         <td>{{h.description}}</td>
+                        <td><button @click="showDetails(h.name)">Details</button> </td>
                     </tr>
                 </table>
             </div>
@@ -140,6 +146,9 @@ mounted(){
             .then(response => {
                 this.hotels = response.data;
             })  
+        },
+        showDetails: function(chosenHotel) {
+            window.location ="./hotelProfile/"+ chosenHotel;
         }     
     }
 }

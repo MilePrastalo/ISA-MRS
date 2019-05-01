@@ -1,59 +1,75 @@
 <template>
    <div id = "hotelProfile">
-            <table>
+            <h1>{{hotel.name}}</h1>     
+
+            <div>
+              <table>
+                <th>
+                  <td>Hotel Info:</td>
+                </th>
                 <tr>
-                    <td> Name: </td>
-                    <td>  <input type="text" name="name" v-model="name" > </td>
+                  <td>City: </td>
+                  <td>{{this.hotel.destination.name}}</td>
                 </tr>
                 <tr>
-                    <td> Address: </td>
-                    <td>  <input type="text" name="address" v-model="address" > </td>
+                  <td>Destination description: </td>
+                  <td>{{this.hotel.destination.description}}</td>
                 </tr>
                 <tr>
-                    <td> Description: </td>
-                    <td> <textarea  rows="5" cols="22" name="description"  v-model="description" style="overflow:scroll;"></textarea> </td>        
+                  <td>Address: </td>
+                  <td>{{this.hotel.address}}</td>
                 </tr>
                 <tr>
-                    <td>  </td>
-                    <td><button v-on:click="updateHotelProfile()">Edit</button> </td>      
+                  <td>Hotel description: </td>
+                  <td>{{this.hotel.description}}</td>
                 </tr>
-            </table>      
-        </div>
+              </table>
+              <br>
+              <br>
+              <table border="1" >
+                        <tr>
+                            <td>Room Number</td>
+                            <td>Number Of Beds</td>
+                            <td>Price Per Day</td>
+                            <td>Options</td>
+                        </tr>
+                    <tr v-for="r in hotel.rooms" :key="r.id">  
+                        <td>{{r.roomNumber}}</td>
+                        <td>{{r.numberOfBeds}}</td>
+                        <td>{{r.pricePerDay}}</td>
+                        <td><button @click="showDetails(r.roomNumber)">Details</button></td>
+                    </tr>
+                </table>
+            </div>
+    </div>
 </template>
 
 <script>
-
+import axios from 'axios'
 export default {
   name: 'hotelProfile',
   components: {
   },
   data: function () {
   return {
-    name: "",
-    address: "",
-    description: ""
+    hotel : []
   }
 },
 mounted(){
-    axios.get("http://localhost:8080/api/getHotelProfile")
+         axios.get("http://localhost:8080/api/getHotel/"+this.$route.params.hotelName)
         .then(response => {
-            this.name = response.data.name
-            this.address = response.data.address
-            this.description = response.data.description
+            this.hotel = response.data
           });   
     },
-    methods:{
-        updateFlightCompanyProfile: function(){
-             axios.post("http://localhost:8080/api/updateHotelProfile",{name:this.name, address: this.address, description: this.description})
-            .then(response => {
-                this.name = response.data.name
-                this.address = response.data.address
-                this.description = response.data.description
-            });  
-        }     
+    methods:{  
+      showDetails: function(chosenRoom) {
+        this.$router.push("/hotelRoom/"+ this.$route.params.hotelName+ "/" + chosenRoom);
+        },
+        back: function() {
+        this.$router.push('/');
+        }      
     }
 }
-
 </script>
 
 <style>
