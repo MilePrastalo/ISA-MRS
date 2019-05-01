@@ -55,7 +55,7 @@ export default new Router({
       component: () => import('./components/searchRentACarCompany.vue')
     },
     {
-      path: '/hotelProfile',
+      path: '/hotelProfile/:hotelName',
       name: 'hotelProfile',
       component: () => import('./components/hotelProfile.vue')
     },
@@ -135,6 +135,11 @@ export default new Router({
       path: '/friends',
       name: 'friends',
       component: () => import('./components/s1_friends/friends.vue')
+    },
+    {
+      path: '/hotelRoom/:hotelName/:roomNumber',
+      name: 'hotelRoom',
+      component: () => import('./components/hotelRoom.vue')
     }
   ]
 })
