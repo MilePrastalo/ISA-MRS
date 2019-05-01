@@ -36,7 +36,7 @@ export default {
     },
     mounted(){
 
-        var flightID = 6;
+        var flightID = localStorage.getItem('flightID');
         localStorage.setItem("selected_seats",[]);
         localStorage.setItem("called_friends",[]);
     }, 

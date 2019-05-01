@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -27,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.beans.FlightBean;
 import com.tim9.PlanJourney.beans.SeatsBean;
+import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.models.flight.Flight;
 import com.tim9.PlanJourney.models.flight.FlightAdmin;
@@ -34,6 +34,7 @@ import com.tim9.PlanJourney.models.flight.FlightCompany;
 import com.tim9.PlanJourney.models.flight.Seat;
 import com.tim9.PlanJourney.models.flight.Ticket;
 import com.tim9.PlanJourney.service.DestinationService;
+import com.tim9.PlanJourney.service.EmailService;
 import com.tim9.PlanJourney.service.FlightCompanyService;
 import com.tim9.PlanJourney.service.FlightService;
 import com.tim9.PlanJourney.service.UserService;
@@ -49,6 +50,8 @@ public class FlifgtController {
 	FlightCompanyService flightCompanyService;
 	@Autowired
 	UserService userService;
+	@Autowired
+	EmailService emailService;
 	
 	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MMyyyy. HH:mm");
 	
@@ -94,6 +97,22 @@ public class FlifgtController {
 		Collections.sort(seats, Comparator.comparing(Seat::getSeatRow));
 		SeatsBean sb = new SeatsBean(seats, rows, columns);
 		return sb;
+	}
+	
+	
+	@RequestMapping(value = "/api/sendReservationRequest", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE,  produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	public @ResponseBody String sendReservationRequest(@RequestBody RegisteredUser user){
+
+		try {
+			emailService.sendReservationRequest(user);
+			
+		}catch( Exception e ){
+			
+			System.out.println("Error while sending email: " + e.getMessage());
+		}
+
+		return "success";
 	}
 	
 

@@ -135,6 +135,11 @@ export default new Router({
       path: '/flightReservation',
       name: 'flightReservation',
       component: () => import('./components/s1_flightReservation/flightReservation.vue')
+    },
+    {
+      path: '/confirmationPage',
+      name: 'confirmationPage',
+      component: () => import('./components/s1_flightReservation/confirmationPage.vue')
     }
   ]
 })

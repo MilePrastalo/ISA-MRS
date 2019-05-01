@@ -12,9 +12,6 @@
                     <li  v-for="friend in calledFriends" :key ="friend.id"> {{friend.firstName}} {{friend.lastName}} </li>
                 </ul>
             </div>
-            <div style="margin-left: 10%">
-                <button>Next >></button>
-             </div>
         </div>
 
         <br>
@@ -104,9 +101,19 @@ export default {
                 alert("You didn't reserve enough seats!");
             }
             else{
-                this.calledFriends.push(friend);
-                alert("Friend is called!");
-                localStorage.setItem("called_friends", this.calledFriends )
+
+                axios.post("http://localhost:8080/api/sendReservationRequest", {firstName : friend.firstName, lastName: friend.lastName, id: friend.id, email: friend.email})
+                .then(response => {
+                    if (response.data == "success"){
+                        this.calledFriends.push(friend);
+                        alert("Friend is called!");
+                        localStorage.setItem("called_friends", this.calledFriends );
+                    }
+                    else{
+                        alert("Something wrong happend!");
+                    }
+                });
+                
             }
         },
 
