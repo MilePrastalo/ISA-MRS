@@ -50,7 +50,7 @@
                     <td> {{flight.firstClassPrice}}</td>
                 </tr>
                 <tr>
-                    <td><button >Make reservation</button> </td>
+                    <td><button @click="makeReservation(flight.id)">Make reservation</button> </td>
                 </tr>
             </table>
         </div>
@@ -61,7 +61,7 @@
 
         <div class = "row">
             <a href = "/searchVehicle">Search for rent a car services</a>
-        </div>      
+        </div>    
     </div>
 </template>
 
@@ -94,13 +94,17 @@ export default {
 },
 mounted(){
     var flightID = localStorage.getItem("flightID");
-    alert(this.flightID);
     axios.get("http://localhost:8080/api/getFlight/" + flightID)
         .then(response => {
             this.flight = response.data
           }); 
     },
     methods:{
+
+        makeReservation: function(id){
+            localStorage.setItem('flightID',id);
+            window.location = '/flightReservation'
+        }
             
     }
 }

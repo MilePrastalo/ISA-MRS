@@ -137,6 +137,16 @@ export default new Router({
       component: () => import('./components/s1_friends/friends.vue')
     },
     {
+      path: '/flightReservation',
+      name: 'flightReservation',
+      component: () => import('./components/s1_flightReservation/flightReservation.vue')
+    },
+    {
+      path: '/confirmationPage',
+      name: 'confirmationPage',
+      component: () => import('./components/s1_flightReservation/confirmationPage.vue')
+    },
+    {
       path: '/hotelRoom/:hotelName/:roomNumber',
       name: 'hotelRoom',
       component: () => import('./components/hotelRoom.vue')
