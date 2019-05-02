@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.tim9.PlanJourney.models.RegisteredUser;
+
 @Entity
 public class HotelReservation {
 
@@ -33,6 +35,8 @@ public class HotelReservation {
 
 	@Column(name = "lastDay", unique = false, nullable = false)
 	private Date lastDay;
+	@ManyToOne
+	private RegisteredUser user;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<AdditionalCharges> additionalCharges = new HashSet<AdditionalCharges>();
@@ -109,5 +113,14 @@ public class HotelReservation {
 	public void setPaidPrice(float paidPrice) {
 		this.paidPrice = paidPrice;
 	}
+
+	public RegisteredUser getUser() {
+		return user;
+	}
+
+	public void setUser(RegisteredUser user) {
+		this.user = user;
+	}
+	
 
 }
