@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.websocket.server.PathParam;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tim9.PlanJourney.beans.DestinationBean;
 import com.tim9.PlanJourney.beans.FlightBean;
 import com.tim9.PlanJourney.models.Authority;
-import com.tim9.PlanJourney.models.SystemAdmin;
 import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.models.flight.Flight;
 import com.tim9.PlanJourney.models.flight.FlightAdmin;
@@ -245,19 +243,6 @@ public class FlightCompanyController {
 		return found;
 	}
 	
-	@RequestMapping(value = "/api/testSYS", method = RequestMethod.GET)
-	@CrossOrigin()
-	public void testSYS() throws Exception {
-		
-		BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
-		SystemAdmin flightAdmin = new SystemAdmin("admin", bc.encode("admin"), "admin", "admin", "mira@gmail.com");
-		Authority authority = (Authority) authorityService.findOne(1l);
-		ArrayList<Authority> authorities = new ArrayList<>();
-		authorities.add(authority);
-		flightAdmin.setAuthorities(authorities);
-		userService.save(flightAdmin);
-	}
-
 	// Method puts some test data into database
 	@RequestMapping(value = "/api/testFlightData", method = RequestMethod.GET)
 	@CrossOrigin()
