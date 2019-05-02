@@ -34,10 +34,10 @@ public class RegisteredUser extends User {
 	 
 	
 	@OneToMany(mappedBy="user")
-	private Set<VehicleReservation> vehicleReservations  = new HashSet<>();;
+	private Set<VehicleReservation> vehicleReservations  = new HashSet<>();
 	
 	@OneToMany(mappedBy="user")
-	private Set<HotelReservation> hotelReservations;
+	private Set<HotelReservation> hotelReservations   = new HashSet<>();
 	
 	public RegisteredUser() {
 		// TODO Auto-generated constructor stub
@@ -113,6 +113,7 @@ public class RegisteredUser extends User {
 		// TODO Auto-generated method stub
 		return true;
 	}
+	
 	
 	
 
