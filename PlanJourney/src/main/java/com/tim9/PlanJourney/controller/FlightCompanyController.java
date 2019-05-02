@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tim9.PlanJourney.beans.DestinationBean;
 import com.tim9.PlanJourney.beans.FlightBean;
 import com.tim9.PlanJourney.models.Authority;
+import com.tim9.PlanJourney.models.SystemAdmin;
 import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.models.flight.Flight;
 import com.tim9.PlanJourney.models.flight.FlightAdmin;
@@ -39,6 +40,7 @@ import com.tim9.PlanJourney.models.flight.Ticket;
 import com.tim9.PlanJourney.service.AuthorityService;
 import com.tim9.PlanJourney.service.DestinationService;
 import com.tim9.PlanJourney.service.FlightCompanyService;
+import com.tim9.PlanJourney.service.SystemAdminService;
 import com.tim9.PlanJourney.service.UserService;
 
 @RestController
@@ -52,8 +54,10 @@ public class FlightCompanyController {
 	private UserService userService;
 	@Autowired
 	private AuthorityService authorityService;
+	@Autowired
+	private SystemAdminService sysService;
 	
-	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MMyyyy. HH:mm");
+	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 
 	@RequestMapping(value = "/api/getFlightCompanyProfile", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -135,7 +139,7 @@ public class FlightCompanyController {
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
 	// Method returns flight information
-	public @ResponseBody ArrayList<Flight> getFlights() throws Exception {
+	public @ResponseBody ArrayList<FlightBean> getFlights() throws Exception {
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
@@ -147,9 +151,9 @@ public class FlightCompanyController {
 				System.out.println("Flight admin doesnt't have flight company.");
 				return null;
 			}
-			ArrayList<Flight> flights = new ArrayList<>();
-			for (Flight d : flightCompany.getFlights()) {
-				flights.add(d);
+			ArrayList<FlightBean> flights = new ArrayList<>();
+			for (Flight f : flightCompany.getFlights()) {
+				flights.add(new FlightBean(f,"", sdf.format(f.getStartDate()), sdf.format(f.getEndDate())));
 			}
 			return flights;
 		}
@@ -239,6 +243,19 @@ public class FlightCompanyController {
 		}
 		System.out.println("\t pronasao je: " + found.size());
 		return found;
+	}
+	
+	@RequestMapping(value = "/api/testSYS", method = RequestMethod.GET)
+	@CrossOrigin()
+	public void testSYS() throws Exception {
+		
+		BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
+		SystemAdmin flightAdmin = new SystemAdmin("admin", bc.encode("admin"), "admin", "admin", "mira@gmail.com");
+		Authority authority = (Authority) authorityService.findOne(1l);
+		ArrayList<Authority> authorities = new ArrayList<>();
+		authorities.add(authority);
+		flightAdmin.setAuthorities(authorities);
+		userService.save(flightAdmin);
 	}
 
 	// Method puts some test data into database

@@ -35,13 +35,16 @@ import com.tim9.PlanJourney.models.flight.Seat;
 import com.tim9.PlanJourney.models.flight.Ticket;
 import com.tim9.PlanJourney.service.DestinationService;
 import com.tim9.PlanJourney.service.EmailService;
+import com.tim9.PlanJourney.service.FlightAdminSerice;
 import com.tim9.PlanJourney.service.FlightCompanyService;
 import com.tim9.PlanJourney.service.FlightService;
-import com.tim9.PlanJourney.service.UserService;
+import com.tim9.PlanJourney.service.SeatService;
 
 @RestController
 public class FlifgtController {
 
+	@Autowired
+	FlightAdminSerice flightAdminService;
 	@Autowired
 	FlightService flightService;
 	@Autowired
@@ -49,41 +52,42 @@ public class FlifgtController {
 	@Autowired
 	FlightCompanyService flightCompanyService;
 	@Autowired
-	UserService userService;
-	@Autowired
 	EmailService emailService;
+	@Autowired
+	SeatService seatService;
+
+	private static SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	private static SimpleDateFormat sdf2 = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
+
 	
-	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MMyyyy. HH:mm");
-	
-	
+	// Method returns flight that match given id
 	@RequestMapping(value = "/api/getFlight/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	//Method returns flight which match given id
-	public @ResponseBody FlightBean getFlight(@PathVariable("id") Long id) throws Exception{
-		
+	public @ResponseBody FlightBean getFlight(@PathVariable("id") Long id) throws Exception {
+
 		Flight flight = flightService.findOne(id);
 		String companyName = "";
-		for ( FlightCompany fc : flightCompanyService.findAll()) {
+		for (FlightCompany fc : flightCompanyService.findAll()) {
 			if (fc.getFlights().contains(flight)) {
 				companyName = fc.getName();
 				break;
 			}
 		}
-		
-		return new FlightBean(flight, companyName, sdf.format(flight.getStartDate()), sdf.format(flight.getEndDate()));
+
+		return new FlightBean(flight, companyName, sdf2.format(flight.getStartDate()), sdf2.format(flight.getEndDate()));
 	}
-	
-	
+
 	@RequestMapping(value = "/api/getSeatsOnFlight/{id}/{travelClass}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	public @ResponseBody SeatsBean getSeatsOnFlight(@PathVariable("id") Long id, @PathVariable("travelClass") String travelClass) throws Exception{
+	public @ResponseBody SeatsBean getSeatsOnFlight(@PathVariable("id") Long id,
+			@PathVariable("travelClass") String travelClass) throws Exception {
 
 		Flight flight = flightService.findOne(id);
 		List<Seat> seats = new ArrayList<Seat>();
 		int rows = 0;
 		int columns = 0;
-		for ( Seat seat : flight.getSeats()) {
-			
+		for (Seat seat : flight.getSeats()) {
+
 			if (seat.getTravelClassa().equals(travelClass)) {
 				seats.add(seat);
 				if (seat.getSeatRow() > rows) {
@@ -92,78 +96,94 @@ public class FlifgtController {
 				if (seat.getSeatColumn() > columns) {
 					columns = seat.getSeatColumn();
 				}
-			}	
+			}
 		}
 		Collections.sort(seats, Comparator.comparing(Seat::getSeatRow));
 		SeatsBean sb = new SeatsBean(seats, rows, columns);
 		return sb;
 	}
-	
-	
-	@RequestMapping(value = "/api/sendReservationRequest", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE,  produces = MediaType.APPLICATION_JSON_VALUE)
+
+	@RequestMapping(value = "/api/editSeat/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	public @ResponseBody String sendReservationRequest(@RequestBody RegisteredUser user){
+	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
+	public @ResponseBody Seat editSeat(@PathVariable("id") Long id) throws Exception {
+
+		Seat seat = seatService.findOne(id);
+		if (seat == null) {
+			return null;
+		}
+		if (seat.isUnavailable()) {
+			seat.setUnavailable(false);
+		} else {
+			seat.setUnavailable(true);
+		}
+		seatService.save(seat);
+		return seat;
+	}
+	
+	@RequestMapping(value = "/api/sendReservationRequest", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	public @ResponseBody String sendReservationRequest(@RequestBody RegisteredUser user) {
 
 		try {
 			emailService.sendReservationRequest(user);
-			
-		}catch( Exception e ){
-			
+
+		} catch (Exception e) {
+
 			System.out.println("Error while sending email: " + e.getMessage());
 		}
 
 		return "success";
 	}
-	
 
-	@RequestMapping(value = "/api/addFlight", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	//Method for adding new flight
+	@RequestMapping(value = "/api/addFlight", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
-	public @ResponseBody Flight addFlight(@RequestBody FlightBean newFlightInfo) throws Exception {
+	public @ResponseBody String addFlight(@RequestBody FlightBean newFlightInfo) throws Exception {
 
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (!(authentication instanceof AnonymousAuthenticationToken)) {
-
-			String username = authentication.getName();
-			FlightAdmin user = (FlightAdmin) userService.findOneByUsername(username);
-			FlightCompany flightCompany = user.getFlightCompany();
-			if (flightCompany == null) {
-				System.out.println("Flight admin doesnt't have flight company.");
-				return null;
-			}
-			// security checks on backend side
-			Date endDate = newFlightInfo.getEndDate();
-			Date startDate = newFlightInfo.getStartDate();
-			if (endDate.before(startDate)) {
-				return null;
-			}
-			Date today = new Date();
-			if (startDate.before(today) || endDate.before(today)) {
-				return null;
-			}
-			if (newFlightInfo.getStartDestination().equals(newFlightInfo.getEndDestination())) {
-				System.out.println("\tiste destinacije");
-				return null;
-			}
-			Destination startDestination = destinationService.findByName(newFlightInfo.getStartDestination());
-			Destination endDestination = destinationService.findByName(newFlightInfo.getEndDestination());
-			if (startDestination == null || endDestination == null) {
-				return null;
-			}
-			Set<Seat> seats = new HashSet<Seat>();
-			makeSeats(seats, newFlightInfo.getEconomicCapacity(), "economic");
-			makeSeats(seats, newFlightInfo.getBuisinesssCapacity(), "business");
-			makeSeats(seats, newFlightInfo.getFirstClassCapacity(), "first class");
-
-			Flight newFlight = new Flight(startDate, endDate, newFlightInfo.getFlightDuration(),
-					newFlightInfo.getFlightLength(), startDestination, endDestination, new HashSet<Ticket>(), seats,
-					newFlightInfo.getBusinessPrice(), newFlightInfo.getEconomicPrice(),
-					newFlightInfo.getFirstClassPrice());
-			flightCompany.getFlights().add(newFlight);
-			flightCompanyService.save(flightCompany);
-			return newFlight;
+		FlightAdmin loggedAdmin = getLoggedFlightAdmin();
+		if (loggedAdmin == null) {
+			return null;
 		}
-		return null;
+		FlightCompany flightCompany = loggedAdmin.getFlightCompany();
+		if (flightCompany == null) {
+			return "No company has been assigned to you.";
+		}
+		
+		Date endDate = sdf1.parse(newFlightInfo.getEndDate_str());
+		Date startDate = sdf1.parse(newFlightInfo.getStartDate_str());
+		
+		if (endDate.before(startDate)) {
+			return "End date can not be before start date!";
+		}
+		Date today = new Date();
+		if (startDate.before(today) || endDate.before(today)) {
+			return "Dates can not be in the past!";
+		}
+		if (newFlightInfo.getStartDestination().equals(newFlightInfo.getEndDestination())) {
+			return "Start and end destinations must be different!";
+		}
+		Destination startDestination = destinationService.findByName(newFlightInfo.getStartDestination());
+		Destination endDestination = destinationService.findByName(newFlightInfo.getEndDestination());
+		if (startDestination == null || endDestination == null) {
+			return null;
+		}
+		Set<Seat> seats = new HashSet<Seat>();
+		makeSeats(seats, newFlightInfo.getEconomicCapacity(), "economic");
+		makeSeats(seats, newFlightInfo.getBuisinesssCapacity(), "business");
+		makeSeats(seats, newFlightInfo.getFirstClassCapacity(), "first class");
+
+		Flight newFlight = new Flight(startDate, endDate, newFlightInfo.getFlightDuration(),
+				newFlightInfo.getFlightLength(), startDestination, endDestination, new HashSet<Ticket>(), seats,
+				newFlightInfo.getBusinessPrice(), newFlightInfo.getEconomicPrice(), newFlightInfo.getFirstClassPrice());
+
+		flightService.save(newFlight);
+		flightCompany.getFlights().add(newFlight);
+		flightCompanyService.save(flightCompany);
+		flightAdminService.save(loggedAdmin);
+
+		return "success";
 	}
 
 	@RequestMapping(value = "/api/flightSearch", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -178,32 +198,48 @@ public class FlifgtController {
 		for (Flight f : flights) {
 			companyName = getCompanyNameForFlight(f);
 			System.out.println("\t>>>" + f.getEndDestination().getName());
-			if ( (f.getStartDestination().getName().equals(search.getStartDestination()) || search.getStartDestination().equals(""))
-				&& (f.getEndDestination().getName().equals(search.getEndDestination()) || search.getEndDestination().equals(""))
-				&&  (companyName.equals(search.getFlightCompany()) || search.getFlightCompany().equals(""))
-				&& (f.getEconomicPrice() >= search.getMinEconomic() || (search.getMinEconomic() == 0))
-				&& (f.getBusinessPrice() >= search.getMinBusiness() || (search.getMinBusiness() == 0))
-				&& (f.getFirstClassPrice() >= search.getMinFirstClass() || (search.getMinFirstClass() == 0))
-				&& (f.getEconomicPrice() <= search.getMaxEconomic() || (search.getMaxEconomic() == 0))
-				&& (f.getBusinessPrice() <= search.getMaxBusiness() || (search.getMaxBusiness() == 0))
-				&& (f.getFirstClassPrice() <= search.getMaxFirstClass() || (search.getMaxFirstClass() == 0))
-				&& (f.getFlightDuration() == search.getFlightDuration() || search.getFlightDuration() == 0)
-				&& (f.getFlightLength() == search.getFlightLength() || search.getFlightLength() == 0)
-				&& ( search.getStartDate()==null || dateTimeComparator.compare(f.getStartDate(),search.getStartDate()) == 0) 
-				&& (search.getEndDate() == null  || dateTimeComparator.compare(f.getEndDate(),search.getEndDate()) == 0)
-				)
-					 {
-				
-				foundFlights.add(new FlightBean(f,companyName, sdf.format(f.getStartDate()), sdf.format(f.getEndDate())));
+			if ((f.getStartDestination().getName().equals(search.getStartDestination())
+					|| search.getStartDestination().equals(""))
+					&& (f.getEndDestination().getName().equals(search.getEndDestination())
+							|| search.getEndDestination().equals(""))
+					&& (companyName.equals(search.getFlightCompany()) || search.getFlightCompany().equals(""))
+					&& (f.getEconomicPrice() >= search.getMinEconomic() || (search.getMinEconomic() == 0))
+					&& (f.getBusinessPrice() >= search.getMinBusiness() || (search.getMinBusiness() == 0))
+					&& (f.getFirstClassPrice() >= search.getMinFirstClass() || (search.getMinFirstClass() == 0))
+					&& (f.getEconomicPrice() <= search.getMaxEconomic() || (search.getMaxEconomic() == 0))
+					&& (f.getBusinessPrice() <= search.getMaxBusiness() || (search.getMaxBusiness() == 0))
+					&& (f.getFirstClassPrice() <= search.getMaxFirstClass() || (search.getMaxFirstClass() == 0))
+					&& (f.getFlightDuration() == search.getFlightDuration() || search.getFlightDuration() == 0)
+					&& (f.getFlightLength() == search.getFlightLength() || search.getFlightLength() == 0)
+					&& (search.getStartDate() == null
+							|| dateTimeComparator.compare(f.getStartDate(), search.getStartDate()) == 0)
+					&& (search.getEndDate() == null
+							|| dateTimeComparator.compare(f.getEndDate(), search.getEndDate()) == 0)) {
+
+				foundFlights
+						.add(new FlightBean(f, companyName, sdf2.format(f.getStartDate()), sdf2.format(f.getEndDate())));
 			}
 		}
 		System.out.println("\tREZ = " + foundFlights.size());
 		return foundFlights;
 
 	}
+
+	// Returns currently logged user
+	private FlightAdmin getLoggedFlightAdmin() {
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String username = authentication.getName();
+			FlightAdmin user = (FlightAdmin) flightAdminService.findByUsername(username);
+			return user;
+		}
+		return null;
+	}
+
 	private String getCompanyNameForFlight(Flight flight) {
 		String companyName = "";
-		for ( FlightCompany fc : flightCompanyService.findAll()) {
+		for (FlightCompany fc : flightCompanyService.findAll()) {
 			if (fc.getFlights().contains(flight)) {
 				companyName = fc.getName();
 				break;

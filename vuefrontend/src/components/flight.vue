@@ -73,26 +73,12 @@ export default {
   },
   data: function () {
   return {
-     startDestination: "",
-     endDestination: "",
-     startDate: "",
-     endDate: "",
-     flightDuration: "",
-     flightLength: "",
-     buisinesssPrice: "",
-     firstClassPrice: "",
-     economicPrice: "",
-     flight: {},
-     items: [
-      { message: 'Foo' },
-       { message: 'Aoo' },
-        { message: 'Boo' },
-         { message: 'Doo' },
-      { message: 'Gar' }
-    ]
+      
+     flight: {}
   }
 },
 mounted(){
+
     var flightID = localStorage.getItem("flightID");
     axios.get("http://localhost:8080/api/getFlight/" + flightID)
         .then(response => {

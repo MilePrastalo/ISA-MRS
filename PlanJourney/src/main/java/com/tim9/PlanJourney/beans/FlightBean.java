@@ -1,12 +1,13 @@
 package com.tim9.PlanJourney.beans;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.tim9.PlanJourney.models.flight.Flight;
 
 public class FlightBean {
 	
-
+	
 	private String startDestination;
 	private String endDestination;
 	private Date startDate;

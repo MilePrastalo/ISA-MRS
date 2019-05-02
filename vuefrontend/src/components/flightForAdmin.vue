@@ -8,151 +8,116 @@
         <br>
 
         <div class = "row">
-            <table style="text-align: left">
-                <tr>
-                    <td>Flight company: </td>
-                    <td> <input type = "text" v-model= "flight.flightCompany"  > </td>
-                </tr>
-                <tr>
-                    <td>From: </td>
-                    <td> <input class = "edit" type = "text" v-model= "flight.startDestination"> </td>
-                </tr>
-                <tr>
-                    <td>To: </td>
-                    <td> <input class = "edit" type = "text" v-model= "flight.endDestination" > </td>
-                </tr>
-                <tr>
-                    <td>Start date: </td>
-                    <td> <input class = "edit" type = "text" v-model= "flight.startDate_str" > </td>
-                </tr>
-                <tr>
-                    <td>End date: </td>
-                    <td> <input class = "edit" type = "text" v-model= "flight.endDate_str" > </td>
-                </tr>
-                <tr>
-                    <td>Flight duration: </td>
-                    <td> <input class = "edit" type = "text" v-model= "flight.flightDuration" > </td>
-                </tr>
-                <tr>
-                    <td>Flight length: </td>
-                    <td> <input class = "edit" type = "text" v-model= "flight.flightLength" > </td>
-                </tr>
-                <tr>
-                    <td>Eco class price: </td>
-                    <td> <input class = "edit" type = "text" v-model= "flight.economicPrice" > </td>
-                </tr>
-                <tr>
-                    <td>Business class price: </td>
-                    <td> <input class = "edit" type = "text" v-model= "flight.businessPrice" > </td>
-                </tr>
-                <tr>
-                    <td>First class price: </td>
-                    <td> <input class = "edit" type = "text" v-model= "flight.firstClassPrice" > </td>
-                </tr>
-                <tr>
-                    <td><button>Edit</button> </td>
-                </tr>
-            </table>
-        </div>
-        <br><br>
-
-        <div class = "row">
+            <form>
+                <table style="text-align: left">
+                    <tr>
+                        <td>Flight company: </td>
+                        <td> <input type = "text" v-model= "flight.flightCompany"  > </td>
+                    </tr>
+                    <tr>
+                        <td>From: </td>
+                        <td> <input class = "edit" type = "text" v-model= "flight.startDestination"> </td>
+                    </tr>
+                    <tr>
+                        <td>To: </td>
+                        <td> <input class = "edit" type = "text" v-model= "flight.endDestination" > </td>
+                    </tr>
+                    <tr>
+                        <td>Start date: </td>
+                        <td> <input class = "edit" type = "text" v-model= "flight.startDate_str" > </td>
+                    </tr>
+                    <tr>
+                        <td>End date: </td>
+                        <td> <input class = "edit" type = "text" v-model= "flight.endDate_str" > </td>
+                    </tr>
+                    <tr>
+                        <td>Flight duration: </td>
+                        <td> <input class = "edit" type = "text" v-model= "flight.flightDuration" > </td>
+                    </tr>
+                    <tr>
+                        <td>Flight length: </td>
+                        <td> <input class = "edit" type = "text" v-model= "flight.flightLength" > </td>
+                    </tr>
+                    <tr>
+                        <td>Eco class price: </td>
+                        <td> <input class = "edit" type = "text" v-model= "flight.economicPrice" > </td>
+                    </tr>
+                    <tr>
+                        <td>Business class price: </td>
+                        <td> <input class = "edit" type = "text" v-model= "flight.businessPrice" > </td>
+                    </tr>
+                    <tr>
+                        <td>First class price: </td>
+                        <td> <input class = "edit" type = "text" v-model= "flight.firstClassPrice" > </td>
+                    </tr>
+                    <tr>
+                        <td><input type="submit" value="Edit"></td>
+                    </tr>
+                </table>
+            </form>
             
-            <table border="1"  style="margin-right: 5%">
-                <caption style="caption-side: top;">Business class: seats</caption>
-                <tr v-for="r in seatsE.rows" :key ="r"> 
-                    <td v-for="c in seatsE.columns" :key ="c" >
-                    <div v-if="seatsE.seats[(c-1)+(r-1)*seatsE.columns].taken == false" style="background-color: palegreen;"  >
-                         ({{ seatsE.seats[(c-1)+(r-1)*seatsE.columns].seatRow}},{{ seatsE.seats[(c-1)+(r-1)*seatsE.columns].seatColumn}} )
-                        </div>
-                        <div v-if="seatsE.seats[(c-1)+(r-1)*seatsE.columns].taken == true" style="background-color: salmon;"  >
-                              ({{ seatsE.seats[(c-1)+(r-1)*seatsE.columns].seatRow}},{{ seatsE.seats[(c-1)+(r-1)*seatsE.columns].seatColumn}} )
-                    </div>
-                    </td> 
-                </tr>
-            </table>
-            <table border="1"  style="margin-right: 5%">
-                <caption style="caption-side: top;">Business class: seats</caption>
-                <tr v-for="r in seatsB.rows" :key ="r"> 
-                    <td v-for="c in seatsB.columns" :key ="c" >
-                    <div v-if="seatsB.seats[(c-1)+(r-1)*seatsB.columns].taken == false" style="background-color: palegreen;"  >
-                         ({{ seatsB.seats[(c-1)+(r-1)*seatsB.columns].seatRow}},{{ seatsB.seats[(c-1)+(r-1)*seatsB.columns].seatColumn}} )
-                        </div>
-                        <div v-if="seatsB.seats[(c-1)+(r-1)*seatsB.columns].taken == true" style="background-color: salmon;"  >
-                              ({{ seatsB.seats[(c-1)+(r-1)*seatsB.columns].seatRow}},{{ seatsB.seats[(c-1)+(r-1)*seatsB.columns].seatColumn}} )
-                    </div>
-                    </td> 
-                </tr>
-            </table>
-            <table border="1"  style="margin-right: 5%">
-                <caption style="caption-side: top;">Business class: seats</caption>
-                <tr v-for="r in seatsF.rows" :key ="r"> 
-                    <td v-for="c in seatsF.columns" :key ="c" >
-                    <div v-if="seatsF.seats[(c-1)+(r-1)*seatsF.columns].taken == false" style="background-color: palegreen;"  >
-                         ({{ seatsF.seats[(c-1)+(r-1)*seatsF.columns].seatRow}},{{ seatsF.seats[(c-1)+(r-1)*seatsF.columns].seatColumn}} )
-                        </div>
-                        <div v-if="seatsF.seats[(c-1)+(r-1)*seatsF.columns].taken == true" style="background-color: salmon;"  >
-                              ({{ seatsF.seats[(c-1)+(r-1)*seatsF.columns].seatRow}},{{ seatsF.seats[(c-1)+(r-1)*seatsF.columns].seatColumn}} )
-                    </div>
-                    </td> 
-                </tr>
-            </table>
-             
-        </div> 
+        </div><br>
+
+        <editSeats :iid = "id"></editSeats>
+        
+
+        
          
     </div>
 </template>
 
 <script>
+import EditSeats from "./editSeatsOnFlight.vue";
 
 export default {
-  name: 'flightForAdmin',
-  components: {},
-  data: function () {
-  return {
-     startDestination: "",
-     endDestination: "",
-     startDate: "",
-     endDate: "",
-     flightDuration: "",
-     flightLength: "",
-     buisinesssPrice: "",
-     firstClassPrice: "",
-     economicPrice: "",
-     flight: {},
-    seatsE: {},
-    seatsB: {},
-    seatsF: {},
-  }
-},
-mounted(){
-    var flightID = localStorage.getItem("flightID");
-     var getJwtToken = function() {
-        return localStorage.getItem('jwtToken');
-    };
-    axios.get("http://localhost:8080/api/getFlight/" + flightID)
-        .then(response => {
-            this.flight = response.data
-          });
-    axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-    axios.get("http://localhost:8080/api/getSeatsOnFlight/" + flightID + "/economic")
-        .then(response => {
-            this.seatsE = response.data;
-          });; 
-     axios.get("http://localhost:8080/api/getSeatsOnFlight/" + flightID + "/business")
-        .then(response => {
-            this.seatsB = response.data;
-          });
-     axios.get("http://localhost:8080/api/getSeatsOnFlight/" + flightID + "/first class")
-        .then(response => {
-            this.seatsF = response.data;
-          });
+    name: 'flightForAdmin',
+    components: {
+        editSeats:  EditSeats
     },
-methods: {
-    goToProfile: function(){
+    data: function () {
+        return {
+                flight: {},
+                seatsE: {},
+                seatsB: {},
+                seatsF: {},
+                id: 0,
+            }
+    },
+    created:function(){
 
-    }
-}     
+        this.id = localStorage.getItem("flightID");
+    },
+    mounted(){
+        
+            var getJwtToken = function() {
+                return localStorage.getItem('jwtToken');
+            };
+            axios.get("http://localhost:8080/api/getFlight/" + this.id)
+            .then(response => {
+                this.flight = response.data
+            });
+    },
+    methods: {
+
+        modify: function(seat){
+            
+            var getJwtToken = function() {
+            return localStorage.getItem('jwtToken');
+            };
+            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.get("http://localhost:8080/api/editSeat/" + seat.id)
+            .then(response => {
+                if (response.data != null){
+                    if (seat.unavailable == true){
+                        seat.unavailable = false;
+                    }
+                    else{
+                        seat.unavailable = true;
+                    }
+                }
+            });    
+        }
+    }     
     
 }
 

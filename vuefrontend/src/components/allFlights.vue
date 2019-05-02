@@ -73,10 +73,10 @@
                     <td></td>
                 </tr>
                 <tr v-for="flight in flights" :key="flight.id">  
-                    <td>{{flight.startDestination.name}}</td>
-                    <td>{{flight.endDestination.name}}</td>
-                    <td>{{flight.startDate}}</td>
-                    <td>{{flight.endDate}}</td>
+                    <td>{{flight.startDestination}}</td>
+                    <td>{{flight.endDestination}}</td>
+                    <td>{{flight.startDate_str}}</td>
+                    <td>{{flight.endDate_str}}</td>
                     <td>{{flight.flightDuration}}</td>
                     <td>{{flight.flightLength}}</td>
                     <td>{{flight.economicPrice}}</td>

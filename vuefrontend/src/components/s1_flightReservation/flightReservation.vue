@@ -2,12 +2,14 @@
    <div id = "flightReservation">
 
         <div v-if="currentStep == 1">
+            <button @click="goBack(1)"> << Back </button>&nbsp
             <button @click="goToNextStep(2)"> Next >> </button>
-            <seat_selection></seat_selection>
+            <seat_selection :iid= "id"></seat_selection>
         </div>
 
         <div v-if="currentStep == 2">
-             <button> Next >> </button>
+            <button @click="goBack(2)"> << Back </button> &nbsp
+            <button> Next >> </button>
             <calledFriends></calledFriends>
         </div>		
          
@@ -32,11 +34,15 @@ export default {
             selected: [],
             total: 0,
             calledFriends: [],
+            id : 0
             }
     },
-    mounted(){
+    created:function(){
 
-        var flightID = localStorage.getItem('flightID');
+        this.id = localStorage.getItem("flightID");
+    },
+    mounted(){
+        
         localStorage.setItem("selected_seats",[]);
         localStorage.setItem("called_friends",[]);
     }, 
@@ -51,6 +57,15 @@ export default {
                 else{
                     this.currentStep = option;
                 }
+            }
+        },
+
+        goBack: function(current){
+            if (current == 1){
+                window.location = '/flight'
+            }
+            else if (current == 2){
+                this.currentStep = 1;
             }
         },
 } 

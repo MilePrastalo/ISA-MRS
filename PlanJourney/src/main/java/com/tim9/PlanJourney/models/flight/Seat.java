@@ -28,6 +28,9 @@ public class Seat {
     
     @Column(name = "active", unique = false, nullable = false)
 	private boolean active;
+    
+    @Column(name = "unavailable", unique = false, nullable = false)
+   	private boolean unavailable;
 	
 	
 	public Seat() {
@@ -42,6 +45,7 @@ public class Seat {
 		SeatColumn = seatColumn;
 		this.travelClassa = travelClassa;
 		this.active = false;
+		this.unavailable = false;
 	}
 
 
@@ -96,6 +100,19 @@ public class Seat {
 	public void setActive(boolean active) {
 		this.active = active;
 	}
+
+
+	public boolean isUnavailable() {
+		return unavailable;
+	}
+
+
+	public void setUnavailable(boolean unavailable) {
+		this.unavailable = unavailable;
+	}
+
+
+	
 
 	
 
