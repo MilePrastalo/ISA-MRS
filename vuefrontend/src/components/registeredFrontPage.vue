@@ -55,12 +55,22 @@
                 <div id="CarsReservations" class="centered col-lg-10" hidden="true">
                     <table>
                         <tr>
-                            <th>Location</th>
-                            <th>Model</th>
-                            <th>Date</th>
+                            <th>Location pick</th>
+                            <th>Location return</th>
+                            <th>Name</th>
+                            <th>Date from</th>
+                            <th>Date to</th>
                             <th>Price</th>
-                            <th>Details</th>
                             <th>Cancel</th>
+                        </tr>
+                        <tr v-for="reservation in vehiclereservations" :key="reservation.id">
+                            <td>{{reservation.locationPick}}</td>
+                            <td>{{reservation.locationReturn}}</td>
+                            <td>{{reservation.vehicleName}}</td>
+                            <td>{{reservation.dateFrom}}</td>
+                            <td>{{reservation.dateTo}}</td>
+                            <td>{{reservation.price}}</td>
+                            <td><Button @click="cancel(reservation)">Cancel</Button></td>
                         </tr>
                     </table>
                 </div>
@@ -74,6 +84,22 @@
 
 export default {
   name: 'registeredUserFrontPage',
+  data: function(){
+      return{
+          vehiclereservations:[]
+      }
+  },
+  mounted(){
+      var getJwtToken = function() {
+                    return localStorage.getItem('jwtToken');
+                };
+        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.get("http://localhost:8080/api/geteReservations")
+            .then(response => {
+                console.log(response);
+                this.vehiclereservations = response.data;
+            }); 
+  },
   methods : {
       showFlights : function(){
             var flightDiv = document.getElementById("FlightsReservations").hidden=false;
@@ -107,6 +133,17 @@ export default {
     },
     rentACar:function(){
         window.location="./rentacar";
+    },
+    cancel:function(reservation){
+        var getJwtToken = function() {
+                    return localStorage.getItem('jwtToken');
+                };
+        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.post("http://localhost:8080/api/cancelVehicleReservation",reservation)
+            .then(response => {
+                console.log(response);
+                alert("success");
+            }); 
     }
   }
 }

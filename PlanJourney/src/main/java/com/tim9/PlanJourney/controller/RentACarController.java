@@ -36,6 +36,7 @@ import com.tim9.PlanJourney.beans.BranchOfficeBean;
 import com.tim9.PlanJourney.beans.EditVehicleBean;
 import com.tim9.PlanJourney.beans.RentACarCompanySearchBean;
 import com.tim9.PlanJourney.beans.RentACarProfileBean;
+import com.tim9.PlanJourney.beans.VehicleReservationBean;
 import com.tim9.PlanJourney.beans.VehicleReservationSearchBean;
 import com.tim9.PlanJourney.beans.VehicleSearchBean;
 import com.tim9.PlanJourney.beans.VehicleSearchReturnBean;
@@ -295,6 +296,48 @@ public class RentACarController {
 
 		return true;
 	}
+	
+	@RequestMapping(value = "/api/cancelVehicleReservation", method = RequestMethod.POST, produces= MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	//Removes reservation
+	public @ResponseBody boolean cancleVehicleReservation(@RequestBody VehicleReservationBean bean) throws Exception { 
+		Vehicle vehicle = vehicleService.findOne(bean.getVehicleId());
+		RegisteredUser user = getRegisteredUser();		
+		VehicleReservation reservation = reservationService.findOne(bean.getId());
+		
+		user.getVehicleReservations().remove(reservation);
+		userService.save(user);
+
+		vehicle.getReservations().remove(reservation);
+		vehicleService.save(vehicle);
+		reservationService.remove(bean.getId());
+
+		return true;
+	}
+	@RequestMapping(value = "/api/geteReservations", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	//Removes reservation
+	public @ResponseBody ArrayList<VehicleReservationBean> getReservations() throws Exception { 
+		RegisteredUser user = getRegisteredUser();		
+		ArrayList<VehicleReservation> reservations = new ArrayList<>();
+		reservations.addAll(user.getVehicleReservations());
+		ArrayList<VehicleReservationBean> restoreturn = new ArrayList<>();
+		for (VehicleReservation rese : reservations) {
+			VehicleReservationBean b = new VehicleReservationBean();
+			b.setId(rese.getId());
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+			b.setDateFrom(sdf.format(rese.getDateFrom()));
+			b.setDateTo(sdf.format(rese.getDateTo()));
+			b.setPrice(rese.getCena());
+			b.setVehicleId(rese.getVehicle().getId());
+			b.setVehicleName(rese.getVehicle().getName());
+			b.setLocationPick(rese.getOfficePick().getName());
+			b.setLocationReturn(rese.getOfficeReturn().getName());
+			restoreturn.add(b);
+		}
+		return restoreturn;
+	}
+	
 	private boolean hasVehicle(RentACarCompany company,String from, String to) throws Exception {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		if(from.equals("") || to.equals("")) {
