@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tim9.PlanJourney.beans.DestinationBean;
 import com.tim9.PlanJourney.beans.FlightBean;
 import com.tim9.PlanJourney.models.Authority;
+import com.tim9.PlanJourney.models.SystemAdmin;
 import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.models.flight.Flight;
 import com.tim9.PlanJourney.models.flight.FlightAdmin;
@@ -39,6 +40,7 @@ import com.tim9.PlanJourney.models.flight.Ticket;
 import com.tim9.PlanJourney.service.AuthorityService;
 import com.tim9.PlanJourney.service.DestinationService;
 import com.tim9.PlanJourney.service.FlightCompanyService;
+import com.tim9.PlanJourney.service.SystemAdminService;
 import com.tim9.PlanJourney.service.UserService;
 
 @RestController
@@ -52,6 +54,8 @@ public class FlightCompanyController {
 	private UserService userService;
 	@Autowired
 	private AuthorityService authorityService;
+	@Autowired
+	private SystemAdminService sysService;
 	
 	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 
@@ -239,6 +243,19 @@ public class FlightCompanyController {
 		}
 		System.out.println("\t pronasao je: " + found.size());
 		return found;
+	}
+	
+	@RequestMapping(value = "/api/testSYS", method = RequestMethod.GET)
+	@CrossOrigin()
+	public void testSYS() throws Exception {
+		
+		BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
+		SystemAdmin flightAdmin = new SystemAdmin("admin", bc.encode("admin"), "admin", "admin", "mira@gmail.com");
+		Authority authority = (Authority) authorityService.findOne(1l);
+		ArrayList<Authority> authorities = new ArrayList<>();
+		authorities.add(authority);
+		flightAdmin.setAuthorities(authorities);
+		userService.save(flightAdmin);
 	}
 
 	// Method puts some test data into database
