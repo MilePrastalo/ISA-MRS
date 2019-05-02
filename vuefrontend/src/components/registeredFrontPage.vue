@@ -142,6 +142,7 @@ export default {
         axios.post("http://localhost:8080/api/cancelVehicleReservation",reservation)
             .then(response => {
                 console.log(response);
+                alert("success");
             }); 
     }
   }
