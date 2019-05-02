@@ -4,12 +4,22 @@
             <div class = "row">
                 <h2>Choose seat(s) </h2>
             </div>
-            <br>
+            <div class='my-legend'>
+                <div class='legend-title'></div>
+                <div class='legend-scale'>
+                    <ul class='legend-labels'>
+                        <li><span style='background:mediumspringgreen;'></span>Active</li>
+                        <li><span style='background:salmon;'></span>Booked</li>
+                        <li><span style='background:orange;'></span>Unavailable</li>
+                    </ul>
+                </div>
+            </div>
+            <br><br><br>
             <div class = "row"> 
                 <table class = "seats">
                     <caption style="caption-side: top; font-weight: bold">Economic class</caption>
                     <tr v-for="r in seatsE.rows" :key ="r"> 
-                        <td  v-for="c in seatsE.columns" :key ="c" v-bind:class = "{active: seatsE.seats[(c-1)+(r-1)*seatsE.columns].active, booked: seatsE.seats[(c-1)+(r-1)*seatsE.columns].taken}" @click="addSeat(seatsE.seats[(c-1)+(r-1)*seatsE.columns])">
+                        <td  v-for="c in seatsE.columns" :key ="c" v-bind:class = "{active: seatsE.seats[(c-1)+(r-1)*seatsE.columns].active, booked: seatsE.seats[(c-1)+(r-1)*seatsE.columns].taken,  unavailable: seatsE.seats[(c-1)+(r-1)*seatsE.columns].unavailable}" @click="addSeat(seatsE.seats[(c-1)+(r-1)*seatsE.columns])">
                             ( {{ seatsE.seats[(c-1)+(r-1)*seatsE.columns].seatRow}} , {{ seatsE.seats[(c-1)+(r-1)*seatsE.columns].seatColumn}} )	
                         </td> 
                     </tr>
@@ -17,7 +27,7 @@
                 <table class = "seats">
                     <caption style="caption-side: top; font-weight: bold">Business class</caption>
                     <tr v-for="r in seatsB.rows" :key ="r"> 
-                        <td  v-for="c in seatsB.columns" :key ="c" v-bind:class = "{active: seatsB.seats[(c-1)+(r-1)*seatsB.columns].active, booked: seatsB.seats[(c-1)+(r-1)*seatsB.columns].taken}" @click="addSeat(seatsB.seats[(c-1)+(r-1)*seatsB.columns])">
+                        <td  v-for="c in seatsB.columns" :key ="c" v-bind:class = "{active: seatsB.seats[(c-1)+(r-1)*seatsB.columns].active, booked: seatsB.seats[(c-1)+(r-1)*seatsB.columns].taken, unavailable: seatsB.seats[(c-1)+(r-1)*seatsB.columns].unavailable}" @click="addSeat(seatsB.seats[(c-1)+(r-1)*seatsB.columns])">
                             ( {{ seatsB.seats[(c-1)+(r-1)*seatsB.columns].seatRow}} , {{ seatsB.seats[(c-1)+(r-1)*seatsB.columns].seatColumn}} )	
                         </td>
                     </tr>
@@ -25,7 +35,7 @@
                 <table class = "seats">
                     <caption style="caption-side: top; font-weight: bold">First class</caption>
                     <tr v-for="r in seatsF.rows" :key ="r"> 
-                        <td  v-for="c in seatsF.columns" :key ="c" v-bind:class = "{active: seatsF.seats[(c-1)+(r-1)*seatsF.columns].active, booked: seatsF.seats[(c-1)+(r-1)*seatsF.columns].taken}" @click="addSeat(seatsF.seats[(c-1)+(r-1)*seatsF.columns])">
+                        <td  v-for="c in seatsF.columns" :key ="c" v-bind:class = "{active: seatsF.seats[(c-1)+(r-1)*seatsF.columns].active, booked: seatsF.seats[(c-1)+(r-1)*seatsF.columns].taken, unavailable: seatsF.seats[(c-1)+(r-1)*seatsF.columns].unavailable}" @click="addSeat(seatsF.seats[(c-1)+(r-1)*seatsF.columns])">
                             ( {{ seatsF.seats[(c-1)+(r-1)*seatsF.columns].seatRow}} ,{{ seatsF.seats[(c-1)+(r-1)*seatsF.columns].seatColumn}} )	
                         </td>
                     </tr>
@@ -56,6 +66,7 @@ export default {
 
     name: 'seatSelection',
     components: {},
+    props: ["iid"],
     data: function () {
         return {
 
@@ -70,7 +81,7 @@ export default {
 
     mounted(){
         
-        var flightID = 7;
+        var flightID = this.iid;
         var getJwtToken = function() {
             return localStorage.getItem('jwtToken');
         };
@@ -113,7 +124,7 @@ export default {
 
         addSeat: function(seat){
 
-            if (seat.active == false){
+            if (seat.active == false && seat.taken == false && seat.unavailable == false){
                 seat.active = true;
                 if (seat.taken == false){
                     var str = "#" + seat.id;
@@ -123,7 +134,7 @@ export default {
                     this.total += this.getPrice(seat.travelClassa);
                 }
             }
-            else{
+            else if (seat.active == true) {
 
                 seat.active = false;
                 var s;
@@ -181,6 +192,49 @@ export default {
 .seats .booked {
     background-color: salmon;
 }
+
+.seats .unavailable {
+    background-color: orange;
+}
+
+.my-legend .legend-title {
+    text-align: left;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 90%;
+    }
+  .my-legend .legend-scale ul {
+    margin: 0;
+    margin-bottom: 5px;
+    padding: 0;
+    float: left;
+    list-style: none;
+    }
+  .my-legend .legend-scale ul li {
+    font-size: 80%;
+    list-style: none;
+    margin-left: 0;
+    line-height: 18px;
+    margin-bottom: 2px;
+    }
+  .my-legend ul.legend-labels li span {
+    display: block;
+    float: left;
+    height: 16px;
+    width: 30px;
+    margin-right: 5px;
+    margin-left: 0;
+    border: 1px solid #999;
+    }
+  .my-legend .legend-source {
+    font-size: 70%;
+    color: #999;
+    clear: both;
+    }
+  .my-legend a {
+    color: #777;
+    }
+
 
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;

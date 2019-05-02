@@ -6,8 +6,7 @@
             <h2>New Flight: </h2>
         </div>
         <br>
-
-        <div class = "row">
+        <form @submit="addFlight">
             <table  style="text-align: left">
                 <th  colspan="2" style="text-align: center">Basic Info</th>
                 <tr>
@@ -25,12 +24,12 @@
                 <tr>
                     <td> Start date: </td>
                     <td>  <input type="date" name="startDate" v-model="startDate"  required> </td>
-                    <td>  <input type="text" name="time_startDate"  placeholder="hh:mm"  required> </td>
+                    <td>  <input type="time" name="time_startDate" v-model="startDate_time"  placeholder="hh:mm"  required> </td>
                 </tr>
                  <tr>
                     <td> End date: </td>
                     <td>  <input type="date" name="endDate" v-model="endDate" required > </td>
-                    <td>  <input type="text" name="time_endDate"  placeholder="hh:mm" required> </td>
+                    <td>  <input type="time" name="time_endDate" v-model="endDate_time"  placeholder="hh:mm" required> </td>
                 </tr>
                  <tr>
                     <td> Flight duration: </td>
@@ -73,9 +72,13 @@
                 <br>
                 <tr>
                     <td></td>
-                    <td><button v-on:click="addFlight()">Add New flight</button> </td>      
+                    <td><input type="submit" value = "Add flight" > </td>      
                 </tr>
             </table>
+        </form>
+
+        <div class = "row">
+            
             </div>      
         </div>
 </template>
@@ -91,7 +94,9 @@ export default {
      startDestination: "",
      endDestination: "",
      startDate: "",
+     startDate_time: "",
      endDate: "",
+     endDate_time: "",
      flightDuration: "",
      flightLength: "",
      buisinesssPrice: "",
@@ -118,6 +123,7 @@ mounted(){
     },
     methods:{
         addFlight: function(){
+            
             if (this.startDestination == this.endDestination){
                 alert("Start and end destinations can not be the same!");
                 return
@@ -137,12 +143,15 @@ mounted(){
             if( this.flightDuration < 0 || this.flightLength < 0){
                 alert("Both, duration and length of flihts can not have negative value!");
             }
+
+            var startDateTime = this.startDate + " " + this.startDate_time;
+            var endDateTime = this.endDate +  " " + this.endDate_time;
+
             var economicCapacity = this.economicCapacity_rows + "|" + this.economicCapacity_columns;
             var buisinesssCapacity = this.buisinesssCapacity_rows + "|" + this.buisinesssCapacity_columns;
             var firstClassCapacity = this.firstClassCapacity_rows + "|" + this.firstClassCapacity_columns;
-            alert(this.startDestination);
             var newFlight = {startDestination: this.startDestination.name, endDestination: this.endDestination.name,
-                startDate: this.startDate, endDate: this.endDate, 
+                startDate_str: startDateTime, endDate_str: endDateTime, 
                 flightDuration: this.flightDuration, flightLength: this.flightLength, 
                 businessPrice: this.buisinesssPrice, economicPrice: this.economicPrice, firstClassPrice: this.firstClassPrice,
                 economicCapacity: economicCapacity, buisinesssCapacity: buisinesssCapacity, firstClassCapacity: firstClassCapacity }
@@ -150,7 +159,10 @@ mounted(){
                 return localStorage.getItem('jwtToken');
             };
             axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-            axios.post("http://localhost:8080/api/addFlight", newFlight);
+            axios.post("http://localhost:8080/api/addFlight", newFlight)
+            .then(response => {
+                alert(response.data);
+            });; 
         }     
     }
 }

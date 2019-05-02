@@ -53,7 +53,7 @@ public class FlightCompanyController {
 	@Autowired
 	private AuthorityService authorityService;
 	
-	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MMyyyy. HH:mm");
+	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 
 	@RequestMapping(value = "/api/getFlightCompanyProfile", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -135,7 +135,7 @@ public class FlightCompanyController {
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
 	// Method returns flight information
-	public @ResponseBody ArrayList<Flight> getFlights() throws Exception {
+	public @ResponseBody ArrayList<FlightBean> getFlights() throws Exception {
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
@@ -147,9 +147,9 @@ public class FlightCompanyController {
 				System.out.println("Flight admin doesnt't have flight company.");
 				return null;
 			}
-			ArrayList<Flight> flights = new ArrayList<>();
-			for (Flight d : flightCompany.getFlights()) {
-				flights.add(d);
+			ArrayList<FlightBean> flights = new ArrayList<>();
+			for (Flight f : flightCompany.getFlights()) {
+				flights.add(new FlightBean(f,"", sdf.format(f.getStartDate()), sdf.format(f.getEndDate())));
 			}
 			return flights;
 		}
