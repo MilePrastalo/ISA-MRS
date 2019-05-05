@@ -448,11 +448,16 @@ public class RentACarController {
 	    vehicleService.save(v);		
 	}
 
-	@RequestMapping(value = "/api/removeCar/{id}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/api/removeCar/{id}", method = RequestMethod.DELETE, produces= MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('RENT_ADMIN')")
-	public void removeCar(@PathVariable Long id) throws Exception {
+	public boolean removeCar(@PathVariable Long id) throws Exception {
+		Vehicle v = vehicleService.findOne(id);
+		if(v.getReservations().size()>0) {
+			return false;
+		}
 		vehicleService.remove(id);
+		return true;
 	}
 	@RequestMapping(value = "/api/getCarsByAdmin", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -531,6 +536,21 @@ public class RentACarController {
 		    BranchOffice bo = new BranchOffice(bean.getName(), bean.getAddress(), company, destination);
 		    bs.save(bo);
 		    companyService.save(company);
+	}
+	@RequestMapping(value = "/api/removeOffice/{id}", method = RequestMethod.DELETE, produces= MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('RENT_ADMIN')")
+	public boolean removeOffice(@PathVariable Long id) throws Exception {
+		BranchOffice office = bs.findOne(id);
+		ArrayList<VehicleReservation> reservations =(ArrayList<VehicleReservation>) reservationService.findAll();
+		for (VehicleReservation vehicleReservation : reservations) {
+			if(vehicleReservation.getOfficePick()==office || vehicleReservation.getOfficeReturn() == office) {
+				return false;
+			}
+		}
+
+		bs.remove(id);
+		return true;
 	}
 	
 

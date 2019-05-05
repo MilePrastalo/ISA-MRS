@@ -24,7 +24,7 @@
                 <td>{{car.dateFrom}}</td>
                 <td>{{car.dateTo}}</td>
                 <td><Button @click="editVehicleMethod(car.id,car.name,car.maker,car.type,car.year,car.price,car.dateFrom,car.dateTo)">Edit</Button></td>
-                <td><Button>Remove</Button></td>
+                <td><Button @click="removeVehicle(car.id)">Remove</Button></td>
             </tr>
         </table>
     </div>
@@ -99,6 +99,17 @@ export default {
         this.price = "";
         this.dateFrom = "";
         this.dateTo = "";
+      },
+      removeVehicle:function(id){
+          var getJwtToken = function() {
+            return localStorage.getItem('jwtToken');
+        };
+        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.delete("http://localhost:8080/api/removeCar/"+id)
+            .then(response => {
+                alert("Success");
+                console.log(response);
+            }); 
       }
   }
 }
