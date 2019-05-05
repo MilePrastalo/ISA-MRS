@@ -26,13 +26,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.beans.FlightBean;
 import com.tim9.PlanJourney.beans.SeatsBean;
-import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.models.flight.Flight;
 import com.tim9.PlanJourney.models.flight.FlightAdmin;
 import com.tim9.PlanJourney.models.flight.FlightCompany;
+import com.tim9.PlanJourney.models.flight.FlightReservation;
 import com.tim9.PlanJourney.models.flight.Seat;
-import com.tim9.PlanJourney.models.flight.Ticket;
 import com.tim9.PlanJourney.service.DestinationService;
 import com.tim9.PlanJourney.service.EmailService;
 import com.tim9.PlanJourney.service.FlightAdminSerice;
@@ -98,7 +97,7 @@ public class FlifgtController {
 				}
 			}
 		}
-		Collections.sort(seats, Comparator.comparing(Seat::getSeatRow));
+		Collections.sort(seats, Comparator.comparing(Seat::getSeatRow).thenComparing(Seat::getSeatColumn));
 		SeatsBean sb = new SeatsBean(seats, rows, columns);
 		return sb;
 	}
@@ -121,20 +120,6 @@ public class FlifgtController {
 		return seat;
 	}
 	
-	@RequestMapping(value = "/api/sendReservationRequest", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@CrossOrigin()
-	public @ResponseBody String sendReservationRequest(@RequestBody RegisteredUser user) {
-
-		try {
-			emailService.sendReservationRequest(user);
-
-		} catch (Exception e) {
-
-			System.out.println("Error while sending email: " + e.getMessage());
-		}
-
-		return "success";
-	}
 
 	//Method for adding new flight
 	@RequestMapping(value = "/api/addFlight", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -175,7 +160,7 @@ public class FlifgtController {
 		makeSeats(seats, newFlightInfo.getFirstClassCapacity(), "first class");
 
 		Flight newFlight = new Flight(startDate, endDate, newFlightInfo.getFlightDuration(),
-				newFlightInfo.getFlightLength(), startDestination, endDestination, new HashSet<Ticket>(), seats,
+				newFlightInfo.getFlightLength(), startDestination, endDestination, new HashSet<FlightReservation>(), seats,
 				newFlightInfo.getBusinessPrice(), newFlightInfo.getEconomicPrice(), newFlightInfo.getFirstClassPrice());
 
 		flightService.save(newFlight);

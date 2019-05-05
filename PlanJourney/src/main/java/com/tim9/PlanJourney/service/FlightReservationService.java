@@ -7,30 +7,30 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.tim9.PlanJourney.models.flight.Ticket;
-import com.tim9.PlanJourney.repository.FlightTicketRepository;
+import com.tim9.PlanJourney.models.flight.FlightReservation;
+import com.tim9.PlanJourney.repository.FlightReservationRepository;
 
 @Service
-public class FlightTicketService {
+public class FlightReservationService {
+	
 	
 	@Autowired
-	FlightTicketRepository repository;
-	
-	
-	public Ticket findOne(Long id) {
+	FlightReservationRepository  repository;
+
+	public FlightReservation findOne(Long id) {
 		return repository.getOne(id);//repository.findOne();
 	}
 
-	public List<Ticket> findAll() {
+	public List<FlightReservation> findAll() {
 		return repository.findAll();
 	}
 	
-	public Page<Ticket> findAll(Pageable page) {
+	public Page<FlightReservation> findAll(Pageable page) {
 		return repository.findAll(page);
 	}
 
-	public Ticket save(Ticket ticket) {
-		return repository.save(ticket);
+	public FlightReservation save(FlightReservation reservation) {
+		return repository.save(reservation);
 	}
 
 	public void remove(Long id) {

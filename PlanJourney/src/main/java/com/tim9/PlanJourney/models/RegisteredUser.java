@@ -1,28 +1,23 @@
 package com.tim9.PlanJourney.models;
 
-import java.util.Collection;
 import java.util.HashSet;
-
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-
-import org.springframework.security.core.GrantedAuthority;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tim9.PlanJourney.hotel.HotelReservation;
-import com.tim9.PlanJourney.models.flight.Ticket;
+import com.tim9.PlanJourney.models.flight.FlightReservation;
 import com.tim9.PlanJourney.models.rentacar.VehicleReservation;
+
 @Entity
 public class RegisteredUser extends User {
 	
+	@JsonIgnore
 	@OneToMany(mappedBy="user")
-	private Set<Ticket> flightReservations = new HashSet<Ticket>(); 
-	//lista rezervacija  hotela
-	//lista rezervacija  rent-a-car
+	private Set<FlightReservation> flightReservations = new HashSet<FlightReservation>(); 
+
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "sender")
@@ -31,8 +26,9 @@ public class RegisteredUser extends User {
 	@JsonIgnore
 	@OneToMany(mappedBy = "reciever")
 	private Set<FriendRequest> receivedRequests = new HashSet<FriendRequest>();
-	 
 	
+
+
 	@OneToMany(mappedBy="user")
 	private Set<VehicleReservation> vehicleReservations  = new HashSet<>();
 	
@@ -55,11 +51,11 @@ public class RegisteredUser extends User {
 		this.vehicleReservations = vehicleReservations;
 	}
 
-	public Set<Ticket> getFlightReservations() {
+	public Set<FlightReservation> getFlightReservations() {
 		return flightReservations;
 	}
 
-	public void setFlightReservations(Set<Ticket> flightReservations) {
+	public void setFlightReservations(Set<FlightReservation> flightReservations) {
 		this.flightReservations = flightReservations;
 	}
 
@@ -88,6 +84,7 @@ public class RegisteredUser extends User {
 	public void setHotelReservations(Set<HotelReservation> hotelReservations) {
 		this.hotelReservations = hotelReservations;
 	}
+	
 
 	@JsonIgnore
 	@Override
@@ -113,6 +110,7 @@ public class RegisteredUser extends User {
 		// TODO Auto-generated method stub
 		return true;
 	}
+
 	
 	
 	
