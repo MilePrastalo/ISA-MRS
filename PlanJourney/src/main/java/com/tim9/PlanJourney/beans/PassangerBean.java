@@ -7,17 +7,19 @@ public class PassangerBean {
 	private String firstName;
 	private String lastName;
 	private String passport;
+	private double price;
 	
 	public PassangerBean() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public PassangerBean(Long seatId, String firstName, String lastName, String passport) {
+	public PassangerBean(Long seatId, String firstName, String lastName, String passport, double price) {
 		super();
 		this.seatId = seatId;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.passport = passport;
+		this.price = price;
 	}
 
 	public Long getSeatId() {
@@ -50,6 +52,14 @@ public class PassangerBean {
 
 	public void setPassport(String passport) {
 		this.passport = passport;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
 	}
 	
 	

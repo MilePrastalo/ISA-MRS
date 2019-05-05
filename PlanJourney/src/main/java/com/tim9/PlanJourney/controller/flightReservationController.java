@@ -47,6 +47,21 @@ public class flightReservationController {
 	private SeatService seatService;
 	@Autowired
 	private PassangerService passangerService;
+	
+	
+	
+	@RequestMapping(value = "/api/getMyReservations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('REGISTERED')")
+	public @ResponseBody Set<FlightReservation> getMyReservations() {
+
+		RegisteredUser loggedUser = getLoggedRegisteredUser();
+		if (loggedUser == null) {
+			return null;
+		}
+		return loggedUser.getFlightReservations();
+	}
+	
 
 	@RequestMapping(value = "/api/sendReservationRequest", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -63,7 +78,7 @@ public class flightReservationController {
 		seatService.save(seat);
 		String callerInfo = loggedUser.getUsername() + " ( " + loggedUser.getFirstName() + " " +  loggedUser.getLastName() + " )";
 		
-		FlightReservation reservation = new FlightReservation(reciever, seat, new HashSet<Passanger>(), flight, 0, new Date(), false, callerInfo );
+		FlightReservation reservation = new FlightReservation(reciever, seat, new HashSet<Passanger>(), flight, findPrice(flight, seat), new Date(), false, callerInfo );
 		reservationService.save(reservation);
 		reciever.getFlightReservations().add(reservation);
 		registeredUserService.save(reciever);
@@ -99,11 +114,15 @@ public class flightReservationController {
 			return null;
 		}
 		Flight flight = flightService.findOne(reservationBean.getFlightId());
+		double total = reservationBean.getPassangers().get(0).getPrice();
 		Seat main_seat = seatService.findOne(reservationBean.getPassangers().get(0).getSeatId());
+		main_seat.setTaken(true);
 		seatService.save(main_seat);
 		Set<Passanger> passangers = new HashSet<>();
 		
 		for (int i = 1; i < reservationBean.getPassangers().size(); i++) {
+			
+			total += reservationBean.getPassangers().get(i).getPrice();
 			Seat seat = seatService.findOne(reservationBean.getPassangers().get(i).getSeatId());
 			seat.setTaken(true);
 			seatService.save(seat);
@@ -111,7 +130,7 @@ public class flightReservationController {
 			passangerService.save(passanger);
 			passangers.add(passanger);
 		}
-		FlightReservation reservation = new FlightReservation(loggedUser, main_seat, passangers, flight, 0, new Date(), true, "" );
+		FlightReservation reservation = new FlightReservation(loggedUser, main_seat, passangers, flight, total, new Date(), true, "" );
 		reservationService.save(reservation);
 		return reservation;
 	}
@@ -148,6 +167,19 @@ public class flightReservationController {
 			return user;
 		}
 		return null;
+	}
+	
+	private double findPrice(Flight f, Seat s) {
+		
+		if (s.getTravelClassa() == "economic") {
+			return f.getEconomicPrice();
+		}
+		else if (s.getTravelClassa() == "business") {
+			return f.getBusinessPrice();
+		}
+		else {
+			return f.getFirstClassPrice();
+		}
 	}
 
 }

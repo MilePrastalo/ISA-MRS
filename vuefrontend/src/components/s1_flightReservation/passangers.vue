@@ -151,7 +151,6 @@ export default {
                 alert("You didn't reserve enough seats!");
             }
             else{
-                
                 var request = {calledUserId: friend.id, flightId: this.iid, seatId: this.passangers[this.curent_idx].seat.id};
                 axios.post("http://localhost:8080/api/sendReservationRequest", request)
                 .then(response => {

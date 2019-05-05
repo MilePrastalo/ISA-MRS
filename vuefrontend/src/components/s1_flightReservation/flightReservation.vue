@@ -48,8 +48,27 @@ export default {
         localStorage.setItem("passangers",JSON.stringify([]));
     },
     mounted(){
+
+        var flightID = localStorage.getItem("flightID");
+        axios.get("http://localhost:8080/api/getFlight/" + flightID)
+        .then(response => {
+            this.flight = response.data
+          }); 
     }, 
     methods: {
+
+         getPrice: function( travelClass ){
+
+            if (travelClass == "economic"){
+                return this.flight.economicPrice;
+            }
+            else if (travelClass == "business"){
+                return this.flight.businessPrice;
+            }
+            else{
+                return this.flight.firstClassPrice;
+            }
+        },
 
         makeReservation: function(){
            
@@ -57,9 +76,15 @@ export default {
             var passangerSeat = [];
             for (idx in this.passangers){
                 if (this.passangers[idx].friend == false){
-                    var obj = {seatId: this.passangers[idx].seat.id, firstName: this.passangers[idx].firstName, lastName: this.passangers[idx].lastName, passport: this.passangers[idx].passport};
+                    var price = this.getPrice(this.passangers[idx].seat.travelClass);
+                    var obj = {price: price, seatId: this.passangers[idx].seat.id, firstName: this.passangers[idx].firstName, lastName: this.passangers[idx].lastName, passport: this.passangers[idx].passport};
                     passangerSeat.push(obj);
                 }     
+            }
+            if (passangerSeat.length == 0){
+                 var price = this.getPrice(this.selected_seats[0].travelClass);
+                 var obj = {price: price, seatId: this.selected_seats[0].id, firstName: "", lastName: "", passport: ""};
+                passangerSeat.push(obj);
             }
             var getJwtToken = function() {
                 return localStorage.getItem('jwtToken');
@@ -84,7 +109,7 @@ export default {
                     alert("You must choose at least one seat!");
                 }
                 else if (this.selected_seats.length == 1){
-                    alert("preskacu se prijatelji i podaci.");
+                    this.makeReservation();
                 }
                 else{
                     this.currentStep = option;
