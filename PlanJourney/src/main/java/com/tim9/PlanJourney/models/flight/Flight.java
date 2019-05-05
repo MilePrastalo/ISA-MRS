@@ -1,6 +1,5 @@
 package com.tim9.PlanJourney.models.flight;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,10 +10,11 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "flight")
@@ -36,15 +36,15 @@ public class Flight {
 	@Column(name = "flightLength", unique = false, nullable = false)
 	private int flightLength;
 	
-	//private Set<String> destinationsOnTheWay =  new HashSet<String>();
 	@OneToOne()
 	private Destination startDestination;
 	
 	@OneToOne()
 	private Destination endDestination;
 	
-	@OneToMany(mappedBy = "flight", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Ticket> tickets = new HashSet<Ticket>();
+	@JsonIgnore
+	@OneToMany(mappedBy = "flight")
+	private Set<FlightReservation> flightReservations = new HashSet<FlightReservation>();
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Seat> seats = new HashSet<Seat>();
@@ -64,7 +64,7 @@ public class Flight {
 
 	
 	public Flight( Date startDate, Date endDate, int flightDuration, int flightLength,
-			Destination startDestination, Destination endDestination, Set<Ticket> tickets, Set<Seat> seats,
+			Destination startDestination, Destination endDestination, Set<FlightReservation> flightReservations, Set<Seat> seats,
 			double businessPrice, double economicPrice, double firstClassPrice) {
 		super();
 		this.startDate = startDate;
@@ -73,17 +73,12 @@ public class Flight {
 		this.flightLength = flightLength;
 		this.startDestination = startDestination;
 		this.endDestination = endDestination;
-		this.tickets = tickets;
+		this.flightReservations = flightReservations;
 		this.seats = seats;
 		this.businessPrice = businessPrice;
 		this.economicPrice = economicPrice;
 		this.firstClassPrice = firstClassPrice;
 	}
-
-
-
-
-
 
 
 	public Date getStartDate() {
@@ -159,20 +154,14 @@ public class Flight {
 	}
 
 
-
 	public Long getId() {
 		return id;
 	}
 
 
-
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-
-
-
 
 
 
@@ -182,27 +171,13 @@ public class Flight {
 
 
 
-
-
-
-
 	public void setStartDestination(Destination startDestination) {
 		this.startDestination = startDestination;
 	}
 
-
-
-
-
-
-
 	public Destination getEndDestination() {
 		return endDestination;
 	}
-
-
-
-
 
 
 
@@ -211,37 +186,17 @@ public class Flight {
 	}
 
 
-
-
-
-
-
-	public Set<Ticket> getTickets() {
-		return tickets;
+	public Set<FlightReservation> getFlightReservations() {
+		return flightReservations;
 	}
 
 
-
-
-
-
-
-	public void setTickets(Set<Ticket> tickets) {
-		this.tickets = tickets;
+	public void setFlightReservations(Set<FlightReservation> flightReservations) {
+		this.flightReservations = flightReservations;
 	}
 
+	
 
-/*
-	public Set<Ticket> getTickets() {
-		return tickets;
-	}
-
-
-
-	public void setTickets(Set<Ticket> tickets) {
-		this.tickets = tickets;
-	}
-	*/
 	
 
 }
