@@ -30,6 +30,9 @@ public class FlightCompany extends Company {
 	@OneToMany( fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<FlightReservation>  flightReservation = new  HashSet<FlightReservation>();
 	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<QuickFlightReservation>  quickFlightReservations = new  HashSet<QuickFlightReservation>();
+	
 	public FlightCompany() {
 		super();
 	}
@@ -44,7 +47,7 @@ public class FlightCompany extends Company {
 	
 
 	public FlightCompany( String name, String address, String description,double rating, Set<FlightAdmin> flightAdmins, Set<Destination> destinations, Set<Flight> flights,
-			Set<FlightReservation> flightReservation) {
+			Set<FlightReservation> flightReservation, Set<QuickFlightReservation> quickFlightReservation) {
 		this.setName(name);
 		this.setAddress(address);
 		this.setDescription(description);
@@ -53,6 +56,7 @@ public class FlightCompany extends Company {
 		this.destinations = destinations;
 		this.flights = flights;
 		this.flightReservation = flightReservation;
+		this.quickFlightReservations = quickFlightReservation;
 	}
 
 	public Set<FlightAdmin> getFlightAdmins() {
@@ -85,6 +89,14 @@ public class FlightCompany extends Company {
 
 	public void setFlightReservation(Set<FlightReservation> flightReservation) {
 		this.flightReservation = flightReservation;
+	}
+
+	public Set<QuickFlightReservation> getQuickFlightReservations() {
+		return quickFlightReservations;
+	}
+
+	public void setQuickFlightReservations(Set<QuickFlightReservation> quickFlightReservations) {
+		this.quickFlightReservations = quickFlightReservations;
 	}
 
 	

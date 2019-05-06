@@ -28,16 +28,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.beans.DestinationBean;
 import com.tim9.PlanJourney.beans.FlightBean;
+import com.tim9.PlanJourney.beans.QuickFlightReservationBean;
 import com.tim9.PlanJourney.models.Authority;
 import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.models.flight.Flight;
 import com.tim9.PlanJourney.models.flight.FlightAdmin;
 import com.tim9.PlanJourney.models.flight.FlightCompany;
 import com.tim9.PlanJourney.models.flight.FlightReservation;
+import com.tim9.PlanJourney.models.flight.QuickFlightReservation;
 import com.tim9.PlanJourney.models.flight.Seat;
 import com.tim9.PlanJourney.service.AuthorityService;
 import com.tim9.PlanJourney.service.DestinationService;
 import com.tim9.PlanJourney.service.FlightCompanyService;
+import com.tim9.PlanJourney.service.FlightService;
+import com.tim9.PlanJourney.service.QuickFlightReservationService;
+import com.tim9.PlanJourney.service.SeatService;
 import com.tim9.PlanJourney.service.UserService;
 
 @RestController
@@ -51,6 +56,12 @@ public class FlightCompanyController {
 	private UserService userService;
 	@Autowired
 	private AuthorityService authorityService;
+	@Autowired
+	private FlightService flightService;
+	@Autowired
+	private SeatService seatService;
+	@Autowired
+	private QuickFlightReservationService quickReservationService;
 	
 	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 
@@ -240,6 +251,63 @@ public class FlightCompanyController {
 		return found;
 	}
 	
+	
+	@RequestMapping(value = "/api/addQuickFlightReservation", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE ,produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
+	public @ResponseBody QuickFlightReservation addQuickFlightReservation(@RequestBody QuickFlightReservationBean quickReservationBean) {
+
+		FlightAdmin loggedAdmin = getLoggedFlightAdmin();
+		if (loggedAdmin == null) {
+			return null;
+		}
+		Flight flight = flightService.findOne(quickReservationBean.getFlightId());
+		Seat seat = seatService.findOne(quickReservationBean.getSeatId());
+		seat.setQuick(true);
+		seatService.save(seat);
+		QuickFlightReservation quickReservation = new QuickFlightReservation(seat, flight, findPrice(flight, seat), quickReservationBean.getDiscount());
+		quickReservationService.save(quickReservation);
+		loggedAdmin.getFlightCompany().getQuickFlightReservations().add(quickReservation);
+		userService.save(loggedAdmin);
+		return quickReservation;
+	}
+	
+	@RequestMapping(value = "/api/getQuickReservations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
+	public @ResponseBody Set<QuickFlightReservation> getQuickReservations() {
+
+		FlightAdmin loggedAdmin = getLoggedFlightAdmin();
+		if (loggedAdmin == null) {
+			return null;
+		}
+		return loggedAdmin.getFlightCompany().getQuickFlightReservations();
+	}
+	
+	private FlightAdmin getLoggedFlightAdmin() {
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String username = authentication.getName();
+			FlightAdmin user = (FlightAdmin) userService.findOneByUsername(username);
+			return user;
+		}
+		return null;
+	}
+	
+	private double findPrice(Flight f, Seat s) {
+		
+		if (s.getTravelClassa() == "economic") {
+			return f.getEconomicPrice();
+		}
+		else if (s.getTravelClassa() == "business") {
+			return f.getBusinessPrice();
+		}
+		else {
+			return f.getFirstClassPrice();
+		}
+	}
+	
 	// Method puts some test data into database
 	@RequestMapping(value = "/api/testFlightData", method = RequestMethod.GET)
 	@CrossOrigin()
@@ -273,7 +341,7 @@ public class FlightCompanyController {
 		flights.add(flight1);
 		flights.add(flight2);
 		FlightCompany fc = new FlightCompany("Avio", "address", "description", 0, new HashSet<FlightAdmin>(),
-				destinations, flights, new HashSet<FlightReservation>());
+				destinations, flights, new HashSet<FlightReservation>(), new HashSet<QuickFlightReservation>());
 		flightCompanyService.save(fc);
 		BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
 		FlightAdmin flightAdmin = new FlightAdmin("mira", bc.encode("miric"), "Mira", "Miric", "mira@gmail.com");

@@ -18,6 +18,12 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#" @click="selectTab(5)">Destinations</a>
                 </li>
+                 <li class="nav-item">
+                    <a class="nav-link" href="#" @click="selectTab(6)">Quick Tickets</a>
+                </li>
+                 <li class="nav-item">
+                    <a class="nav-link" href="#" @click="selectTab(7)">Add Quick Ticket</a>
+                </li>
             </ul>
         </div>
 
@@ -36,6 +42,12 @@
         <div class = "row" v-if="currentTab == 5" id = "destinations">
             <destinations></destinations>
         </div>
+        <div class = "row" v-if="currentTab == 6" id = "quickReservations">
+            <quickReservations></quickReservations>
+        </div>
+        <div class = "row" v-if="currentTab == 7" id = "addQuickReservation">
+            <addQuickReservation></addQuickReservation>
+        </div>
 
     </div>
 </template>
@@ -47,6 +59,9 @@ import newFlight from  './newFlight.vue'
 import destinations from './destinations.vue'
 import allFlights from './allFlights.vue'
 import flightCompanyProfile from './flightCompanyProfile.vue'
+import AddQuickReservation from './addQuickReservation.vue'
+import QuickReservations from './quickReservations.vue'
+
 
 export default {
   name: 'flightAdmin',
@@ -55,7 +70,9 @@ export default {
       flightCompanyProfile: flightCompanyProfile,
       allFlights: allFlights,
       newFlight: newFlight,
-      destinations: destinations
+      destinations: destinations,
+      addQuickReservation: AddQuickReservation,
+      quickReservations: QuickReservations
   },
   data: function () {
     return {
