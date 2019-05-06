@@ -39,6 +39,8 @@ public class RegisteredUser extends User {
 	@OneToMany(mappedBy="user")
 	private Set<HotelReservation> hotelReservations   = new HashSet<>();
 	
+	@OneToMany(mappedBy="user")
+	private Set<Review> userReviews;	
 	public RegisteredUser() {
 		// TODO Auto-generated constructor stub
 	}

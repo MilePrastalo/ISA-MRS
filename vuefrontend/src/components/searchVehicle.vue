@@ -34,6 +34,7 @@
                 <td>{{car.maker}}</td>
                 <td>{{car.year}}</td>
                 <td>{{car.price}}</td>
+                <td>{{car.rating}}</td>
             </tr>
         </table>
     </div>

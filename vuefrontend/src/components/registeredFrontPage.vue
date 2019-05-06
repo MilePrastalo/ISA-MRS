@@ -70,7 +70,9 @@
                             <td>{{reservation.dateFrom}}</td>
                             <td>{{reservation.dateTo}}</td>
                             <td>{{reservation.price}}</td>
-                            <td><Button @click="cancel(reservation)">Cancel</Button></td>
+                            <td>{{reservation.id}}</td>
+                            <td><Button v-if="reservation.status == 0" @click="cancel(reservation)">Cancel</Button></td>
+                            <td class="ratingtd" v-if="reservation.status == 2"><span class="fa fa-star over" @click="review(reservation.id,5)"></span><span class="fa fa-star over" @click="review(reservation.id,4)"></span><span class="fa fa-star over" @click="review(reservation.id,3)"></span><span class="fa fa-star over" @click="review(reservation.id,2)"></span><span class="fa fa-star over" @click="review(reservation.id,1)"></span></td>
                         </tr>
                     </table>
                 </div>
@@ -140,6 +142,18 @@ export default {
                 };
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
         axios.post("http://localhost:8080/api/cancelVehicleReservation",reservation)
+            .then(response => {
+                console.log(response);
+                alert("success");
+            }); 
+    },
+    review:function(reservation,num){
+        console.log(reservation);
+        var getJwtToken = function() {
+                    return localStorage.getItem('jwtToken');
+                };
+        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.post("http://localhost:8080/api/reviewVehicle",{reservationId:reservation,rating:num})
             .then(response => {
                 console.log(response);
                 alert("success");
@@ -218,6 +232,16 @@ button{
     margin-left:auto;
     margin-right: auto;
     margin-top: 2%;
+}
+.ratingtd{
+    unicode-bidi:bidi-override;
+    direction:rtl;
+}
+.ratingtd > .over:hover{
+    color: orange;
+}
+.ratingtd > .over:hover ~ span:before{
+    color: orange;
 }
 
 </style>
