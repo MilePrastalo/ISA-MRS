@@ -129,9 +129,9 @@ export default {
                 if (seat.taken == false){
                     var str = "#" + seat.id;
                     this.selected_seats.push(seat);
-                    localStorage.setItem("selected_seats",this.selected_seats);
-                     localStorage.setItem("total",this.total);
                     this.total += this.getPrice(seat.travelClassa);
+                    localStorage.setItem("selected_seats",JSON.stringify(this.selected_seats));
+                    localStorage.setItem("total",this.total);           
                 }
             }
             else if (seat.active == true) {
@@ -145,7 +145,7 @@ export default {
                 }
                 this.total -= this.getPrice(seat.travelClassa);
                 this.selected_seats.splice(s, 1);
-                localStorage.setItem("selected_seats",this.selected_seats);
+                localStorage.setItem("selected_seats",JSON.stringify(this.selected_seats));
                 localStorage.setItem("total",this.total);
             }		
         },      

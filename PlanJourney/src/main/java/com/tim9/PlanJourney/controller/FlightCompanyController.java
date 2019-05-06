@@ -33,12 +33,11 @@ import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.models.flight.Flight;
 import com.tim9.PlanJourney.models.flight.FlightAdmin;
 import com.tim9.PlanJourney.models.flight.FlightCompany;
+import com.tim9.PlanJourney.models.flight.FlightReservation;
 import com.tim9.PlanJourney.models.flight.Seat;
-import com.tim9.PlanJourney.models.flight.Ticket;
 import com.tim9.PlanJourney.service.AuthorityService;
 import com.tim9.PlanJourney.service.DestinationService;
 import com.tim9.PlanJourney.service.FlightCompanyService;
-import com.tim9.PlanJourney.service.SystemAdminService;
 import com.tim9.PlanJourney.service.UserService;
 
 @RestController
@@ -52,8 +51,6 @@ public class FlightCompanyController {
 	private UserService userService;
 	@Autowired
 	private AuthorityService authorityService;
-	@Autowired
-	private SystemAdminService sysService;
 	
 	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 
@@ -269,14 +266,14 @@ public class FlightCompanyController {
 		makeSeats(seats2, "3|3", "first class");
 
 		Flight flight1 = new Flight(new Date(), new Date(), 3, 6000, destinatinon1, destinatinon2,
-				new HashSet<Ticket>(), seats1, 100, 120, 140);
+				new HashSet<FlightReservation>(), seats1, 100, 120, 140);
 		Flight flight2 = new Flight(new Date(), new Date(), 5, 3000, destinatinon3, destinatinon4,
-				new HashSet<Ticket>(), seats2, 546, 151, 84);
+				new HashSet<FlightReservation>(), seats2, 546, 151, 84);
 		Set<Flight> flights = new HashSet<Flight>();
 		flights.add(flight1);
 		flights.add(flight2);
 		FlightCompany fc = new FlightCompany("Avio", "address", "description", 0, new HashSet<FlightAdmin>(),
-				destinations, flights, new HashSet<Ticket>());
+				destinations, flights, new HashSet<FlightReservation>());
 		flightCompanyService.save(fc);
 		BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
 		FlightAdmin flightAdmin = new FlightAdmin("mira", bc.encode("miric"), "Mira", "Miric", "mira@gmail.com");

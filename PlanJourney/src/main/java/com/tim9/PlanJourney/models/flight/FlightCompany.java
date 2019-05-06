@@ -6,9 +6,6 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 import com.tim9.PlanJourney.models.Company;
@@ -31,7 +28,7 @@ public class FlightCompany extends Company {
 	
 	
 	@OneToMany( fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Ticket>  tickets = new  HashSet<Ticket>();
+	private Set<FlightReservation>  flightReservation = new  HashSet<FlightReservation>();
 	
 	public FlightCompany() {
 		super();
@@ -47,7 +44,7 @@ public class FlightCompany extends Company {
 	
 
 	public FlightCompany( String name, String address, String description,double rating, Set<FlightAdmin> flightAdmins, Set<Destination> destinations, Set<Flight> flights,
-			Set<Ticket> tickets) {
+			Set<FlightReservation> flightReservation) {
 		this.setName(name);
 		this.setAddress(address);
 		this.setDescription(description);
@@ -55,7 +52,7 @@ public class FlightCompany extends Company {
 		this.flightAdmins = flightAdmins;
 		this.destinations = destinations;
 		this.flights = flights;
-		this.tickets = tickets;
+		this.flightReservation = flightReservation;
 	}
 
 	public Set<FlightAdmin> getFlightAdmins() {
@@ -82,13 +79,15 @@ public class FlightCompany extends Company {
 		this.flights = flights;
 	}
 
-	public Set<Ticket> getTickets() {
-		return tickets;
+	public Set<FlightReservation> getFlightReservation() {
+		return flightReservation;
 	}
 
-	public void setTickets(Set<Ticket> tickets) {
-		this.tickets = tickets;
+	public void setFlightReservation(Set<FlightReservation> flightReservation) {
+		this.flightReservation = flightReservation;
 	}
+
+	
 	
 	
 

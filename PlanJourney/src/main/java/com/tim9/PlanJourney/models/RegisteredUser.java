@@ -14,15 +14,15 @@ import org.springframework.security.core.GrantedAuthority;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tim9.PlanJourney.hotel.HotelReservation;
+import com.tim9.PlanJourney.models.flight.FlightReservation;
 import com.tim9.PlanJourney.models.flight.Ticket;
 import com.tim9.PlanJourney.models.rentacar.VehicleReservation;
 @Entity
 public class RegisteredUser extends User {
 	
+	@JsonIgnore
 	@OneToMany(mappedBy="user")
-	private Set<Ticket> flightReservations = new HashSet<Ticket>(); 
-	//lista rezervacija  hotela
-	//lista rezervacija  rent-a-car
+	private Set<FlightReservation> flightReservations = new HashSet<FlightReservation>(); 
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "sender")
@@ -39,11 +39,12 @@ public class RegisteredUser extends User {
 	@OneToMany(mappedBy="user")
 	private Set<HotelReservation> hotelReservations   = new HashSet<>();
 	
-	@OneToMany(mappedBy="user")
-	private Set<Review> userReviews;	
 	public RegisteredUser() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	@OneToMany(mappedBy="user")
+	private Set<Review> userReviews;	
 	
 	public RegisteredUser( String username, String password, String firstName, String lastName, String email) {
 		super(username,password,firstName,lastName,email);
@@ -116,7 +117,5 @@ public class RegisteredUser extends User {
 		return true;
 	}
 	
-	
-	
-
 }
+
