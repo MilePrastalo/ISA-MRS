@@ -41,11 +41,11 @@
                     </tr>
                     <tr>
                         <td>Check if available: </td>
-                        <td><button @click="checkDate()" >Check</button></td>
+                        <td><button @click="splitDate()" >Check</button></td>
                     </tr>
-                    <tr v-if="this.available == 1 && this.user.name != null">
+                    <tr v-if="this.available == 1 && this.user.firstName != null">
                       <td>Make reservation: </td>
-                      <td><button @click="reserve()">Check</button></td>
+                      <td><button @click="reserve()">Reserve Room</button></td>
                     </tr>
                 </table>
             </div>
@@ -66,7 +66,13 @@ export default {
     user: [],
     available : 0,
     firstDay: "",
-    lastDay: ""
+    lastDay: "",
+    fYear: 0,
+    fMonth: 0,
+    fDay: 0,
+    lYear: 0,
+    lMonth: 0,
+    lDay: 0
   }
 },
 mounted(){
@@ -94,69 +100,59 @@ mounted(){
       back: function() {
         this.$router.push("/hotelProfile/"+ this.$route.params.hotelName);
         },
-        checkReservations: function(fYear,fMonth,fDay,lYear,lMonth,lDay) {
+        checkReservations: function() {
           for(let r in this.hotel.reservations) {
-              if(this.hotel.reservations[r].room.roomNumber == this.room.roomNumber) {
-                  var rSplitFirstDay = this.hotel.reservations[r].room.firstDay.split("-");
-                  var rfYear = rSplitFirstDay[0];
-                  var rfMonth = rSplitFirstDay[1];
-                  var rfDay = rSplitFirstDay[2];
+              if(this.hotel.reservations[r].roomNumber == this.room.roomNumber) { 
+                  // Date must be before or after existing reservation.
 
-                  var rSplitLastDay = this.hotel.reservations[r].room.lastDay.split("-");
-                  var rlYear = rSplitLastDay[0];
-                  var rlMonth = rSplitLastDay[1];
-                  var rlDay = rSplitLastDay[2];
-
-                  if((rfYear - fYear == 0 && rfMonth - fMonth >= 0 && rfDay - fDay >= 0) && (lYear - rfYear == 0 && lMonth - rfMonth >= 0 && lDay - rfDay >= 0)) {
-                      this.available = 0;
-                      return;
-                  }
-
-                  if((fYear - rfYear == 0 && fMonth - rfMonth >= 0 && fDay - rfDay >= 0) && (rlYear - fYear == 0 && rlMonth - fMonth >= 0 && rlDay - fDay >= 0)) {
-                      this.available = 0;
-                      return;
-                  }
-
-                  this.available = 1;
-                  return;
-
+                  // Date is before:
+                  if(this.lYear < this.hotel.reservations[r].fYear) {
+                    this.available = 1;
+                    return;
+                  } else if (this.lYear === this.hotel.reservations[r].fYear && this.lMonth < this.hotel.reservations[r].fMonth) {
+                    this.available = 1;
+                    return;
+                  }else if (this.lYear === this.hotel.reservations[r].fYear && this.lMonth === this.hotel.reservations[r].fMonth && this.lDay < this.hotel.reservations[r].fDay) {
+                    this.available = 1;
+                    return;
+                  } // Date is after: 
+                   else if (this.fYear > this.hotel.reservations[r].lYear) {
+                     this.available = 1;
+                    return;
+                   } else if (this.fYear === this.hotel.reservations[r].lYear && this.fMonth > this.hotel.reservations[r].lMonth) {
+                     this.available = 1;
+                    return;
+                   } else if(this.fYear === this.hotel.reservations[r].lYear && this.fMonth === this.hotel.reservations[r].lMonth && this.fDay > this.hotel.reservations[r].lDay) {
+                     this.available = 1;
+                    return;
+                   } else {
+                     alert("Room is taken.")
+                     this.available = 0;
+                    return;
+                   }
               }
           }
           this.available = 1;
           return;
       },
       checkDate: function() {
-          if(this.firstDay == "" || this.lastDay == "") {
-              alert("Please eneter both dates.");
-          }
-          
           var today = new Date();
           var tYear = today.getFullYear();
           var tMonth = today.getMonth() + 1;
           var tDay = today.getDate();
-
-          var splitFirstDay = this.firstDay.split("-");
-          var fYear = splitFirstDay[0];
-          var fMonth = splitFirstDay[1];
-          var fDay = splitFirstDay[2];
-
-          var splitLastDay = this.lastDay.split("-");
-          var lYear = splitLastDay[0];
-          var lMonth = splitLastDay[1];
-          var lDay = splitLastDay[2];
           
-          if(fYear - tYear >= 0 && lYear - tYear >= 0 && lYear - fYear >= 0) {
-              if(fMonth - tMonth >= 0 && lMonth - tMonth >= 0 && lMonth - fMonth >= 0) {
-                  if(lMonth - fMonth > 0 && lMonth - tMonth > 0) {
-                      this.checkReservations(fYear,fMonth,fDay,lYear,lMonth,lDay);
+          if(this.fYear - tYear >= 0 && this.lYear - tYear >= 0 && this.lYear - this.fYear >= 0) {
+              if(this.fMonth - tMonth >= 0 && this.lMonth - tMonth >= 0 && this.lMonth - this.fMonth >= 0) {
+                  if(this.lMonth - this.fMonth > 0 && this.lMonth - tMonth > 0) {
+                      this.checkReservations();
                       return;
                   }
-                  if(fMonth - tMonth > 0 && lMonth - fMonth >= 0 && lDay - fDay > 0) {
-                      this.checkReservations(fYear,fMonth,fDay,lYear,lMonth,lDay);
+                  if(this.fMonth - tMonth > 0 && this.lMonth - this.fMonth >= 0 && this.lDay - this.fDay > 0) {
+                      this.checkReservations();
                       return;
                   } else {
-                    if(fDay - tDay > 0 && lDay - tDay > 0 && lDay - fDay > 0) {
-                      this.checkReservations(fYear,fMonth,fDay,lYear,lMonth,lDay);
+                    if(this.fDay - tDay > 0 && this.lDay - tDay > 0 && this.lDay - this.fDay > 0) {
+                      this.checkReservations();
                       return;
                   } else {
                       alert("Incorect date day.")
@@ -172,8 +168,34 @@ mounted(){
       changedDate: function() {
         this.available = 0;
       },
+      splitDate: function() {
+         if(this.firstDay == "" || this.lastDay == "") {
+              alert("Please eneter both dates.");
+         }
+        var splitFirstDay = this.firstDay.split("-");
+        this.fYear = parseInt(splitFirstDay[0]);
+        this.fMonth = parseInt(splitFirstDay[1]);
+        this.fDay = parseInt(splitFirstDay[2]);
+
+        var splitLastDay = this.lastDay.split("-");
+        this.lYear = parseInt(splitLastDay[0]);
+        this.lMonth = parseInt(splitLastDay[1]);
+        this.lDay = parseInt(splitLastDay[2]);
+        this.checkDate();
+      },
       reserve: function() {
-        
+        axios.post("http://localhost:8080/api/addHotelReservation",{username: this.user.username,hotelName: this.hotel.name,fYear: this.fYear,fMonth: this.fMonth,fDay: this.fDay,lYear: this.lYear,lMonth: this.lMonth,lDay: this.lDay, roomNumber: this.room.roomNumber})
+        .then(response => {
+            if(response.data === true) {
+              alert("Your reservation is successful.");
+              this.available = 0;
+              
+              this.hotel.reservations.push({username: this.user.username,hotelName: this.hotel.name,fYear: this.fYear,fMonth: this.fMonth,fDay: this.fDay,lYear: this.lYear,lMonth: this.lMonth,lDay: this.lDay, roomNumber: this.room.roomNumber});
+            } else {
+              alert("Your reservation failed.");
+              this.available = 0;
+            }
+          });
       }
           
     }
