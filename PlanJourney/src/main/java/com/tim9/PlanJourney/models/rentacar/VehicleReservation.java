@@ -10,17 +10,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import com.tim9.PlanJourney.models.RegisteredUser;
+import com.tim9.PlanJourney.models.Reservation;
 @Entity
 
-public class VehicleReservation {
-	@Id
-	@GeneratedValue
-	private Long id;
+public class VehicleReservation extends Reservation {
+
 	@ManyToOne
 	private Vehicle vehicle;
-	
-	@ManyToOne
-	private RegisteredUser user;
 	
 	@Column(name = "dateFrom", nullable = false)
 	private Date dateFrom;
@@ -48,19 +44,12 @@ public class VehicleReservation {
 		super();
 		this.date = date;
 		this.vehicle = vehicle;
-		this.user = user;
 		this.dateFrom = dateFrom;
 		this.dateTo = dateTo;
 		this.cena = cena;
+		setUser(user);
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public Vehicle getVehicle() {
 		return vehicle;
@@ -70,13 +59,6 @@ public class VehicleReservation {
 		this.vehicle = vehicle;
 	}
 
-	public RegisteredUser getUser() {
-		return user;
-	}
-
-	public void setUser(RegisteredUser user) {
-		this.user = user;
-	}
 
 	public Date getDateFrom() {
 		return dateFrom;

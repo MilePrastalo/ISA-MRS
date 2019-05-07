@@ -1,18 +1,12 @@
 package com.tim9.PlanJourney.controller;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
 
-import org.joda.time.Days;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,11 +15,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -40,10 +32,9 @@ import com.tim9.PlanJourney.beans.VehicleReservationBean;
 import com.tim9.PlanJourney.beans.VehicleReservationSearchBean;
 import com.tim9.PlanJourney.beans.VehicleSearchBean;
 import com.tim9.PlanJourney.beans.VehicleSearchReturnBean;
-import com.tim9.PlanJourney.models.Authority;
 import com.tim9.PlanJourney.models.RegisteredUser;
+import com.tim9.PlanJourney.models.Review;
 import com.tim9.PlanJourney.models.flight.Destination;
-import com.tim9.PlanJourney.models.flight.FlightCompany;
 import com.tim9.PlanJourney.models.rentacar.BranchOffice;
 import com.tim9.PlanJourney.models.rentacar.RentACarAdmin;
 import com.tim9.PlanJourney.models.rentacar.RentACarCompany;
@@ -55,7 +46,6 @@ import com.tim9.PlanJourney.service.DestinationService;
 import com.tim9.PlanJourney.service.RegisteredUserService;
 import com.tim9.PlanJourney.service.RentACarAdminService;
 import com.tim9.PlanJourney.service.RentACarCompanyService;
-import com.tim9.PlanJourney.service.UserService;
 import com.tim9.PlanJourney.service.VehicleReservationService;
 import com.tim9.PlanJourney.service.VehicleService;
 
@@ -103,7 +93,7 @@ public class RentACarController {
 					&& (vehicle.getYear() < search.getOlder() || search.getOlder() == 0)
 					&& (vehicle.getType().equals(search.getType()) || search.getType().equals(""))) {
 				foundVehicles.add(new VehicleSearchReturnBean(vehicle.getName(), vehicle.getMaker(), vehicle.getType(),
-						vehicle.getYear(), vehicle.getPrice()));
+						vehicle.getYear(), vehicle.getPrice(),vehicle.getRating()));
 			}
 		}
 		return foundVehicles;
@@ -258,7 +248,7 @@ public class RentACarController {
 			}
 		}
 		for (Vehicle vehicle : vehicles) {
-			VehicleSearchReturnBean be = new VehicleSearchReturnBean(vehicle.getName(), vehicle.getMaker(), vehicle.getType(), vehicle.getYear(), vehicle.getPrice());
+			VehicleSearchReturnBean be = new VehicleSearchReturnBean(vehicle.getName(), vehicle.getMaker(), vehicle.getType(), vehicle.getYear(), vehicle.getPrice(),vehicle.getRating());
 			be.setId(Long.toString(vehicle.getId()));
 			found.add(be);
 		}
@@ -289,7 +279,9 @@ public class RentACarController {
 		reservationService.save(reservation);
 		user.getVehicleReservations().add(reservation);
 		vehicle.getReservations().add(reservation);
-		
+		RentACarCompany company = vehicle.getCompany();
+		company.getReservations().add(reservation);
+		companyService.save(company);
 		userService.save(user);
 		vehicleService.save(vehicle);
 		reservationService.save(reservation);
@@ -305,6 +297,24 @@ public class RentACarController {
 		RegisteredUser user = getRegisteredUser();		
 		VehicleReservation reservation = reservationService.findOne(bean.getId());
 		
+		user.getVehicleReservations().remove(reservation);
+		userService.save(user);
+		vehicle.getCompany().getReservations().remove(reservation);
+		companyService.save(vehicle.getCompany());
+		vehicle.getReservations().remove(reservation);
+		vehicleService.save(vehicle);
+		reservationService.remove(bean.getId());
+
+		return true;
+	}
+	@RequestMapping(value = "/api/rateVehicleReservation", method = RequestMethod.POST, produces= MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	//Removes reservation
+	public @ResponseBody boolean rateVehicleReservation(@RequestBody VehicleReservationBean bean) throws Exception { 
+		Vehicle vehicle = vehicleService.findOne(bean.getVehicleId());
+		RegisteredUser user = getRegisteredUser();		
+		VehicleReservation reservation = reservationService.findOne(bean.getId());
+		reservation.getOfficePick().getCompany();
 		user.getVehicleReservations().remove(reservation);
 		userService.save(user);
 
@@ -333,6 +343,25 @@ public class RentACarController {
 			b.setVehicleName(rese.getVehicle().getName());
 			b.setLocationPick(rese.getOfficePick().getName());
 			b.setLocationReturn(rese.getOfficeReturn().getName());
+			Set<Review> reviews = rese.getReservationReviews();
+			for (Review r : reviews) {
+				if (r.getUser().getUsername().equals(user.getUsername())) {
+					b.setRating(r.getRating());
+				}
+			}
+			Date now = new Date();
+			long a = rese.getDateFrom().getTime() - now.getTime();
+			int status;
+			if (a>24*2*3600*1000) {
+				status = 0;
+			}
+			else if (now.getTime() - rese.getDateTo().getTime()>0) {
+				status = 2;
+			}
+			else {
+				status = 1;
+			}
+			b.setStatus(status);
 			restoreturn.add(b);
 		}
 		return restoreturn;
@@ -425,7 +454,7 @@ public class RentACarController {
 		    v.setAvaiableFrom(sdf.parse(vehicleBean.getDateFrom()));
 		    v.setAvaiableTo(sdf.parse(vehicleBean.getDateTo()));
 		    company.getVehicles().add(v);
-		    
+		    v.setCompany(company);
 		    vehicleService.save(v);
 		    companyService.save(company);
 	}
@@ -504,7 +533,7 @@ public class RentACarController {
 	    	ob.setId(office.getId());
 	    	ob.setName(office.getName());
 	    	ob.setAddress(office.getAddress());
-	    	ob.setDestination(office.getDestination().getName());;
+	    	ob.setDestination(office.getDestination().getName());
 	    	officessToReturn.add(ob);
 		}
 	    return officessToReturn;

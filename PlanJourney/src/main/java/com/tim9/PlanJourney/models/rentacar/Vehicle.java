@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 @Entity
 public class Vehicle {
@@ -45,6 +46,12 @@ public class Vehicle {
 	
 	@OneToMany(mappedBy = "vehicle", fetch = FetchType.LAZY)
 	private Set<VehicleReservation> reservations;
+	
+	@Column(name="rating", nullable = true)
+	private double rating;
+	
+	@ManyToOne
+	private RentACarCompany company;
 	
 	public Vehicle() {
 		super();
@@ -194,8 +201,28 @@ public class Vehicle {
 	}
 
 
-	
-	
+
+	public double getRating() {
+		return rating;
+	}
+
+
+
+	public void setRating(double rating) {
+		this.rating = rating;
+	}
+
+
+
+	public RentACarCompany getCompany() {
+		return company;
+	}
+
+
+
+	public void setCompany(RentACarCompany company) {
+		this.company = company;
+	}	
 	
 	
 }

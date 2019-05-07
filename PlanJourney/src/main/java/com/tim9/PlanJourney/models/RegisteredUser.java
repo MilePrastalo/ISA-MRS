@@ -26,7 +26,9 @@ public class RegisteredUser extends User {
 	@JsonIgnore
 	@OneToMany(mappedBy = "reciever")
 	private Set<FriendRequest> receivedRequests = new HashSet<FriendRequest>();
-	
+
+	@OneToMany(mappedBy="user")
+	private Set<Review> userReviews;
 
 
 	@OneToMany(mappedBy="user")
@@ -85,6 +87,15 @@ public class RegisteredUser extends User {
 		this.hotelReservations = hotelReservations;
 	}
 	
+	
+
+	public Set<Review> getUserReviews() {
+		return userReviews;
+	}
+
+	public void setUserReviews(Set<Review> userReviews) {
+		this.userReviews = userReviews;
+	}
 
 	@JsonIgnore
 	@Override
@@ -111,8 +122,5 @@ public class RegisteredUser extends User {
 		return true;
 	}
 
-	
-	
-	
-
 }
+

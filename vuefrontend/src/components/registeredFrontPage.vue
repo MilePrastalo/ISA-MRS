@@ -70,7 +70,14 @@
                             <td>{{reservation.dateFrom}}</td>
                             <td>{{reservation.dateTo}}</td>
                             <td>{{reservation.price}}</td>
-                            <td><Button @click="cancel(reservation)">Cancel</Button></td>
+                            <td><Button v-if="reservation.status == 0" @click="cancel(reservation)">Cancel</Button></td>
+                            <td class="ratingtd" v-if="reservation.status == 2" >
+                                <span class="fa fa-star over" @click="review(reservation,5)" :id="reservation.ratings[4]"></span>
+                                <span class="fa fa-star over" @click="review(reservation,4)" :id="reservation.ratings[3]"></span>
+                                <span class="fa fa-star over" @click="review(reservation,3)" :id="reservation.ratings[2]"></span>
+                                <span class="fa fa-star over" @click="review(reservation,2)" :id="reservation.ratings[1]"></span>
+                                <span class="fa fa-star over" @click="review(reservation,1)" :id="reservation.ratings[0]"></span>
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -80,6 +87,7 @@
 </template>
 
 <script>
+import { setTimeout } from 'timers';
 
 
 export default {
@@ -96,9 +104,11 @@ export default {
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/geteReservations")
             .then(response => {
-                console.log(response);
                 this.vehiclereservations = response.data;
-            }); 
+                this.vehiclereservations.forEach(element => {
+                    element.ratings = [element.id + "1",element.id + "2",element.id + "3",element.id + "4",element.id + "5"];
+                });
+            });
   },
   methods : {
       showFlights : function(){
@@ -118,12 +128,14 @@ export default {
             document.getElementById("cars").className="nav-link";
       },
       showCars : function(){
+          
             var flightDiv = document.getElementById("FlightsReservations").hidden=true;
             var hoteltDiv = document.getElementById("HotelsReservations").hidden=true;
             var carDiv = document.getElementById("CarsReservations").hidden=false;
             document.getElementById("flights").className="nav-link";
             document.getElementById("hotels").className="nav-link";
             document.getElementById("cars").className="nav-link active";
+                
       },
     logout:function(){
       window.location="./";
@@ -144,6 +156,30 @@ export default {
                 console.log(response);
                 alert("success");
             }); 
+    },
+    review:function(reservation,num){
+        var getJwtToken = function() {
+                    return localStorage.getItem('jwtToken');
+                };
+        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.post("http://localhost:8080/api/reviewVehicle",{reservationId:reservation.id,rating:num})
+            .then(response => {
+                alert("success");
+            });
+        reservation.rating = num;
+        this.setStars(reservation,num);
+    },
+    setStars:function(reservation,num){
+        for(var i = 1;i<=5;i++){
+            var element = document.getElementById(reservation.ratings[i-1]);
+            if(i<=num){
+                element.className = "fa fa-star over clicked"
+            }
+            else{
+                element.className = "fa fa-star over"
+            }
+        }
+        
     }
   }
 }
@@ -218,6 +254,19 @@ button{
     margin-left:auto;
     margin-right: auto;
     margin-top: 2%;
+}
+.ratingtd{
+    unicode-bidi:bidi-override;
+    direction:rtl;
+}
+.ratingtd > .over:hover{
+    color: orange;
+}
+.ratingtd > .over:hover ~ span:before{
+    color: orange;
+}
+.clicked{
+    color: orange;
 }
 
 </style>
