@@ -23,7 +23,7 @@ public class FlightCompany extends Company {
 	private Set<Destination> destinations = new HashSet<Destination>();
 	
 	
-	@OneToMany( fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "flightCompany",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Flight>  flights = new  HashSet<Flight>();
 	
 	

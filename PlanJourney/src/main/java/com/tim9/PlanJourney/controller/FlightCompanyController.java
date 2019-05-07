@@ -361,15 +361,16 @@ public class FlightCompanyController {
 		makeSeats(seats2, "5|4", "business");
 		makeSeats(seats2, "3|3", "first class");
 
-		Flight flight1 = new Flight(new Date(), new Date(), 3, 6000, destinatinon1, destinatinon2,
-				new HashSet<FlightReservation>(), seats1, 100, 120, 140);
-		Flight flight2 = new Flight(new Date(), new Date(), 5, 3000, destinatinon3, destinatinon4,
-				new HashSet<FlightReservation>(), seats2, 546, 151, 84);
-		Set<Flight> flights = new HashSet<Flight>();
-		flights.add(flight1);
-		flights.add(flight2);
 		FlightCompany fc = new FlightCompany("Avio", "address", "description", 0, new HashSet<FlightAdmin>(),
-				destinations, flights, new HashSet<FlightReservation>(), new HashSet<QuickFlightReservation>());
+				destinations, new HashSet<Flight>(), new HashSet<FlightReservation>(), new HashSet<QuickFlightReservation>());
+		
+		Flight flight1 = new Flight(fc, new Date(), new Date(), 3, 6000, destinatinon1, destinatinon2,
+				new HashSet<FlightReservation>(), seats1, 100, 120, 140);
+		Flight flight2 = new Flight(fc, new Date(), new Date(), 5, 3000, destinatinon3, destinatinon4,
+				new HashSet<FlightReservation>(), seats2, 546, 151, 84);
+		fc.getFlights().add(flight1);
+		fc.getFlights().add(flight2);
+		
 		flightCompanyService.save(fc);
 		BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
 		FlightAdmin flightAdmin = new FlightAdmin("mira", bc.encode("miric"), "Mira", "Miric", "mira@gmail.com");

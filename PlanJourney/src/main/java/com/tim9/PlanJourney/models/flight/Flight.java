@@ -10,11 +10,13 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "flight")
@@ -23,6 +25,10 @@ public class Flight {
 	@Id
 	@GeneratedValue
 	private Long id;
+	
+	@ManyToOne
+	@JsonIgnore
+	private FlightCompany flightCompany;
 	
 	@Column(name = "startDate", unique = false, nullable = false)
 	private Date startDate;
@@ -66,7 +72,7 @@ public class Flight {
 	}
 
 	
-	public Flight( Date startDate, Date endDate, int flightDuration, int flightLength,
+	public Flight( FlightCompany flightCompany ,Date startDate, Date endDate, int flightDuration, int flightLength,
 			Destination startDestination, Destination endDestination, Set<FlightReservation> flightReservations, Set<Seat> seats,
 			double businessPrice, double economicPrice, double firstClassPrice) {
 		super();
@@ -81,6 +87,7 @@ public class Flight {
 		this.businessPrice = businessPrice;
 		this.economicPrice = economicPrice;
 		this.firstClassPrice = firstClassPrice;
+		this.flightCompany = flightCompany;
 		this.rating = 0;
 	}
 
@@ -207,6 +214,16 @@ public class Flight {
 
 	public void setRating(double rating) {
 		this.rating = rating;
+	}
+
+
+	public FlightCompany getFlightCompany() {
+		return flightCompany;
+	}
+
+
+	public void setFlightCompany(FlightCompany flightCompany) {
+		this.flightCompany = flightCompany;
 	}
 
 	
