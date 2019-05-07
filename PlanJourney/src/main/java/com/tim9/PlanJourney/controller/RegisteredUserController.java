@@ -1,5 +1,7 @@
 package com.tim9.PlanJourney.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -34,6 +36,7 @@ public class RegisteredUserController {
 	private RegisteredUserService service;
 	@Autowired
 	private FriendRequestService friendReqestsService;
+	
 
 	// Method for searching and filtering registered users
 	@RequestMapping(value = "/api/getRegUsers", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -226,11 +229,11 @@ public class RegisteredUserController {
 	}
 	
 	
-	@RequestMapping(value = "/api/getMyFlightReservations", method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/api/getMyFlightReservations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('REGISTERED')")
-	public @ResponseBody Set<FlightReservation> getMyFlightReservations() {
-
+	public @ResponseBody Set<FlightReservation> getMyFlightReservations() throws ParseException {
+		
 		RegisteredUser loggedUser = getLoggedRegisteredUser();
 		if (loggedUser == null) {
 			return null;

@@ -42,6 +42,9 @@ public class Flight {
 	@OneToOne()
 	private Destination endDestination;
 	
+	@Column(name="rating", nullable = true)
+	private double rating;
+	
 	@JsonIgnore
 	@OneToMany(mappedBy = "flight")
 	private Set<FlightReservation> flightReservations = new HashSet<FlightReservation>();
@@ -78,6 +81,7 @@ public class Flight {
 		this.businessPrice = businessPrice;
 		this.economicPrice = economicPrice;
 		this.firstClassPrice = firstClassPrice;
+		this.rating = 0;
 	}
 
 
@@ -193,6 +197,16 @@ public class Flight {
 
 	public void setFlightReservations(Set<FlightReservation> flightReservations) {
 		this.flightReservations = flightReservations;
+	}
+
+
+	public double getRating() {
+		return rating;
+	}
+
+
+	public void setRating(double rating) {
+		this.rating = rating;
 	}
 
 	
