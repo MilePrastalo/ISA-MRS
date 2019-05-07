@@ -7,8 +7,8 @@
                 <button @click="logout" id="logoutbt" class="col-lg-2">Log Out</button>
             </div>
             <div class="row"> 
-                <button class="col-lg-2">Airlines</button>
-                <button class="col-lg-2" @click="showHotelSearch">Hotels</button>
+                <button class="col-lg-2" @click="airlines">Airlines</button>
+                <button class="col-lg-2">Hotels</button>
                 <button class="col-lg-2" @click="rentACar">Rent a car</button>
                 <button class="col-lg-2">Friends</button>
             </div>
@@ -33,12 +33,25 @@
                 <div id="FlightsReservations" class="centered col-lg-10">
                     <table>
                         <tr>
-                            <th>Origin</th>
-                            <th>Destination</th>
-                            <th>Date</th>
+                            <th>Start destination</th>
+                            <th>End destination</th>
+                            <th>Start date</th>
+                            <th>End date</th>
+                            <th>Seat</th>
                             <th>Price</th>
-                            <th>Details</th>
-                            <th>Cancel</th>
+                            <th>Passangers count</th>
+                        </tr>
+                        <tr v-for="flightReservation in flightReservations" :key="flightReservation.id">
+                            <td>{{flightReservation.flight.startDestination.name}}</td>
+                            <td>{{flightReservation.flight.endDestination.name}}</td>
+                            <td>{{flightReservation.flight.startDate}}</td>
+                            <td>{{flightReservation.flight.endDate}}</td>
+                            <td> {{flightReservation.seat.travelClassa}} : ({{flightReservation.seat.seatRow}},{{flightReservation.seat.seatColumn}})</td>
+                            <td>{{flightReservation.price}}</td>
+                            <td v-if="flightReservation.passangers.length != 0">{{flightReservation.passangers.length}} + (1)</td>
+                            <td v-else>1</td>
+                             <td><button>Details</button></td>
+
                         </tr>
                     </table>
                 </div>
@@ -101,8 +114,8 @@ export default {
   name: 'registeredUserFrontPage',
   data: function(){
       return{
-          vehiclereservations:[],
-          hotelReservations: []
+          flightReservations: [],
+          vehiclereservations:[]
       }
   },
   mounted(){
@@ -113,17 +126,19 @@ export default {
         axios.get("http://localhost:8080/api/geteReservations")
             .then(response => {
                 this.vehiclereservations = response.data;
-
+                this.vehiclereservations.forEach(element => {
+                    element.ratings = [element.id + "1",element.id + "2",element.id + "3",element.id + "4",element.id + "5"];
+                });
             }); 
         axios.get("http://localhost:8080/api/getUserHotelReservations")
             .then(response => {
                 this.hotelReservations = response.data;
-            });
+            });  
 
-                this.vehiclereservations.forEach(element => {
-                    element.ratings = [element.id + "1",element.id + "2",element.id + "3",element.id + "4",element.id + "5"];
+        axios.get("http://localhost:8080/api/getMyFlightReservations")
+            .then(response => {
+                this.flightReservations = response.data;
                 });
-            });
   },
   methods : {
       showFlights : function(){
@@ -161,6 +176,9 @@ export default {
     rentACar:function(){
         window.location="./rentacar";
     },
+    airlines:function(){
+        window.location="./searchFlightCompany";
+    },
     cancel:function(reservation){
         var getJwtToken = function() {
                     return localStorage.getItem('jwtToken');
@@ -172,14 +190,6 @@ export default {
                 alert("success");
             }); 
     },
-
-    showDetails: function(hotelName,chosenRoom) {
-        this.$router.push("/hotelRoom/"+ hotelName + "/" + chosenRoom);
-        },
-    showHotelSearch: function() {
-        this.$router.push("/searchHotels");
-        },
-
     review:function(reservation,num){
         var getJwtToken = function() {
                     return localStorage.getItem('jwtToken');
@@ -192,6 +202,12 @@ export default {
         reservation.rating = num;
         this.setStars(reservation,num);
     },
+    showDetails: function(hotelName,chosenRoom) {
+        this.$router.push("/hotelRoom/"+ hotelName + "/" + chosenRoom);
+    },
+    showHotelSearch: function() {
+        this.$router.push("/searchHotels");
+    },
     setStars:function(reservation,num){
         for(var i = 1;i<=5;i++){
             var element = document.getElementById(reservation.ratings[i-1]);
@@ -203,7 +219,6 @@ export default {
             }
         }
         
-
     }
   }
 }
@@ -292,5 +307,4 @@ button{
 .clicked{
     color: orange;
 }
-
 </style>

@@ -150,6 +150,11 @@ export default new Router({
       path: '/hotelRoom/:hotelName/:roomNumber',
       name: 'hotelRoom',
       component: () => import('./components/hotelRoom.vue')
+    },
+    {
+      path: '/CompanyProfile',
+      name: 'CompanyProfile',
+      component: () => import('./components/s1_flightCompany/CompanyProfile.vue')
     }
   ]
 })

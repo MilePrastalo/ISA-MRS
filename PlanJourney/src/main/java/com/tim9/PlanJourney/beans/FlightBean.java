@@ -30,6 +30,7 @@ public class FlightBean {
 	private String buisinesssCapacity;
 	private String firstClassCapacity;
 	private Long id;
+	private Long companyId;
 	
 	
 	public FlightBean() {
@@ -40,7 +41,7 @@ public class FlightBean {
 	public FlightBean(String startDestination, String endDestination, Date startDate, Date endDate, int flightDuration,
 			int flightLength, double businessPrice, double economicPrice, double firstClassPrice, double minBusiness,
 			double minEconomic, double minFirstClass, double maxBusiness, double maxEconomic, double maxFirstClass,
-			String flightCompany, String economicCapacity, String buisinesssCapacity, String firstClassCapacity) {
+			String flightCompany, String economicCapacity, String buisinesssCapacity, String firstClassCapacity, Long companyId) {
 		super();
 		this.startDestination = startDestination;
 		this.endDestination = endDestination;
@@ -61,6 +62,7 @@ public class FlightBean {
 		this.economicCapacity = economicCapacity;
 		this.buisinesssCapacity = buisinesssCapacity;
 		this.firstClassCapacity = firstClassCapacity;
+		this.companyId = companyId;
 	}
 	
 	public FlightBean(Flight flight, String companyName, String startDate, String endDate) {
@@ -297,6 +299,16 @@ public class FlightBean {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+
+	public Long getCompanyId() {
+		return companyId;
+	}
+
+
+	public void setCompanyId(Long companyId) {
+		this.companyId = companyId;
 	}
 	
 	

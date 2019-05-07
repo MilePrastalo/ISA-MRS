@@ -19,16 +19,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.beans.FlightReservationBean;
+import com.tim9.PlanJourney.beans.QuickFlightReservationBean;
 import com.tim9.PlanJourney.beans.ReservationRequestBean;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.flight.Flight;
 import com.tim9.PlanJourney.models.flight.FlightReservation;
 import com.tim9.PlanJourney.models.flight.Passanger;
+import com.tim9.PlanJourney.models.flight.QuickFlightReservation;
 import com.tim9.PlanJourney.models.flight.Seat;
 import com.tim9.PlanJourney.service.EmailService;
 import com.tim9.PlanJourney.service.FlightReservationService;
 import com.tim9.PlanJourney.service.FlightService;
 import com.tim9.PlanJourney.service.PassangerService;
+import com.tim9.PlanJourney.service.QuickFlightReservationService;
 import com.tim9.PlanJourney.service.RegisteredUserService;
 import com.tim9.PlanJourney.service.SeatService;
 
@@ -47,6 +50,8 @@ public class flightReservationController {
 	private SeatService seatService;
 	@Autowired
 	private PassangerService passangerService;
+	@Autowired
+	private QuickFlightReservationService quickReservationService;
 	
 	
 	
@@ -141,6 +146,39 @@ public class flightReservationController {
 		}
 		reservationService.save(reservation);
 		return reservation;
+	}
+	
+	@RequestMapping(value = "/api/makeQuickReservation", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('REGISTERED')")
+	public @ResponseBody String makeQuickReservation(@RequestBody QuickFlightReservationBean reservationBean)  {
+
+		RegisteredUser loggedUser = getLoggedRegisteredUser();
+		if (loggedUser == null) {
+			return "You are not logged in!";
+		}
+		Flight flight = flightService.findOne(reservationBean.getFlightId());
+		double originPrice = reservationBean.getOriginPrice();
+		double discount = reservationBean.getDiscount();
+		Seat main_seat = seatService.findOne(reservationBean.getSeatId());
+		main_seat.setTaken(true);
+		main_seat.setQuick(false);
+		seatService.save(main_seat);
+		double total = originPrice * discount/100;
+		FlightReservation reservation = new FlightReservation(loggedUser, main_seat, new HashSet<Passanger>(), flight, total, new Date(), true, "" );
+		QuickFlightReservation quick = quickReservationService.findOne(reservationBean.getId());
+		quick.setTaken(true);
+		quickReservationService.save(quick);
+		reservationService.save(reservation);
+		try {
+			emailService.sendReservationMade(reservation);
+
+		} catch (Exception e) {
+
+			System.out.println("Error while sending email: " + e.getMessage());
+			return "Reservation is made, but we didn'y succeed to send e-mail about details!";
+		}
+		return "success";
 	}
 
 	

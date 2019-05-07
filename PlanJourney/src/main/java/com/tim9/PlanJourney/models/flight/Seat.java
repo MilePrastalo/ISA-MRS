@@ -31,6 +31,9 @@ public class Seat {
     
     @Column(name = "unavailable", unique = false, nullable = false)
    	private boolean unavailable;
+    
+    @Column(name = "quick", unique = false, nullable = false)
+   	private boolean quick;
 	
 	
 	public Seat() {
@@ -46,6 +49,7 @@ public class Seat {
 		this.travelClassa = travelClassa;
 		this.active = false;
 		this.unavailable = false;
+		this.quick = false;
 	}
 
 
@@ -109,6 +113,16 @@ public class Seat {
 
 	public void setUnavailable(boolean unavailable) {
 		this.unavailable = unavailable;
+	}
+
+
+	public boolean isQuick() {
+		return quick;
+	}
+
+
+	public void setQuick(boolean quick) {
+		this.quick = quick;
 	}
 
 

@@ -7,6 +7,7 @@
                 <ul class='legend-labels'>
                     <li><span style='background:orange;'></span>Unavailable</li>
                     <li><span style='background:salmon;'></span>Booked</li>
+                     <li><span style='background:yellow;'></span>Quick reservation</li>
                 </ul>
             </div>
         </div>
@@ -15,7 +16,7 @@
             <table class = "seats">
                     <caption style="caption-side: top; font-weight: bold">Economic class</caption>
                     <tr v-for="r in seatsE.rows" :key ="r"> 
-                        <td  v-for="c in seatsE.columns" :key ="c" v-bind:class = "{unavailable: seatsE.seats[(c-1)+(r-1)*seatsE.columns].unavailable, booked: seatsE.seats[(c-1)+(r-1)*seatsE.columns].taken}" @click="modify(seatsE.seats[(c-1)+(r-1)*seatsE.columns])">
+                        <td  v-for="c in seatsE.columns" :key ="c" v-bind:class = "{unavailable: seatsE.seats[(c-1)+(r-1)*seatsE.columns].unavailable, booked: seatsE.seats[(c-1)+(r-1)*seatsE.columns].taken, quick: seatsE.seats[(c-1)+(r-1)*seatsE.columns].quick}" @click="modify(seatsE.seats[(c-1)+(r-1)*seatsE.columns])">
                             ( {{ seatsE.seats[(c-1)+(r-1)*seatsE.columns].seatRow}} , {{ seatsE.seats[(c-1)+(r-1)*seatsE.columns].seatColumn}} )	
                         </td> 
                     </tr>
@@ -23,7 +24,7 @@
             <table class = "seats">
                 <caption style="caption-side: top; font-weight: bold">Business class</caption>
                 <tr v-for="r in seatsB.rows" :key ="r"> 
-                    <td  v-for="c in seatsB.columns" :key ="c" v-bind:class = "{unavailable: seatsB.seats[(c-1)+(r-1)*seatsB.columns].unavailable, booked: seatsB.seats[(c-1)+(r-1)*seatsB.columns].taken}" @click="modify(seatsB.seats[(c-1)+(r-1)*seatsB.columns])">
+                    <td  v-for="c in seatsB.columns" :key ="c" v-bind:class = "{unavailable: seatsB.seats[(c-1)+(r-1)*seatsB.columns].unavailable, booked: seatsB.seats[(c-1)+(r-1)*seatsB.columns].taken, quick: seatsB.seats[(c-1)+(r-1)*seatsB.columns].quick}" @click="modify(seatsB.seats[(c-1)+(r-1)*seatsB.columns])">
                         ( {{ seatsB.seats[(c-1)+(r-1)*seatsB.columns].seatRow}} , {{ seatsB.seats[(c-1)+(r-1)*seatsB.columns].seatColumn}} )	
                     </td>
                 </tr>
@@ -31,7 +32,7 @@
             <table class = "seats">
                 <caption style="caption-side: top; font-weight: bold">First class</caption>
                 <tr v-for="r in seatsF.rows" :key ="r"> 
-                    <td  v-for="c in seatsF.columns" :key ="c" v-bind:class = "{unavailable: seatsF.seats[(c-1)+(r-1)*seatsF.columns].unavailable, booked: seatsF.seats[(c-1)+(r-1)*seatsF.columns].taken}" @click="modify(seatsF.seats[(c-1)+(r-1)*seatsF.columns])">
+                    <td  v-for="c in seatsF.columns" :key ="c" v-bind:class = "{unavailable: seatsF.seats[(c-1)+(r-1)*seatsF.columns].unavailable, booked: seatsF.seats[(c-1)+(r-1)*seatsF.columns].taken, quick: seatsF.seats[(c-1)+(r-1)*seatsF.columns].quick}" @click="modify(seatsF.seats[(c-1)+(r-1)*seatsF.columns])">
                         ( {{ seatsF.seats[(c-1)+(r-1)*seatsF.columns].seatRow}} ,{{ seatsF.seats[(c-1)+(r-1)*seatsF.columns].seatColumn}} )	
                     </td>
                 </tr>
@@ -79,21 +80,23 @@ export default {
     
         modify: function(seat){
             
-            var getJwtToken = function() {
-                return localStorage.getItem('jwtToken');
-            };
-            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-            axios.get("http://localhost:8080/api/editSeat/" + seat.id)
-            .then(response => {
-                if (response.data != null){
-                    if (seat.unavailable == true){
-                        seat.unavailable = false;
+            if (seat.booked == false && seat.quick == false){
+                var getJwtToken = function() {
+                    return localStorage.getItem('jwtToken');
+                };
+                axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+                axios.get("http://localhost:8080/api/editSeat/" + seat.id)
+                .then(response => {
+                    if (response.data != null){
+                        if (seat.unavailable == true){
+                            seat.unavailable = false;
+                        }
+                        else{
+                            seat.unavailable = true;
+                        }
                     }
-                    else{
-                        seat.unavailable = true;
-                    }
-                }
-            });      
+                });     
+            } 
         }
     }     
     
@@ -128,6 +131,10 @@ export default {
 
 .seats .booked {
     background-color: salmon;
+}
+.seats .quick {
+    background-color: yellow;
+    border-radius: 5px;
 }
 
  .my-legend .legend-title {
