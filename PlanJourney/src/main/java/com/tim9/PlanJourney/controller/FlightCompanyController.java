@@ -165,6 +165,24 @@ public class FlightCompanyController {
 		}
 		return null;
 	}
+	
+	@RequestMapping(value = "/api/getFlightsCompany/{idCompany}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('REGISTERED')")
+	// Method returns flight information
+	public @ResponseBody ArrayList<FlightBean> getFlightsCompany( @PathVariable("idCompany") Long idCompany)  {
+
+		FlightCompany flightCompany = flightCompanyService.findOne(idCompany);
+		if (flightCompany == null) {
+			System.out.println("Flight admin doesnt't have flight company.");
+			return null;
+		}
+		ArrayList<FlightBean> flights = new ArrayList<>();
+		for (Flight f : flightCompany.getFlights()) {
+			flights.add(new FlightBean(f,"", sdf.format(f.getStartDate()), sdf.format(f.getEndDate())));
+		}
+		return flights;
+	}
 
 	@RequestMapping(value = "/api/getDestinations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -193,44 +211,45 @@ public class FlightCompanyController {
 
 	@RequestMapping(value = "/api/flightsInCompany", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
+	@PreAuthorize("hasAnyAuthority('FLIGHT_ADMIN','REGISTERED')")
 	// Method for searching flights in flight company
 	public @ResponseBody ArrayList<FlightBean> flightsInCompany(@RequestBody FlightBean search) throws Exception {
-
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (!(authentication instanceof AnonymousAuthenticationToken)) {
-
-			String username = authentication.getName();
-			FlightAdmin user = (FlightAdmin) userService.findOneByUsername(username);
-			FlightCompany flightCompany = user.getFlightCompany();
-			if (flightCompany == null) {
-				System.out.println("Flight admin doesnt't have flight company.");
+		
+		FlightCompany flightCompany = null;
+		if (search.getCompanyId() != -1) {
+			flightCompany = flightCompanyService.findOne(search.getCompanyId());
+		}
+		else {
+			FlightAdmin user = getLoggedFlightAdmin();
+			if (user == null) {
 				return null;
 			}
-			ArrayList<FlightBean> foundFlights = new ArrayList<>();
-			DateTimeComparator dateTimeComparator = DateTimeComparator.getDateOnlyInstance();
-			for (Flight f : flightCompany.getFlights()) {
-				if ( (f.getStartDestination().getName().equals(search.getStartDestination()) || search.getStartDestination().equals(""))
-						&& (f.getEndDestination().getName().equals(search.getEndDestination()) || search.getEndDestination().equals(""))
-						&& (f.getEconomicPrice() >= search.getMinEconomic() || (search.getMinEconomic() == 0))
-						&& (f.getBusinessPrice() >= search.getMinBusiness() || (search.getMinBusiness() == 0))
-						&& (f.getFirstClassPrice() >= search.getMinFirstClass() || (search.getMinFirstClass() == 0))
-						&& (f.getEconomicPrice() <= search.getMaxEconomic() || (search.getMaxEconomic() == 0))
-						&& (f.getBusinessPrice() <= search.getMaxBusiness() || (search.getMaxBusiness() == 0))
-						&& (f.getFirstClassPrice() <= search.getMaxFirstClass() || (search.getMaxFirstClass() == 0))
-						&& (f.getFlightDuration() == search.getFlightDuration() || search.getFlightDuration() == 0)
-						&& (f.getFlightLength() == search.getFlightLength() || search.getFlightLength() == 0)
-						&& ( search.getStartDate()==null || dateTimeComparator.compare(f.getStartDate(),search.getStartDate()) == 0) 
-						&& (search.getEndDate() == null  || dateTimeComparator.compare(f.getEndDate(),search.getEndDate()) == 0)
-						)
-							 {
-					foundFlights.add(new FlightBean(f,"", sdf.format(f.getStartDate()), sdf.format(f.getEndDate())));
-				}
-			}
-			return foundFlights;
+			flightCompany = user.getFlightCompany();
 		}
-		return null;
+		ArrayList<FlightBean> foundFlights = new ArrayList<>();
+		DateTimeComparator dateTimeComparator = DateTimeComparator.getDateOnlyInstance();
+		for (Flight f : flightCompany.getFlights()) {
+			if ( (f.getStartDestination().getName().equals(search.getStartDestination()) || search.getStartDestination().equals(""))
+					&& (f.getEndDestination().getName().equals(search.getEndDestination()) || search.getEndDestination().equals(""))
+					&& (f.getEconomicPrice() >= search.getMinEconomic() || (search.getMinEconomic() == 0))
+					&& (f.getBusinessPrice() >= search.getMinBusiness() || (search.getMinBusiness() == 0))
+					&& (f.getFirstClassPrice() >= search.getMinFirstClass() || (search.getMinFirstClass() == 0))
+					&& (f.getEconomicPrice() <= search.getMaxEconomic() || (search.getMaxEconomic() == 0))
+					&& (f.getBusinessPrice() <= search.getMaxBusiness() || (search.getMaxBusiness() == 0))
+					&& (f.getFirstClassPrice() <= search.getMaxFirstClass() || (search.getMaxFirstClass() == 0))
+					&& (f.getFlightDuration() == search.getFlightDuration() || search.getFlightDuration() == 0)
+					&& (f.getFlightLength() == search.getFlightLength() || search.getFlightLength() == 0)
+					&& ( search.getStartDate()==null || dateTimeComparator.compare(f.getStartDate(),search.getStartDate()) == 0) 
+					&& (search.getEndDate() == null  || dateTimeComparator.compare(f.getEndDate(),search.getEndDate()) == 0)
+					)
+						 {
+				foundFlights.add(new FlightBean(f,"", sdf.format(f.getStartDate()), sdf.format(f.getEndDate())));
+			}
+		}
+		return foundFlights;
 	}
+	
+	
 	
 	@RequestMapping(value = "/api/searchFlightCompanies/{companyName}", method = RequestMethod.GET,   produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -282,6 +301,15 @@ public class FlightCompanyController {
 			return null;
 		}
 		return loggedAdmin.getFlightCompany().getQuickFlightReservations();
+	}
+	
+	@RequestMapping(value = "/api/getQuickReservationsCompany/{idCompany}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('REGISTERED')")
+	public @ResponseBody Set<QuickFlightReservation> getQuickReservationsCompany(@PathVariable("idCompany") Long idCompany) {
+
+		FlightCompany company = flightCompanyService.findOne(idCompany);
+		return company.getQuickFlightReservations();
 	}
 	
 	private FlightAdmin getLoggedFlightAdmin() {

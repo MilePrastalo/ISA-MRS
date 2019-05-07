@@ -20,19 +20,23 @@
         </div>
         <br>
         <div>
-            <table border="1" hidden ref = "resCompanySearch" >
-            <tr>
-                <td>Name</td>
-                <td>Address</td>
-                <td>Description</td>
-            </tr>
-            <tr v-for="company in companies" :key="company.id"> 
-                <td>{{company.name}}</td>
-                <td>{{company.address}}</td>
-                <td>{{company.description}}</td>
-                <td> <Button>Details</Button></td>
-            </tr>
-            </table>
+            <table border="1" class = 'table'>
+                <thead class="thead-dark">
+                    <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr v-for="company in companies" :key="company.id"> 
+                    <td>{{company.name}}</td>
+                    <td>{{company.address}}</td>
+                    <td>{{company.description}}</td>
+                    <td> <Button @click="goToDetails(company.id)">Details</Button></td>
+                </tr>
+                </tbody>              
+            </table>  
         </div>        
     </div>
 </template>
@@ -60,7 +64,10 @@ methods:{
             console.log(response);
             this.companies = response.data
         }); 
-        this.$refs["resCompanySearch"].hidden = false;
+    },
+    goToDetails: function(id){
+        localStorage.setItem("idCompany", id);
+        window.location = './CompanyProfile'
     }
 }
 }

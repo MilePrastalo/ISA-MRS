@@ -23,6 +23,7 @@ import com.tim9.PlanJourney.beans.FriendRequestBean;
 import com.tim9.PlanJourney.beans.UserBean;
 import com.tim9.PlanJourney.models.FriendRequest;
 import com.tim9.PlanJourney.models.RegisteredUser;
+import com.tim9.PlanJourney.models.flight.FlightReservation;
 import com.tim9.PlanJourney.service.FriendRequestService;
 import com.tim9.PlanJourney.service.RegisteredUserService;
 
@@ -223,6 +224,20 @@ public class RegisteredUserController {
 		}
 		return friends;
 	}
+	
+	
+	@RequestMapping(value = "/api/getMyFlightReservations", method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('REGISTERED')")
+	public @ResponseBody Set<FlightReservation> getMyFlightReservations() {
+
+		RegisteredUser loggedUser = getLoggedRegisteredUser();
+		if (loggedUser == null) {
+			return null;
+		}
+		return loggedUser.getFlightReservations();
+	}
+
 
 	// Method for checking if the user is in given list
 	private boolean isInList(RegisteredUser subject, Set<RegisteredUser> friends) {

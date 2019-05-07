@@ -59,19 +59,21 @@
         <br>
 
         <div class = "row">
-            <table border="1">
-                <tr>
-                    <td>Start destination</td>
-                    <td>End destination</td>
-                    <td>Start date</td>
-                    <td>End date</td>
-                    <td>Flight duration</td>
-                    <td>Flight Length</td>
-                    <td>Economic price</td>
-                    <td>Buisiness price</td>
-                    <td>First class price</td>
-                    <td></td>
-                </tr>
+            <table border="1" class = 'table'>
+                <thead class="thead-dark">
+                    <tr>
+                    <th scope="col">Start destination</th>
+                    <th scope="col">End destination</th>
+                    <th scope="col">Start date</th>
+                    <th scope="col">End date</th>
+                    <th scope="col">Flight Duration</th>
+                    <th scope="col">Flight Length</th>
+                    <th scope="col">Economic price</th>
+                    <th scope="col">Business price</th>
+                    <th scope="col">First class price</th>
+                    </tr>
+                </thead>
+                <tbody>
                 <tr v-for="flight in flights" :key="flight.id">  
                     <td>{{flight.startDestination}}</td>
                     <td>{{flight.endDestination}}</td>
@@ -82,10 +84,12 @@
                     <td>{{flight.economicPrice}}</td>
                     <td>{{flight.businessPrice}}</td>
                     <td>{{flight.firstClassPrice}}</td>
-                    <td> <Button @click="goToDetails(flight.id)" >Details</Button></td>
-                    <td><button>Edit</button></td>
-                    <td><button>Delete</button></td>
-                </tr>              
+                    <td v-if="role == 'FLIGHT_ADMIN'"> <Button @click="goToDetails(flight.id)" >Details</Button></td>
+                    <td  v-if="role == 'FLIGHT_ADMIN'"><button>Edit</button></td>
+                    <td  v-if="role == 'FLIGHT_ADMIN'"><button>Delete</button></td>
+                    <td  v-if="role == 'REGISTERED'"><button @click="goToDetailsForReservation(flight.id)">Details</button></td>
+                </tr>
+                </tbody>              
             </table>  
         </div>   
     </div>
@@ -95,29 +99,49 @@
 export default {
   name: 'allFlights',
   components: {},
+  props: ["idCompany"],
   data: function () {
   return {
-      startDestination: "",
-     endDestination: "",
-     startDate: "",
-     endDate: "",
-     flightDuration: "",
-     flightLength: "",
-     MinPrice: "",
-     MaxPrice: "",
-      check: 1,
-      flights: []
+
+    role: "",
+    startDestination: "",
+    endDestination: "",
+    startDate: "",
+    endDate: "",
+    flightDuration: "",
+    flightLength: "",
+    MinPrice: "",
+    MaxPrice: "",
+    check: 1,
+    flights: []
   }
 },
-mounted(){
-        var getJwtToken = function() {
-                return localStorage.getItem('jwtToken');
-            };
+created: function(){
+    var getJwtToken = function() {
+            return localStorage.getItem('jwtToken');
+        };
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getFlights")
+        axios.get("http://localhost:8080/api/getUserRole")
         .then(response => {
-            this.flights = response.data
-          });  
+            this.role = response.data
+            if (response.data == 'FLIGHT_ADMIN'){
+                    axios.get("http://localhost:8080/api/getFlights")
+                    .then(response2 => {
+                        this.flights = response2.data
+                    });  
+                }
+                else if (response.data == 'REGISTERED') {
+                    axios.get("http://localhost:8080/api/getFlightsCompany/" + this.idCompany)
+                    .then(response3 => {
+                        this.flights = response3.data
+                    }); 
+                }   
+        });
+},
+
+mounted(){
+         
+        
     },
     methods:{ 
         checkedClass: function(option){
@@ -145,19 +169,30 @@ mounted(){
             var flightForSearch = {startDestination: this.startDestination, endDestination: this.endDestination, startDate: this.startDate, endDate: this.endDate,
             minEconomic : MineconomicPrice, minBusiness: MinbuisinesssPrice, minFirstClass :MinfirstClassPrice,
             maxEconomic: MaxeconomicPrice, maxBusiness: MaxbuisinesssPrice, maxFirstClass:MaxfirstClassPrice,
-            flightDuration: this.flightDuration, flightLength:  this.flightLength }
+            flightDuration: this.flightDuration, flightLength:  this.flightLength, companyId: -1 }
             var getJwtToken = function() {
                 return localStorage.getItem('jwtToken');
             };
+            if (this.role == 'REGISTERED') {
+
+                flightForSearch.companyId = this.idCompany;
+            }
             axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
             axios.post("http://localhost:8080/api/flightsInCompany",flightForSearch)
             .then(response => {
                 this.flights = response.data
-            }); 
+            });
         },
+
+        
         goToDetails : function(flightID){
             localStorage.setItem("flightID",flightID)
             window.location = "/flightForAdmin"
+        },
+
+        goToDetailsForReservation: function(flightID){
+            localStorage.setItem("flightID",flightID)
+            window.location = "/flight"
         }       
     }
 }

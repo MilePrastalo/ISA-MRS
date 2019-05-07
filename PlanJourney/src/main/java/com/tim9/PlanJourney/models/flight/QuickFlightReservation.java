@@ -27,6 +27,9 @@ public class QuickFlightReservation {
 	@Column(name = "discount")
 	private int discount;
 	
+	@Column(name = "taken")
+	private boolean taken;
+	
 	public QuickFlightReservation() {
 		// TODO Auto-generated constructor stub
 	}
@@ -37,6 +40,7 @@ public class QuickFlightReservation {
 		this.flight = flight;
 		this.originPrice = originPrice;
 		this.discount = discount;
+		this.taken = false;
 	}
 
 	public Long getId() {
@@ -77,6 +81,14 @@ public class QuickFlightReservation {
 
 	public void setDiscount(int discount) {
 		this.discount = discount;
+	}
+
+	public boolean isTaken() {
+		return taken;
+	}
+
+	public void setTaken(boolean taken) {
+		this.taken = taken;
 	}
 	
 	

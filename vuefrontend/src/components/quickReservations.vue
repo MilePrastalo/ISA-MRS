@@ -3,12 +3,12 @@
 
         <br><br>
         <div class="row"> 
-            <h2> All Quick Tickets: </h2>
+            <h2>Quick Tickets: </h2>
         </div>
         <br>
 
         <div class = "row">
-            <table  class = "table">
+            <table border="1"  class = "table">
                 <thead class="thead-dark">
                     <tr>
                     <th scope="col">Start destination</th>
@@ -29,7 +29,9 @@
                     <td>({{res.seat.seatRow}},{{res.seat.seatColumn}})</td>
                     <td>{{res.originPrice}}</td>
                     <td>{{res.discount}}</td>
-                    <td> <Button>Delete</Button></td>
+                    <td v-if="role == 'FLIGHT_ADMIN' && res.taken == false"> <Button>Delete</Button></td>
+                    <td v-if="role == 'FLIGHT_ADMIN' && res.taken == true"> Reserved</td>
+                    <td v-if="role == 'REGISTERED' && res.taken == false" @click="bookQuickTicket(res)"> <Button>Book</Button></td>
                 </tr> 
                 </tbody>             
             </table>  
@@ -41,25 +43,56 @@
 export default {
   name: 'allFlights',
   components: {},
+  props: ["idCompany"],
   data: function () {
   return {
-    
+    role: "",
     quickReservations: []
   }
 },
+
 mounted(){
 
         var getJwtToken = function() {
-                return localStorage.getItem('jwtToken');
-            };
+            return localStorage.getItem('jwtToken');
+        };
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getQuickReservations")
+        axios.get("http://localhost:8080/api/getUserRole")
         .then(response => {
-            this.quickReservations = response.data
-        });  
+
+            this.role = response.data;
+            if (response.data == 'FLIGHT_ADMIN'){
+                axios.get("http://localhost:8080/api/getQuickReservations")
+                .then(response2 => {
+                    this.quickReservations = response2.data
+                });
+            }
+            else if (response.data == 'REGISTERED') {
+                axios.get("http://localhost:8080/api/getQuickReservationsCompany/" + this.idCompany)
+                .then(response3 => {
+                    this.quickReservations = response3.data
+                });
+            }  
+        });    
     },
     methods:{ 
         
+        bookQuickTicket: function(res){
+            if (res.taken == true){
+                alert("Sorry, it's already taken!");
+                return;
+            }
+             var obj = {id: res.id, flightId: res.flight.id, seatId: res.seat.id, originPrice: res.originPrice, discount: res.discount};
+             axios.post("http://localhost:8080/api/makeQuickReservation", obj)
+            .then(response => {
+                if (response.data == 'success'){
+                    alert("Reservation was successful! You will get e-mail about it.");
+                }
+                else{
+                    alert(response.data);
+                }
+            });
+        }
     }
 }
 

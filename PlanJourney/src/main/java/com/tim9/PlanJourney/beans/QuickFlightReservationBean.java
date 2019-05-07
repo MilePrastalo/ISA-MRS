@@ -2,7 +2,7 @@ package com.tim9.PlanJourney.beans;
 
 public class QuickFlightReservationBean {
 	
-	
+	private Long id;
 	private Long flightId;
 	private Long seatId;
 	private double originPrice;
@@ -12,8 +12,9 @@ public class QuickFlightReservationBean {
 		// TODO Auto-generated constructor stub
 	}
 
-	public QuickFlightReservationBean(Long flightId, Long seatId, double originPrice, int discount) {
+	public QuickFlightReservationBean(Long id, Long flightId, Long seatId, double originPrice, int discount) {
 		super();
+		this.id = id;
 		this.flightId = flightId;
 		this.seatId = seatId;
 		this.originPrice = originPrice;
@@ -50,6 +51,14 @@ public class QuickFlightReservationBean {
 
 	public void setDiscount(int discount) {
 		this.discount = discount;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 	
 	
