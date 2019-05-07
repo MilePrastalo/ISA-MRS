@@ -18,6 +18,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -57,6 +58,7 @@ public abstract class User implements UserDetails{
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
     private List<Authority> authorities;
+	
 
 	public User() {
 	}
@@ -132,6 +134,7 @@ public abstract class User implements UserDetails{
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.authorities;
     }
+    
 
 
 }
