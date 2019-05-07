@@ -57,12 +57,19 @@
                 </div>
                 <div id="HotelsReservations" class="centered col-lg-10" hidden="true"><table>
                         <tr>
-                            <th>Destination</th>
-                            <th>Date</th>
-                            <th>Price</th>
+                            <th>Hotel Name</th>
+                            <th>Room Number</th>
+                            <th>First Day</th>
+                            <th>Last Day</th>
                             <th>Details</th>
                             <th>Cancel</th>
-                        </tr>
+                        <tr v-for="r in hotelReservations" :key="r.id">  
+                        <td>{{r.hotelName}}</td>
+                        <td>{{r.roomNumber}}</td>
+                        <td>{{r.fDay + "-" + r.fMonth + "-" + r.fYear}}</td>
+                        <td>{{r.lDay + "-" + r.lMonth + "-" + r.lYear}}</td>
+                        <td><button @click="showDetails(r.hotelName,r.roomNumber)">Details</button></td>
+                    </tr>
                     </table>
                 </div>
                 <div id="CarsReservations" class="centered col-lg-10" hidden="true">
@@ -122,7 +129,11 @@ export default {
                 this.vehiclereservations.forEach(element => {
                     element.ratings = [element.id + "1",element.id + "2",element.id + "3",element.id + "4",element.id + "5"];
                 });
-            });
+            }); 
+        axios.get("http://localhost:8080/api/getUserHotelReservations")
+            .then(response => {
+                this.hotelReservations = response.data;
+            });  
 
         axios.get("http://localhost:8080/api/getMyFlightReservations")
             .then(response => {
@@ -190,6 +201,12 @@ export default {
             });
         reservation.rating = num;
         this.setStars(reservation,num);
+    },
+    showDetails: function(hotelName,chosenRoom) {
+        this.$router.push("/hotelRoom/"+ hotelName + "/" + chosenRoom);
+    },
+    showHotelSearch: function() {
+        this.$router.push("/searchHotels");
     },
     setStars:function(reservation,num){
         for(var i = 1;i<=5;i++){
@@ -290,5 +307,4 @@ button{
 .clicked{
     color: orange;
 }
-
 </style>

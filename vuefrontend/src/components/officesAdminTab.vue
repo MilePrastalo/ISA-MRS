@@ -16,7 +16,7 @@
                 <td>{{office.destination}}</td>
                 <td>{{office.address}}</td>
                 <td><Button @click="editOfficeMethod(office.id,office.name,office.destination,office.address)">Edit</Button></td>
-                <td><Button>Remove</Button></td>
+                <td><Button @click="removeOffice(office.id)">Remove</Button></td>
             </tr>
         </table>
     </div>
@@ -74,6 +74,17 @@ export default {
       backAdd:function(){
           console.log("Called");
           this.selected = 1;
+      },
+      removeOffice:function(id){
+          var getJwtToken = function() {
+            return localStorage.getItem('jwtToken');
+        };
+        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.delete("http://localhost:8080/api/removeOffice/"+id)
+            .then(response => {
+                alert("Success");
+                console.log(response);
+            }); 
       }
   }
 }

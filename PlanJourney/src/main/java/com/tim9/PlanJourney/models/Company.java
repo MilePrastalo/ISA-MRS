@@ -28,7 +28,7 @@ public abstract class Company {
 	private String description;
 	
 	
-	@Column(name="rating", unique=false, nullable=false)
+	@Column(name="rating", nullable = true)
 	private double rating;
 	
 	public Company() {

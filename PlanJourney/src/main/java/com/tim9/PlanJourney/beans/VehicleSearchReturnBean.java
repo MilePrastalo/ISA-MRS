@@ -9,15 +9,17 @@ public class VehicleSearchReturnBean {
 	private String type;
 	private int year;
 	private Double price;
-	public VehicleSearchReturnBean(String name, String maker, String type, int year, Double price) {
+	private double rating;
+	public VehicleSearchReturnBean(String name, String maker, String type, int year, Double price,double rating) {
 		super();
 		this.name = name;
 		this.maker = maker;
 		this.type = type;
 		this.year = year;
 		this.price = price;
+		this.rating = rating;
 	}
-	public VehicleSearchReturnBean(String id,String name, String maker, String type, int year, Double price) {
+	public VehicleSearchReturnBean(String id,String name, String maker, String type, int year, Double price,double rating) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -25,6 +27,7 @@ public class VehicleSearchReturnBean {
 		this.type = type;
 		this.year = year;
 		this.price = price;
+		this.rating = rating;
 	}
 	public VehicleSearchReturnBean() {
 		super();
@@ -64,6 +67,12 @@ public class VehicleSearchReturnBean {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public double getRating() {
+		return rating;
+	}
+	public void setRating(double rating) {
+		this.rating = rating;
 	}
 	
 	
