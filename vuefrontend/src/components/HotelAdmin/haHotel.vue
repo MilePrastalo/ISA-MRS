@@ -133,7 +133,7 @@ mounted(){
             this.ac.pricePerDay = "";
         },
         addRoom: function() {
-            this.hotel.rooms.push({roomNumber: this.room.roomNumber,numberOfBeds:this.room.numberOfBeds,pricePerDay:this.room.pricePerDay,additionalCharges:this.acList});
+            this.hotel.rooms.push({roomNumber: this.room.roomNumber,numberOfBeds:this.room.numberOfBeds,pricePerDay:this.room.pricePerDay,additionalCharges:this.acList,rating:0});
             this.room = [];
         },
         save: function() {

@@ -9,14 +9,24 @@ public class HotelRoomBean {
 	private int roomNumber;
 	private int numberOfBeds;
 	private float pricePerDay;
+	private double rating;
 	private Set<AdditionalCharges> additionalCharges = new HashSet<AdditionalCharges>();
 
-	public HotelRoomBean(int roomNumber, int numberOfBeds, float pricePerDay,
+	public HotelRoomBean(int roomNumber, int numberOfBeds, float pricePerDay, double rating,
 			Set<AdditionalCharges> additionalCharges) {
 		this.roomNumber = roomNumber;
 		this.numberOfBeds = numberOfBeds;
 		this.pricePerDay = pricePerDay;
+		this.rating = rating;
 		this.additionalCharges = additionalCharges;
+	}
+
+	public double getRating() {
+		return rating;
+	}
+
+	public void setRating(double rating) {
+		this.rating = rating;
 	}
 
 	public HotelRoomBean() {
