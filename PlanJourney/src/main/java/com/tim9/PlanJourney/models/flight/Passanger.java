@@ -25,6 +25,9 @@ public class Passanger {
 	@OneToOne
 	private Seat seat;
 
+	public Passanger() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public Passanger( String firstName, String lastName, String passport, Seat seat) {
 		super();

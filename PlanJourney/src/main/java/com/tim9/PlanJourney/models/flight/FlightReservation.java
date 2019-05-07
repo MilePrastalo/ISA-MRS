@@ -1,6 +1,7 @@
 package com.tim9.PlanJourney.models.flight;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -29,7 +30,7 @@ public class FlightReservation {
 	
 	//samo za neregistrovane putnike
 	@OneToMany
-	private Set<Passanger> passangers;
+	private Set<Passanger> passangers = new HashSet<Passanger>();
 	
 	@ManyToOne
 	private Flight flight;
