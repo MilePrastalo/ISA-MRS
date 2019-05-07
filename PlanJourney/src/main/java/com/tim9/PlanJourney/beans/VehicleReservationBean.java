@@ -10,6 +10,7 @@ public class VehicleReservationBean {
 	private String dateTo;
 	private double price;
 	private int status;
+	private int rating;
 	
 	public VehicleReservationBean() {
 		super();
@@ -68,6 +69,13 @@ public class VehicleReservationBean {
 	public void setStatus(int status) {
 		this.status = status;
 	}
+	public int getRating() {
+		return rating;
+	}
+	public void setRating(int rating) {
+		this.rating = rating;
+	}
+	
 	
 	
 	

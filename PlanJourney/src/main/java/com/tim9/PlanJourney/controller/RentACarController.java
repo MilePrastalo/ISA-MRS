@@ -33,6 +33,7 @@ import com.tim9.PlanJourney.beans.VehicleReservationSearchBean;
 import com.tim9.PlanJourney.beans.VehicleSearchBean;
 import com.tim9.PlanJourney.beans.VehicleSearchReturnBean;
 import com.tim9.PlanJourney.models.RegisteredUser;
+import com.tim9.PlanJourney.models.Review;
 import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.models.rentacar.BranchOffice;
 import com.tim9.PlanJourney.models.rentacar.RentACarAdmin;
@@ -342,6 +343,12 @@ public class RentACarController {
 			b.setVehicleName(rese.getVehicle().getName());
 			b.setLocationPick(rese.getOfficePick().getName());
 			b.setLocationReturn(rese.getOfficeReturn().getName());
+			Set<Review> reviews = rese.getReservationReviews();
+			for (Review r : reviews) {
+				if (r.getUser().getUsername().equals(user.getUsername())) {
+					b.setRating(r.getRating());
+				}
+			}
 			Date now = new Date();
 			long a = rese.getDateFrom().getTime() - now.getTime();
 			int status;
