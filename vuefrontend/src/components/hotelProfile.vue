@@ -58,7 +58,8 @@ export default {
 mounted(){
          axios.get("http://localhost:8080/api/getHotel/"+this.$route.params.hotelName)
         .then(response => {
-            this.hotel = response.data
+            this.hotel = response.data;
+           console.log(this.hotel);
           });   
     },
     methods:{  
