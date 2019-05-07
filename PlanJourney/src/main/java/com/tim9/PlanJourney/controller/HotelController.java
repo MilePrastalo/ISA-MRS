@@ -78,6 +78,7 @@ public class HotelController {
 		hb.setRooms(rb);
 
 		ArrayList<HotelReservationBean> reservationBeans = new ArrayList<HotelReservationBean>();
+		// Creates hotel reservation beans from hotel reservations.
 		for (HotelReservation hr : h.getReservations()) {
 			Calendar c = Calendar.getInstance();
 			c.setTime(hr.getFirstDay());
@@ -104,6 +105,39 @@ public class HotelController {
 		hb.setDestination(db);
 
 		return hb;
+	}
+
+	@RequestMapping(value = "/api/getUserHotelReservations", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('REGISTERED')")
+	public @ResponseBody ArrayList<HotelReservationBean> getHotelReservations() {
+		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+		String username = currentUser.getName();
+		RegisteredUser user = (RegisteredUser) userService.findByUsername(username);
+
+		ArrayList<HotelReservationBean> hotelReservationBeans = new ArrayList<HotelReservationBean>();
+
+		if (user != null) {
+			// Creates hotel reservation beans from hotel reservations.
+			for (HotelReservation hr : user.getHotelReservations()) {
+				HotelReservationBean reservationBean = new HotelReservationBean();
+				reservationBean.setRoomNumber(hr.getRoom().getRoomNumber());
+				reservationBean.setUsername(hr.getUser().getUsername());
+				reservationBean.setHotelName(hr.getHotel().getName());
+				Calendar c = Calendar.getInstance();
+				c.setTime(hr.getFirstDay());
+				reservationBean.setfYear(c.get(Calendar.YEAR));
+				reservationBean.setfMonth(c.get(Calendar.MONTH) + 1);
+				reservationBean.setfDay(c.get(Calendar.DAY_OF_MONTH));
+				c.setTime(hr.getLastDay());
+				reservationBean.setHotelName(hr.getHotel().getName());
+				reservationBean.setlYear(c.get(Calendar.YEAR));
+				reservationBean.setlMonth(c.get(Calendar.MONTH) + 1);
+				reservationBean.setlDay(c.get(Calendar.DAY_OF_MONTH));
+				hotelReservationBeans.add(reservationBean);
+			}
+		}
+		return hotelReservationBeans;
 	}
 
 	@RequestMapping(value = "/api/addHotel", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
