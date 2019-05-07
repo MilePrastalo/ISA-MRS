@@ -1,20 +1,76 @@
 package com.tim9.PlanJourney.beans;
 
-import java.util.Date;
 
 public class HotelReservationBean {
 	private String hotelName;
 	private String username;
 	private int roomNumber;
-	private Date firstDay;
-	private Date lastDay;
+	private int fYear;
+	private int fMonth;
+	private int fDay;
+	private int lYear;
+	private int lMonth;
+	private int lDay;
 
-	public HotelReservationBean(String hotelName, String username, int roomNumber, Date firstDay, Date lastDay) {
+	public HotelReservationBean(String hotelName, String username, int roomNumber, int fYear, int fMonth, int fDay,
+			int lYear, int lMonth, int lDay) {
 		this.hotelName = hotelName;
 		this.username = username;
 		this.roomNumber = roomNumber;
-		this.firstDay = firstDay;
-		this.lastDay = lastDay;
+		this.fYear = fYear;
+		this.fMonth = fMonth;
+		this.fDay = fDay;
+		this.lYear = lYear;
+		this.lMonth = lMonth;
+		this.lDay = lDay;
+	}
+
+	public int getfYear() {
+		return fYear;
+	}
+
+	public void setfYear(int fYear) {
+		this.fYear = fYear;
+	}
+
+	public int getfMonth() {
+		return fMonth;
+	}
+
+	public void setfMonth(int fMonth) {
+		this.fMonth = fMonth;
+	}
+
+	public int getfDay() {
+		return fDay;
+	}
+
+	public void setfDay(int fDay) {
+		this.fDay = fDay;
+	}
+
+	public int getlYear() {
+		return lYear;
+	}
+
+	public void setlYear(int lYear) {
+		this.lYear = lYear;
+	}
+
+	public int getlMonth() {
+		return lMonth;
+	}
+
+	public void setlMonth(int lMonth) {
+		this.lMonth = lMonth;
+	}
+
+	public int getlDay() {
+		return lDay;
+	}
+
+	public void setlDay(int lDay) {
+		this.lDay = lDay;
 	}
 
 	public HotelReservationBean() {
@@ -42,22 +98,6 @@ public class HotelReservationBean {
 
 	public void setRoomNumber(int roomNumber) {
 		this.roomNumber = roomNumber;
-	}
-
-	public Date getFirstDay() {
-		return firstDay;
-	}
-
-	public void setFirstDay(Date firstDay) {
-		this.firstDay = firstDay;
-	}
-
-	public Date getLastDay() {
-		return lastDay;
-	}
-
-	public void setLastDay(Date lastDay) {
-		this.lastDay = lastDay;
 	}
 
 }

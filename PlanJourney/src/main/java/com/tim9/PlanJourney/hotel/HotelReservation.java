@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tim9.PlanJourney.models.RegisteredUser;
 
 @Entity
@@ -25,17 +27,19 @@ public class HotelReservation {
 	private Long id;
 
 	@ManyToOne
+	@JsonIgnoreProperties({"admins","reservations","destinations"})
 	private Hotel hotel;
 
 	@OneToOne
 	private HotelRoom room;
-
+	
 	@Column(name = "firstDay", unique = false, nullable = false)
 	private Date firstDay;
 
 	@Column(name = "lastDay", unique = false, nullable = false)
 	private Date lastDay;
 	@ManyToOne
+	@JsonIgnore
 	private RegisteredUser user;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

@@ -1,6 +1,8 @@
 package com.tim9.PlanJourney.controller;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tim9.PlanJourney.beans.DestinationBean;
+import com.tim9.PlanJourney.beans.HotelBean;
 import com.tim9.PlanJourney.beans.HotelReservationBean;
+import com.tim9.PlanJourney.beans.HotelRoomBean;
 import com.tim9.PlanJourney.hotel.Hotel;
 import com.tim9.PlanJourney.hotel.HotelReservation;
 import com.tim9.PlanJourney.hotel.HotelRoom;
@@ -52,11 +57,53 @@ public class HotelController {
 
 	@RequestMapping(value = "/api/getHotel/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	public Hotel getHotel(@PathVariable("name") String name) {
+	public HotelBean getHotel(@PathVariable("name") String name) {
 
-		Hotel hotel = service.findByName(name);
+		Hotel h = service.findByName(name);
 
-		return hotel;
+		HotelBean hb = new HotelBean();
+		hb.setName(h.getName());
+		hb.setAddress(h.getAddress());
+		hb.setDescription(h.getDescription());
+		hb.setRating(h.getRating());
+		ArrayList<HotelRoomBean> rb = new ArrayList<HotelRoomBean>();
+		for (HotelRoom r : h.getRooms()) {
+			HotelRoomBean roomBean = new HotelRoomBean();
+			roomBean.setRoomNumber(r.getRoomNumber());
+			roomBean.setNumberOfBeds(r.getNumberOfBeds());
+			roomBean.setPricePerDay(r.getPricePerDay());
+			roomBean.setAdditionalCharges(r.getAdditionalCharges());
+			rb.add(roomBean);
+		}
+		hb.setRooms(rb);
+
+		ArrayList<HotelReservationBean> reservationBeans = new ArrayList<HotelReservationBean>();
+		for (HotelReservation hr : h.getReservations()) {
+			Calendar c = Calendar.getInstance();
+			c.setTime(hr.getFirstDay());
+			HotelReservationBean reservationBean = new HotelReservationBean();
+			reservationBean.setRoomNumber(hr.getRoom().getRoomNumber());
+			reservationBean.setUsername(hr.getUser().getUsername());
+			reservationBean.setHotelName(hr.getHotel().getName());
+			reservationBean.setfYear(c.get(Calendar.YEAR));
+			reservationBean.setfMonth(c.get(Calendar.MONTH) + 1);
+			reservationBean.setfDay(c.get(Calendar.DAY_OF_MONTH));
+			c.setTime(hr.getLastDay());
+			reservationBean.setHotelName(hr.getHotel().getName());
+			reservationBean.setlYear(c.get(Calendar.YEAR));
+			reservationBean.setlMonth(c.get(Calendar.MONTH) + 1);
+			reservationBean.setlDay(c.get(Calendar.DAY_OF_MONTH));
+			reservationBeans.add(reservationBean);
+		}
+		hb.setReservations(reservationBeans);
+
+		DestinationBean db = new DestinationBean();
+		db.setName(h.getDestination().getName());
+		db.setDescription(h.getDestination().getDescription());
+		db.setCoordinates(h.getDestination().getCoordinates());
+		hb.setDestination(db);
+
+		return hb;
 	}
 
 	@RequestMapping(value = "/api/addHotel", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -166,7 +213,13 @@ public class HotelController {
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
 			// checks if hotel already exists on given address and same destination.
 			Hotel hotel = service.findByName(reservationBean.getHotelName());
+			if (hotel == null) {
+				return false;
+			}
 			RegisteredUser user = userService.findByUsername(reservationBean.getUsername());
+			if (user == null) {
+				return false;
+			}
 			HotelRoom room = null;
 			for (HotelRoom r : hotel.getRooms()) {
 				if (r.getRoomNumber() == reservationBean.getRoomNumber()) {
@@ -174,15 +227,38 @@ public class HotelController {
 					break;
 				}
 			}
-			long time = reservationBean.getLastDay().getTime() - reservationBean.getFirstDay().getTime();
+			if (room == null) {
+				return false;
+			}
+
+			// Creating Date objects
+
+			Date firstDay = new Date();
+			Calendar c = Calendar.getInstance();
+			System.out.println("Dates: " + reservationBean.getfYear() + " m: " + reservationBean.getfMonth() + " d: "
+					+ reservationBean.getfDay());
+			c.set(reservationBean.getfYear(), reservationBean.getfMonth() - 1, reservationBean.getfDay(), 0, 0);
+			firstDay.setTime(c.getTimeInMillis());
+
+			Date lastDay = new Date();
+			c.set(reservationBean.getlYear(), reservationBean.getlMonth() - 1, reservationBean.getlDay(), 0, 0);
+			lastDay.setTime(c.getTimeInMillis());
+
+			if (!checkDate(firstDay, lastDay, hotel, reservationBean.getRoomNumber())) {
+				return false;
+			}
+
+			// Calculating number of days.
+			long time = lastDay.getTime() - firstDay.getTime();
 			long days = TimeUnit.MILLISECONDS.toDays(time);
 
 			HotelReservation reservation = new HotelReservation();
-			reservation.setFirstDay(reservationBean.getFirstDay());
-			reservation.setLastDay(reservationBean.getLastDay());
+			reservation.setFirstDay(firstDay);
+			reservation.setLastDay(lastDay);
 			reservation.setHotel(hotel);
 			reservation.setRoom(room);
 			reservation.setPaidPrice(days * room.getPricePerDay());
+			reservation.setUser(user);
 			hotel.getReservations().add(reservation);
 			user.getHotelReservations().add(reservation);
 
@@ -192,6 +268,29 @@ public class HotelController {
 			return true;
 		}
 		return false;
+	}
+
+	// Backend checks for adding new reservations.
+	private boolean checkDate(Date firstDay, Date lastDay, Hotel hotel, int roomNumber) {
+
+		if (firstDay.after(lastDay)) {
+			return false;
+		}
+
+		for (HotelReservation hr : hotel.getReservations()) {
+			if (roomNumber == hr.getRoom().getRoomNumber()) {
+				if (lastDay.after(hr.getFirstDay()) && lastDay.before(hr.getLastDay())) {
+					return false;
+				}
+				if (firstDay.after(hr.getFirstDay()) && firstDay.before(hr.getLastDay())) {
+					return false;
+				}
+				if (firstDay.equals(hr.getFirstDay()) || lastDay.equals(hr.getLastDay())) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 }
