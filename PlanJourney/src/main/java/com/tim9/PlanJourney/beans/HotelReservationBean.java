@@ -2,6 +2,7 @@ package com.tim9.PlanJourney.beans;
 
 
 public class HotelReservationBean {
+	private Long id;
 	private String hotelName;
 	private String username;
 	private int roomNumber;
@@ -99,5 +100,14 @@ public class HotelReservationBean {
 	public void setRoomNumber(int roomNumber) {
 		this.roomNumber = roomNumber;
 	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
 
 }

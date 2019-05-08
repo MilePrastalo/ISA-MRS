@@ -18,13 +18,12 @@ import javax.persistence.OneToOne;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tim9.PlanJourney.models.RegisteredUser;
+import com.tim9.PlanJourney.models.Reservation;
 
 @Entity
-public class HotelReservation {
+public class HotelReservation extends Reservation {
 
-	@Id
-	@GeneratedValue
-	private Long id;
+
 
 	@ManyToOne
 	@JsonIgnoreProperties({"admins","reservations","destinations"})
@@ -38,9 +37,7 @@ public class HotelReservation {
 
 	@Column(name = "lastDay", unique = false, nullable = false)
 	private Date lastDay;
-	@ManyToOne
-	@JsonIgnore
-	private RegisteredUser user;
+
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<AdditionalCharges> additionalCharges = new HashSet<AdditionalCharges>();
@@ -53,7 +50,7 @@ public class HotelReservation {
 
 	public HotelReservation(Long id, Hotel hotel, HotelRoom room, Date firstDay, Date lastDay,
 			Set<AdditionalCharges> additionalCharges, float paidPrice) {
-		this.id = id;
+		setId(id);
 		this.hotel = hotel;
 		this.room = room;
 		this.firstDay = firstDay;
@@ -62,13 +59,6 @@ public class HotelReservation {
 		this.paidPrice = paidPrice;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public Hotel getHotel() {
 		return hotel;
@@ -118,13 +108,6 @@ public class HotelReservation {
 		this.paidPrice = paidPrice;
 	}
 
-	public RegisteredUser getUser() {
-		return user;
-	}
-
-	public void setUser(RegisteredUser user) {
-		this.user = user;
-	}
 	
 
 }
