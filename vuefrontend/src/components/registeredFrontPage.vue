@@ -40,6 +40,8 @@
                             <th>Seat</th>
                             <th>Price</th>
                             <th>Passangers count</th>
+                            <th>Details</th>
+                            <th>Review</th>
                         </tr>
                         <tr v-for="flightReservation in flightReservations" :key="flightReservation.id">
                             <td>{{flightReservation.flight.startDestination.name}}</td>
@@ -51,7 +53,13 @@
                             <td v-if="flightReservation.passangers.length != 0">{{flightReservation.passangers.length}} + (1)</td>
                             <td v-else>1</td>
                              <td><button>Details</button></td>
-
+                             <td class="ratingtd">
+                                <span class="fa fa-star over" @click="review(flightReservation,5)" :id="flightReservation.ratings[4]"></span>
+                                <span class="fa fa-star over" @click="review(flightReservation,4)" :id="flightReservation.ratings[3]"></span>
+                                <span class="fa fa-star over" @click="review(flightReservation,3)" :id="flightReservation.ratings[2]"></span>
+                                <span class="fa fa-star over" @click="review(flightReservation,2)" :id="flightReservation.ratings[1]"></span>
+                                <span class="fa fa-star over" @click="review(flightReservation,1)" :id="flightReservation.ratings[0]"></span>
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -63,12 +71,21 @@
                             <th>Last Day</th>
                             <th>Details</th>
                             <th>Cancel</th>
+                            <th>review</th>
                         <tr v-for="r in hotelReservations" :key="r.id">  
                         <td>{{r.hotelName}}</td>
                         <td>{{r.roomNumber}}</td>
                         <td>{{r.fDay + "-" + r.fMonth + "-" + r.fYear}}</td>
                         <td>{{r.lDay + "-" + r.lMonth + "-" + r.lYear}}</td>
                         <td><button @click="showDetails(r.hotelName,r.roomNumber)">Details</button></td>
+                        <td></td>
+                        <td class="ratingtd">
+                                <span class="fa fa-star over" @click="reviewHotel(r,5)" :id="r.ratings[4]"></span>
+                                <span class="fa fa-star over" @click="reviewHotel(r,4)" :id="r.ratings[3]"></span>
+                                <span class="fa fa-star over" @click="reviewHotel(r,3)" :id="r.ratings[2]"></span>
+                                <span class="fa fa-star over" @click="reviewHotel(r,2)" :id="r.ratings[1]"></span>
+                                <span class="fa fa-star over" @click="reviewHotel(r,1)" :id="r.ratings[0]"></span>
+                            </td>
                     </tr>
                     </table>
                 </div>
@@ -115,7 +132,8 @@ export default {
   data: function(){
       return{
           flightReservations: [],
-          vehiclereservations:[]
+          vehiclereservations:[],
+          hotelReservations:[]
       }
   },
   mounted(){
@@ -133,11 +151,17 @@ export default {
         axios.get("http://localhost:8080/api/getUserHotelReservations")
             .then(response => {
                 this.hotelReservations = response.data;
+                this.hotelReservations.forEach(element => {
+                    element.ratings = [element.id + "1",element.id + "2",element.id + "3",element.id + "4",element.id + "5"];
+                });
             });  
 
         axios.get("http://localhost:8080/api/getMyFlightReservations")
             .then(response => {
                 this.flightReservations = response.data;
+                this.flightReservations.forEach(element => {
+                    element.ratings = [element.id + "1",element.id + "2",element.id + "3",element.id + "4",element.id + "5"];
+                    });
                 });
   },
   methods : {
@@ -195,7 +219,34 @@ export default {
                     return localStorage.getItem('jwtToken');
                 };
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        console.log(reservation);
         axios.post("http://localhost:8080/api/reviewVehicle",{reservationId:reservation.id,rating:num})
+            .then(response => {
+                alert("success");
+            });
+        reservation.rating = num;
+        this.setStars(reservation,num);
+    },
+    reviewHotel:function(reservation,num){
+        var getJwtToken = function() {
+                    return localStorage.getItem('jwtToken');
+                };
+        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        console.log(reservation);
+        axios.post("http://localhost:8080/api/reviewHotel",{reservationId:reservation.id,rating:num})
+            .then(response => {
+                alert("success");
+            });
+        reservation.rating = num;
+        this.setStars(reservation,num);
+    },
+    reviewFlight:function(reservation,num){
+        var getJwtToken = function() {
+                    return localStorage.getItem('jwtToken');
+                };
+        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        console.log(reservation);
+        axios.post("http://localhost:8080/api/reviewFlight",{reservationId:reservation.id,rating:num})
             .then(response => {
                 alert("success");
             });

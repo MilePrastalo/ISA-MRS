@@ -13,17 +13,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.tim9.PlanJourney.models.RegisteredUser;
+import com.tim9.PlanJourney.models.Reservation;
 
 @Entity
-public class FlightReservation {
+public class FlightReservation extends Reservation {
 	
-	
-	@Id
-	@GeneratedValue
-	private Long id;
-	
-	@ManyToOne
-	private RegisteredUser user;
 	
 	@OneToOne
 	private Seat seat;
@@ -54,7 +48,7 @@ public class FlightReservation {
 	public FlightReservation(RegisteredUser user, Seat seat, Set<Passanger> passangers, Flight flight,
 			double price, Date date, boolean confirmed, String callerInfo) {
 		super();
-		this.user = user;
+		setUser(user);
 		this.seat = seat;
 		this.passangers = passangers;
 		this.flight = flight;
@@ -62,22 +56,6 @@ public class FlightReservation {
 		this.date = date;
 		this.confirmed = confirmed;
 		this.callerInfo = callerInfo;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public RegisteredUser getUser() {
-		return user;
-	}
-
-	public void setUser(RegisteredUser user) {
-		this.user = user;
 	}
 
 	public Seat getSeat() {

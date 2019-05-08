@@ -134,6 +134,7 @@ public class HotelController {
 				reservationBean.setlYear(c.get(Calendar.YEAR));
 				reservationBean.setlMonth(c.get(Calendar.MONTH) + 1);
 				reservationBean.setlDay(c.get(Calendar.DAY_OF_MONTH));
+				reservationBean.setId(hr.getId());
 				hotelReservationBeans.add(reservationBean);
 			}
 		}
