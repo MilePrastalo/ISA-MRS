@@ -3,6 +3,7 @@ package com.tim9.PlanJourney.controller;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +26,16 @@ import com.tim9.PlanJourney.beans.DestinationBean;
 import com.tim9.PlanJourney.beans.HotelBean;
 import com.tim9.PlanJourney.beans.HotelReservationBean;
 import com.tim9.PlanJourney.beans.HotelRoomBean;
+import com.tim9.PlanJourney.beans.QuickHotelReservationBean;
 import com.tim9.PlanJourney.hotel.Hotel;
 import com.tim9.PlanJourney.hotel.HotelReservation;
 import com.tim9.PlanJourney.hotel.HotelRoom;
+import com.tim9.PlanJourney.hotel.QuickReservationPriceReduction;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.service.DestinationService;
 import com.tim9.PlanJourney.service.HotelService;
+import com.tim9.PlanJourney.service.QuickReservationPriceReductionService;
 import com.tim9.PlanJourney.service.RegisteredUserService;
 
 @RestController
@@ -107,7 +111,7 @@ public class HotelController {
 		return hb;
 	}
 
-	@RequestMapping(value = "/api/getUserHotelReservations", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/api/getUserHotelReservations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('REGISTERED')")
 	public @ResponseBody ArrayList<HotelReservationBean> getHotelReservations() {
@@ -325,6 +329,54 @@ public class HotelController {
 			}
 		}
 		return true;
+	}
+
+	// Price Reduction should be added to reservations!
+	@RequestMapping(value = "/api/buyQuickHotelReservation", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('REGISTERED')")
+	public @ResponseBody boolean buyQuickHotelReservation(@RequestBody HotelReservationBean reservationBean) {
+		// checks logged user.
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			// checks if hotel already exists on given address and same destination.
+			Hotel hotel = service.findByName(reservationBean.getHotelName());
+			if (hotel == null) {
+				return false;
+			}
+
+			// checks registered user
+			RegisteredUser user = userService.findByUsername(reservationBean.getUsername());
+			if (user == null) {
+				return false;
+			}
+
+			// Splits date and checks if reservation date is valid.
+			Date firstDay = new Date();
+			Calendar c = Calendar.getInstance();
+			System.out.println("Dates: " + reservationBean.getfYear() + " m: " + reservationBean.getfMonth() + " d: "
+					+ reservationBean.getfDay());
+			c.set(reservationBean.getfYear(), reservationBean.getfMonth() - 1, reservationBean.getfDay(), 0, 0);
+			firstDay.setTime(c.getTimeInMillis());
+
+			Date lastDay = new Date();
+			c.set(reservationBean.getlYear(), reservationBean.getlMonth() - 1, reservationBean.getlDay(), 0, 0);
+			lastDay.setTime(c.getTimeInMillis());
+
+			for (HotelReservation hr : hotel.getReservations()) {
+				if (hr.getRoom().getRoomNumber() == reservationBean.getRoomNumber() && hr.getFirstDay().equals(firstDay)
+						&& hr.getLastDay().equals(lastDay)) {
+					hr.setUser(user);
+					break;
+				}
+			}
+			
+			service.save(hotel);
+			userService.save(user);
+
+			return true;
+		}
+		return false;
 	}
 
 }

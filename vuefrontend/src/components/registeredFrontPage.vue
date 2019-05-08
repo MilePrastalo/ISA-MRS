@@ -115,7 +115,8 @@ export default {
   data: function(){
       return{
           flightReservations: [],
-          vehiclereservations:[]
+          vehiclereservations:[],
+          hotelReservations: []
       }
   },
   mounted(){
