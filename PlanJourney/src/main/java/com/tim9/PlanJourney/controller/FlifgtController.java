@@ -65,15 +65,7 @@ public class FlifgtController {
 	public @ResponseBody FlightBean getFlight(@PathVariable("id") Long id) throws Exception {
 
 		Flight flight = flightService.findOne(id);
-		String companyName = "";
-		for (FlightCompany fc : flightCompanyService.findAll()) {
-			if (fc.getFlights().contains(flight)) {
-				companyName = fc.getName();
-				break;
-			}
-		}
-
-		return new FlightBean(flight, companyName, sdf2.format(flight.getStartDate()), sdf2.format(flight.getEndDate()));
+		return new FlightBean(flight, flight.getFlightCompany().getName(), sdf2.format(flight.getStartDate()), sdf2.format(flight.getEndDate()));
 	}
 
 	@RequestMapping(value = "/api/getSeatsOnFlight/{id}/{travelClass}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -159,7 +151,7 @@ public class FlifgtController {
 		makeSeats(seats, newFlightInfo.getBuisinesssCapacity(), "business");
 		makeSeats(seats, newFlightInfo.getFirstClassCapacity(), "first class");
 
-		Flight newFlight = new Flight(startDate, endDate, newFlightInfo.getFlightDuration(),
+		Flight newFlight = new Flight(flightCompany, startDate, endDate, newFlightInfo.getFlightDuration(),
 				newFlightInfo.getFlightLength(), startDestination, endDestination, new HashSet<FlightReservation>(), seats,
 				newFlightInfo.getBusinessPrice(), newFlightInfo.getEconomicPrice(), newFlightInfo.getFirstClassPrice());
 
@@ -179,15 +171,12 @@ public class FlifgtController {
 		flights = (ArrayList<Flight>) flightService.findAll();
 		ArrayList<FlightBean> foundFlights = new ArrayList<>();
 		DateTimeComparator dateTimeComparator = DateTimeComparator.getDateOnlyInstance();
-		String companyName = "";
 		for (Flight f : flights) {
-			companyName = getCompanyNameForFlight(f);
-			System.out.println("\t>>>" + f.getEndDestination().getName());
 			if ((f.getStartDestination().getName().equals(search.getStartDestination())
 					|| search.getStartDestination().equals(""))
 					&& (f.getEndDestination().getName().equals(search.getEndDestination())
 							|| search.getEndDestination().equals(""))
-					&& (companyName.equals(search.getFlightCompany()) || search.getFlightCompany().equals(""))
+					&& (f.getFlightCompany().getName().equals(search.getFlightCompany()) || search.getFlightCompany().equals(""))
 					&& (f.getEconomicPrice() >= search.getMinEconomic() || (search.getMinEconomic() == 0))
 					&& (f.getBusinessPrice() >= search.getMinBusiness() || (search.getMinBusiness() == 0))
 					&& (f.getFirstClassPrice() >= search.getMinFirstClass() || (search.getMinFirstClass() == 0))
@@ -202,7 +191,7 @@ public class FlifgtController {
 							|| dateTimeComparator.compare(f.getEndDate(), search.getEndDate()) == 0)) {
 
 				foundFlights
-						.add(new FlightBean(f, companyName, sdf2.format(f.getStartDate()), sdf2.format(f.getEndDate())));
+						.add(new FlightBean(f, f.getFlightCompany().getName(), sdf2.format(f.getStartDate()), sdf2.format(f.getEndDate())));
 			}
 		}
 		System.out.println("\tREZ = " + foundFlights.size());
@@ -222,16 +211,6 @@ public class FlifgtController {
 		return null;
 	}
 
-	private String getCompanyNameForFlight(Flight flight) {
-		String companyName = "";
-		for (FlightCompany fc : flightCompanyService.findAll()) {
-			if (fc.getFlights().contains(flight)) {
-				companyName = fc.getName();
-				break;
-			}
-		}
-		return companyName;
-	}
 
 	private Set<Seat> makeSeats(Set<Seat> seats, String capacity, String flightClass) {
 		int rows = Integer.parseInt(capacity.split("|")[0]);
