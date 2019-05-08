@@ -246,7 +246,7 @@ export default {
                 };
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
         console.log(reservation);
-        axios.post("http://localhost:8080/api/reviewVehicle",{reservationId:reservation.id,rating:num})
+        axios.post("http://localhost:8080/api/reviewFlight",{reservationId:reservation.id,rating:num})
             .then(response => {
                 alert("success");
             });
