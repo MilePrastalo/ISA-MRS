@@ -22,17 +22,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tim9.PlanJourney.beans.QuickHotelReservationBean;
+import com.tim9.PlanJourney.beans.HotelReservationBean;
 import com.tim9.PlanJourney.hotel.Hotel;
 import com.tim9.PlanJourney.hotel.HotelAdmin;
 import com.tim9.PlanJourney.hotel.HotelReservation;
 import com.tim9.PlanJourney.hotel.HotelRoom;
-import com.tim9.PlanJourney.hotel.QuickReservationPriceReduction;
 import com.tim9.PlanJourney.models.Authority;
 import com.tim9.PlanJourney.service.AuthorityService;
 import com.tim9.PlanJourney.service.HotelAdminService;
 import com.tim9.PlanJourney.service.HotelService;
-import com.tim9.PlanJourney.service.QuickReservationPriceReductionService;
 import com.tim9.PlanJourney.service.UserService;
 
 @RestController
@@ -49,9 +47,6 @@ public class HotelAdminController {
 
 	@Autowired
 	private UserService userService;
-
-	@Autowired
-	private QuickReservationPriceReductionService quickPriceService;
 
 	@RequestMapping(value = "/api/getHotelAdmin/{username}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -152,7 +147,7 @@ public class HotelAdminController {
 	@RequestMapping(value = "/api/addQuickHotelReservation", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('HOTEL_ADMIN')")
-	public @ResponseBody boolean addQuickHotelReservations(@RequestBody QuickHotelReservationBean reservationBean) {
+	public @ResponseBody boolean addQuickHotelReservation(@RequestBody HotelReservationBean reservationBean) {
 
 		// Checks if hotel exists.
 		Hotel hotel = hotelService.findByName(reservationBean.getHotelName());
@@ -189,22 +184,17 @@ public class HotelAdminController {
 		// Calculating number of days.
 		long time = lastDay.getTime() - firstDay.getTime();
 		long days = TimeUnit.MILLISECONDS.toDays(time);
-		
+
 		// Adds new reservation
 		HotelReservation reservation = new HotelReservation();
 		reservation.setFirstDay(firstDay);
 		reservation.setLastDay(lastDay);
 		reservation.setHotel(hotel);
 		reservation.setRoom(room);
-		reservation.setPaidPrice(days * room.getPricePerDay() * (reservationBean.getPriceReduction() / 100));
+		reservation.setPaidPrice(days * room.getPricePerDay());
+		reservation.setDiscount(reservationBean.getDiscount());
 		hotel.getReservations().add(reservation);
 		hotelService.save(hotel);
-		
-		// Adds price reduction for new reservation
-		QuickReservationPriceReduction qrpr = new QuickReservationPriceReduction();
-		qrpr.setReservation(reservation);
-		qrpr.setPriceReduction(reservationBean.getPriceReduction());
-		quickPriceService.save(qrpr);
 
 		return true;
 	}

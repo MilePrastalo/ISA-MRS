@@ -1,6 +1,5 @@
 package com.tim9.PlanJourney.beans;
 
-
 public class HotelReservationBean {
 	private String hotelName;
 	private String username;
@@ -11,9 +10,12 @@ public class HotelReservationBean {
 	private int lYear;
 	private int lMonth;
 	private int lDay;
+	private int discount;
+	private float paidPrice;
+	private int numberOfBeds;
 
 	public HotelReservationBean(String hotelName, String username, int roomNumber, int fYear, int fMonth, int fDay,
-			int lYear, int lMonth, int lDay) {
+			int lYear, int lMonth, int lDay, int discount, float paidPrice, int numberOfBeds) {
 		this.hotelName = hotelName;
 		this.username = username;
 		this.roomNumber = roomNumber;
@@ -23,6 +25,33 @@ public class HotelReservationBean {
 		this.lYear = lYear;
 		this.lMonth = lMonth;
 		this.lDay = lDay;
+		this.discount = discount;
+		this.paidPrice = paidPrice;
+		this.numberOfBeds = numberOfBeds;
+	}
+
+	public float getPaidPrice() {
+		return paidPrice;
+	}
+
+	public void setPaidPrice(float paidPrice) {
+		this.paidPrice = paidPrice;
+	}
+
+	public int getNumberOfBeds() {
+		return numberOfBeds;
+	}
+
+	public void setNumberOfBeds(int numberOfBeds) {
+		this.numberOfBeds = numberOfBeds;
+	}
+
+	public int getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(int discount) {
+		this.discount = discount;
 	}
 
 	public int getfYear() {

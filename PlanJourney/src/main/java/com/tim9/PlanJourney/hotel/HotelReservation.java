@@ -1,6 +1,5 @@
 package com.tim9.PlanJourney.hotel;
 
-
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,12 +26,12 @@ public class HotelReservation {
 	private Long id;
 
 	@ManyToOne
-	@JsonIgnoreProperties({"admins","reservations","destinations"})
+	@JsonIgnoreProperties({ "admins", "reservations", "destinations" })
 	private Hotel hotel;
 
 	@OneToOne
 	private HotelRoom room;
-	
+
 	@Column(name = "firstDay", unique = false, nullable = false)
 	private Date firstDay;
 
@@ -48,18 +47,31 @@ public class HotelReservation {
 	@Column(name = "paidPrice", unique = false, nullable = false)
 	private float paidPrice;
 
+	@Column(name = "discount", unique = false, nullable = false)
+	private int discount;
+
 	public HotelReservation() {
 	}
 
-	public HotelReservation(Long id, Hotel hotel, HotelRoom room, Date firstDay, Date lastDay,
-			Set<AdditionalCharges> additionalCharges, float paidPrice) {
+	public HotelReservation(Long id, Hotel hotel, HotelRoom room, Date firstDay, Date lastDay, RegisteredUser user,
+			Set<AdditionalCharges> additionalCharges, float paidPrice, int discount) {
 		this.id = id;
 		this.hotel = hotel;
 		this.room = room;
 		this.firstDay = firstDay;
 		this.lastDay = lastDay;
+		this.user = user;
 		this.additionalCharges = additionalCharges;
 		this.paidPrice = paidPrice;
+		this.discount = discount;
+	}
+
+	public int getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(int discount) {
+		this.discount = discount;
 	}
 
 	public Long getId() {
@@ -125,6 +137,5 @@ public class HotelReservation {
 	public void setUser(RegisteredUser user) {
 		this.user = user;
 	}
-	
 
 }

@@ -21,22 +21,59 @@
     </table>
     <br>
     <br>
-    <table border="1">
+    <table>
+      <tr>
+        <td>
+          <h3>Rooms</h3>
+          <table border="1">
       <tr>
         <td>Room Number</td>
         <td>Number Of Beds</td>
         <td>Price Per Day</td>
+        <td>Rating</td>
         <td>Options</td>
       </tr>
       <tr v-for="r in hotel.rooms" :key="r.id">
         <td>{{r.roomNumber}}</td>
         <td>{{r.numberOfBeds}}</td>
         <td>{{r.pricePerDay}}</td>
+        <td>{{r.rating}}</td>
         <td>
           <button @click="showDetails(r.roomNumber)">Details</button>
         </td>
       </tr>
     </table>
+        </td>
+        <td>
+          <h3>Quick Reservations</h3>
+          <table border="1">
+      <tr>
+        <td>Room Number</td>
+        <td>Number Of Beds</td>
+        <td>First Day</td>
+        <td>Last Day</td>
+        <td>Original Price</td>
+        <td>Discount</td>
+        <td>Discounted Price</td>
+        <td>Options</td>
+      </tr>
+      <tr v-for="r in quickReservations" :key="r.id">
+        <td>{{r.roomNumber}}</td>
+        <td>{{r.numberOfBeds}}</td>
+        <td>{{r.fDay +"."+r.fMonth +"."+r.fYear+"."}}</td>
+        <td>{{r.lDay +"."+r.lMonth +"."+r.lYear+"."}}</td>
+        <td>{{r.paidPrice}}</td>
+        <td>{{r.discount}}</td>
+        <td>{{parseFloat(r.paidPrice) - parseFloat(r.paidPrice) * (parseFloat(r.discount) / 100)}}</td>
+        <td>
+          <button @click="reserve(r)">Details</button>
+        </td>
+      </tr>
+    </table>
+        </td>
+      </tr>
+    </table>
+    
 
     <h2>My Map</h2>
     <vl-map v-if="loaded = 1" style="height: 400px">
@@ -59,6 +96,7 @@ export default {
   data: function () {
   return {
     hotel : [],
+    quickReservations: [],
     destinationName: "",
     destintionDesc: "",
     zoom: 15,
@@ -68,6 +106,11 @@ export default {
   }
 },
 mounted(){
+         var getJwtToken = function() {
+            return localStorage.getItem('jwtToken');
+        };
+        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+
          axios.get("http://localhost:8080/api/getHotel/"+this.$route.params.hotelName)
         .then(response => {
             this.hotel = response.data;
@@ -80,7 +123,17 @@ mounted(){
             falseCenter[1] = parseFloat(destCoordSplit[0]);
             this.center = falseCenter;
             this.loaded = 1;
+          // Checks for quick reservations.
+          var index = 0;
+          for(let r in response.data.reservations) {
+            if(response.data.reservations[r].username === null) {
+              response.data.reservations[r].index = index;
+              this.quickReservations.push(response.data.reservations[r]);
+              index += 1;
+            }
+          }
           });
+          
        
     },
     methods:{  
@@ -89,6 +142,18 @@ mounted(){
         },
         back: function() {
         this.$router.push('/');
+        },
+        reserve: function(room) {
+          axios.post("http://localhost:8080/api/buyQuickHotelReservation",{hotelName: room.hotelName,fYear:room.fYear,fMonth: room.fMonth,fDay: room.fDay,lYear: room.lYear,lMonth: room.lMonth,lDay: room.lDay, roomNumber: room.roomNumber})
+        .then(response => {
+            if(response.data === true) {
+              alert("Your reservation is successful.");
+              this.quickReservations.splice(room.index);
+            
+            } else {
+              alert("Your reservation failed.");
+            }
+          });
         }      
     }
 }

@@ -3,7 +3,6 @@ package com.tim9.PlanJourney.controller;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,16 +25,13 @@ import com.tim9.PlanJourney.beans.DestinationBean;
 import com.tim9.PlanJourney.beans.HotelBean;
 import com.tim9.PlanJourney.beans.HotelReservationBean;
 import com.tim9.PlanJourney.beans.HotelRoomBean;
-import com.tim9.PlanJourney.beans.QuickHotelReservationBean;
 import com.tim9.PlanJourney.hotel.Hotel;
 import com.tim9.PlanJourney.hotel.HotelReservation;
 import com.tim9.PlanJourney.hotel.HotelRoom;
-import com.tim9.PlanJourney.hotel.QuickReservationPriceReduction;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.service.DestinationService;
 import com.tim9.PlanJourney.service.HotelService;
-import com.tim9.PlanJourney.service.QuickReservationPriceReductionService;
 import com.tim9.PlanJourney.service.RegisteredUserService;
 
 @RestController
@@ -88,7 +84,9 @@ public class HotelController {
 			c.setTime(hr.getFirstDay());
 			HotelReservationBean reservationBean = new HotelReservationBean();
 			reservationBean.setRoomNumber(hr.getRoom().getRoomNumber());
-			reservationBean.setUsername(hr.getUser().getUsername());
+			if (hr.getUser() != null) {
+				reservationBean.setUsername(hr.getUser().getUsername());
+			}
 			reservationBean.setHotelName(hr.getHotel().getName());
 			reservationBean.setfYear(c.get(Calendar.YEAR));
 			reservationBean.setfMonth(c.get(Calendar.MONTH) + 1);
@@ -98,6 +96,9 @@ public class HotelController {
 			reservationBean.setlYear(c.get(Calendar.YEAR));
 			reservationBean.setlMonth(c.get(Calendar.MONTH) + 1);
 			reservationBean.setlDay(c.get(Calendar.DAY_OF_MONTH));
+			reservationBean.setDiscount(hr.getDiscount());
+			reservationBean.setNumberOfBeds(hr.getRoom().getNumberOfBeds());
+			reservationBean.setPaidPrice(hr.getPaidPrice());
 			reservationBeans.add(reservationBean);
 		}
 		hb.setReservations(reservationBeans);
@@ -295,6 +296,7 @@ public class HotelController {
 			reservation.setLastDay(lastDay);
 			reservation.setHotel(hotel);
 			reservation.setRoom(room);
+			reservation.setDiscount(0);
 			reservation.setPaidPrice(days * room.getPricePerDay());
 			reservation.setUser(user);
 			hotel.getReservations().add(reservation);
@@ -346,31 +348,34 @@ public class HotelController {
 			}
 
 			// checks registered user
-			RegisteredUser user = userService.findByUsername(reservationBean.getUsername());
+			String username = authentication.getName();
+			RegisteredUser user = userService.findByUsername(username);
 			if (user == null) {
 				return false;
 			}
 
 			// Splits date and checks if reservation date is valid.
-			Date firstDay = new Date();
 			Calendar c = Calendar.getInstance();
-			System.out.println("Dates: " + reservationBean.getfYear() + " m: " + reservationBean.getfMonth() + " d: "
-					+ reservationBean.getfDay());
-			c.set(reservationBean.getfYear(), reservationBean.getfMonth() - 1, reservationBean.getfDay(), 0, 0);
-			firstDay.setTime(c.getTimeInMillis());
-
-			Date lastDay = new Date();
-			c.set(reservationBean.getlYear(), reservationBean.getlMonth() - 1, reservationBean.getlDay(), 0, 0);
-			lastDay.setTime(c.getTimeInMillis());
 
 			for (HotelReservation hr : hotel.getReservations()) {
-				if (hr.getRoom().getRoomNumber() == reservationBean.getRoomNumber() && hr.getFirstDay().equals(firstDay)
-						&& hr.getLastDay().equals(lastDay)) {
-					hr.setUser(user);
-					break;
+				if (hr.getRoom().getRoomNumber() == reservationBean.getRoomNumber()) {
+					c.setTime(hr.getFirstDay());
+					int fYear = c.get(Calendar.YEAR);
+					int fMonth = c.get(Calendar.MONTH) + 1;
+					int fDay = c.get(Calendar.DAY_OF_MONTH);
+					c.setTime(hr.getLastDay());
+					int lYear = c.get(Calendar.YEAR);
+					int lMonth = c.get(Calendar.MONTH) + 1;
+					int lDay = c.get(Calendar.DAY_OF_MONTH);
+					if (fYear == reservationBean.getfYear() && fMonth == reservationBean.getfMonth()
+							&& fDay == reservationBean.getfDay() && lYear == reservationBean.getlYear()
+							&& lMonth == reservationBean.getlMonth() && lDay == reservationBean.getlDay()) {
+						hr.setUser(user);
+						break;
+					}
 				}
 			}
-			
+
 			service.save(hotel);
 			userService.save(user);
 
