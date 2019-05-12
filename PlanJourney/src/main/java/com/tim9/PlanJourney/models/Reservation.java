@@ -10,6 +10,8 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 public abstract class Reservation {
@@ -18,6 +20,8 @@ public abstract class Reservation {
 	private Long id;
 	
 	@ManyToOne
+	@JsonIgnore
+
 	private RegisteredUser user;
 	
 	@ManyToOne

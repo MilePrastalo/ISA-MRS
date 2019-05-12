@@ -30,6 +30,9 @@ public class HotelRoom {
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<AdditionalCharges> additionalCharges = new HashSet<AdditionalCharges>();
 
+	@Column(name="rating", nullable = true)
+	private double rating;
+	
 	public HotelRoom() {
 	}
 
@@ -81,5 +84,14 @@ public class HotelRoom {
 	public void setAdditionalCharges(Set<AdditionalCharges> additionalCharges) {
 		this.additionalCharges = additionalCharges;
 	}
+
+	public double getRating() {
+		return rating;
+	}
+
+	public void setRating(double rating) {
+		this.rating = rating;
+	}
+	
 
 }

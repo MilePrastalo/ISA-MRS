@@ -8,22 +8,16 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tim9.PlanJourney.models.RegisteredUser;
+import com.tim9.PlanJourney.models.Reservation;
 
 @Entity
-public class HotelReservation {
-
-	@Id
-	@GeneratedValue
-	private Long id;
+public class HotelReservation extends Reservation {
 
 	@ManyToOne
 	@JsonIgnoreProperties({ "admins", "reservations", "destinations" })
@@ -37,9 +31,6 @@ public class HotelReservation {
 
 	@Column(name = "lastDay", unique = false, nullable = false)
 	private Date lastDay;
-	@ManyToOne
-	@JsonIgnore
-	private RegisteredUser user;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<AdditionalCharges> additionalCharges = new HashSet<AdditionalCharges>();
@@ -55,12 +46,16 @@ public class HotelReservation {
 
 	public HotelReservation(Long id, Hotel hotel, HotelRoom room, Date firstDay, Date lastDay, RegisteredUser user,
 			Set<AdditionalCharges> additionalCharges, float paidPrice, int discount) {
-		this.id = id;
+
+	}
+
+	public HotelReservation(Long id, Hotel hotel, HotelRoom room, Date firstDay, Date lastDay,
+			Set<AdditionalCharges> additionalCharges, float paidPrice, int discount) {
+		setId(id);
 		this.hotel = hotel;
 		this.room = room;
 		this.firstDay = firstDay;
 		this.lastDay = lastDay;
-		this.user = user;
 		this.additionalCharges = additionalCharges;
 		this.paidPrice = paidPrice;
 		this.discount = discount;
@@ -72,14 +67,6 @@ public class HotelReservation {
 
 	public void setDiscount(int discount) {
 		this.discount = discount;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public Hotel getHotel() {
@@ -128,14 +115,6 @@ public class HotelReservation {
 
 	public void setPaidPrice(float paidPrice) {
 		this.paidPrice = paidPrice;
-	}
-
-	public RegisteredUser getUser() {
-		return user;
-	}
-
-	public void setUser(RegisteredUser user) {
-		this.user = user;
 	}
 
 }
