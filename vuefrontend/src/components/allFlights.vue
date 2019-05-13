@@ -74,7 +74,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                <tr v-for="flight in flights" :key="flight.id">  
+                <tr v-for="(flight,index) in flights" :key="index">  
                     <td>{{flight.startDestination}}</td>
                     <td>{{flight.endDestination}}</td>
                     <td>{{flight.startDate_str}}</td>
@@ -86,7 +86,7 @@
                     <td>{{flight.firstClassPrice}}</td>
                     <td v-if="role == 'FLIGHT_ADMIN'"> <Button @click="goToDetails(flight.id)" >Details</Button></td>
                     <td  v-if="role == 'FLIGHT_ADMIN'"><button>Edit</button></td>
-                    <td  v-if="role == 'FLIGHT_ADMIN'"><button>Delete</button></td>
+                    <td  v-if="role == 'FLIGHT_ADMIN'"><button @click="removeFlight(flight, index)">Delete</button></td>
                     <td  v-if="role == 'REGISTERED'"><button @click="goToDetailsForReservation(flight.id)">Details</button></td>
                 </tr>
                 </tbody>              
@@ -193,7 +193,27 @@ mounted(){
         goToDetailsForReservation: function(flightID){
             localStorage.setItem("flightID",flightID)
             window.location = "/flight"
-        }       
+        },
+        
+        removeFlight: function(flight, index){
+            var getJwtToken = function() {
+                return localStorage.getItem('jwtToken');
+            };
+            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.get("http://localhost:8080/api/removeFlight/" + flight.id)
+            
+            .then(response => {
+                if (response.data == "success"){
+                    
+                    this.flights.splice( index,1);
+                    alert("Flight is removed.");
+
+                }
+                else{
+                    alert(response.data);
+                }
+            });
+        }
     }
 }
 

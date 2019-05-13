@@ -4,25 +4,25 @@
         <div class="row">
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a  class="nav-link active" href="#" @click="selectTab(1)">Profile</a>
+                    <a  class="nav-link active" id = "profile" href="#" @click="selectTab(1)">Profile</a>
                 </li>
                 <li class="nav-item">
-                    <a  class="nav-link" href="#" @click="selectTab(2)">Flight Company profile</a>     
+                    <a  class="nav-link" id = "companyProfile" href="#" @click="selectTab(2)">Flight Company profile</a>     
                  </li>
                 <li class="nav-item">
-                    <a  class="nav-link" href="#" @click="selectTab(3)">Flights</a>
+                    <a  class="nav-link" id = "flights" href="#" @click="selectTab(3)">Flights</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" @click="selectTab(4)">New Flight</a>
+                    <a class="nav-link" id = "newFlight" href="#" @click="selectTab(4)">New Flight</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" @click="selectTab(5)">Destinations</a>
+                    <a class="nav-link" id = "destinations" href="#" @click="selectTab(5)">Destinations</a>
                 </li>
                  <li class="nav-item">
-                    <a class="nav-link" href="#" @click="selectTab(6)">Quick Tickets</a>
+                    <a class="nav-link" id = "quickTickets" href="#" @click="selectTab(6)">Quick Tickets</a>
                 </li>
                  <li class="nav-item">
-                    <a class="nav-link" href="#" @click="selectTab(7)">Add Quick Ticket</a>
+                    <a class="nav-link" id = "addQuickTicket" href="#" @click="selectTab(7)">Add Quick Ticket</a>
                 </li>
             </ul>
         </div>
@@ -81,7 +81,37 @@ export default {
 },
 methods:{
         selectTab: function(tabId){
+
+            document.getElementById("profile").className="nav-link";
+            document.getElementById("companyProfile").className="nav-link";
+            document.getElementById("flights").className="nav-link";
+            document.getElementById("newFlight").className="nav-link";
+            document.getElementById("destinations").className="nav-link";
+            document.getElementById("quickTickets").className="nav-link";
+            document.getElementById("addQuickTicket").className="nav-link";
+            if (tabId == 1){
+                document.getElementById("profile").className="nav-link active";
+            }
+            else if (tabId == 2){
+                document.getElementById("companyProfile").className="nav-link active";
+            }
+            else if (tabId == 3){
+                document.getElementById("flights").className="nav-link active";
+            }
+            else if (tabId == 4){
+                document.getElementById("newFlight").className="nav-link active";
+            }
+            else if (tabId == 5){
+                document.getElementById("destinations").className="nav-link active";
+            }
+            else if (tabId == 6){
+                document.getElementById("quickTickets").className="nav-link active";
+            }
+            else if (tabId == 7){
+                document.getElementById("addQuickTicket").className="nav-link active";
+            }
             this.currentTab = tabId;
+
         }, 
     }
 }
