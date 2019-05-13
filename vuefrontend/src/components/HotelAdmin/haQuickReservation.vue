@@ -1,24 +1,49 @@
 <template>
-   <div id = "hotelRoom">
-            <h1>{{hotel.name}}</h1>     
-
-            <div>
-              <table>
-                <th>
-                  <td>Hotel: </td>
-                  <td>{{this.hotel.name}}</td>
-                </th>
+  <div id="haQuickReservation">
+    <h1>Quick Reservations</h1>
+    <br>
+    <br>
+    <table>
+      <tr>
+        <td>
+          <h3>Choose Room</h3>
+          <table border="1">
+      <tr>
+        <td>Room Number</td>
+        <td>Number Of Beds</td>
+        <td>Price Per Day</td>
+        <td>Rating</td>
+        <td>Options</td>
+      </tr>
+      <tr v-for="r in hotel.rooms" :key="r.id">
+        <td>{{r.roomNumber}}</td>
+        <td>{{r.numberOfBeds}}</td>
+        <td>{{r.pricePerDay}}</td>
+        <td>{{r.rating}}</td>
+        <td>
+          <button @click="chooseRoom(r)">Choose</button>
+        </td>
+      </tr>
+    </table>
+        </td>
+        <td border="1" v-if="showReservation == 1">
+          <h3>Make Quick Reservation</h3>
+        <table>
                 <tr>
                   <td>Room Number: </td>
-                  <td>{{this.room.roomNumber}}</td>
+                  <td>{{room.roomNumber}}</td>
                 </tr>
                 <tr>
                   <td>Number Of Beds: </td>
-                  <td>{{this.room.numberOfBeds}}</td>
+                  <td>{{room.numberOfBeds}}</td>
                 </tr>
                 <tr>
                   <td>Price Per Day: </td>
-                  <td>{{this.room.pricePerDay}}</td>
+                  <td>{{room.pricePerDay}}</td>
+                </tr>
+                <tr>
+                  <td>Discount in percents: </td>
+                  <td><input type="text" v-model="discount" ></td>
                 </tr>
               </table>
                <table border="1" >
@@ -44,28 +69,31 @@
                         <td>Check if available: </td>
                         <td><button @click="splitDate()" >Check</button></td>
                     </tr>
-                    <tr v-if="this.available == 1 && this.user.firstName != null">
+                    <tr v-if="this.available == 1">
                       <td>Make reservation: </td>
                       <td><button @click="reserve()">Reserve Room</button></td>
                     </tr>
                 </table>
-            </div>
-            <button @click="back()">Back</button>
-    </div>
+        </td>
+      </tr>
+    </table>
+  </div>
 </template>
 
 <script>
-import axios from 'axios'
+
 export default {
-  name: 'hotelRoom',
+  name: 'haQuickReservation',
+  props: {
+      hotel: Object
+  },
   components: {
+
   },
   data: function () {
   return {
-    hotel : [],
-    room : [],
-    user: [],
-    available : 0,
+    room: [],
+    discount: 0,
     firstDay: "",
     lastDay: "",
     fYear: 0,
@@ -73,33 +101,16 @@ export default {
     fDay: 0,
     lYear: 0,
     lMonth: 0,
-    lDay: 0
+    lDay: 0,
+    showReservation: 0,
+    available: 0
+
   }
 },
-mounted(){
-         var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
-        };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getLogUser")
-        .then(response => {
-            this.user = response.data;
-          });
-
-         axios.get("http://localhost:8080/api/getHotel/"+this.$route.params.hotelName)
-        .then(response => {
-            this.hotel = response.data
-            for(let r in response.data.rooms) {
-
-             if(response.data.rooms[r].roomNumber == this.$route.params.roomNumber) {
-                 this.room = response.data.rooms[r];
-             }
-         } 
-          });      
-    },
     methods:{  
-      back: function() {
-        this.$router.push("/hotelProfile/"+ this.$route.params.hotelName);
+      chooseRoom: function(chosenRoom) {
+        this.room = chosenRoom;
+        this.showReservation = 1;
         },
         checkReservations: function() {
           for(let r in this.hotel.reservations) {
@@ -185,28 +196,30 @@ mounted(){
         this.checkDate();
       },
       reserve: function() {
-        axios.post("http://localhost:8080/api/addHotelReservation",{username: this.user.username,hotelName: this.hotel.name,fYear: this.fYear,fMonth: this.fMonth,fDay: this.fDay,lYear: this.lYear,lMonth: this.lMonth,lDay: this.lDay, roomNumber: this.room.roomNumber})
+        if(this.discount === 0) {
+          alert("Discount must be grater than zero.");
+          return;
+        }
+        axios.post("http://localhost:8080/api/addQuickHotelReservation",{hotelName: this.hotel.name,fYear: this.fYear,fMonth: this.fMonth,fDay: this.fDay,lYear: this.lYear,lMonth: this.lMonth,lDay: this.lDay, roomNumber: this.room.roomNumber,discount: this.discount})
         .then(response => {
             if(response.data === true) {
               alert("Your reservation is successful.");
               this.available = 0;
               
-              this.hotel.reservations.push({username: this.user.username,hotelName: this.hotel.name,fYear: this.fYear,fMonth: this.fMonth,fDay: this.fDay,lYear: this.lYear,lMonth: this.lMonth,lDay: this.lDay, roomNumber: this.room.roomNumber});
+              this.hotel.reservations.push({hotelName: this.hotel.name,fYear: this.fYear,fMonth: this.fMonth,fDay: this.fDay,lYear: this.lYear,lMonth: this.lMonth,lDay: this.lDay, roomNumber: this.room.roomNumber,discount: this.discount});
             } else {
               alert("Your reservation failed.");
               this.available = 0;
             }
           });
-      }
-          
+      }     
     }
 }
-
 </script>
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

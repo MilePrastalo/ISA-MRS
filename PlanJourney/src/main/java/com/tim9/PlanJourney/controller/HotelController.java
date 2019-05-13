@@ -84,7 +84,9 @@ public class HotelController {
 			c.setTime(hr.getFirstDay());
 			HotelReservationBean reservationBean = new HotelReservationBean();
 			reservationBean.setRoomNumber(hr.getRoom().getRoomNumber());
-			reservationBean.setUsername(hr.getUser().getUsername());
+			if (hr.getUser() != null) {
+				reservationBean.setUsername(hr.getUser().getUsername());
+			}
 			reservationBean.setHotelName(hr.getHotel().getName());
 			reservationBean.setfYear(c.get(Calendar.YEAR));
 			reservationBean.setfMonth(c.get(Calendar.MONTH) + 1);
@@ -94,6 +96,9 @@ public class HotelController {
 			reservationBean.setlYear(c.get(Calendar.YEAR));
 			reservationBean.setlMonth(c.get(Calendar.MONTH) + 1);
 			reservationBean.setlDay(c.get(Calendar.DAY_OF_MONTH));
+			reservationBean.setDiscount(hr.getDiscount());
+			reservationBean.setNumberOfBeds(hr.getRoom().getNumberOfBeds());
+			reservationBean.setPaidPrice(hr.getPaidPrice());
 			reservationBeans.add(reservationBean);
 		}
 		hb.setReservations(reservationBeans);
@@ -107,7 +112,7 @@ public class HotelController {
 		return hb;
 	}
 
-	@RequestMapping(value = "/api/getUserHotelReservations", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/api/getUserHotelReservations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('REGISTERED')")
 	public @ResponseBody ArrayList<HotelReservationBean> getHotelReservations() {
@@ -292,6 +297,7 @@ public class HotelController {
 			reservation.setLastDay(lastDay);
 			reservation.setHotel(hotel);
 			reservation.setRoom(room);
+			reservation.setDiscount(0);
 			reservation.setPaidPrice(days * room.getPricePerDay());
 			reservation.setUser(user);
 			hotel.getReservations().add(reservation);
@@ -326,6 +332,57 @@ public class HotelController {
 			}
 		}
 		return true;
+	}
+
+	// Price Reduction should be added to reservations!
+	@RequestMapping(value = "/api/buyQuickHotelReservation", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('REGISTERED')")
+	public @ResponseBody boolean buyQuickHotelReservation(@RequestBody HotelReservationBean reservationBean) {
+		// checks logged user.
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			// checks if hotel already exists on given address and same destination.
+			Hotel hotel = service.findByName(reservationBean.getHotelName());
+			if (hotel == null) {
+				return false;
+			}
+
+			// checks registered user
+			String username = authentication.getName();
+			RegisteredUser user = userService.findByUsername(username);
+			if (user == null) {
+				return false;
+			}
+
+			// Splits date and checks if reservation date is valid.
+			Calendar c = Calendar.getInstance();
+
+			for (HotelReservation hr : hotel.getReservations()) {
+				if (hr.getRoom().getRoomNumber() == reservationBean.getRoomNumber()) {
+					c.setTime(hr.getFirstDay());
+					int fYear = c.get(Calendar.YEAR);
+					int fMonth = c.get(Calendar.MONTH) + 1;
+					int fDay = c.get(Calendar.DAY_OF_MONTH);
+					c.setTime(hr.getLastDay());
+					int lYear = c.get(Calendar.YEAR);
+					int lMonth = c.get(Calendar.MONTH) + 1;
+					int lDay = c.get(Calendar.DAY_OF_MONTH);
+					if (fYear == reservationBean.getfYear() && fMonth == reservationBean.getfMonth()
+							&& fDay == reservationBean.getfDay() && lYear == reservationBean.getlYear()
+							&& lMonth == reservationBean.getlMonth() && lDay == reservationBean.getlDay()) {
+						hr.setUser(user);
+						break;
+					}
+				}
+			}
+
+			service.save(hotel);
+			userService.save(user);
+
+			return true;
+		}
+		return false;
 	}
 
 }
