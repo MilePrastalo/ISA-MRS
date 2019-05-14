@@ -36,6 +36,7 @@
                     <th scope="col">Origin price</th>
                     <th scope="col">Discount</th>
                     <th scope="col">Total price</th>
+                    <th scope="col">Reserve</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -48,6 +49,7 @@
                     <td>{{res.price}}</td>
                     <td>{{res.discount}}</td>
                     <td>{{(res.price*(100-res.discount)/100)}}</td>
+                    <td><button @click="reserveQuick(res)">Reserve</button></td>
                 </tr> 
                 </tbody>             
             </table>
@@ -111,6 +113,13 @@ export default {
                 };
                 axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
                 axios.post("http://localhost:8080/api/reserveVehicle",{id:carid,dateFrom:this.datefrom,dateTo:this.dateto,officePick:this.pickoffice,officeReturn:this.returnoffice})
+                    .then(response => {
+                        console.log(response);
+                        alert("Success :D");
+                    }); 
+            },
+            reserveQuick : function(res){
+                axios.post("http://localhost:8080/api/quickReserveVehicle",{id:res.id})
                     .then(response => {
                         console.log(response);
                         alert("Success :D");
