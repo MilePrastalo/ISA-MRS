@@ -605,6 +605,8 @@ public class RentACarController {
 		System.out.println(quick.getOfficePick().getName());
 		System.out.println(quick.getOfficeReturn().getName());
 		vehicle.getQuickReservations().add(quick);
+		officePick.getCompany().getQuickReservations().add(quick);
+		companyService.save(officePick.getCompany());
 		quickService.save(quick);
 	}
 	
@@ -643,6 +645,27 @@ public class RentACarController {
 		
 	}
 	
-	
-
+	@RequestMapping(value = "/api/getQuickReservationsByAdmin", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('RENT_ADMIN')")
+	public @ResponseBody ArrayList<VehicleReservationBean> getQuickReservationsAdmin() throws Exception {
+		ArrayList<VehicleReservationBean> reservations = new ArrayList<>();
+		RentACarAdmin admin = getAdmin();
+		RentACarCompany company = admin.getService();
+		for (QuickVehicleReservation quick : company.getQuickReservations()) {
+			VehicleReservationBean bean = new VehicleReservationBean();
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+			bean.setDateFrom(sdf.format(quick.getDateFrom()));
+			bean.setDateTo(sdf.format(quick.getDateTo()));
+			bean.setId(quick.getId());
+			bean.setLocationPick(quick.getOfficePick().getName());
+			bean.setLocationReturn(quick.getOfficeReturn().getName());
+			bean.setVehicleId(quick.getVehicle().getId());
+			bean.setVehicleName(quick.getVehicle().getName());
+			bean.setPrice(quick.getOriginalPrice()*(100 - quick.getDiscount())/100);
+			bean.setDiscount(quick.getDiscount());
+			reservations.add(bean);
+		}
+		return reservations;
+	}
 }

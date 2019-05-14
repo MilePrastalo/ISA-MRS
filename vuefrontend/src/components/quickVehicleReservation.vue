@@ -75,20 +75,20 @@
                     <th scope="col">Vehicle name</th>
                     <th scope="col">Origin price</th>
                     <th scope="col">Discount</th>
+                    <th scope="col">Total price</th>
                     </tr>
                 </thead>
                 <tbody>
                 <tr v-for="res in quickReservations" :key="res.id">  
-                    <td>{{res.officepick.name}}</td>
-                    <td>{{res.officeret.name}}</td>
-                    <td>{{res.startDate}}</td>
-                    <td>{{res.endDate}}</td>
+                    <td>{{res.locationPick}}</td>
+                    <td>{{res.locationReturn}}</td>
+                    <td>{{res.dateFrom}}</td>
+                    <td>{{res.dateTo}}</td>
                     <td>{{res.vehicleName}}</td>
-                    <td>{{res.originalPrice}}</td>
+                    <td>{{res.price}}</td>
                     <td>{{res.discount}}</td>
-                    <td v-if="role == 'RENT_ADMIN' && res.taken == false"> <Button>Delete</Button></td>
-                    <td v-if="role == 'RENT_ADMIN' && res.taken == true"> Reserved</td>
-                    <td v-if="role == 'REGISTERED' && res.taken == false" @click="bookQuickTicket(res)"> <Button>Book</Button></td>
+                    <td>{{(res.price*(100-res.discount)/100)}}</td>
+                    <td><Button>Cancel</Button></td>
                 </tr> 
                 </tbody>             
             </table>  
@@ -130,6 +130,13 @@ mounted(){
             .then(response => {
                 this.offices = response.data;
             }); 
+        axios.get("http://localhost:8080/api/getQuickReservationsByAdmin")
+            .then(response => {
+                console.log(response.data);
+                this.quickReservations = response.data;
+            }); 
+
+
     },
     methods:{ 
         addQuickReservation:function(e){
