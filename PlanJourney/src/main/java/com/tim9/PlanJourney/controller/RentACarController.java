@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tim9.PlanJourney.beans.AddVehicleBean;
 import com.tim9.PlanJourney.beans.BranchOfficeBean;
 import com.tim9.PlanJourney.beans.EditVehicleBean;
+import com.tim9.PlanJourney.beans.QuickVehicleReserveBean;
 import com.tim9.PlanJourney.beans.RentACarCompanySearchBean;
 import com.tim9.PlanJourney.beans.RentACarProfileBean;
 import com.tim9.PlanJourney.beans.VehicleReservationBean;
@@ -194,6 +195,18 @@ public class RentACarController {
 							if(hasVehicle(rentACarCompany,search.getDateFrom(),search.getDateTo())) {
 								foundCOmpanies.add(rentACarCompany);
 								break;
+							}
+							ArrayList<QuickVehicleReservation> quickReservations = new ArrayList<>();
+							quickReservations.addAll(rentACarCompany.getQuickReservations());
+							for (QuickVehicleReservation quick : quickReservations) {
+								if(quick.getOfficePick().getName().equals(search.getName())) {
+									SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+									Date dateFrom = sdf.parse(search.getDateFrom());
+									Date dateTo = sdf.parse(search.getDateTo());
+									if(dateFrom.before(quick.getDateFrom()) && dateTo.after(quick.getDateTo())) {
+										foundCOmpanies.add(rentACarCompany);
+									}
+								}
 							}
 							
 						}
@@ -612,7 +625,6 @@ public class RentACarController {
 	
 	@RequestMapping(value = "/api/getQuickReservations", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	@PreAuthorize("hasAuthority('RENT_ADMIN')")
 	public @ResponseBody ArrayList<VehicleReservationBean> getQuickReservations(@RequestBody VehicleReservationSearchBean search) throws Exception {
 		ArrayList<VehicleReservationBean> found = new ArrayList<>();
 		ArrayList<QuickVehicleReservation> reservations = new ArrayList<>();
@@ -622,23 +634,32 @@ public class RentACarController {
 		String to = search.getDateTo();
 		reservations.addAll(company.getQuickReservations());
 		if(from.equals("") || to.equals("")) {
-			for (QuickVehicleReservation reservation : reservations) {
-				boolean isAvaiable = false;
-				if(reservation.getOfficePick().getDestination().getName().equals(search.getOfficePick()) ) {
-				}
-				
-			}
+			return found;
 		}
 		else {
 			Date fromDate = sdf.parse(from);
 			Date toDate = sdf.parse(to);
 			for (QuickVehicleReservation reservation : reservations) {
 				boolean isAvaiable = false;
-				if (reservation.getDateFrom().before(fromDate) && reservation.getDateTo().after(toDate)) {
-					if(reservation.getOfficePick().getDestination().getName().equals(search.getOfficePick()) ) {
-						
+				System.out.println(fromDate);
+				System.out.println(reservation.getDateFrom());
+				System.out.println(toDate);
+				System.out.println(reservation.getDateTo());
+				if (!reservation.isTaken()) {
+					if (fromDate.before(reservation.getDateFrom()) && toDate.after(reservation.getDateTo())) {
+						VehicleReservationBean bean = new VehicleReservationBean();
+						bean.setDateFrom(sdf.format(reservation.getDateFrom()));
+						bean.setDateTo(sdf.format(reservation.getDateTo()));
+						bean.setId(reservation.getId());
+						bean.setLocationPick(reservation.getOfficePick().getName());
+						bean.setLocationReturn(reservation.getOfficeReturn().getName());
+						bean.setVehicleId(reservation.getVehicle().getId());
+						bean.setVehicleName(reservation.getVehicle().getName());
+						bean.setPrice(reservation.getOriginalPrice()*(100 - reservation.getDiscount())/100);
+						bean.setDiscount(reservation.getDiscount());
+						found.add(bean);
 					}
-				}
+				}	
 			}
 		}
 		return found;
@@ -667,5 +688,34 @@ public class RentACarController {
 			reservations.add(bean);
 		}
 		return reservations;
+	}
+	
+	@RequestMapping(value = "/api/quickReserveVehicle", method = RequestMethod.POST, produces= MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	//Returns vehicles that are avaiable for reservation in selected company
+	public @ResponseBody boolean quickReserveVehicle(@RequestBody QuickVehicleReserveBean bean) throws Exception { 
+		QuickVehicleReservation quick = quickService.findOne(bean.getId());
+		Vehicle vehicle = quick.getVehicle();
+		RegisteredUser user = getRegisteredUser();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date dateFrom = quick.getDateFrom();
+		Date dateTo = quick.getDateTo();
+		BranchOffice pick =quick.getOfficePick();
+		BranchOffice ret = quick.getOfficeReturn();
+		VehicleReservation reservation = new VehicleReservation(vehicle, user,new Date(), dateFrom, dateTo, quick.getOriginalPrice()*(100-quick.getDiscount()/100) );
+		reservation.setOfficePick(pick);
+		reservation.setOfficeReturn(ret);
+		reservationService.save(reservation);
+		quick.setTaken(true);
+		user.getVehicleReservations().add(reservation);
+		vehicle.getReservations().add(reservation);
+		RentACarCompany company = vehicle.getCompany();
+		company.getReservations().add(reservation);
+		companyService.save(company);
+		userService.save(user);
+		vehicleService.save(vehicle);
+		reservationService.save(reservation);
+
+		return true;
 	}
 }
