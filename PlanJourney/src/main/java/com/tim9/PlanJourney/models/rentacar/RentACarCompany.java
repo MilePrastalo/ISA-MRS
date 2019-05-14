@@ -28,6 +28,9 @@ public class RentACarCompany extends Company {
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<VehicleReservation> reservations = new HashSet<VehicleReservation>();
 
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<QuickVehicleReservation> quickReservations = new HashSet<QuickVehicleReservation>();
+	
 	public RentACarCompany() {
 		super();
 	}
@@ -68,6 +71,12 @@ public class RentACarCompany extends Company {
 	}
 	public void setReservations(Set<VehicleReservation> reservations) {
 		this.reservations = reservations;
+	}
+	public Set<QuickVehicleReservation> getQuickReservations() {
+		return quickReservations;
+	}
+	public void setQuickReservations(Set<QuickVehicleReservation> quickReservations) {
+		this.quickReservations = quickReservations;
 	}
 	
 	

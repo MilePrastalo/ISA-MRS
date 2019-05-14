@@ -36,6 +36,7 @@ import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.Review;
 import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.models.rentacar.BranchOffice;
+import com.tim9.PlanJourney.models.rentacar.QuickVehicleReservation;
 import com.tim9.PlanJourney.models.rentacar.RentACarAdmin;
 import com.tim9.PlanJourney.models.rentacar.RentACarCompany;
 import com.tim9.PlanJourney.models.rentacar.Vehicle;
@@ -43,6 +44,7 @@ import com.tim9.PlanJourney.models.rentacar.VehicleReservation;
 import com.tim9.PlanJourney.service.AuthorityService;
 import com.tim9.PlanJourney.service.BranchOfficeService;
 import com.tim9.PlanJourney.service.DestinationService;
+import com.tim9.PlanJourney.service.QuickVehicleReservationService;
 import com.tim9.PlanJourney.service.RegisteredUserService;
 import com.tim9.PlanJourney.service.RentACarAdminService;
 import com.tim9.PlanJourney.service.RentACarCompanyService;
@@ -73,7 +75,9 @@ public class RentACarController {
 	@Autowired
 	private RegisteredUserService userService;
 	
-
+	@Autowired
+	private QuickVehicleReservationService quickService;
+	
 	@RequestMapping(value = "/api/vehicleSearch", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	// Recieves parameters for search and returns list of found vehicles
@@ -581,6 +585,64 @@ public class RentACarController {
 		bs.remove(id);
 		return true;
 	}
+	
+	@RequestMapping(value = "/api/addQuickVehicleReservation", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('RENT_ADMIN')")
+	public void addQuickReservation(@RequestBody VehicleReservationBean bean) throws Exception {
+		Vehicle vehicle = vehicleService.findOne(bean.getVehicleId());
+		vehicle.getId();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date dateFrom = sdf.parse(bean.getDateFrom());
+		Date dateTo = sdf.parse(bean.getDateTo());
+		BranchOffice officePick = bs.findOne(Long.parseLong(bean.getLocationPick()));
+		officePick.getId();
+		BranchOffice officeReturn = bs.findOne(Long.parseLong(bean.getLocationReturn()));
+		officeReturn.getId();
+		QuickVehicleReservation quick = new QuickVehicleReservation(vehicle, vehicle.getPrice(), bean.getDiscount(), dateFrom, dateTo, officePick, officeReturn, false);
+		quick.setOriginalPrice(vehicle.getPrice());
+		System.out.println(quick.getVehicle().getName());
+		System.out.println(quick.getOfficePick().getName());
+		System.out.println(quick.getOfficeReturn().getName());
+		vehicle.getQuickReservations().add(quick);
+		quickService.save(quick);
+	}
+	
+	@RequestMapping(value = "/api/getQuickReservations", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('RENT_ADMIN')")
+	public @ResponseBody ArrayList<VehicleReservationBean> getQuickReservations(@RequestBody VehicleReservationSearchBean search) throws Exception {
+		ArrayList<VehicleReservationBean> found = new ArrayList<>();
+		ArrayList<QuickVehicleReservation> reservations = new ArrayList<>();
+		RentACarCompany company = companyService.findOne(Long.parseLong(search.getId()));
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String from = search.getDateFrom();
+		String to = search.getDateTo();
+		reservations.addAll(company.getQuickReservations());
+		if(from.equals("") || to.equals("")) {
+			for (QuickVehicleReservation reservation : reservations) {
+				boolean isAvaiable = false;
+				if(reservation.getOfficePick().getDestination().getName().equals(search.getOfficePick()) ) {
+				}
+				
+			}
+		}
+		else {
+			Date fromDate = sdf.parse(from);
+			Date toDate = sdf.parse(to);
+			for (QuickVehicleReservation reservation : reservations) {
+				boolean isAvaiable = false;
+				if (reservation.getDateFrom().before(fromDate) && reservation.getDateTo().after(toDate)) {
+					if(reservation.getOfficePick().getDestination().getName().equals(search.getOfficePick()) ) {
+						
+					}
+				}
+			}
+		}
+		return found;
+		
+	}
+	
 	
 
 }

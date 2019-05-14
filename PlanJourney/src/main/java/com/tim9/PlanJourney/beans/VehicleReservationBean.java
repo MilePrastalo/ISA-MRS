@@ -11,6 +11,7 @@ public class VehicleReservationBean {
 	private double price;
 	private int status;
 	private int rating;
+	private int discount;
 	
 	public VehicleReservationBean() {
 		super();
@@ -75,6 +76,13 @@ public class VehicleReservationBean {
 	public void setRating(int rating) {
 		this.rating = rating;
 	}
+	public int getDiscount() {
+		return discount;
+	}
+	public void setDiscount(int discount) {
+		this.discount = discount;
+	}
+	
 	
 	
 	
