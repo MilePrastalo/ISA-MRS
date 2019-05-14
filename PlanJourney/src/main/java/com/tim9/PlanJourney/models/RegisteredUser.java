@@ -3,6 +3,7 @@ package com.tim9.PlanJourney.models;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
@@ -36,6 +37,9 @@ public class RegisteredUser extends User {
 	
 	@OneToMany(mappedBy="user")
 	private Set<HotelReservation> hotelReservations   = new HashSet<>();
+	
+	@Column(name = "confirmed", nullable = true)
+	private boolean confirmed;
 	
 	public RegisteredUser() {
 		// TODO Auto-generated constructor stub
@@ -121,6 +125,15 @@ public class RegisteredUser extends User {
 		// TODO Auto-generated method stub
 		return true;
 	}
+
+	public boolean isConfirmed() {
+		return confirmed;
+	}
+
+	public void setConfirmed(boolean confirmed) {
+		this.confirmed = confirmed;
+	}
+	
 
 }
 

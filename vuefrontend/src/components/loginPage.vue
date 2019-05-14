@@ -33,10 +33,18 @@ export default {
       if(this.username != "" && this.password != ""){
         axios.post("http://localhost:8080/auth/login",{username : this.username, password: this.password})
                     .then(response => {
+                      console.log(response);
                         if(response.status == 200){
                           console.log(response.data.accessToken);
                           localStorage.setItem('jwtToken',response.data.accessToken);
-                          this.getRole();
+                          if(response.data == "NOT CONFIRMED"){
+                            alert("Account not confirmed");
+                            window.location = "./";
+                          }
+                          else{
+                            this.getRole(); 
+                          }
+                          
                         }
                         else{
                           alert("Wrong username or password");
