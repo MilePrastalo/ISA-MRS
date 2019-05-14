@@ -2,6 +2,7 @@ package com.tim9.PlanJourney.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,6 +23,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,6 +38,8 @@ import com.tim9.PlanJourney.models.UserTokenState;
 import com.tim9.PlanJourney.repository.UserRepository;
 import com.tim9.PlanJourney.security.TokenUtils;
 import com.tim9.PlanJourney.service.AuthorityService;
+import com.tim9.PlanJourney.service.EmailService;
+import com.tim9.PlanJourney.service.RegisteredUserService;
 import com.tim9.PlanJourney.service.UserService;
 import com.tim9.PlanJourney.service.impl.CustomUserDetailsService;
 
@@ -53,8 +58,16 @@ public class AuthenticationController {
 	
 	@Autowired
 	private  UserService userService;
+	
+	@Autowired
+	private  RegisteredUserService regUserService;
+	
 	@Autowired
 	private AuthorityService autService;
+	
+	@Autowired
+	private EmailService emailService;
+	
 	@CrossOrigin()
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody LoginBean authenticationRequest,
@@ -64,7 +77,6 @@ public class AuthenticationController {
 				.authenticate(new UsernamePasswordAuthenticationToken(
 						authenticationRequest.getUsername(),
 						authenticationRequest.getPassword()));
-
 		// Ubaci username + password u kontext
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		// Kreiraj token
@@ -75,6 +87,16 @@ public class AuthenticationController {
 		int expiresIn = tokenUtils.getExpiredIn();
 		response.setHeader("Authorization", "Bearer jwt_token");
 		// Vrati token kao odgovor na uspesno autentifikaciju
+		boolean notConfrirmed = false;
+		if (user instanceof RegisteredUser) {
+			RegisteredUser regUser = (RegisteredUser) user;
+			if(!regUser.isConfirmed()) {
+				notConfrirmed = true;
+			}
+		}
+		if(notConfrirmed) {
+			return ResponseEntity.ok("NOT CONFIRMED");
+		}
 		return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
 	}
 	@CrossOrigin()
@@ -92,7 +114,14 @@ public class AuthenticationController {
 		ArrayList<Authority> authorities = new ArrayList<>();
 		authorities.add(aut);
 		user.setAuthorities(authorities);
+		user.setConfirmed(false);
 		userService.save(user);
+		try {
+			emailService.sendRegistrationEmail(user);
+		} catch (MailException | InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return HttpStatus.OK;
 	}
 
@@ -123,6 +152,18 @@ public class AuthenticationController {
 		Map<String, String> result = new HashMap<>();
 		result.put("result", "success");
 		return ResponseEntity.accepted().body(result);
+	}
+	
+	@CrossOrigin()
+	@RequestMapping(value = "/registrationConfirmation/{encoded}", method = RequestMethod.GET)
+	public HttpStatus Conform(@PathVariable("encoded") String encoded) throws AuthenticationException, IOException {
+		byte[] decoded = Base64.getDecoder().decode(encoded);
+		String username = new String(decoded,"UTF-8");
+		System.out.println(username);
+		RegisteredUser user = regUserService.findByUsername(username);
+		user.setConfirmed(true);
+		regUserService.save(user);
+		return HttpStatus.OK;
 	}
 
 	static class PasswordChanger {
