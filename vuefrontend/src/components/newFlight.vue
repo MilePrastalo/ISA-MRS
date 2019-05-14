@@ -122,8 +122,9 @@ mounted(){
           }); 
     },
     methods:{
-        addFlight: function(){
+        addFlight: function(e){
             
+            e.preventDefault()
             if (this.startDestination == this.endDestination){
                 alert("Start and end destinations can not be the same!");
                 return

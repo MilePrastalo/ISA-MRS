@@ -8,50 +8,57 @@
         <br>
 
         <div class = "row">
-            <form>
+            <form @submit="editFlight">
                 <table style="text-align: left">
                     <tr>
-                        <td>Flight company: </td>
-                        <td> <input type = "text" v-model= "flight.flightCompany"  > </td>
-                    </tr>
-                    <tr>
                         <td>From: </td>
-                        <td> <input class = "edit" type = "text" v-model= "flight.startDestination"> </td>
+                        <td >{{flight.startDestination}}</td>
+                        <td></td>
                     </tr>
                     <tr>
                         <td>To: </td>
-                        <td> <input class = "edit" type = "text" v-model= "flight.endDestination" > </td>
+                        <td >{{flight.endDestination}}</td>
                     </tr>
                     <tr>
                         <td>Start date: </td>
-                        <td> <input class = "edit" type = "text" v-model= "flight.startDate_str" > </td>
+                        <td > {{flight.startDate_str}} </td>
+                        <td v-if="editing == true"> <input class = "edit" type = "date" v-model= "startDate" > </td>
+                        <td v-if="editing == true && startDate != ''"> <input class = "edit" type = "time" v-model= "startTime" required > </td>
                     </tr>
                     <tr>
                         <td>End date: </td>
-                        <td> <input class = "edit" type = "text" v-model= "flight.endDate_str" > </td>
+                        <td > {{flight.endDate_str}} </td>
+                        <td v-if="editing == true"> <input class = "edit" type = "date" v-model= "endDate" > </td>
+                        <td v-if="editing == true && endDate != ''"> <input class = "edit" type = "time" v-model= "endTime" required> </td>
                     </tr>
                     <tr>
                         <td>Flight duration: </td>
-                        <td> <input class = "edit" type = "text" v-model= "flight.flightDuration" > </td>
+                        <td v-if="editing == false"> {{flight.flightDuration}} </td>
+                        <td v-else> <input class = "edit" type = "text" v-model= "flight.flightDuration" required > </td>
                     </tr>
                     <tr>
                         <td>Flight length: </td>
-                        <td> <input class = "edit" type = "text" v-model= "flight.flightLength" > </td>
+                         <td v-if="editing == false"> {{flight.flightLength}} </td>
+                        <td v-else> <input class = "edit" type = "text" v-model= "flight.flightLength" required> </td>
                     </tr>
                     <tr>
                         <td>Eco class price: </td>
-                        <td> <input class = "edit" type = "text" v-model= "flight.economicPrice" > </td>
+                        <td v-if="editing == false"> {{flight.economicPrice}} </td>
+                        <td v-else> <input class = "edit" type = "text" v-model= "flight.economicPrice" required > </td>
                     </tr>
                     <tr>
                         <td>Business class price: </td>
-                        <td> <input class = "edit" type = "text" v-model= "flight.businessPrice" > </td>
+                        <td v-if="editing == false"> {{flight.businessPrice}} </td>
+                        <td v-else> <input class = "edit" type = "text" v-model= "flight.businessPrice" required> </td>
                     </tr>
                     <tr>
                         <td>First class price: </td>
-                        <td> <input class = "edit" type = "text" v-model= "flight.firstClassPrice" > </td>
+                        <td v-if="editing == false"> {{flight.firstClassPrice}} </td>
+                        <td v-else> <input class = "edit" type = "text" v-model= "flight.firstClassPrice" required > </td>
                     </tr>
                     <tr>
-                        <td><input type="submit" value="Edit"></td>
+                        <td v-if="editing == false"><button @click="enableEditing">Edit</button></td>
+                        <td v-else><input type="submit" value="Update"></td>
                     </tr>
                 </table>
             </form>
@@ -80,6 +87,11 @@ export default {
                 seatsE: {},
                 seatsB: {},
                 seatsF: {},
+                editing: false,
+                startDate: "",
+                startTime: "",
+                endDate: "",
+                endTime: "",
                 id: 0,
             }
     },
@@ -114,6 +126,35 @@ export default {
                     else{
                         seat.unavailable = true;
                     }
+                }
+            });    
+        },
+
+        enableEditing: function(){
+            this.editing = true;
+        },
+
+        editFlight: function(e){
+
+            e.preventDefault();
+            var getJwtToken = function() {
+                return localStorage.getItem('jwtToken');
+            };
+            if (this.startDate != ""){
+                 this.flight.startDate_str = this.startDate + " " + this.startTime;
+            }
+            if (this.endDate != ""){
+                 this.flight.endDate_str = this.endDate +  " " + this.endTime;
+            }
+            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.post("http://localhost:8080/api/editFlight", this.flight)
+            .then(response => {
+                if (response.data == "success"){
+                    alert("Successfuly updated!");
+                     this.editing = false;
+                }
+                else{
+                    alert(response.data);
                 }
             });    
         }

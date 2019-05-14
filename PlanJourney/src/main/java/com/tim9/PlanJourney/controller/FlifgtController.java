@@ -58,14 +58,14 @@ public class FlifgtController {
 	private static SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	private static SimpleDateFormat sdf2 = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 
-	
 	// Method returns flight that match given id
 	@RequestMapping(value = "/api/getFlight/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	public @ResponseBody FlightBean getFlight(@PathVariable("id") Long id) throws Exception {
 
 		Flight flight = flightService.findOne(id);
-		return new FlightBean(flight, flight.getFlightCompany().getName(), sdf2.format(flight.getStartDate()), sdf2.format(flight.getEndDate()));
+		return new FlightBean(flight, flight.getFlightCompany().getName(), sdf2.format(flight.getStartDate()),
+				sdf2.format(flight.getEndDate()));
 	}
 
 	@RequestMapping(value = "/api/getSeatsOnFlight/{id}/{travelClass}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -111,9 +111,8 @@ public class FlifgtController {
 		seatService.save(seat);
 		return seat;
 	}
-	
 
-	//Method for adding new flight
+	// Method for adding new flight
 	@RequestMapping(value = "/api/addFlight", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
@@ -127,10 +126,10 @@ public class FlifgtController {
 		if (flightCompany == null) {
 			return "No company has been assigned to you.";
 		}
-		
+
 		Date endDate = sdf1.parse(newFlightInfo.getEndDate_str());
 		Date startDate = sdf1.parse(newFlightInfo.getStartDate_str());
-		
+
 		if (endDate.before(startDate)) {
 			return "End date can not be before start date!";
 		}
@@ -152,14 +151,74 @@ public class FlifgtController {
 		makeSeats(seats, newFlightInfo.getFirstClassCapacity(), "first class");
 
 		Flight newFlight = new Flight(flightCompany, startDate, endDate, newFlightInfo.getFlightDuration(),
-				newFlightInfo.getFlightLength(), startDestination, endDestination, new HashSet<FlightReservation>(), seats,
-				newFlightInfo.getBusinessPrice(), newFlightInfo.getEconomicPrice(), newFlightInfo.getFirstClassPrice());
+				newFlightInfo.getFlightLength(), startDestination, endDestination, new HashSet<FlightReservation>(),
+				seats, newFlightInfo.getBusinessPrice(), newFlightInfo.getEconomicPrice(),
+				newFlightInfo.getFirstClassPrice());
 
 		flightService.save(newFlight);
 		flightCompany.getFlights().add(newFlight);
 		flightCompanyService.save(flightCompany);
 		flightAdminService.save(loggedAdmin);
 
+		return "success";
+	}
+
+	// Method for editing flight
+	@RequestMapping(value = "/api/editFlight", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
+	public @ResponseBody String editFlight(@RequestBody FlightBean flightInfo) throws Exception {
+		
+
+		FlightAdmin loggedAdmin = getLoggedFlightAdmin();
+		if (loggedAdmin == null) {
+			return null;
+		}
+		Long flightId = flightInfo.getId();
+		Flight flight = flightService.findOne(flightId);
+		
+		Date endDate = flightInfo.getEndDate();;
+		Date startDate = flightInfo.getStartDate();
+		if (flightInfo.getEndDate_str().equals("")) {
+			endDate = sdf1.parse(flightInfo.getEndDate_str());
+		}
+		if (flightInfo.getEndDate_str().equals("")) {
+			endDate = sdf1.parse(flightInfo.getStartDate_str());
+		}
+		if (endDate.before(startDate)) {
+			return "End date can not be before start date!";
+		}
+		Date today = new Date();
+		if (startDate.before(today) || endDate.before(today)) {
+			return "Dates can not be in the past!";
+		}
+		
+		flight.setStartDate(startDate);
+		flight.setEndDate(endDate);
+		flight.setFlightDuration(flightInfo.getFlightDuration());
+		flight.setFlightLength(flightInfo.getFlightLength());
+		flight.setEconomicPrice(flightInfo.getEconomicPrice());
+		flight.setBusinessPrice(flightInfo.getBusinessPrice());
+		flight.setFirstClassPrice(flightInfo.getFirstClassPrice());
+		flightService.save(flight);
+		return "success";
+	}
+
+	// Method for removing flight
+	@RequestMapping(value = "/api/removeFlight/{flightId}", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
+	public @ResponseBody String removeFlight(@PathVariable("flightId") Long flightId) throws Exception {
+		
+		FlightAdmin loggedAdmin = getLoggedFlightAdmin();
+		if (loggedAdmin == null) {
+			return null;
+		}
+		Flight flight = flightService.findOne(flightId);
+		if (flight.getFlightReservations().size() > 0) {
+			return "You can not remove this flight, there are some reservations";
+		}
+		flightService.remove(flightId);
 		return "success";
 	}
 
@@ -176,7 +235,8 @@ public class FlifgtController {
 					|| search.getStartDestination().equals(""))
 					&& (f.getEndDestination().getName().equals(search.getEndDestination())
 							|| search.getEndDestination().equals(""))
-					&& (f.getFlightCompany().getName().equals(search.getFlightCompany()) || search.getFlightCompany().equals(""))
+					&& (f.getFlightCompany().getName().equals(search.getFlightCompany())
+							|| search.getFlightCompany().equals(""))
 					&& (f.getEconomicPrice() >= search.getMinEconomic() || (search.getMinEconomic() == 0))
 					&& (f.getBusinessPrice() >= search.getMinBusiness() || (search.getMinBusiness() == 0))
 					&& (f.getFirstClassPrice() >= search.getMinFirstClass() || (search.getMinFirstClass() == 0))
@@ -190,8 +250,8 @@ public class FlifgtController {
 					&& (search.getEndDate() == null
 							|| dateTimeComparator.compare(f.getEndDate(), search.getEndDate()) == 0)) {
 
-				foundFlights
-						.add(new FlightBean(f, f.getFlightCompany().getName(), sdf2.format(f.getStartDate()), sdf2.format(f.getEndDate())));
+				foundFlights.add(new FlightBean(f, f.getFlightCompany().getName(), sdf2.format(f.getStartDate()),
+						sdf2.format(f.getEndDate())));
 			}
 		}
 		System.out.println("\tREZ = " + foundFlights.size());
@@ -210,7 +270,6 @@ public class FlifgtController {
 		}
 		return null;
 	}
-
 
 	private Set<Seat> makeSeats(Set<Seat> seats, String capacity, String flightClass) {
 		int rows = Integer.parseInt(capacity.split("|")[0]);
