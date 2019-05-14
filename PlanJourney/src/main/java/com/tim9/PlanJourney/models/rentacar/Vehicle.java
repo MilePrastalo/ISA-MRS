@@ -47,6 +47,9 @@ public class Vehicle {
 	@OneToMany(mappedBy = "vehicle", fetch = FetchType.LAZY)
 	private Set<VehicleReservation> reservations;
 	
+	@OneToMany(mappedBy = "vehicle", fetch = FetchType.LAZY)
+	private Set<QuickVehicleReservation> quickReservations;
+	
 	@Column(name="rating", nullable = true)
 	private double rating;
 	
@@ -222,7 +225,20 @@ public class Vehicle {
 
 	public void setCompany(RentACarCompany company) {
 		this.company = company;
+	}
+
+
+
+	public Set<QuickVehicleReservation> getQuickReservations() {
+		return quickReservations;
+	}
+
+
+
+	public void setQuickReservations(Set<QuickVehicleReservation> quickReservations) {
+		this.quickReservations = quickReservations;
 	}	
+	
 	
 	
 }

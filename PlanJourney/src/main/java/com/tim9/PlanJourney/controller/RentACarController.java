@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tim9.PlanJourney.beans.AddVehicleBean;
 import com.tim9.PlanJourney.beans.BranchOfficeBean;
 import com.tim9.PlanJourney.beans.EditVehicleBean;
+import com.tim9.PlanJourney.beans.QuickVehicleReserveBean;
 import com.tim9.PlanJourney.beans.RentACarCompanySearchBean;
 import com.tim9.PlanJourney.beans.RentACarProfileBean;
 import com.tim9.PlanJourney.beans.VehicleReservationBean;
@@ -36,6 +37,7 @@ import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.Review;
 import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.models.rentacar.BranchOffice;
+import com.tim9.PlanJourney.models.rentacar.QuickVehicleReservation;
 import com.tim9.PlanJourney.models.rentacar.RentACarAdmin;
 import com.tim9.PlanJourney.models.rentacar.RentACarCompany;
 import com.tim9.PlanJourney.models.rentacar.Vehicle;
@@ -43,6 +45,7 @@ import com.tim9.PlanJourney.models.rentacar.VehicleReservation;
 import com.tim9.PlanJourney.service.AuthorityService;
 import com.tim9.PlanJourney.service.BranchOfficeService;
 import com.tim9.PlanJourney.service.DestinationService;
+import com.tim9.PlanJourney.service.QuickVehicleReservationService;
 import com.tim9.PlanJourney.service.RegisteredUserService;
 import com.tim9.PlanJourney.service.RentACarAdminService;
 import com.tim9.PlanJourney.service.RentACarCompanyService;
@@ -73,7 +76,9 @@ public class RentACarController {
 	@Autowired
 	private RegisteredUserService userService;
 	
-
+	@Autowired
+	private QuickVehicleReservationService quickService;
+	
 	@RequestMapping(value = "/api/vehicleSearch", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	// Recieves parameters for search and returns list of found vehicles
@@ -190,6 +195,18 @@ public class RentACarController {
 							if(hasVehicle(rentACarCompany,search.getDateFrom(),search.getDateTo())) {
 								foundCOmpanies.add(rentACarCompany);
 								break;
+							}
+							ArrayList<QuickVehicleReservation> quickReservations = new ArrayList<>();
+							quickReservations.addAll(rentACarCompany.getQuickReservations());
+							for (QuickVehicleReservation quick : quickReservations) {
+								if(quick.getOfficePick().getName().equals(search.getName())) {
+									SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+									Date dateFrom = sdf.parse(search.getDateFrom());
+									Date dateTo = sdf.parse(search.getDateTo());
+									if(dateFrom.before(quick.getDateFrom()) && dateTo.after(quick.getDateTo())) {
+										foundCOmpanies.add(rentACarCompany);
+									}
+								}
 							}
 							
 						}
@@ -582,5 +599,123 @@ public class RentACarController {
 		return true;
 	}
 	
+	@RequestMapping(value = "/api/addQuickVehicleReservation", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('RENT_ADMIN')")
+	public void addQuickReservation(@RequestBody VehicleReservationBean bean) throws Exception {
+		Vehicle vehicle = vehicleService.findOne(bean.getVehicleId());
+		vehicle.getId();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date dateFrom = sdf.parse(bean.getDateFrom());
+		Date dateTo = sdf.parse(bean.getDateTo());
+		BranchOffice officePick = bs.findOne(Long.parseLong(bean.getLocationPick()));
+		officePick.getId();
+		BranchOffice officeReturn = bs.findOne(Long.parseLong(bean.getLocationReturn()));
+		officeReturn.getId();
+		QuickVehicleReservation quick = new QuickVehicleReservation(vehicle, vehicle.getPrice(), bean.getDiscount(), dateFrom, dateTo, officePick, officeReturn, false);
+		quick.setOriginalPrice(vehicle.getPrice());
+		System.out.println(quick.getVehicle().getName());
+		System.out.println(quick.getOfficePick().getName());
+		System.out.println(quick.getOfficeReturn().getName());
+		vehicle.getQuickReservations().add(quick);
+		officePick.getCompany().getQuickReservations().add(quick);
+		companyService.save(officePick.getCompany());
+		quickService.save(quick);
+	}
+	
+	@RequestMapping(value = "/api/getQuickReservations", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	public @ResponseBody ArrayList<VehicleReservationBean> getQuickReservations(@RequestBody VehicleReservationSearchBean search) throws Exception {
+		ArrayList<VehicleReservationBean> found = new ArrayList<>();
+		ArrayList<QuickVehicleReservation> reservations = new ArrayList<>();
+		RentACarCompany company = companyService.findOne(Long.parseLong(search.getId()));
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String from = search.getDateFrom();
+		String to = search.getDateTo();
+		reservations.addAll(company.getQuickReservations());
+		if(from.equals("") || to.equals("")) {
+			return found;
+		}
+		else {
+			Date fromDate = sdf.parse(from);
+			Date toDate = sdf.parse(to);
+			for (QuickVehicleReservation reservation : reservations) {
+				boolean isAvaiable = false;
+				System.out.println(fromDate);
+				System.out.println(reservation.getDateFrom());
+				System.out.println(toDate);
+				System.out.println(reservation.getDateTo());
+				if (!reservation.isTaken()) {
+					if (fromDate.before(reservation.getDateFrom()) && toDate.after(reservation.getDateTo())) {
+						VehicleReservationBean bean = new VehicleReservationBean();
+						bean.setDateFrom(sdf.format(reservation.getDateFrom()));
+						bean.setDateTo(sdf.format(reservation.getDateTo()));
+						bean.setId(reservation.getId());
+						bean.setLocationPick(reservation.getOfficePick().getName());
+						bean.setLocationReturn(reservation.getOfficeReturn().getName());
+						bean.setVehicleId(reservation.getVehicle().getId());
+						bean.setVehicleName(reservation.getVehicle().getName());
+						bean.setPrice(reservation.getOriginalPrice()*(100 - reservation.getDiscount())/100);
+						bean.setDiscount(reservation.getDiscount());
+						found.add(bean);
+					}
+				}	
+			}
+		}
+		return found;
+		
+	}
+	
+	@RequestMapping(value = "/api/getQuickReservationsByAdmin", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('RENT_ADMIN')")
+	public @ResponseBody ArrayList<VehicleReservationBean> getQuickReservationsAdmin() throws Exception {
+		ArrayList<VehicleReservationBean> reservations = new ArrayList<>();
+		RentACarAdmin admin = getAdmin();
+		RentACarCompany company = admin.getService();
+		for (QuickVehicleReservation quick : company.getQuickReservations()) {
+			VehicleReservationBean bean = new VehicleReservationBean();
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+			bean.setDateFrom(sdf.format(quick.getDateFrom()));
+			bean.setDateTo(sdf.format(quick.getDateTo()));
+			bean.setId(quick.getId());
+			bean.setLocationPick(quick.getOfficePick().getName());
+			bean.setLocationReturn(quick.getOfficeReturn().getName());
+			bean.setVehicleId(quick.getVehicle().getId());
+			bean.setVehicleName(quick.getVehicle().getName());
+			bean.setPrice(quick.getOriginalPrice()*(100 - quick.getDiscount())/100);
+			bean.setDiscount(quick.getDiscount());
+			reservations.add(bean);
+		}
+		return reservations;
+	}
+	
+	@RequestMapping(value = "/api/quickReserveVehicle", method = RequestMethod.POST, produces= MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	//Returns vehicles that are avaiable for reservation in selected company
+	public @ResponseBody boolean quickReserveVehicle(@RequestBody QuickVehicleReserveBean bean) throws Exception { 
+		QuickVehicleReservation quick = quickService.findOne(bean.getId());
+		Vehicle vehicle = quick.getVehicle();
+		RegisteredUser user = getRegisteredUser();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date dateFrom = quick.getDateFrom();
+		Date dateTo = quick.getDateTo();
+		BranchOffice pick =quick.getOfficePick();
+		BranchOffice ret = quick.getOfficeReturn();
+		VehicleReservation reservation = new VehicleReservation(vehicle, user,new Date(), dateFrom, dateTo, quick.getOriginalPrice()*(100-quick.getDiscount()/100) );
+		reservation.setOfficePick(pick);
+		reservation.setOfficeReturn(ret);
+		reservationService.save(reservation);
+		quick.setTaken(true);
+		user.getVehicleReservations().add(reservation);
+		vehicle.getReservations().add(reservation);
+		RentACarCompany company = vehicle.getCompany();
+		company.getReservations().add(reservation);
+		companyService.save(company);
+		userService.save(user);
+		vehicleService.save(vehicle);
+		reservationService.save(reservation);
 
+		return true;
+	}
 }

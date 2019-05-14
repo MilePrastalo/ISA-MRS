@@ -16,6 +16,9 @@
                     <li class="nav-item">
                         <a id="Vehicles" class="nav-link" href="#" @click="showVehicles">Vehicles</a>
                     </li>
+                    <li class="nav-item">
+                        <a id="QuickReservations" class="nav-link" href="#" @click="showQuick">Quick Reservation</a>
+                    </li>
                 </ul>
                 <Button @click = "logout">Log Out</Button>
                 
@@ -28,6 +31,7 @@
                 
                 <div id="office" v-if="tabSelected==3"><officeAdmin></officeAdmin></div>
                 <div id="CarsReservations" v-if="tabSelected==4"><vehicleAdminTab></vehicleAdminTab></div>
+                <div id="QuickReservations" v-if="tabSelected==5"><quickVehicle></quickVehicle></div>
             </div>
         </div>
     </div>
@@ -39,6 +43,7 @@ import userProfile from "./userProfile.vue";
 import rentacarprofile from "./rentacarprofile.vue";
 import officeAdmin from "./officesAdminTab.vue";
 import vehicleAdminTab from "./vehicleAdminTab.vue";
+import quickVehicle from "./quickVehicleReservation.vue";
 
 export default {
   name: 'registeredUserFrontPage',
@@ -46,7 +51,8 @@ export default {
     userProfile,
     rentacarprofile,
     officeAdmin,
-    vehicleAdminTab
+    vehicleAdminTab,
+    quickVehicle
   },
   data: function(){
       return {
@@ -60,6 +66,7 @@ export default {
             document.getElementById("companyProfile").className="nav-link";
             document.getElementById("Branch_offices").className="nav-link";
             document.getElementById("Vehicles").className="nav-link";
+            document.getElementById("QuickReservations").className="nav-link";
 
       },
       showCompanyProfile : function(){
@@ -68,6 +75,7 @@ export default {
             document.getElementById("companyProfile").className="nav-link active";
             document.getElementById("Branch_offices").className="nav-link";
             document.getElementById("Vehicles").className="nav-link";
+            document.getElementById("QuickReservations").className="nav-link";
 
       },
       showOffices : function(){
@@ -76,6 +84,7 @@ export default {
             document.getElementById("companyProfile").className="nav-link";
             document.getElementById("Branch_offices").className="nav-link active";
             document.getElementById("Vehicles").className="nav-link";
+            document.getElementById("QuickReservations").className="nav-link";
 
       },
       showVehicles: function(){
@@ -84,7 +93,18 @@ export default {
             document.getElementById("companyProfile").className="nav-link";
             document.getElementById("Branch_offices").className="nav-link";
             document.getElementById("Vehicles").className="nav-link active";
+            document.getElementById("QuickReservations").className="nav-link";
 
+      },
+      showQuick:function(){
+        this.tabSelected = 5;
+        document.getElementById("profile").className="nav-link";
+        document.getElementById("companyProfile").className="nav-link";
+        document.getElementById("Branch_offices").className="nav-link";
+        document.getElementById("Vehicles").className="nav-link";
+        document.getElementById("QuickReservations").className="nav-link active";
+
+        
       },
       logout :function(){
             localStorage.setItem('jwtToken',"");
