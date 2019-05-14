@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,6 +31,7 @@ import com.tim9.PlanJourney.beans.DestinationBean;
 import com.tim9.PlanJourney.beans.FlightBean;
 import com.tim9.PlanJourney.beans.QuickFlightReservationBean;
 import com.tim9.PlanJourney.models.Authority;
+import com.tim9.PlanJourney.models.Review;
 import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.models.flight.Flight;
 import com.tim9.PlanJourney.models.flight.FlightAdmin;
@@ -321,6 +323,36 @@ public class FlightCompanyController {
 			return user;
 		}
 		return null;
+	}
+	
+	@RequestMapping(value = "/api/getCompanyAverageRate", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
+	public ArrayList<Integer> getCompanyAverageRate() {
+		FlightAdmin loggedAdmin = getLoggedFlightAdmin();
+		if (loggedAdmin == null) {
+			return null;
+		}
+		FlightCompany flightCompany = loggedAdmin.getFlightCompany();
+		HashMap<Integer, Integer> ratingMap = new HashMap<>();
+		ratingMap.put(1, 0);
+		ratingMap.put(2, 0);
+		ratingMap.put(3, 0);
+		ratingMap.put(4, 0);
+		ratingMap.put(5, 0);
+		for (FlightReservation reservation : flightCompany.getFlightReservation()) {
+			for ( Review review : reservation.getReservationReviews()) {
+				int newNum = ratingMap.get(review.getRating()) + 1;
+				ratingMap.put(review.getRating(), newNum);
+			}
+		}
+		ArrayList<Integer> rates = new ArrayList<>();
+		rates.add(ratingMap.get(1));
+		rates.add(ratingMap.get(2));
+		rates.add(ratingMap.get(3));
+		rates.add(ratingMap.get(4));
+		rates.add(ratingMap.get(5));
+		return rates;
 	}
 	
 	private double findPrice(Flight f, Seat s) {
