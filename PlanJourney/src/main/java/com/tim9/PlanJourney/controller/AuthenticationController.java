@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.tim9.PlanJourney.beans.LoginBean;
 import com.tim9.PlanJourney.beans.RegisterBean;
@@ -156,14 +157,15 @@ public class AuthenticationController {
 	
 	@CrossOrigin()
 	@RequestMapping(value = "/registrationConfirmation/{encoded}", method = RequestMethod.GET)
-	public HttpStatus Conform(@PathVariable("encoded") String encoded) throws AuthenticationException, IOException {
+	public RedirectView Conform(@PathVariable("encoded") String encoded) throws AuthenticationException, IOException {
 		byte[] decoded = Base64.getDecoder().decode(encoded);
 		String username = new String(decoded,"UTF-8");
 		System.out.println(username);
 		RegisteredUser user = regUserService.findByUsername(username);
 		user.setConfirmed(true);
 		regUserService.save(user);
-		return HttpStatus.OK;
+		RedirectView view = new RedirectView("http://localhost:8081");
+		return view;
 	}
 
 	static class PasswordChanger {
