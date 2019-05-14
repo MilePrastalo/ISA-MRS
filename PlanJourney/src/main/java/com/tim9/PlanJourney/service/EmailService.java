@@ -35,11 +35,9 @@ public class EmailService {
 
 		System.out.println("E-mail sent!");
 	}
-	
+	//Sends email with encoded username after registration
 	@Async
 	public void sendRegistrationEmail(RegisteredUser user) throws MailException, InterruptedException {
-
-
 		System.out.println("Slanje emaila..." + user.getEmail());
 		SimpleMailMessage mail = new SimpleMailMessage();
 		mail.setTo(user.getEmail());

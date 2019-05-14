@@ -118,9 +118,8 @@ public class AuthenticationController {
 		user.setConfirmed(false);
 		userService.save(user);
 		try {
-			emailService.sendRegistrationEmail(user);
+			emailService.sendRegistrationEmail(user); // sends email
 		} catch (MailException | InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return HttpStatus.OK;
@@ -157,6 +156,7 @@ public class AuthenticationController {
 	
 	@CrossOrigin()
 	@RequestMapping(value = "/registrationConfirmation/{encoded}", method = RequestMethod.GET)
+	//Recieves enoceded username and switches variable confirmed to true so user can log in
 	public RedirectView Conform(@PathVariable("encoded") String encoded) throws AuthenticationException, IOException {
 		byte[] decoded = Base64.getDecoder().decode(encoded);
 		String username = new String(decoded,"UTF-8");

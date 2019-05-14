@@ -326,7 +326,6 @@ public class RentACarController {
 	}
 	@RequestMapping(value = "/api/rateVehicleReservation", method = RequestMethod.POST, produces= MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	//Removes reservation
 	public @ResponseBody boolean rateVehicleReservation(@RequestBody VehicleReservationBean bean) throws Exception { 
 		Vehicle vehicle = vehicleService.findOne(bean.getVehicleId());
 		RegisteredUser user = getRegisteredUser();		
@@ -343,7 +342,7 @@ public class RentACarController {
 	}
 	@RequestMapping(value = "/api/geteReservations", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	//Removes reservation
+	//Returns list of rent a car reservations for user
 	public @ResponseBody ArrayList<VehicleReservationBean> getReservations() throws Exception { 
 		RegisteredUser user = getRegisteredUser();		
 		ArrayList<VehicleReservation> reservations = new ArrayList<>();
@@ -602,6 +601,7 @@ public class RentACarController {
 	@RequestMapping(value = "/api/addQuickVehicleReservation", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('RENT_ADMIN')")
+	//Adds quick reservation to database
 	public void addQuickReservation(@RequestBody VehicleReservationBean bean) throws Exception {
 		Vehicle vehicle = vehicleService.findOne(bean.getVehicleId());
 		vehicle.getId();
@@ -625,6 +625,7 @@ public class RentACarController {
 	
 	@RequestMapping(value = "/api/getQuickReservations", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
+	//Returns list of avaiable quick reservations for selected time period and location for user
 	public @ResponseBody ArrayList<VehicleReservationBean> getQuickReservations(@RequestBody VehicleReservationSearchBean search) throws Exception {
 		ArrayList<VehicleReservationBean> found = new ArrayList<>();
 		ArrayList<QuickVehicleReservation> reservations = new ArrayList<>();
@@ -669,6 +670,7 @@ public class RentACarController {
 	@RequestMapping(value = "/api/getQuickReservationsByAdmin", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('RENT_ADMIN')")
+	//Returns list of all quick reservations
 	public @ResponseBody ArrayList<VehicleReservationBean> getQuickReservationsAdmin() throws Exception {
 		ArrayList<VehicleReservationBean> reservations = new ArrayList<>();
 		RentACarAdmin admin = getAdmin();
@@ -692,7 +694,8 @@ public class RentACarController {
 	
 	@RequestMapping(value = "/api/quickReserveVehicle", method = RequestMethod.POST, produces= MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	//Returns vehicles that are avaiable for reservation in selected company
+	//Makes quick reservation
+	//Creates new reservation and changes bool taken for quick reservation
 	public @ResponseBody boolean quickReserveVehicle(@RequestBody QuickVehicleReserveBean bean) throws Exception { 
 		QuickVehicleReservation quick = quickService.findOne(bean.getId());
 		Vehicle vehicle = quick.getVehicle();
