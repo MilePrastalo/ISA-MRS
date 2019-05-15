@@ -22,12 +22,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tim9.PlanJourney.beans.HotelDailyReportBean;
+import com.tim9.PlanJourney.beans.HotelReportBean;
 import com.tim9.PlanJourney.beans.HotelReservationBean;
 import com.tim9.PlanJourney.hotel.Hotel;
 import com.tim9.PlanJourney.hotel.HotelAdmin;
 import com.tim9.PlanJourney.hotel.HotelReservation;
 import com.tim9.PlanJourney.hotel.HotelRoom;
 import com.tim9.PlanJourney.models.Authority;
+import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.service.AuthorityService;
 import com.tim9.PlanJourney.service.HotelAdminService;
 import com.tim9.PlanJourney.service.HotelService;
@@ -75,8 +78,6 @@ public class HotelAdminController {
 
 			String username = authentication.getName();
 			HotelAdmin user = (HotelAdmin) userService.findOneByUsername(username);
-			System.out.println(user.getHotel().getName());
-			System.out.println(user.getHotel().getDestination().getName());
 			return user;
 		}
 		return null;
@@ -142,6 +143,80 @@ public class HotelAdminController {
 		return null;
 	}
 
+	@RequestMapping(value = "/api/getHotelReport", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('HOTEL_ADMIN')")
+	public @ResponseBody HotelReportBean getHotelReport(@RequestBody HotelReportBean hotelReportBean) {
+
+		hotelReportBean.setDailyReports(new ArrayList<HotelDailyReportBean>());
+
+		// Authenticate admin so we can get hotel.
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String username = authentication.getName();
+			HotelAdmin admin = adminService.findByUsername(username);
+			Hotel hotel = hotelService.findByName(admin.getHotel().getName());
+
+			// Sets time period of report depending on reports name(week,month,year).
+			int timePeriod = 0;
+			switch (hotelReportBean.getReportName()) {
+			case ("WEEK"):
+				timePeriod = 7;
+				break;
+			case ("MONTH"):
+				timePeriod = 30;
+				break;
+			case ("YEAR"):
+				timePeriod = 365;
+				break;
+			}
+			int numberOfReservations = 0;
+			float totalEarnings = 0;
+			// Calendar c is used to iterate days, cr is used for reservation first day.
+			Calendar c = Calendar.getInstance();
+			c.set(hotelReportBean.getfYear(), hotelReportBean.getfMonth() - 1, hotelReportBean.getfDay(), 0, 0);
+			Calendar cr = Calendar.getInstance();
+			// For every single day in time period we create dailyReport and add it to final
+			// report.
+			for (int i = 0; i < timePeriod; i++) {
+				HotelDailyReportBean dailyReport = new HotelDailyReportBean();
+				dailyReport.settYear(c.get(Calendar.YEAR));
+				dailyReport.settMonth(c.get(Calendar.MONTH) + 1);
+				dailyReport.settDay(c.get(Calendar.DAY_OF_MONTH));
+				dailyReport.setNumberOfReservations(0);
+				dailyReport.setEarnings(0);
+
+				// Checks if there are any reservations for current day, if there are adds them
+				// to dailyReport earnings.
+				for (HotelReservation hr : hotel.getReservations()) {
+					// Splits the first day of reservation
+					cr.setTime(hr.getFirstDay());
+					int fYear = cr.get(Calendar.YEAR);
+					int fMonth = cr.get(Calendar.MONTH) + 1;
+					int fDay = cr.get(Calendar.DAY_OF_MONTH);
+
+					if (fDay == dailyReport.gettDay() && fMonth == dailyReport.gettMonth()
+							&& fYear == dailyReport.gettYear()) {
+						dailyReport.setNumberOfReservations(dailyReport.getNumberOfReservations() + 1);
+						float paidPrice = hr.getPaidPrice() - hr.getPaidPrice() * hr.getDiscount() / 100;
+						dailyReport.setEarnings(dailyReport.getEarnings() + paidPrice);
+						numberOfReservations++;
+						totalEarnings += paidPrice;
+					}
+				}
+				hotelReportBean.setNumberOfReservations(numberOfReservations);
+				hotelReportBean.setTotalEarnings(totalEarnings);
+				hotelReportBean.getDailyReports().add(dailyReport);
+
+				// Increases Calendar c to next day.
+				c.add(Calendar.DATE, 1);
+			}
+
+		}
+
+		return hotelReportBean;
+	}
+
 	// Difference between quick reservation and normal reservation is lack of user
 	// and price reduction in quick reservation.
 	@RequestMapping(value = "/api/addQuickHotelReservation", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -152,6 +227,7 @@ public class HotelAdminController {
 		// Checks if hotel exists.
 		Hotel hotel = hotelService.findByName(reservationBean.getHotelName());
 		if (hotel == null) {
+			System.out.println("puko 1");
 			return false;
 		}
 		// Finds selected room and check if it exists.
@@ -163,13 +239,12 @@ public class HotelAdminController {
 			}
 		}
 		if (room == null) {
+			System.out.println("puko 2");
 			return false;
 		}
 		// Splits date and checks if reservation date is valid.
 		Date firstDay = new Date();
 		Calendar c = Calendar.getInstance();
-		System.out.println("Dates: " + reservationBean.getfYear() + " m: " + reservationBean.getfMonth() + " d: "
-				+ reservationBean.getfDay());
 		c.set(reservationBean.getfYear(), reservationBean.getfMonth() - 1, reservationBean.getfDay(), 0, 0);
 		firstDay.setTime(c.getTimeInMillis());
 
@@ -178,6 +253,9 @@ public class HotelAdminController {
 		lastDay.setTime(c.getTimeInMillis());
 
 		if (!checkDate(firstDay, lastDay, hotel, reservationBean.getRoomNumber())) {
+			System.out.println("puko 3");
+			System.out.println(firstDay);
+			System.out.println(lastDay);
 			return false;
 		}
 

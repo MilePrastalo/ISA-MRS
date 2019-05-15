@@ -20,7 +20,7 @@ import com.tim9.PlanJourney.models.Reservation;
 public class HotelReservation extends Reservation {
 
 	@ManyToOne
-	@JsonIgnoreProperties({ "admins", "reservations", "destinations" })
+	@JsonIgnoreProperties({ "admins", "reservations", "destinations", "rooms" })
 	private Hotel hotel;
 
 	@OneToOne
@@ -49,9 +49,9 @@ public class HotelReservation extends Reservation {
 
 	}
 
-	public HotelReservation(Long id, Hotel hotel, HotelRoom room, Date firstDay, Date lastDay,
-			Set<AdditionalCharges> additionalCharges, float paidPrice, int discount) {
-		setId(id);
+	public HotelReservation(Hotel hotel, HotelRoom room, Date firstDay, Date lastDay,
+			Set<AdditionalCharges> additionalCharges, float paidPrice, int discount, RegisteredUser user) {
+		super();
 		this.hotel = hotel;
 		this.room = room;
 		this.firstDay = firstDay;
@@ -59,6 +59,7 @@ public class HotelReservation extends Reservation {
 		this.additionalCharges = additionalCharges;
 		this.paidPrice = paidPrice;
 		this.discount = discount;
+		setUser(user);
 	}
 
 	public int getDiscount() {
