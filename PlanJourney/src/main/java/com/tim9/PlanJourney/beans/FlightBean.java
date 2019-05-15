@@ -31,6 +31,7 @@ public class FlightBean {
 	private String firstClassCapacity;
 	private Long id;
 	private Long companyId;
+	private double rate;
 	
 	
 	public FlightBean() {
@@ -309,6 +310,16 @@ public class FlightBean {
 
 	public void setCompanyId(Long companyId) {
 		this.companyId = companyId;
+	}
+
+
+	public double getRate() {
+		return rate;
+	}
+
+
+	public void setRate(double rate) {
+		this.rate = rate;
 	}
 	
 	
