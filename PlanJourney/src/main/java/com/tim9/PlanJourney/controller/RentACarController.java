@@ -293,10 +293,11 @@ public class RentACarController {
 		VehicleReservation reservation = new VehicleReservation(vehicle, user,new Date(), dateFrom, dateTo, (double)( (dateTo.getTime() - dateFrom.getTime()) / (1000 * 60 * 60 * 24)) * vehicle.getPrice() );
 		reservation.setOfficePick(pick);
 		reservation.setOfficeReturn(ret);
+		RentACarCompany company = vehicle.getCompany();
+		reservation.setCompany(company);
 		reservationService.save(reservation);
 		user.getVehicleReservations().add(reservation);
 		vehicle.getReservations().add(reservation);
-		RentACarCompany company = vehicle.getCompany();
 		company.getReservations().add(reservation);
 		companyService.save(company);
 		userService.save(user);
@@ -721,4 +722,6 @@ public class RentACarController {
 
 		return true;
 	}
+	
+	
 }

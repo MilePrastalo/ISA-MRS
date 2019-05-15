@@ -150,8 +150,10 @@ public class ReviewController {
 	}
 	//calculates new rating for rent a car company
 	private void calculateNewRentACarRating(RentACarCompany company) {
+		RentACarCompany c2 = rentACarCompanyService.findOne(company.getId());
+		c2.getReservations();
 		ArrayList<Reservation> reservations = new ArrayList<>();
-		reservations.addAll(company.getReservations());
+		reservations.addAll(c2.getReservations());
 		calculateCompanyRating(reservations,company);
 		rentACarCompanyService.save(company);
 	}
