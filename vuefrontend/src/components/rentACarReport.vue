@@ -9,35 +9,31 @@
       </div>
       <div class="row" id="Vehicless">
           <div class="container">
-              <div class="row">
-              From:
-              <input type="date" name="" id="">
-              To: 
-              <input type="date" name="" id="">
-              Avaiable
-              <input name="avaiability" type="radio" value="Avaiable" v-model="avaiability"/>
-              Reserved
-              <input name="avaiability" type="radio" value="Reserved" v-model="avaiability"/>
-              <button @click="searchVehicles">Search</button>
-          </div>
-          <div class="row">
-              <table>
-                  <tr>
-                      <td>Vehicle name</td>
-                      <td>Vehicle Maker</td>
-                      <td>year</td>
-                      <td>type</td>
-                      <td>rating</td>
-                  </tr>
-                  <tr v-for="vehicle in vehicles" :key="vehicle.id">
-                      <td>{{vehicle.name}}</td>
-                      <td>{{vehicle.maker}}</td>
-                      <td>{{vehicle.year}}</td>
-                      <td>{{vehicle.type}}</td>
-                      <td>{{vehicle.rating}}</td>
-                  </tr>
-              </table>
-          </div>
+              
+            <div class="row">
+                <table>
+            <tr>
+                <th>Name</th>
+                <th>Maker</th>
+                <th>Type</th>
+                <th>Year</th>
+                <th>Price</th>
+                <th>Avaiable from</th>
+                <th>Avaiable to</th>
+                <th>Rating</th>
+            </tr>
+            <tr v-for="car in cars" :key="car.id">
+                <td>{{car.name}}</td>
+                <td>{{car.maker}}</td>
+                <td>{{car.type}}</td>
+                <td>{{car.year}}</td>
+                <td>{{car.price}}</td>
+                <td>{{car.dateFrom}}</td>
+                <td>{{car.dateTo}}</td>
+                <td>{{car.rating}}</td>
+            </tr>
+        </table>
+            </div>
           </div>
           
               
@@ -104,7 +100,7 @@ export default {
       visible  :false ,
       ratingData:[5,5,1,2,3],
       avgRating:4.21,
-      vehicles:[],
+      cars:[],
       avaiability:"",
       dateFromVehicle:"",
       dateToVehicle:"",
@@ -132,6 +128,17 @@ export default {
                     this.ratingData = response.data.ratings; 
                     this.avgRating = response.data.avgRating;
                 });
+
+        axios.get("http://localhost:8080/api/getCarsByAdmin")
+            .then(response => {
+                console.log(response);
+                this.cars = response.data;
+                this.cars.forEach(element => {
+                    if(element.rating<=0){
+                        element.rating = "No rating";
+                    }
+                });
+            }); 
   },
 
   methods:{
