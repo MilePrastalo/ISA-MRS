@@ -522,6 +522,7 @@ public class RentACarController {
 	    	eb.setPrice(Double.toString(vehicle.getPrice()));
 	    	eb.setType(vehicle.getType());
 	    	eb.setYear(Integer.toString(vehicle.getYear()));
+	    	eb.setRating(vehicle.getRating());
 	    	try {
 	    		eb.setDateFrom(sdf.format(vehicle.getAvaiableFrom()));
 		    	eb.setDateTo(sdf.format(vehicle.getAvaiableTo()));
