@@ -57,19 +57,14 @@
           <div class="contai">
               <div class="row">
                From:
-              <input type="date" name="" id="">
+              <input v-model="dateFromEarnings" type="date" name="" id="">
               To: 
-              <input type="date" name="" id="">
-              Weekly
-              <input v-model="earningsType" name="earningspan" type="radio" value="Weekly"/>
-              Monthly
-              <input v-model="earningsType" name="earningspan" type="radio" value="Monthly"/>
-              Yearly
-              <input v-model="earningsType" name="earningspan" type="radio" value="Yearly"/>
+              <input v-model="dateToEarnings" type="date" name="" id="">
+
               <button @click="searchEarnings">Search</button>
           </div>
           <div class="row">
-              <canvas ref="referencedElement" id="myChart2" width="600" height="400" style="responsive:true;"></canvas>
+              <h2>Earnings for selected period:{{earnings}}</h2>
           </div>
         </div>
       </div>
@@ -155,7 +150,7 @@ export default {
                     return localStorage.getItem('jwtToken');
                 };
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-        axios.post("http://localhost:8080/api/",{})
+        axios.post("http://localhost:8080/api/getCompanyEarningsReport",{dateFrom:this.dateFromEarnings,dateTo:this.dateToEarnings})
                 .then(response => { 
                     this.earnings = response.data; 
                 }); 
@@ -234,41 +229,7 @@ export default {
             document.getElementById('Earnings').hidden = false;
             document.getElementById('Reservations').hidden = true;
 
-            var ctx = document.getElementById('myChart2').getContext('2d');
-            var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-            labels: ['1', '2', '3', '4', '5'],
-            datasets: [{
-                label: '# of Votes',
-                data: this.ratingData,
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                ],
-                borderWidth: 1
-            }]
-        },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                }
-            }
-        });
+            
         }
     else{
         document.getElementById('Ratings').hidden = true;

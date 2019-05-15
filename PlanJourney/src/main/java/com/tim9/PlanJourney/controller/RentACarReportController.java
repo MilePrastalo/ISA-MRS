@@ -158,8 +158,6 @@ public class RentACarReportController {
 		}
 		return report;
 	}
-	
-	
 	private RentACarAdmin getAdmin() {
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 		String username = currentUser.getName();
@@ -167,5 +165,40 @@ public class RentACarReportController {
 
 		return admin;
 
+	}
+	
+	@RequestMapping(value = "/api/getCompanyEarningsReport", method = RequestMethod.POST,  consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	public @ResponseBody double getEarningsReport(@RequestBody  VehicleReservationReport search)
+			throws Exception {
+		RentACarAdmin admin = getAdmin();
+		RentACarCompany company = companyService.findOne(admin.getService().getId());
+		company.getReservations();
+		VehicleReportReturn report = new VehicleReportReturn();
+		ArrayList<VehicleReservation> reservations = new ArrayList<>();
+		
+		reservations.addAll(company.getReservations());
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date startDate = sdf.parse(search.getDateFrom());
+		Date endDate = sdf.parse(search.getDateTo());
+		Calendar calStart = Calendar.getInstance();
+		calStart.setTime(startDate);
+		Calendar calEnd = Calendar.getInstance();
+		calEnd.setTime(endDate);
+		
+		double earnings = 0.0;
+		
+		
+		for (VehicleReservation vehicleReservation : reservations) {
+			Date from = sdf.parse(search.getDateFrom());
+			Date to = sdf.parse(search.getDateTo());
+			if(vehicleReservation.getDateFrom().after(from)) {
+				earnings+=vehicleReservation.getCena();
+			}
+			
+		}
+		
+		return earnings;
 	}
 }
