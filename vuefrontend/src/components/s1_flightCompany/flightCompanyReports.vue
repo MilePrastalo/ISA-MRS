@@ -47,35 +47,37 @@
 
         <div  class="row" id="Ratings">
             <h2>Average rate for Flight Company: {{averageRate}}</h2>
-            <canvas ref="referencedElement" id="myChart" width="80%" height="30%"  style="responsive:true;"></canvas>
+            <div id="ratingsCanvasArea">
+                <canvas ref="referencedElement" id="myChart"  style="responsive:true;"></canvas>
+            </div>
         </div>
 
         
         <div  class="row" id="SoldTickets">
             <div class = "row">
-                <form >
+                <form  @submit="onSubmitSoldTickets">
                     <table style="text-align: left">
                         <tr>
                             <td>From:</td>
-                            <td><input type="date"></td>
+                            <td><input type="date" v-model="dateFrom"></td>
                         </tr>
                         <tr>
                             <td>To:</td>
-                            <td><input type="date"></td>
+                            <td><input type="date" v-model="dateTo"></td>
                         </tr>
                         <tr style="text-align: center">
                             <td><div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="eco" checked @click="checkedClass(1)" name="inlineDefaultRadiosExample">
+                                <input type="radio" class="custom-control-input" id="eco" checked @click="checkedClassTicket('daily')" name="inlineDefaultRadiosExample">
                                 <label class="custom-control-label" for="eco">Daily</label>
                                 </div>
                             </td>
                             <td><div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="bus" @click="checkedClass(2)" name="inlineDefaultRadiosExample">
+                                <input type="radio" class="custom-control-input" id="bus" @click="checkedClassTicket('weekly')" name="inlineDefaultRadiosExample">
                                 <label class="custom-control-label" for="bus">Weekly</label>
                                 </div>
                             </td>
                             <td><div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="first" @click="checkedClass(3)" name="inlineDefaultRadiosExample">
+                                <input type="radio" class="custom-control-input" id="first" @click="checkedClassTicket('monthly')" name="inlineDefaultRadiosExample">
                                 <label class="custom-control-label" for="first">Monthly</label>
                                 </div>
                             </td>
@@ -86,7 +88,9 @@
                     </table>
                 </form>
                 <br>
-                <canvas ref="referencedElement" id="soldTicketsChart" width="80%" height="30%"    style="responsive:true;"></canvas>
+                <div id = "ticketCanvasArea">
+                    <canvas ref="referencedElement" id="soldTicketsChart" style="responsive:true;"></canvas>
+                </div>
             </div>
         </div>
         <div  class="row" id="Earnings">
@@ -129,10 +133,11 @@ export default {
         dataForCompanyRates: [],
         dataSoldTickets: [],
         averageRate: 0,
-        dateFrom: {},
-        dateTo: {},
+        dateFrom: "",
+        dateTo: "",
         earnings: 0,
-        earningsVisible: false
+        earningsVisible: false,
+        reportKindTickets: "daily",
     }
   },
   mounted(){
@@ -169,7 +174,6 @@ export default {
             document.getElementById('Ratings').hidden = true;
             document.getElementById('Earnings').hidden = true;
             document.getElementById('SoldTickets').hidden = false;
-            this.soldTicketReport();
         }
         else if (this.tabSelected == 3) {
             document.getElementById('Ratings').hidden = true;
@@ -230,14 +234,12 @@ export default {
             }
         });
     },
+    onSubmitSoldTickets: function(e){
 
-    onSubmitSoldTickets: function(){
-
-        var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
-        };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-        axios.post("http://localhost:8080/api/getSoldTicketsReport",{dateFrom: "", dateTo: "", level: ""})
+        e.preventDefault();
+        console.log(localStorage.getItem('jwtToken'));
+        axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('jwtToken');
+        axios.post("http://localhost:8080/api/getSoldTicketReport",{dateFrom: this.dateFrom, dateTo: this.dateTo, kind: this.reportKindTickets})
         .then(response => {
                 this.dataSoldTickets = response.data;
                 this.soldTicketReport();
@@ -245,15 +247,16 @@ export default {
     },
 
     soldTicketReport: function(){
-
+        document.getElementById('soldTicketsChart').remove(); // this is my <canvas> element
+        document.getElementById('ticketCanvasArea').innerHTML = '<canvas ref="referencedElement" id="soldTicketsChart" style="responsive:true;"><canvas>';
         var ctx = document.getElementById('soldTicketsChart').getContext('2d');
         var myChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Monday', 'Thusday', 'Wendsday', 'Thrusday', 'Friday', 'Saturday','Sunday'],
+                labels: this.dataSoldTickets.labels,
                 datasets: [{
                     label: '# of sold tickets',
-                    data: ['5', '5', '3', '10', '12'],
+                    data:  this.dataSoldTickets.data,
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
@@ -296,6 +299,10 @@ export default {
                 this.earnings = response.data;
                 this.earningsVisible = true;
         });
+    },
+
+    checkedClassTicket: function(kind){
+        this.reportKindTickets = kind;
     }
 
 
@@ -326,12 +333,12 @@ h2{
     margin-top: 2%;
 }
 
-#Ratings{
+#ratingsCanvasArea{
     width: 80%;
-    height: 50%;
+    height: 50%
 }
-#SoldTickets{
+#ticketCanvasArea{
     width: 80%;
-    height: 50%;
+     height: 50%
 }
 </style>

@@ -8,10 +8,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +30,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.beans.DestinationBean;
 import com.tim9.PlanJourney.beans.FlightBean;
-import com.tim9.PlanJourney.beans.FlightReportBean;
+import com.tim9.PlanJourney.beans.FlightReportRequestBean;
 import com.tim9.PlanJourney.beans.QuickFlightReservationBean;
+import com.tim9.PlanJourney.beans.FlightCompanyReportBean;
 import com.tim9.PlanJourney.models.Authority;
 import com.tim9.PlanJourney.models.Review;
 import com.tim9.PlanJourney.models.flight.Destination;
@@ -402,7 +405,7 @@ public class FlightCompanyController {
 	@RequestMapping(value = "/api/getEarningsReport", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
-	public @ResponseBody String getEarningsReport(@RequestBody FlightReportBean reqestData) {
+	public @ResponseBody String getEarningsReport(@RequestBody FlightReportRequestBean reqestData) {
 
 		FlightAdmin loggedAdmin = getLoggedFlightAdmin();
 		if (loggedAdmin == null) {
@@ -429,6 +432,90 @@ public class FlightCompanyController {
 		}
 		return Double.toString(total);
 	}
+	
+	
+	@RequestMapping(value = "/api/getSoldTicketReport", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
+	public @ResponseBody FlightCompanyReportBean getSoldTicket(@RequestBody FlightReportRequestBean reqestData) throws Exception {
+
+		FlightAdmin loggedAdmin = getLoggedFlightAdmin();
+		if (loggedAdmin == null) {
+			return null;
+		}
+		FlightCompany flightCompany = loggedAdmin.getFlightCompany();
+		
+		Date startDate = reqestData.getDateFrom();
+		Date endDate = reqestData.getDateTo();
+		Calendar calStart = Calendar.getInstance();
+		calStart.setTime(startDate);
+		Calendar calEnd = Calendar.getInstance();
+		calEnd.setTime(endDate);
+
+		ArrayList<String> labels = new ArrayList<>();
+		ArrayList<Integer> cntTickets = new ArrayList<>();
+		
+		System.out.println("KIND = " + reqestData.getKind());
+		long span = endDate.getTime() - startDate.getTime();
+		long cols;
+		if (reqestData.getKind().equals("daily")) {
+			cols = TimeUnit.DAYS.convert(span, TimeUnit.MILLISECONDS);
+			for(int i = 0; i<=cols;i++) {
+				labels.add(sdf.format(calStart.getTime()));
+				cntTickets.add(0);
+				calStart.add(calStart.DATE, 1);
+			}
+		}
+		else if (reqestData.getKind().equals("weekly")) {
+			cols = TimeUnit.DAYS.convert(span, TimeUnit.MILLISECONDS);
+			int weekStart = calStart.get(Calendar.WEEK_OF_YEAR);
+			int weekEnd = calEnd.get(Calendar.WEEK_OF_YEAR);
+			boolean ajusted = false;
+			for(int i = 0; i<=weekEnd-weekStart;i++) {
+				labels.add(sdf.format(calStart.getTime()));
+				cntTickets.add(0);
+				if(!ajusted) {
+					calStart.add(calStart.DATE, 9-calStart.get(Calendar.DAY_OF_WEEK));
+					ajusted = true;
+				}
+				else {
+					calStart.add(calStart.DATE, 7);
+				}
+			}
+		}
+		else if (reqestData.getKind().equals("monthly")) {
+			boolean ajusted = false;
+			int monthStart = calStart.get(Calendar.MONTH);
+			int montEnd = calEnd.get(Calendar.MONTH);
+
+			for(int i = 0; i<=montEnd-monthStart;i++) {
+				labels.add(sdf.format(calStart.getTime()));
+				cntTickets.add(0);
+				int sub = calStart.get(Calendar.DAY_OF_MONTH);
+				if(!ajusted) {
+					calStart.add(calStart.DATE,-sub+1);
+					calStart.add(calStart.MONTH, 1);
+					ajusted= true;
+				}
+				else {
+					calStart.add(calStart.MONTH, 1);
+				}
+			}
+		}
+		for (Flight flight : flightCompany.getFlights()) {
+			for (FlightReservation reservation : flight.getFlightReservations()) {
+				for(int i = cntTickets.size()-1; i>=0; i--) {
+					Date d = sdf.parse(labels.get(i));
+					if (reservation.getFlight().getStartDate().after(d)) {
+						cntTickets.set(i, cntTickets.get(i)+1);
+						break;
+					}
+				}
+			}
+		}
+		return new FlightCompanyReportBean(labels, cntTickets);
+	}
+	
 
 	private double findPrice(Flight f, Seat s) {
 
