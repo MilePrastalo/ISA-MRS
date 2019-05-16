@@ -293,10 +293,11 @@ public class RentACarController {
 		VehicleReservation reservation = new VehicleReservation(vehicle, user,new Date(), dateFrom, dateTo, (double)( (dateTo.getTime() - dateFrom.getTime()) / (1000 * 60 * 60 * 24)) * vehicle.getPrice() );
 		reservation.setOfficePick(pick);
 		reservation.setOfficeReturn(ret);
+		RentACarCompany company = vehicle.getCompany();
+		reservation.setCompany(company);
 		reservationService.save(reservation);
 		user.getVehicleReservations().add(reservation);
 		vehicle.getReservations().add(reservation);
-		RentACarCompany company = vehicle.getCompany();
 		company.getReservations().add(reservation);
 		companyService.save(company);
 		userService.save(user);
@@ -521,6 +522,7 @@ public class RentACarController {
 	    	eb.setPrice(Double.toString(vehicle.getPrice()));
 	    	eb.setType(vehicle.getType());
 	    	eb.setYear(Integer.toString(vehicle.getYear()));
+	    	eb.setRating(vehicle.getRating());
 	    	try {
 	    		eb.setDateFrom(sdf.format(vehicle.getAvaiableFrom()));
 		    	eb.setDateTo(sdf.format(vehicle.getAvaiableTo()));
@@ -721,4 +723,6 @@ public class RentACarController {
 
 		return true;
 	}
+	
+	
 }

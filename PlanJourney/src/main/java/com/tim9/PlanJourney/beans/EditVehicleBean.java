@@ -9,6 +9,7 @@ public class EditVehicleBean {
 	private String price;
 	private String dateFrom;
 	private String dateTo;
+	private double rating;
 	public EditVehicleBean() {
 		super();
 	}
@@ -60,6 +61,13 @@ public class EditVehicleBean {
 	public void setDateTo(String dateTo) {
 		this.dateTo = dateTo;
 	}
+	public double getRating() {
+		return rating;
+	}
+	public void setRating(double rating) {
+		this.rating = rating;
+	}
+	
 	
 	
 }

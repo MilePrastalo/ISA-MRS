@@ -19,6 +19,9 @@
                     <li class="nav-item">
                         <a id="QuickReservations" class="nav-link" href="#" @click="showQuick">Quick Reservation</a>
                     </li>
+                    <li class="nav-item">
+                        <a id="Reports" class="nav-link" href="#" @click="showReports">Reports</a>
+                    </li>
                 </ul>
                 <Button @click = "logout">Log Out</Button>
                 
@@ -32,6 +35,7 @@
                 <div id="office" v-if="tabSelected==3"><officeAdmin></officeAdmin></div>
                 <div id="CarsReservations" v-if="tabSelected==4"><vehicleAdminTab></vehicleAdminTab></div>
                 <div id="QuickReservations" v-if="tabSelected==5"><quickVehicle></quickVehicle></div>
+                <div id="Report" v-if="tabSelected==6"><rentACarReport/></div>
             </div>
         </div>
     </div>
@@ -44,7 +48,7 @@ import rentacarprofile from "./rentacarprofile.vue";
 import officeAdmin from "./officesAdminTab.vue";
 import vehicleAdminTab from "./vehicleAdminTab.vue";
 import quickVehicle from "./quickVehicleReservation.vue";
-
+import rentACarReport from "./rentACarReport.vue"
 export default {
   name: 'registeredUserFrontPage',
   components: {
@@ -52,7 +56,8 @@ export default {
     rentacarprofile,
     officeAdmin,
     vehicleAdminTab,
-    quickVehicle
+    quickVehicle,
+    rentACarReport
   },
   data: function(){
       return {
@@ -105,6 +110,14 @@ export default {
         document.getElementById("QuickReservations").className="nav-link active";
 
         
+      },
+      showReports:function(){
+          this.tabSelected=6;
+          document.getElementById("profile").className="nav-link";
+        document.getElementById("companyProfile").className="nav-link";
+        document.getElementById("Branch_offices").className="nav-link";
+        document.getElementById("Vehicles").className="nav-link";
+        document.getElementById("QuickReservations").className="nav-link";
       },
       logout :function(){
             localStorage.setItem('jwtToken',"");
