@@ -11,7 +11,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,19 +23,23 @@ import com.tim9.PlanJourney.beans.FlightReservationBean;
 import com.tim9.PlanJourney.beans.PassangerBean;
 import com.tim9.PlanJourney.beans.QuickFlightReservationBean;
 import com.tim9.PlanJourney.beans.ReservationRequestBean;
+import com.tim9.PlanJourney.hotel.HotelReservation;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.flight.Flight;
 import com.tim9.PlanJourney.models.flight.FlightReservation;
 import com.tim9.PlanJourney.models.flight.Passanger;
 import com.tim9.PlanJourney.models.flight.QuickFlightReservation;
 import com.tim9.PlanJourney.models.flight.Seat;
+import com.tim9.PlanJourney.models.rentacar.VehicleReservation;
 import com.tim9.PlanJourney.service.EmailService;
 import com.tim9.PlanJourney.service.FlightReservationService;
 import com.tim9.PlanJourney.service.FlightService;
+import com.tim9.PlanJourney.service.HotelReservationService;
 import com.tim9.PlanJourney.service.PassangerService;
 import com.tim9.PlanJourney.service.QuickFlightReservationService;
 import com.tim9.PlanJourney.service.RegisteredUserService;
 import com.tim9.PlanJourney.service.SeatService;
+import com.tim9.PlanJourney.service.VehicleReservationService;
 
 @RestController
 public class flightReservationController {
@@ -55,6 +58,10 @@ public class flightReservationController {
 	private PassangerService passangerService;
 	@Autowired
 	private QuickFlightReservationService quickReservationService;
+	@Autowired
+	private VehicleReservationService vehicleReservationService;
+	@Autowired
+	private HotelReservationService hotelReservationService;
 	
 	
 	
@@ -100,6 +107,8 @@ public class flightReservationController {
 		reservationBean.getPassangers().get(0).setFirstName(loggedUser.getLastName());
 		
 		Set<Passanger> passangers = new HashSet<>();
+		Set<HotelReservation> hotelReservations = getHotelReservations(reservationBean.getHotelReservations());
+		Set<VehicleReservation> vehicleReservations = getRentReservations(reservationBean.getRentReservations());
 		
 		for (PassangerBean passanger : reservationBean.getPassangers()) {
 			
@@ -122,7 +131,8 @@ public class flightReservationController {
 		seatService.saveAll(seats);
 		passangerService.saveAll(passangersList);
 		
-		FlightReservation reservation = new FlightReservation(loggedUser, main_seat, passangers, flight, total, new Date(), false);
+		FlightReservation reservation = new FlightReservation(loggedUser, main_seat, passangers, flight, total, new Date(), false, hotelReservations, vehicleReservations);
+		reservationService.save(reservation);
 		for (RegisteredUser friend: friends) {
 			try {
 				emailService.sendReservationRequest(friend, reservation.getId());
@@ -131,7 +141,6 @@ public class flightReservationController {
 				System.out.println("Error while sending email: " + e.getMessage());
 			}
 		}
-		reservationService.save(reservation);
 		try {
 			emailService.sendReservationMade(reservation);
 
@@ -141,6 +150,28 @@ public class flightReservationController {
 			return "Reservation is made but we didn't succeed to send the email!";
 		}
 		return "success";
+	}
+	
+	private Set<HotelReservation> getHotelReservations(ArrayList<Long> ids){
+		Set<HotelReservation> retVal = new HashSet<HotelReservation>();
+		if (ids.size() == 0) {
+			return retVal;
+		}
+		for (Long id : ids) {
+			retVal.add(hotelReservationService.findOne(id));
+		}
+		return retVal;
+	}
+	
+	private Set<VehicleReservation> getRentReservations(ArrayList<Long> ids){
+		Set<VehicleReservation> retVal = new HashSet<VehicleReservation>();
+		if (ids.size() == 0) {
+			return retVal;
+		}
+		for (Long id : ids) {
+			retVal.add(vehicleReservationService.findOne(id));
+		}
+		return retVal;
 	}
 	
 	@RequestMapping(value = "/api/makeQuickReservation", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -160,7 +191,7 @@ public class flightReservationController {
 		main_seat.setQuick(false);
 		seatService.save(main_seat);
 		double total = originPrice * discount/100;
-		FlightReservation reservation = new FlightReservation(loggedUser, main_seat, new HashSet<Passanger>(), flight, total, new Date(), true );
+		FlightReservation reservation = new FlightReservation(loggedUser, main_seat, new HashSet<Passanger>(), flight, total, new Date(), true, new HashSet<>(),  new HashSet<>() );
 		QuickFlightReservation quick = quickReservationService.findOne(reservationBean.getId());
 		quick.setTaken(true);
 		quickReservationService.save(quick);

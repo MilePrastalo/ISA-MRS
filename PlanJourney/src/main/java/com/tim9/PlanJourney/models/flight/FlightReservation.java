@@ -12,8 +12,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.tim9.PlanJourney.hotel.HotelReservation;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.Reservation;
+import com.tim9.PlanJourney.models.rentacar.VehicleReservation;
 
 @Entity
 public class FlightReservation extends Reservation {
@@ -38,13 +40,18 @@ public class FlightReservation extends Reservation {
 	@Column(name = "confirmed")
 	private boolean confirmed;
 	
+	@OneToMany
+	private Set<HotelReservation> hoteReservations = new HashSet<>();
+	
+	@OneToMany
+	private Set<VehicleReservation> vehicleReservations = new HashSet<>();
 	
 	public FlightReservation() {
 		// TODO Auto-generated constructor stub
 	}
 
 	public FlightReservation(RegisteredUser user, Seat seat, Set<Passanger> passangers, Flight flight,
-			double price, Date date, boolean confirmed) {
+			double price, Date date, boolean confirmed,Set<HotelReservation> hotelReservations, Set<VehicleReservation> vehicleReservations  ) {
 		super();
 		setUser(user);
 		this.seat = seat;
@@ -53,6 +60,8 @@ public class FlightReservation extends Reservation {
 		this.price = price;
 		this.date = date;
 		this.confirmed = confirmed;
+		this.hoteReservations = hotelReservations;
+		this.vehicleReservations = vehicleReservations;
 	}
 
 	public Seat getSeat() {
@@ -101,6 +110,22 @@ public class FlightReservation extends Reservation {
 
 	public void setConfirmed(boolean confirmed) {
 		this.confirmed = confirmed;
+	}
+
+	public Set<HotelReservation> getHoteReservations() {
+		return hoteReservations;
+	}
+
+	public void setHoteReservations(Set<HotelReservation> hoteReservations) {
+		this.hoteReservations = hoteReservations;
+	}
+
+	public Set<VehicleReservation> getVehicleReservations() {
+		return vehicleReservations;
+	}
+
+	public void setVehicleReservations(Set<VehicleReservation> vehicleReservations) {
+		this.vehicleReservations = vehicleReservations;
 	}
 
 	
