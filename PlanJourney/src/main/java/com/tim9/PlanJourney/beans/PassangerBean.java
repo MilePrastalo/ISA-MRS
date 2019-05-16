@@ -8,6 +8,7 @@ public class PassangerBean {
 	private String lastName;
 	private String passport;
 	private double price;
+	private Long friendId;
 	
 	public PassangerBean() {
 		// TODO Auto-generated constructor stub
@@ -60,6 +61,14 @@ public class PassangerBean {
 
 	public void setPrice(double price) {
 		this.price = price;
+	}
+
+	public Long getFriendId() {
+		return friendId;
+	}
+
+	public void setFriendId(Long friendId) {
+		this.friendId = friendId;
 	}
 	
 	

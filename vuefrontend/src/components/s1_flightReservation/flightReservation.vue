@@ -9,11 +9,19 @@
         </div>
 
         <div v-if="currentStep == 2">
-
             <button @click="goToNextStep(3)"> Next >> </button>
             <passangers :iid = "id"></passangers>
+        </div>
 
-        </div>		
+        <div v-if="currentStep == 3">
+            <button @click="goToNextStep(4)"> Next >> </button>
+            <h2>Hotel reservations</h2>
+        </div>
+        <div v-if="currentStep == 4">
+            <button @click="goToNextStep(5)"> Finish >> </button>
+            <h2>Vehicle reservations</h2>
+        </div>
+        		
          
     </div>
 </template>
@@ -38,6 +46,8 @@ export default {
             passangers: [],
             id : 0,
             flight: {},
+            hotelReservations: [],
+            vehicleReservations: [],
             currentStep: 1
         }
     },
@@ -75,11 +85,11 @@ export default {
             var idx;
             var passangerSeat = [];
             for (idx in this.passangers){
-                if (this.passangers[idx].friend == false){
-                    var price = this.getPrice(this.passangers[idx].seat.travelClass);
-                    var obj = {price: price, seatId: this.passangers[idx].seat.id, firstName: this.passangers[idx].firstName, lastName: this.passangers[idx].lastName, passport: this.passangers[idx].passport};
-                    passangerSeat.push(obj);
-                }     
+                var price = this.getPrice(this.passangers[idx].seat.travelClass);
+                var obj = {price: price, seatId: this.passangers[idx].seat.id, 
+                           firstName: this.passangers[idx].firstName, lastName: this.passangers[idx].lastName,
+                           passport: this.passangers[idx].passport, friendId: this.passangers[idx].friendID};
+                passangerSeat.push(obj);     
             }
             if (passangerSeat.length == 0){
                  var price = this.getPrice(this.selected_seats[0].travelClass);
@@ -90,12 +100,11 @@ export default {
                 return localStorage.getItem('jwtToken');
             };
             axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-            axios.post("http://localhost:8080/api/makeFlightReservation", {flightId: this.id, passangers: passangerSeat})
+            axios.post("http://localhost:8080/api/makeFlightReservation", {flightId: this.id, passangers: passangerSeat,
+                        hotelReservations: this.hotelReservations, rentReservations: this.vehicleReservations})
             .then(response => {
-                this.flight = response.data
-                 alert("Rezervacija je napravljena");
+                 alert(response.data);
             });
-            alert("Reservation is successfuly made!");
             window.location = '/flight'
         },
 
@@ -120,11 +129,17 @@ export default {
 
                 this.passangers_count = this.selected_seats.length   - (this.passangers).length;
                 if (this.passangers_count != 0){
-                    alert("You must fill all data and then click 'Finish'.");
+                    alert("You must fill all data and then click 'Next'.");
                 }
                 else{
-                    this.makeReservation();
+                    this.currentStep = option;
                 }
+            }
+            if (option == 4){
+                this.currentStep = option;
+            }
+            if (option == 5){
+                this.makeReservation();
             }
             
         },

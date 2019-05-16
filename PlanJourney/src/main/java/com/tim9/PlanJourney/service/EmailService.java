@@ -22,15 +22,14 @@ public class EmailService {
 	
 	
 	@Async
-	public void sendReservationRequest(FlightReservation reservation) throws MailException, InterruptedException {
-
-
-		System.out.println("Slanje emaila..." + reservation.getUser().getEmail());
+	public void sendReservationRequest(RegisteredUser friend, Long id) throws MailException, InterruptedException {
+		Long id_ = id;
+		System.out.println("Slanje emaila..." + friend.getEmail());
 		SimpleMailMessage mail = new SimpleMailMessage();
-		mail.setTo(reservation.getUser().getEmail());
+		mail.setTo(friend.getEmail());
 		mail.setFrom("plan.journey.isa@gmail.com");
 		mail.setSubject("PlanJourney: Flight Reservation Request");
-		mail.setText("Go to: " + "http://localhost:8081/confirmationPage"+"/" + reservation.getId() + " to se details.");
+		mail.setText("Go to: " + "http://localhost:8081/confirmationPage"+"/" + id_ + " to se details.");
 		javaMailSender.send(mail);
 
 		System.out.println("E-mail sent!");

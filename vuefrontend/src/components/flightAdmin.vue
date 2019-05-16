@@ -24,6 +24,9 @@
                  <li class="nav-item">
                     <a class="nav-link" id = "addQuickTicket" href="#" @click="selectTab(7)">Add Quick Ticket</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" id = "reports" href="#" @click="selectTab(8)">Reports</a>
+                </li>
             </ul>
         </div>
 
@@ -48,6 +51,9 @@
         <div class = "row" v-if="currentTab == 7" id = "addQuickReservation">
             <addQuickReservation></addQuickReservation>
         </div>
+        <div class = "row" v-if="currentTab == 8" id = "flightCompanyReport">
+            <flightCompanyReport></flightCompanyReport>
+        </div>
 
     </div>
 </template>
@@ -61,7 +67,7 @@ import allFlights from './allFlights.vue'
 import flightCompanyProfile from './flightCompanyProfile.vue'
 import AddQuickReservation from './addQuickReservation.vue'
 import QuickReservations from './quickReservations.vue'
-
+import FlightCompanyReport from './s1_flightCompany/flightCompanyReports.vue'
 
 export default {
   name: 'flightAdmin',
@@ -72,7 +78,8 @@ export default {
       newFlight: newFlight,
       destinations: destinations,
       addQuickReservation: AddQuickReservation,
-      quickReservations: QuickReservations
+      quickReservations: QuickReservations,
+      flightCompanyReport: FlightCompanyReport
   },
   data: function () {
     return {
@@ -89,6 +96,7 @@ methods:{
             document.getElementById("destinations").className="nav-link";
             document.getElementById("quickTickets").className="nav-link";
             document.getElementById("addQuickTicket").className="nav-link";
+            document.getElementById("reports").className="nav-link";
             if (tabId == 1){
                 document.getElementById("profile").className="nav-link active";
             }
@@ -109,6 +117,9 @@ methods:{
             }
             else if (tabId == 7){
                 document.getElementById("addQuickTicket").className="nav-link active";
+            }
+            else if (tabId == 8){
+                document.getElementById("reports").className="nav-link active";
             }
             this.currentTab = tabId;
 

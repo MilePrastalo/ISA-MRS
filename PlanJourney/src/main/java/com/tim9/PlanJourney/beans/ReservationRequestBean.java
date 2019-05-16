@@ -4,18 +4,20 @@ package com.tim9.PlanJourney.beans;
 public class ReservationRequestBean {
 	
 	private Long calledUserId;
-	private Long flightId;
+	private Long requestId;
 	private Long seatId;
+	private String username;
+	private String password;
 	
 	public ReservationRequestBean() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ReservationRequestBean(Long calledUserId,  Long flightId, Long seatId) {
+	public ReservationRequestBean(Long requestId,  String username, String password) {
 		super();
-		this.calledUserId = calledUserId;
-		this.flightId = flightId;
-		this.seatId = seatId;
+		this.requestId = requestId;
+		this.password = password;
+		this.username = username;
 	}
 
 	public Long getCalledUserId() {
@@ -26,13 +28,6 @@ public class ReservationRequestBean {
 		this.calledUserId = calledUserId;
 	}
 
-	public Long getFlightId() {
-		return flightId;
-	}
-
-	public void setFlightId(Long flightId) {
-		this.flightId = flightId;
-	}
 
 	public Long getSeatId() {
 		return seatId;
@@ -40,6 +35,30 @@ public class ReservationRequestBean {
 
 	public void setSeatId(Long seatId) {
 		this.seatId = seatId;
+	}
+
+	public Long getRequestId() {
+		return requestId;
+	}
+
+	public void setRequestId(Long requestId) {
+		this.requestId = requestId;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 
