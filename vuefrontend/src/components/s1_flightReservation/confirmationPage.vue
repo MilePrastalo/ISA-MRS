@@ -5,7 +5,7 @@
         <table style="text-align: left">
             <tr>
                 <td>From: </td>
-                <td>{{request.callerInfo}}</td>
+                <td>{{request.passangers[0].firstName}} {{request.passangers[0].lastName}}</td>
             </tr>
             <tr>
                 <td> Start destination: </td>
@@ -28,12 +28,16 @@
                 <td>red: {{request.seat.seatRow}}, kolona: {{request.seat.seatColumn}} </td>
             </tr>
             <tr>
-                <td>Price: </td>
+                <td>Enter your username: </td>
+                <td><input type="text" v-model="username"></td>
+            </tr>
+            <tr>
+                <td>Enter your passwors: </td>
+                <td><input type="text" v-model="password"></td>
             </tr>
         </table>
-
-        <button v-if="request.confirmed == false" @click="confirmRequest">Confirm</button>
-        <button  v-if="request.confirmed == false" @click="refuseRequest">Reject</button>
+        <button v-if="this.selected == false" @click="confirmRequest">Confirm</button>
+        <button  v-if="this.selected == false" @click="refuseRequest">Reject</button>
          
     </div>
 </template>
@@ -47,8 +51,11 @@ export default {
     data: function () {
 
         return {
+            username : "",
+            password: "",
+            request: "",
             requestId: this.$route.params.requestId,
-            request: {}
+            selected: false
         }
     },
     created: function(){
@@ -63,17 +70,28 @@ export default {
     methods: {
 
         confirmRequest: function(){
-            axios.get("http://localhost:8080/api/confirmReservationRequest/" + this.requestId)
-            .then(response => {
-                this.request = response.data
-            });
+           if (this.username == "" || this.password == ""){
+                alert("You mast fill in username and password!");
+                return;
+            }
+            this.selected = true;
         },
 
         refuseRequest: function(){
-            alert("dsds");
-            axios.get("http://localhost:8080/api/refuseReservationRequest/" + this.requestId)
+            if (this.username == "" || this.password == ""){
+                alert("You mast fill in username and password!");
+                return;
+            }
+            var getJwtToken = function() {
+            return localStorage.getItem('jwtToken');
+            };
+            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.post("http://localhost:8080/api/refuseReservationRequest" ,{requestId:  this.requestId, username: this.username, password: this.password })
             .then(response => {
-                this.request = response.data
+                alert(response.data)
+                if (response.data == 'success'){
+                     this.selected = true;
+                }
             });
         }
 

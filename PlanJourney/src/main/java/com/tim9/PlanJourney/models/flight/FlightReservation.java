@@ -38,15 +38,13 @@ public class FlightReservation extends Reservation {
 	@Column(name = "confirmed")
 	private boolean confirmed;
 	
-	@Column(name = "callerInfo")
-	private String callerInfo;
 	
 	public FlightReservation() {
 		// TODO Auto-generated constructor stub
 	}
 
 	public FlightReservation(RegisteredUser user, Seat seat, Set<Passanger> passangers, Flight flight,
-			double price, Date date, boolean confirmed, String callerInfo) {
+			double price, Date date, boolean confirmed) {
 		super();
 		setUser(user);
 		this.seat = seat;
@@ -55,7 +53,6 @@ public class FlightReservation extends Reservation {
 		this.price = price;
 		this.date = date;
 		this.confirmed = confirmed;
-		this.callerInfo = callerInfo;
 	}
 
 	public Seat getSeat() {
@@ -104,14 +101,6 @@ public class FlightReservation extends Reservation {
 
 	public void setConfirmed(boolean confirmed) {
 		this.confirmed = confirmed;
-	}
-
-	public String getCallerInfo() {
-		return callerInfo;
-	}
-
-	public void setCallerInfo(String callerInfo) {
-		this.callerInfo = callerInfo;
 	}
 
 	

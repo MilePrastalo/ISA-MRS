@@ -31,6 +31,10 @@ public class PassangerService {
 	public Passanger save(Passanger passanger) {
 		return repository.save(passanger);
 	}
+	
+	public List<Passanger> saveAll(List<Passanger> passangers) {
+		return repository.saveAll(passangers);
+	}
 
 	public void remove(Long id) {
 		repository.deleteById(id);

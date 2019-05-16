@@ -96,7 +96,7 @@ export default {
         var idx;
         for (idx = 0; idx < this.seats_count; idx++ ){
 
-            var passanger = {seat: selected_seats[idx], firstName: "", lastName: "", passport: "", friend: false };
+            var passanger = {seat: selected_seats[idx], firstName: "", lastName: "", passport: "", friendID: -1 };
             this.passangers.push( passanger );
         }
     },
@@ -151,22 +151,11 @@ export default {
                 alert("You didn't reserve enough seats!");
             }
             else{
-                var request = {calledUserId: friend.id, flightId: this.iid, seatId: this.passangers[this.curent_idx].seat.id};
-                axios.post("http://localhost:8080/api/sendReservationRequest", request)
-                .then(response => {
-                    if (response.data == "success"){
-                        this.calledFriends.push(friend);
-                        this.passangers[this.curent_idx].firstName = friend.firstName;
-                        this.passangers[this.curent_idx].lastName = friend.lastName;
-                        this.passangers[this.curent_idx].friend = true;
-                        this.curent_idx++;
-                        alert("Friend is called!");
-                    }
-                    else{
-                        alert(response.data);
-                    }
-                });
-                
+                this.calledFriends.push(friend);
+                this.passangers[this.curent_idx].firstName = friend.firstName;
+                this.passangers[this.curent_idx].lastName = friend.lastName;
+                this.passangers[this.curent_idx].friendID = friend.id;
+                this.curent_idx++;
             }
         },
 

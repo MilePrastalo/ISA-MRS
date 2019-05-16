@@ -1,5 +1,6 @@
 package com.tim9.PlanJourney.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.beans.FlightReservationBean;
+import com.tim9.PlanJourney.beans.PassangerBean;
 import com.tim9.PlanJourney.beans.QuickFlightReservationBean;
 import com.tim9.PlanJourney.beans.ReservationRequestBean;
 import com.tim9.PlanJourney.models.RegisteredUser;
@@ -67,38 +70,6 @@ public class flightReservationController {
 		return loggedUser.getFlightReservations();
 	}
 	
-
-	@RequestMapping(value = "/api/sendReservationRequest", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@CrossOrigin()
-	public @ResponseBody String sendReservationRequest(@RequestBody ReservationRequestBean requestInfo) {
-
-		RegisteredUser loggedUser = getLoggedRegisteredUser();
-		if (loggedUser == null) {
-			return null;
-		}
-		RegisteredUser reciever = registeredUserService.findOne(requestInfo.getCalledUserId());
-		Flight flight = flightService.findOne(requestInfo.getFlightId());
-		Seat seat = seatService.findOne(requestInfo.getSeatId());
-		seat.setTaken(true);
-		seatService.save(seat);
-		String callerInfo = loggedUser.getUsername() + " ( " + loggedUser.getFirstName() + " " +  loggedUser.getLastName() + " )";
-		
-		FlightReservation reservation = new FlightReservation(reciever, seat, new HashSet<Passanger>(), flight, findPrice(flight, seat), new Date(), false, callerInfo );
-		reservationService.save(reservation);
-		reciever.getFlightReservations().add(reservation);
-		registeredUserService.save(reciever);
-		
-		try {
-			emailService.sendReservationRequest(reservation);
-
-		} catch (Exception e) {
-
-			System.out.println("Error while sending email: " + e.getMessage());
-			return "Error while sending email!";
-		}
-		return "success";
-	}
-
 	@RequestMapping(value = "/api/getReservationRequest/{requestId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	public @ResponseBody FlightReservation getReservationRequest(@PathVariable("requestId") Long requestId) {
@@ -107,12 +78,10 @@ public class flightReservationController {
 		return request;
 	}
 	
-	
-	
 	@RequestMapping(value = "/api/makeFlightReservation", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('REGISTERED')")
-	public @ResponseBody FlightReservation makeReservation(@RequestBody FlightReservationBean reservationBean)  {
+	public @ResponseBody String makeReservation(@RequestBody FlightReservationBean reservationBean)  {
 
 		RegisteredUser loggedUser = getLoggedRegisteredUser();
 		if (loggedUser == null) {
@@ -123,29 +92,55 @@ public class flightReservationController {
 		Seat main_seat = seatService.findOne(reservationBean.getPassangers().get(0).getSeatId());
 		main_seat.setTaken(true);
 		seatService.save(main_seat);
+		
+		ArrayList<Seat> seats = new ArrayList<>();
+		ArrayList<RegisteredUser> friends = new ArrayList<>();
+		ArrayList<Passanger> passangersList = new ArrayList<>();
+		reservationBean.getPassangers().get(0).setFirstName(loggedUser.getFirstName());
+		reservationBean.getPassangers().get(0).setFirstName(loggedUser.getLastName());
+		
 		Set<Passanger> passangers = new HashSet<>();
 		
-		for (int i = 1; i < reservationBean.getPassangers().size(); i++) {
+		for (PassangerBean passanger : reservationBean.getPassangers()) {
 			
-			total += reservationBean.getPassangers().get(i).getPrice();
-			Seat seat = seatService.findOne(reservationBean.getPassangers().get(i).getSeatId());
+			total += passanger.getPrice();
+			Seat seat = seatService.findOne(passanger.getSeatId());
 			seat.setTaken(true);
-			seatService.save(seat);
-			Passanger passanger = new Passanger( reservationBean.getPassangers().get(i).getFirstName(), reservationBean.getPassangers().get(i).getLastName(), "", seat);
-			passangerService.save(passanger);
-			passangers.add(passanger);
+			seats.add(seat);
+			Passanger pass = null;
+			if (passanger.getFriendId() != -1) {
+				RegisteredUser friend = registeredUserService.findOne(passanger.getFriendId());
+				friends.add(friend);
+				pass = new Passanger( passanger.getFirstName(), passanger.getLastName(), passanger.getPassport(), seat,  friend, passanger.getPrice());
+			}
+			else {
+				pass = new Passanger( passanger.getFirstName(), passanger.getLastName(), passanger.getPassport(), seat,  null, passanger.getPrice());
+			}
+			passangersList.add(pass);
+			passangers.add(pass);
 		}
-		FlightReservation reservation = new FlightReservation(loggedUser, main_seat, passangers, flight, total, new Date(), true, "" );
+		seatService.saveAll(seats);
+		passangerService.saveAll(passangersList);
+		
+		FlightReservation reservation = new FlightReservation(loggedUser, main_seat, passangers, flight, total, new Date(), false);
+		for (RegisteredUser friend: friends) {
+			try {
+				emailService.sendReservationRequest(friend, reservation.getId());
+
+			} catch (Exception e) {
+				System.out.println("Error while sending email: " + e.getMessage());
+			}
+		}
+		reservationService.save(reservation);
 		try {
 			emailService.sendReservationMade(reservation);
 
 		} catch (Exception e) {
 
 			System.out.println("Error while sending email: " + e.getMessage());
-			return null;
+			return "Reservation is made but we didn't succeed to send the email!";
 		}
-		reservationService.save(reservation);
-		return reservation;
+		return "success";
 	}
 	
 	@RequestMapping(value = "/api/makeQuickReservation", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -165,7 +160,7 @@ public class flightReservationController {
 		main_seat.setQuick(false);
 		seatService.save(main_seat);
 		double total = originPrice * discount/100;
-		FlightReservation reservation = new FlightReservation(loggedUser, main_seat, new HashSet<Passanger>(), flight, total, new Date(), true, "" );
+		FlightReservation reservation = new FlightReservation(loggedUser, main_seat, new HashSet<Passanger>(), flight, total, new Date(), true );
 		QuickFlightReservation quick = quickReservationService.findOne(reservationBean.getId());
 		quick.setTaken(true);
 		quickReservationService.save(quick);
@@ -192,16 +187,28 @@ public class flightReservationController {
 		return request;
 	}
 	
-	@RequestMapping(value = "/api/refuseReservationRequest/{requestId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/api/refuseReservationRequest", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	public @ResponseBody FlightReservation refuseReservationRequest(@PathVariable("requestId") Long requestId) {
-
-		//ne znam da li je dovoljno samo da obrisem ili morem i kod user-a
-		FlightReservation request = reservationService.findOne(requestId);
-		request.getSeat().setTaken(false);
-		seatService.save(request.getSeat());
-		reservationService.remove(request.getId());
-		return null;
+	public @ResponseBody String refuseReservationRequest(@RequestBody ReservationRequestBean request) {
+		
+		RegisteredUser logged = registeredUserService.findByUsername(request.getUsername());
+		if (logged == null) {
+			return "This username doesn't exist!";
+		}
+		FlightReservation reservation = reservationService.findOne(request.getRequestId());
+		for (Passanger passanger : reservation.getPassangers()) {
+			if (passanger.getFriend() != null) {
+				if (passanger.getFriend().getId() == logged.getId() ) {
+					passanger.getSeat().setTaken(false);
+					seatService.save(passanger.getSeat());
+					reservation.setPrice(reservation.getPrice() - passanger.getPrice());
+					reservation.getPassangers().remove(passanger);
+					reservationService.save(reservation);
+					return "success";
+				}
+			}
+		}
+		return "It's not your reservation";
 	}
 	
 	private RegisteredUser getLoggedRegisteredUser() {
