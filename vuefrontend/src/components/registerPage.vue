@@ -1,39 +1,52 @@
 <template>
     <div id="registerPage">
-      <h2>Register</h2>
-        <table>
-          <tr>
-            <td>Username</td>
-            <td><input type="text" v-model="username"></td>
-          </tr>
-          <tr>
-            <td>First Name</td>
-            <td><input type="text" v-model="firstName"></td>
-          </tr>
-          <tr>
-            <td>Last Name</td>
-            <td><input type="text" v-model="lastName"></td>
-          </tr>
-          <tr>
-            <td>E-mail</td>
-            <td><input type="text" v-model="email"></td>
-          </tr>
-          <tr>
-            <td>Password</td>
-            <td><input type="password" v-model="password"></td>
-          </tr>
-          <tr>
-            <td>Confirm password</td>
-            <td><input type="password" v-model="confpassword"></td>
-          </tr>
-          <tr>
-            
-            <td><button><a href="./">Back</a></button></td>
-            <td><button @click="register"  type="submit">Register</button></td>
-          </tr>
-        </table>
-        
+      <div class="container">
+    <div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto blue-border">
+        <div class="card card-signin flex-row my-5">
+          <div class="card-body">
+            <h5 class="card-title text-center">Register</h5>
+            <form class="form-signin">
+              <div class="form-label-group">
+                <input type="text" id="inputUserame" v-model="username" class="form-control" placeholder="Username" required autofocus>
+                <label for="inputUserame">Username</label>
+              </div>
+              <div class="form-label-group">
+                <input type="text" id="inputFirstName" v-model="firstName" class="form-control" placeholder="First Name" required>
+                <label for="inputFirstName">First Name</label>
+              </div>
+              <div class="form-label-group">
+                <input type="text" id="inputLastName" v-model="lastName" class="form-control" placeholder="Last Name" required>
+                <label for="inputLastName">Last Name</label>
+              </div>
+              <div class="form-label-group">
+                <input type="email" id="inputEmail" v-model="email" class="form-control" placeholder="Email address" required>
+                <label for="inputEmail">Email address</label>
+              </div>
+              
+              <hr>
+
+              <div class="form-label-group">
+                <input type="password" id="inputPassword" v-model="password" class="form-control" placeholder="Password" required>
+                <label for="inputPassword">Password</label>
+              </div>
+              
+              <div class="form-label-group">
+                <input type="password" id="inputConfirmPassword" v-model="confpassword" class="form-control" placeholder="Password" required>
+                <label for="inputConfirmPassword">Confirm password</label>
+              </div>
+
+              <button @click="register" class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Register</button>
+              <a class="d-block text-center mt-2 btn btn-lg btn-primary btn-block text-uppercase" href="./loginPage">Login</a>
+              <button @click="goBack" class="btn btn-lg btn-warning btn-block text-uppercase">Back</button>
+              </form>
+          </div>
+        </div>
+      </div>
     </div>
+  </div> 
+    </div>
+    
 </template>
 
 <script>
@@ -51,6 +64,11 @@ export default {
     }
   },
   methods:{
+    goBack:function(e){
+      e.preventDefault();
+      console.log("clicked");
+      window.location.href = "/";
+    },
     register:function(){
       if (this.confpassword !== this.password){
         alert("Passwords don't match");
@@ -95,5 +113,111 @@ table{
 h2{
   margin: auto;
   margin-bottom: 2%;
+}
+:root {
+  --input-padding-x: 1.5rem;
+  --input-padding-y: .75rem;
+}
+
+body {
+  background: #007bff;
+  background: linear-gradient(to right, #0062E6, #33AEFF);
+}
+
+.card-signin {
+  border: 0;
+  border-radius: 1rem;
+  box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.card-signin .card-title {
+  margin-bottom: 2rem;
+  font-weight: 300;
+  font-size: 1.5rem;
+}
+
+
+
+.card-signin .card-body {
+  padding: 2rem;
+}
+
+.form-signin {
+  width: 100%;
+}
+
+.form-signin .btn {
+  font-size: 80%;
+  border-radius: 5rem;
+  letter-spacing: .1rem;
+  font-weight: bold;
+  padding: 1rem;
+  transition: all 0.2s;
+}
+
+.form-label-group {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.form-label-group input {
+  height: auto;
+  border-radius: 2rem;
+}
+
+.form-label-group>input,
+.form-label-group>label {
+  padding: var(--input-padding-y) var(--input-padding-x);
+}
+
+.form-label-group>label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  margin-bottom: 0;
+  /* Override default `<label>` margin */
+  line-height: 1.5;
+  color: #495057;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+  transition: all .1s ease-in-out;
+}
+
+.form-label-group input::-webkit-input-placeholder {
+  color: transparent;
+}
+
+.form-label-group input:-ms-input-placeholder {
+  color: transparent;
+}
+
+.form-label-group input::-ms-input-placeholder {
+  color: transparent;
+}
+
+.form-label-group input::-moz-placeholder {
+  color: transparent;
+}
+
+.form-label-group input::placeholder {
+  color: transparent;
+}
+
+.form-label-group input:not(:placeholder-shown) {
+  padding-top: calc(var(--input-padding-y) + var(--input-padding-y) * (2 / 3));
+  padding-bottom: calc(var(--input-padding-y) / 3);
+}
+
+.form-label-group input:not(:placeholder-shown)~label {
+  padding-top: calc(var(--input-padding-y) / 3);
+  padding-bottom: calc(var(--input-padding-y) / 3);
+  font-size: 12px;
+  color: #777;
+}
+.blue-border{
+  border: 1px solid lightblue;
 }
 </style>
