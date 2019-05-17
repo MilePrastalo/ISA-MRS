@@ -1,16 +1,13 @@
 <template>
     <div id="registeredUserFrontPage">
         <div class="container">
-            <div class="row" id="firstrow"> 
-                <button class="col-lg-4">Invites</button>
-                <button @click="profile" class="col-lg-4">Profil</button>
-                <button @click="logout" id="logoutbt" class="col-lg-2">Log Out</button>
-            </div>
-            <div class="row"> 
-                <button class="col-lg-2" @click="airlines">Airlines</button>
-                <button class="col-lg-2">Hotels</button>
-                <button class="col-lg-2" @click="rentACar">Rent a car</button>
-                <button class="col-lg-2">Friends</button>
+
+            <navbar/>
+            <div class="row "> 
+                <button style="border-radius: 20px;" class="col-sm btn btn-info btn-lg" @click="airlines">Airlines</button>
+                <button style="border-radius: 20px;" class="col-sm btn btn-info btn-lg">Hotels</button>
+                <button style="border-radius: 20px;" class="col-sm btn btn-info btn-lg" @click="rentACar">Rent a car</button>
+                <button style="border-radius: 20px;" class="col-sm btn btn-info btn-lg">Friends</button>
             </div>
             <div class="row" id="title"> 
                 <h2>Reservations</h2>
@@ -31,7 +28,7 @@
             </div>
             <div class="row">
                 <div id="FlightsReservations" class="centered col-lg-10">
-                    <table>
+                    <table class="table">
                         <tr>
                             <th>Start destination</th>
                             <th>End destination</th>
@@ -54,16 +51,22 @@
                             <td v-else>1</td>
                              <td><button>Details</button></td>
                              <td class="ratingtd">
-                                <span class="fa fa-star over" @click="review(flightReservation,5)" :id="flightReservation.ratings[4]"></span>
-                                <span class="fa fa-star over" @click="review(flightReservation,4)" :id="flightReservation.ratings[3]"></span>
-                                <span class="fa fa-star over" @click="review(flightReservation,3)" :id="flightReservation.ratings[2]"></span>
-                                <span class="fa fa-star over" @click="review(flightReservation,2)" :id="flightReservation.ratings[1]"></span>
-                                <span class="fa fa-star over" @click="review(flightReservation,1)" :id="flightReservation.ratings[0]"></span>
+                                <span class="fa fa-star over clicked" v-if="getRating(flightReservation,5)" @click="reviewFlight(flightReservation,5)" :id="flightReservation.ratings[4]"></span>
+                                    <span class="fa fa-star over" v-else @click="review(flightReservation,5)" :id="flightReservation.ratings[4]"></span>
+                                <span class="fa fa-star over clicked" v-if="getRating(flightReservation,4)" @click="reviewFlight(flightReservation,4)" :id="flightReservation.ratings[3]"></span>
+                                    <span class="fa fa-star over" v-else @click="review(flightReservation,4)" :id="flightReservation.ratings[3]"></span>
+                                <span class="fa fa-star over clicked" v-if="getRating(flightReservation,3)" @click="reviewFlight(flightReservation,3)" :id="flightReservation.ratings[2]"></span>
+                                    <span class="fa fa-star over" v-else @click="review(flightReservation,3)" :id="flightReservation.ratings[2]"></span>
+                                <span class="fa fa-star over clicked" v-if="getRating(flightReservation,2)" @click="reviewFlight(flightReservation,2)" :id="flightReservation.ratings[1]"></span>
+                                    <span class="fa fa-star over" v-else @click="review(flightReservation,2)" :id="flightReservation.ratings[1]"></span>
+                                <span class="fa fa-star over clicked" v-if="getRating(flightReservation,1)" @click="reviewFlight(flightReservation,1)" :id="flightReservation.ratings[0]"></span>
+                                    <span class="fa fa-star over" v-else @click="review(flightReservation,1)" :id="flightReservation.ratings[0]"></span>
                             </td>
                         </tr>
                     </table>
                 </div>
-                <div id="HotelsReservations" class="centered col-lg-10" hidden="true"><table>
+                <div id="HotelsReservations" class="centered col-lg-10" hidden="true">
+                    <table class="table">
                         <tr>
                             <th>Hotel Name</th>
                             <th>Room Number</th>
@@ -80,17 +83,23 @@
                         <td><button @click="showDetails(r.hotelName,r.roomNumber)">Details</button></td>
                         <td></td>
                         <td class="ratingtd">
-                                <span class="fa fa-star over" @click="reviewHotel(r,5)" :id="r.ratings[4]"></span>
-                                <span class="fa fa-star over" @click="reviewHotel(r,4)" :id="r.ratings[3]"></span>
-                                <span class="fa fa-star over" @click="reviewHotel(r,3)" :id="r.ratings[2]"></span>
-                                <span class="fa fa-star over" @click="reviewHotel(r,2)" :id="r.ratings[1]"></span>
-                                <span class="fa fa-star over" @click="reviewHotel(r,1)" :id="r.ratings[0]"></span>
+                                <span class="fa fa-star over clicked" v-if="getRating(r,5)" @click="reviewHotel(r,5)" :id="r.ratings[4]"></span>
+                                    <span class="fa fa-star over" v-else @click="reviewHotel(r,5)" :id="r.ratings[4]"></span>
+                                <span class="fa fa-star over clicked" v-if="getRating(r,4)" @click="reviewHotel(r,4)" :id="r.ratings[3]"></span>
+                                    <span class="fa fa-star over" v-else @click="reviewHotel(r,4)" :id="r.ratings[3]"></span>
+                                <span class="fa fa-star over clicked" v-if="getRating(r,3)" @click="reviewHotel(r,3)" :id="r.ratings[2]"></span>
+                                    <span class="fa fa-star over" v-else @click="reviewHotel(r,3)" :id="r.ratings[2]"></span>
+                                <span class="fa fa-star over clicked" v-if="getRating(r,2)" @click="reviewHotel(r,2)" :id="r.ratings[1]"></span>
+                                    <span class="fa fa-star over" v-else @click="reviewHotel(r,2)" :id="r.ratings[1]"></span>
+                                <span class="fa fa-star over clicked " v-if="getRating(r,1)" @click="reviewHotel(r,1)" :id="r.ratings[0]"></span>
+                                    <span class="fa fa-star over" v-else @click="reviewHotel(r,1)" :id="r.ratings[0]"></span>
+
                             </td>
                     </tr>
                     </table>
                 </div>
                 <div id="CarsReservations" class="centered col-lg-10" hidden="true">
-                    <table>
+                    <table class="table">
                         <tr>
                             <th>Location pick</th>
                             <th>Location return</th>
@@ -109,11 +118,17 @@
                             <td>{{reservation.price}}</td>
                             <td><Button v-if="reservation.status == 0" @click="cancel(reservation)">Cancel</Button></td>
                             <td class="ratingtd" v-if="reservation.status == 2" >
-                                <span class="fa fa-star over" @click="review(reservation,5)" :id="reservation.ratings[4]"></span>
-                                <span class="fa fa-star over" @click="review(reservation,4)" :id="reservation.ratings[3]"></span>
-                                <span class="fa fa-star over" @click="review(reservation,3)" :id="reservation.ratings[2]"></span>
-                                <span class="fa fa-star over" @click="review(reservation,2)" :id="reservation.ratings[1]"></span>
-                                <span class="fa fa-star over" @click="review(reservation,1)" :id="reservation.ratings[0]"></span>
+                                <span class="fa fa-star over clicked" v-if="getRating(reservation,5)==true" @click="review(reservation,5)" :id="reservation.ratings[4]"></span>
+                                    <span class="fa fa-star over" v-else @click="review(reservation,5)" :id="reservation.ratings[4]"></span>
+                                <span class="fa fa-star over clicked" v-if="getRating(reservation,4)" @click="review(reservation,4)" :id="reservation.ratings[3]"></span>
+                                    <span class="fa fa-star over" v-else @click="review(reservation,4)" :id="reservation.ratings[3]"></span>
+                                <span class="fa fa-star over clicked" v-if="getRating(reservation,3)" @click="review(reservation,3)" :id="reservation.ratings[2]"></span>
+                                    <span class="fa fa-star over" v-else @click="review(reservation,3)" :id="reservation.ratings[2]"></span>
+                                <span class="fa fa-star over clicked" v-if="getRating(reservation,2)" @click="review(reservation,2)" :id="reservation.ratings[1]"></span>
+                                    <span class="fa fa-star over" v-else @click="review(reservation,2)" :id="reservation.ratings[1]"></span>
+                                <span class="fa fa-star over clicked" v-if="getRating(reservation,1)" @click="review(reservation,1)" :id="reservation.ratings[0]"></span>
+                                    <span class="fa fa-star over" v-else @click="review(reservation,1)" :id="reservation.ratings[0]"></span>
+
                             </td>
                         </tr>
                     </table>
@@ -125,6 +140,7 @@
 
 <script>
 import { setTimeout } from 'timers';
+import navbar from "./navbar.vue";
 
 
 export default {
@@ -136,7 +152,10 @@ export default {
           hotelReservations:[]
       }
   },
-  mounted(){
+  components: {
+      navbar
+    },
+  created(){
       var getJwtToken = function() {
                     return localStorage.getItem('jwtToken');
                 };
@@ -164,7 +183,17 @@ export default {
                     });
                 });
   },
+  mounted(){
+  },
   methods : {
+      getRating:function(res,rating){
+          console.log(res);
+          if(res.rating>=rating){
+              console.log("true");
+              return true;
+          }
+          return false;
+      },
       showFlights : function(){
             var flightDiv = document.getElementById("FlightsReservations").hidden=false;
             var hoteltDiv = document.getElementById("HotelsReservations").hidden=true;
@@ -275,7 +304,6 @@ export default {
 }
 
 </script>
-
 <style scoped>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
@@ -315,6 +343,7 @@ button{
 #title{
     text-align: center;
     align-content: center;
+    margin-bottom: 2%;
 }
 #title h2{
     text-align: center;
