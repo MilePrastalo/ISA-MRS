@@ -47,12 +47,59 @@ public class HotelController {
 
 	@RequestMapping(value = "/api/getAllHotels", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	public @ResponseBody ArrayList<Hotel> getAllHotels() throws Exception {
-		ArrayList<Hotel> hotel = (ArrayList<Hotel>) service.findAll();
-		for (Hotel h : hotel) {
-			System.out.println(h.getName());
+	public @ResponseBody ArrayList<HotelBean> getAllHotels() throws Exception {
+		ArrayList<Hotel> hotels = (ArrayList<Hotel>) service.findAll();
+		ArrayList<HotelBean> hotelBeans = new ArrayList<HotelBean>();
+		for (Hotel h : hotels) {
+			HotelBean hb = new HotelBean();
+			hb.setName(h.getName());
+			hb.setAddress(h.getAddress());
+			hb.setDescription(h.getDescription());
+			hb.setRating(h.getRating());
+			ArrayList<HotelRoomBean> rb = new ArrayList<HotelRoomBean>();
+			for (HotelRoom r : h.getRooms()) {
+				HotelRoomBean roomBean = new HotelRoomBean();
+				roomBean.setRoomNumber(r.getRoomNumber());
+				roomBean.setNumberOfBeds(r.getNumberOfBeds());
+				roomBean.setPricePerDay(r.getPricePerDay());
+				roomBean.setAdditionalCharges(r.getAdditionalCharges());
+				rb.add(roomBean);
+			}
+			hb.setRooms(rb);
+
+			ArrayList<HotelReservationBean> reservationBeans = new ArrayList<HotelReservationBean>();
+			// Creates hotel reservation beans from hotel reservations.
+			for (HotelReservation hr : h.getReservations()) {
+				Calendar c = Calendar.getInstance();
+				c.setTime(hr.getFirstDay());
+				HotelReservationBean reservationBean = new HotelReservationBean();
+				reservationBean.setRoomNumber(hr.getRoom().getRoomNumber());
+				if (hr.getUser() != null) {
+					reservationBean.setUsername(hr.getUser().getUsername());
+				}
+				reservationBean.setHotelName(hr.getHotel().getName());
+				reservationBean.setfYear(c.get(Calendar.YEAR));
+				reservationBean.setfMonth(c.get(Calendar.MONTH) + 1);
+				reservationBean.setfDay(c.get(Calendar.DAY_OF_MONTH));
+				c.setTime(hr.getLastDay());
+				reservationBean.setHotelName(hr.getHotel().getName());
+				reservationBean.setlYear(c.get(Calendar.YEAR));
+				reservationBean.setlMonth(c.get(Calendar.MONTH) + 1);
+				reservationBean.setlDay(c.get(Calendar.DAY_OF_MONTH));
+				reservationBean.setDiscount(hr.getDiscount());
+				reservationBean.setNumberOfBeds(hr.getRoom().getNumberOfBeds());
+				reservationBean.setPaidPrice(hr.getPaidPrice());
+				reservationBeans.add(reservationBean);
+			}
+			hb.setReservations(reservationBeans);
+
+			DestinationBean db = new DestinationBean();
+			db.setName(h.getDestination().getName());
+			db.setDescription(h.getDestination().getDescription());
+			db.setCoordinates(h.getDestination().getCoordinates());
+			hb.setDestination(db);
 		}
-		return hotel;
+		return hotelBeans;
 	}
 
 	@RequestMapping(value = "/api/getHotel/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -19,6 +19,9 @@
                     <li class="nav-item">
                         <a  class="nav-link" href="#" @click="selectTab(4)" >Add Quick Reservation</a>
                     </li>
+                    <li class="nav-item">
+                        <a  class="nav-link" href="#" @click="selectTab(5)" >Reports</a>
+                    </li>
 
                 </ul>
             </div>
@@ -103,12 +106,16 @@
             <div v-if="currentTab == 4">
                 <ha-quick-reservation :hotel="hotel"></ha-quick-reservation>
             </div>
+             <div v-if="currentTab == 5">
+                <ha-reports :hotel="hotel"></ha-reports>
+            </div>
    </div>
 </template>
 
 <script>
 
 import haQuickReservation from "./haQuickReservation.vue"
+import haReports from "./haReports.vue"
 
 export default {
   name: 'haHotel',
@@ -116,7 +123,8 @@ export default {
       hotel: Object
   },
   components: {
-      haQuickReservation: haQuickReservation
+      haQuickReservation: haQuickReservation,
+      haReports: haReports
   },
   data: function () {
   return {
