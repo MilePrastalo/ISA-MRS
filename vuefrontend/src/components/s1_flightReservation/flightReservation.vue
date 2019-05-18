@@ -19,7 +19,7 @@
         </div>
         <div v-if="currentStep == 4">
             <button @click="goToNextStep(5)"> Finish >> </button>
-            <h2>Vehicle reservations</h2>
+            <rentACarReservation :iflightDateArrive="flight.startDate_str" :iflightDateLeaving="flight.endDate_str" v-on:vehicleReserved="carReserved" :ilocation="destination"/>
         </div>
         		
          
@@ -29,19 +29,21 @@
 <script>
 import SeatSelection from './seatsSelection.vue';
 import Passangers from './passangers.vue';
-
+import rentACarReservation from '.././rentACarReservation.vue'
 export default {
 
     name: 'flightReservation',
     components: {
 
         seat_selection: SeatSelection,
-        passangers: Passangers
+        passangers: Passangers,
+        rentACarReservation
     },
     data: function () {
         return {
 
             selected_seats: [],
+            destination:"",
             total: 0,
             passangers: [],
             id : 0,
@@ -63,6 +65,8 @@ export default {
         axios.get("http://localhost:8080/api/getFlight/" + flightID)
         .then(response => {
             this.flight = response.data
+            console.log(this.flight);
+            this.destination = this.flight.endDestination;
           }); 
     }, 
     methods: {
@@ -79,7 +83,10 @@ export default {
                 return this.flight.firstClassPrice;
             }
         },
-
+        carReserved:function(id){
+            this.vehicleReservations.push(id);
+            console.log(id);
+        },
         makeReservation: function(){
            
             var idx;
@@ -119,7 +126,7 @@ export default {
                     alert("You must choose at least one seat!");
                 }
                 else if (this.selected_seats.length == 1){
-                    this.makeReservation();
+                    this.currentStep = option;
                 }
                 else{
                     this.currentStep = option;

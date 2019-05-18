@@ -282,7 +282,7 @@ public class RentACarController {
 	@RequestMapping(value = "/api/reserveVehicle", method = RequestMethod.POST, produces= MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	//Returns vehicles that are avaiable for reservation in selected company
-	public @ResponseBody boolean reserveVehicle(@RequestBody VehicleReservationSearchBean search) throws Exception { 
+	public @ResponseBody Long reserveVehicle(@RequestBody VehicleReservationSearchBean search) throws Exception { 
 		Vehicle vehicle = vehicleService.findOne(Long.parseLong(search.getId()));
 		RegisteredUser user = getRegisteredUser();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -302,9 +302,9 @@ public class RentACarController {
 		companyService.save(company);
 		userService.save(user);
 		vehicleService.save(vehicle);
-		reservationService.save(reservation);
-
-		return true;
+		VehicleReservation reser=  reservationService.save(reservation);
+		return reser.getId();
+		 
 	}
 	
 	@RequestMapping(value = "/api/cancelVehicleReservation", method = RequestMethod.POST, produces= MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
