@@ -1,38 +1,37 @@
 <template>
     <div id="rentACarReport">
       <div class="row">
-          <button @click="selected(0)" >Vehicles</button>
-          <button @click="selected(1)">Ratings</button>
-          <button @click="selected(2)">Earnings</button>
-          <button @click="selected(3)">Reservations</button>
+          <button class="btn-primary space" @click="selected(0)" >Vehicles</button>
+          <button class="btn-primary space" @click="selected(1)">Ratings</button>
+          <button class="btn-primary space" @click="selected(2)">Earnings</button>
+          <button class="btn-primary space" @click="selected(3)">Reservations</button>
 
       </div>
       <div class="row" id="Vehicless">
-          <div class="container">
-              
+          <div class="container">     
             <div class="row">
-                <table>
-            <tr>
-                <th>Name</th>
-                <th>Maker</th>
-                <th>Type</th>
-                <th>Year</th>
-                <th>Price</th>
-                <th>Avaiable from</th>
-                <th>Avaiable to</th>
-                <th>Rating</th>
-            </tr>
-            <tr v-for="car in cars" :key="car.id">
-                <td>{{car.name}}</td>
-                <td>{{car.maker}}</td>
-                <td>{{car.type}}</td>
-                <td>{{car.year}}</td>
-                <td>{{car.price}}</td>
-                <td>{{car.dateFrom}}</td>
-                <td>{{car.dateTo}}</td>
-                <td>{{car.rating}}</td>
-            </tr>
-        </table>
+                <table class="table">
+                    <tr>
+                        <th>Name</th>
+                        <th>Maker</th>
+                        <th>Type</th>
+                        <th>Year</th>
+                        <th>Price</th>
+                        <th>Avaiable from</th>
+                        <th>Avaiable to</th>
+                        <th>Rating</th>
+                    </tr>
+                    <tr v-for="car in cars" :key="car.id">
+                        <td>{{car.name}}</td>
+                        <td>{{car.maker}}</td>
+                        <td>{{car.type}}</td>
+                        <td>{{car.year}}</td>
+                        <td>{{car.price}}</td>
+                        <td>{{car.dateFrom}}</td>
+                        <td>{{car.dateTo}}</td>
+                        <td>{{car.rating}}</td>
+                    </tr>
+                </table>
             </div>
           </div>
           
@@ -168,7 +167,7 @@ export default {
                     return localStorage.getItem('jwtToken');
                 };
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-        axios.post("http://localhost:8080/api/getCompanyReservationsReport",{dateFrom:this.dateFromReservation,dateTo:this.dateToReservation,type:2})
+        axios.post("http://localhost:8080/api/getCompanyReservationsReport",{dateFrom:this.dateFromReservation,dateTo:this.dateToReservation,type:this.earningsType})
                 .then(response => { 
                     console.log(response);
                     this.reservations = response.data;
@@ -310,5 +309,8 @@ th,td{
 h2{
   margin: auto;
   margin-bottom: 2%;
+}
+.space{
+    margin: 1%;
 }
 </style>

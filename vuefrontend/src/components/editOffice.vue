@@ -1,24 +1,24 @@
 <template>
    <div id = "addOffice">
-            <table>
-                <tr>
-                    <td> Name: </td>
-                    <td>  <input type="text" name="name" v-model="name" > </td>
-                </tr>
-                <tr>
-                    <td> Address: </td>
-                    <td>  <input type="text" name="address" v-model="address" > </td>
-                </tr>
-                <tr>
-                    <td> Destination: </td>
-                    <td> <textarea  rows="5" cols="22" name="destination"  v-model="destination" style="overflow:scroll;"></textarea> </td>        
-                </tr>
-                <tr>
-                    <td><Button @click="backAdd()">Back to adding</Button>  </td>
-                    <td><button v-on:click="edit()">Edit Office</button> </td>   
-                </tr>
-            </table>      
-        </div>
+       <form action="">
+            <div class="form-label-group">
+                <label> Name: </label>
+                <input type="text" name="name" v-model="name" >
+            </div>
+            <div class="form-label-group">
+                <label> Address: </label>
+                <input type="text" name="address" v-model="address" >
+            </div>
+            <div class="form-label-group">
+                <label> Destination: </label>
+                <input type="text" name="destination" v-model="destination" >
+            </div>
+            <div class="form-label-group">
+                <Button @click="backAdd()">Back to adding</Button>
+                <button @click="edit()">Edit Office</button>  
+            </div>
+       </form> 
+    </div>
 </template>
 
 <script>

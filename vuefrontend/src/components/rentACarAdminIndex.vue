@@ -23,9 +23,7 @@
                     <li class="nav-item">
                         <a id="Reports" class="nav-link" href="#" @click="showReports">Reports</a>
                     </li>
-                </ul>
-                <Button @click = "logout">Log Out</Button>
-                
+                </ul>                
             </div>
             <div class="row">
                 <div id="Profile" v-if="tabSelected==1">
@@ -139,11 +137,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
-table{
-    border: 1px solid darkgray;
-}
-th{
-    border: 1px solid darkgray;
 }
 </style>
