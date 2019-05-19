@@ -113,6 +113,8 @@ public class HotelController {
 		hb.setAddress(h.getAddress());
 		hb.setDescription(h.getDescription());
 		hb.setRating(h.getRating());
+		hb.setLatitude(h.getLatitude());
+		hb.setLongitude(h.getLongitude());
 		ArrayList<HotelRoomBean> rb = new ArrayList<HotelRoomBean>();
 		for (HotelRoom r : h.getRooms()) {
 			HotelRoomBean roomBean = new HotelRoomBean();

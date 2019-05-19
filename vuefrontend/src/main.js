@@ -1,17 +1,18 @@
 import Vue from 'vue'
-import VueLayers from 'vuelayers'
-import 'vuelayers/lib/style.css' // needs css-loader
+
 
 import App from './App.vue'
 import router from './router'
-
+import YandexMapPlugin from 'vue-yandex-maps'
 Vue.config.productionTip = false
 
-// register all VueLayers components
-Vue.use(VueLayers, {
-  // global data projection, see https://vuelayers.github.io/#/quickstart?id=global-data-projection
-  // dataProjection: 'EPSG:4326',
-})
+// Translates Yandex maps to english.
+const options = {
+  lang: 'en_US',
+  version: '2.1'
+}
+Vue.use(YandexMapPlugin,options)
+
 new Vue({
   router,
   render: h => h(App)
