@@ -1,5 +1,6 @@
 <template>
     <div id="registeredUserFrontPage">
+        <navbar/>
         <div class="container">
             <div class="row">
                 <ul class="nav nav-tabs">
@@ -49,6 +50,8 @@ import officeAdmin from "./officesAdminTab.vue";
 import vehicleAdminTab from "./vehicleAdminTab.vue";
 import quickVehicle from "./quickVehicleReservation.vue";
 import rentACarReport from "./rentACarReport.vue"
+import navbar from "./navbar.vue";
+
 export default {
   name: 'registeredUserFrontPage',
   components: {
@@ -57,7 +60,8 @@ export default {
     officeAdmin,
     vehicleAdminTab,
     quickVehicle,
-    rentACarReport
+    rentACarReport,
+    navbar
   },
   data: function(){
       return {

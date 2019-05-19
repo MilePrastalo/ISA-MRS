@@ -1,6 +1,6 @@
 <template>
    <div id = "searchFlightCompany">
-
+       <navbar/>
 
         <div class = "row">
             <h2>Flight Company Search </h2>
@@ -42,10 +42,13 @@
 </template>
 
 <script>
+import navbar from "./navbar.vue";
+
 export default {
   name: 'searchFlightCompany',
   components: {
-  },
+      navbar
+    },
   data: function () {
   return {
      companyName: "-",
@@ -81,6 +84,7 @@ methods:{
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #303e4d;
-  margin: 5%;
+  margin-left: 5%;
+  margin-right: 5%;
 }
 </style>

@@ -19,7 +19,7 @@
         </table>
     </div>
     <div>
-        <table id="DataTable" >
+        <table id="DataTable"  class="table">
             <tr>
                 <th>Name</th>
                 <th>Offices</th>
@@ -27,7 +27,7 @@
             </tr>
             <tr v-for="company in companies" :key="company.name">  
                 <td>{{company.name}}</td>
-                <td><table>
+                <td><table class="table">
                     <tr><th>Office name</th>
                     <th>Office address</th>
                     <th>Office destination</th></tr>

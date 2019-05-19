@@ -1,6 +1,6 @@
 <template>
    <div id = "flightReservation">
-
+       <navbar/>
         <div v-if="currentStep == 1">
             
             <button @click="goToNextStep(2)"> Next >> </button>
@@ -30,6 +30,8 @@
 import SeatSelection from './seatsSelection.vue';
 import Passangers from './passangers.vue';
 import rentACarReservation from '.././rentACarReservation.vue'
+import navbar from ".././navbar.vue";
+
 export default {
 
     name: 'flightReservation',
@@ -37,7 +39,8 @@ export default {
 
         seat_selection: SeatSelection,
         passangers: Passangers,
-        rentACarReservation
+        rentACarReservation,
+        navbar
     },
     data: function () {
         return {
@@ -175,6 +178,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin: 5%
+  margin-left: 5%;
+  margin-right:5%;
+  margin-top:0%;
 }
 </style>

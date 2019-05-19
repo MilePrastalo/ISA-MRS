@@ -3,7 +3,7 @@
         <h2>Vehicles</h2>
         <addvehicle v-if="selected == 1"></addvehicle>
         <editVehicle v-on:back="back" v-on:vedited="veditedDraw" v-if="selected == 2" :iid="id" v-bind:iname="name" v-bind:imaker="maker" v-bind:itype="type" :iyear="year" v-bind:iprice="price" v-bind:idateto="dateTo" v-bind:idatefrom="dateFrom"></editVehicle>
-        <table>
+        <table class="table">
             <tr>
                 <th>Name</th>
                 <th>Maker</th>
@@ -123,11 +123,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
-table{
-    border: 1px solid darkgray;
-}
-th{
-    border: 1px solid darkgray;
 }
 </style>

@@ -2,7 +2,7 @@
     <div id="rentACarReservation">
         <searchRentACarCompany :ilocation = "location"  v-on:selected="showVehicles" :iflightDateArrive="flightDateArrive" :iflightDateLeaving="flightDateLeaving" />
         <div id="classic">
-            <table>
+            <table class="table"> 
                 <tr>
                     <td>Name</td>
                     <td>Maker</td>
