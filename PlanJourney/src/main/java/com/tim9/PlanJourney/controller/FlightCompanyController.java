@@ -213,6 +213,36 @@ public class FlightCompanyController {
 		}
 		return null;
 	}
+	
+	@RequestMapping(value = "/api/editDestination", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
+	public @ResponseBody String editDestination(@RequestBody DestinationBean destInfo) {
+		
+		FlightAdmin logged = getLoggedFlightAdmin();
+		if (logged == null) {
+			return null;
+		}
+		Destination destination = destinationService.findOne(destInfo.getId());
+		destination.setCoordinates(destInfo.getCoordinates());
+		destination.setDescription(destInfo.getDescription());
+		destination.setName(destInfo.getName());
+		destinationService.save(destination);
+		return "success";
+	}
+	
+	@RequestMapping(value = "/api/removeDestination/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
+	public @ResponseBody String removeDestination(@PathVariable("id") Long  id) throws Exception {
+		
+		FlightAdmin logged = getLoggedFlightAdmin();
+		if (logged == null) {
+			return null;
+		}
+		destinationService.remove(id);
+		return "success";
+	}
 
 	@RequestMapping(value = "/api/flightsInCompany", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()

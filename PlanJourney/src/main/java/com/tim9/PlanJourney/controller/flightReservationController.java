@@ -1,5 +1,6 @@
 package com.tim9.PlanJourney.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tim9.PlanJourney.beans.FlightBean;
 import com.tim9.PlanJourney.beans.FlightReservationBean;
 import com.tim9.PlanJourney.beans.PassangerBean;
 import com.tim9.PlanJourney.beans.QuickFlightReservationBean;
@@ -63,7 +65,7 @@ public class flightReservationController {
 	@Autowired
 	private HotelReservationService hotelReservationService;
 	
-	
+	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 	
 	@RequestMapping(value = "/api/getMyReservations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -75,6 +77,23 @@ public class flightReservationController {
 			return null;
 		}
 		return loggedUser.getFlightReservations();
+	}
+	
+	@RequestMapping(value = "/api/getFlightReservation/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('REGISTERED')")
+	public @ResponseBody FlightReservationBean getReservation(@PathVariable("id") Long id) {
+		System.out.println("\t" + id );
+		RegisteredUser loggedUser = getLoggedRegisteredUser();
+		if (loggedUser == null) {
+			return null;
+		}
+		FlightReservation reservation = reservationService.findOne(id);
+		if (reservation == null) {
+			return null;
+		}
+		FlightBean flight = new FlightBean(reservation.getFlight(),"", sdf.format(reservation.getFlight().getStartDate()),sdf.format(reservation.getFlight().getEndDate()));
+		return new FlightReservationBean(flight, reservation.getPassangers(), reservation.getPrice(), sdf.format(reservation.getDate()));
 	}
 	
 	@RequestMapping(value = "/api/getReservationRequest/{requestId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
