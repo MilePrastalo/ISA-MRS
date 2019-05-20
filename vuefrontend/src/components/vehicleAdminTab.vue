@@ -1,9 +1,9 @@
 <template>
     <div id="vehicleAdmin">
-        <h2 class="centeredh2">Vehicles</h2>
-        <addvehicle v-if="selected == 1"></addvehicle>
-        <editVehicle v-on:back="back" v-on:vedited="veditedDraw" v-if="selected == 2" :iid="id" v-bind:iname="name" v-bind:imaker="maker" v-bind:itype="type" :iyear="year" v-bind:iprice="price" v-bind:idateto="dateTo" v-bind:idatefrom="dateFrom"></editVehicle>
-        <table class="table">
+        <h2 class="centered">Vehicles</h2>
+        <addvehicle class="centered" v-if="selected == 1"></addvehicle>
+        <editVehicle class="centered" v-on:back="back" v-on:vedited="veditedDraw" v-if="selected == 2" :iid="id" v-bind:iname="name" v-bind:imaker="maker" v-bind:itype="type" :iyear="year" v-bind:iprice="price" v-bind:idateto="dateTo" v-bind:idatefrom="dateFrom"></editVehicle>
+        <table class="table centered">
             <tr>
                 <th>Name</th>
                 <th>Maker</th>
@@ -124,9 +124,10 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
-.centeredh2{
+.centered{
   margin-left: auto;
   margin-right: auto;
+  width: 800px;
 }
 .form-signin {
   width: 100%;
@@ -196,5 +197,9 @@ label{
 .form-label-group>input,
 .form-label-group>label {
   padding: var(--input-padding-y) var(--input-padding-x);
+}
+#vehicleAdmin{
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>

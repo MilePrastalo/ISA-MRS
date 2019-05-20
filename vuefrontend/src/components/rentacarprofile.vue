@@ -1,8 +1,8 @@
 <template>
-  <div id="rentacarprofile">
+  <div id="rentacarprofile" class="centered">
     <h2>Company profile</h2>
-    <form class="form-signin">
-      <div class="form-label-group">
+    <form class="form-signin centered" >
+      <div class="form-label-group centered">
         <label for="name">Name</label>
         <input id="name" v-model="name" type="text" required autofocus>
       </div>
@@ -69,10 +69,7 @@ mounted(){
   text-align: center;
   color: #2c3e50;
 }
-h2{
-  margin-top : 5%;
-  width: 800px;
-}
+
 :root {
   --input-padding-x: 1.5rem;
   --input-padding-y: .75rem;
@@ -147,5 +144,13 @@ body {
 }
 label{
   width: 20%;
+}
+.centered{
+  margin-left: auto;
+  margin-right: auto;
+  align-content: center;
+  align-items: center;
+  align-self: center;
+  width: 800px;
 }
 </style>

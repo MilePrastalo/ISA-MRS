@@ -1,7 +1,7 @@
 <template>
    <div id = "quickVehicle">
-        <h2 class="centeredh2">Quick Tickets: </h2>
-        <form action="">
+        <h2 class="centered">Quick Tickets: </h2>
+        <form action="" class="centered">
             <div class="form-label-group">
                 <label>VehicleName</label>
                 <h4>{{vehicleName}}</h4>
@@ -32,7 +32,7 @@
         </form>
         <div class="row">
             <br>
-            <table  class="table">
+            <table  class="table centered">
             <tr>
                 <th>Name</th>
                 <th>Maker</th>
@@ -55,8 +55,8 @@
             </tr>
         </table>
         </div>
-        <div class = "row">
-            <table border="1"  class = "table">
+        <div class = "row centered">
+            <table border="1"  class = "table centered">
                 <thead class="thead-dark">
                     <tr>
                     <th scope="col">Office to pick up</th>
@@ -160,9 +160,10 @@ mounted(){
   text-align: center;
   color: #2c3e50;
 }
-.centeredh2{
+.centered{
   margin-left: auto;
   margin-right: auto;
+  width:800px;
 }
 .form-signin {
   width: 100%;
