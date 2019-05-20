@@ -46,7 +46,7 @@
                     </tr>
                     <tr>
                         <td>  </td>
-                        <td><button v-on:click="updateSystemAdminProfile()">Edit</button> </td>        
+                        <td><button v-on:click="updateHotelAdminProfile()">Edit</button> </td>        
                     </tr>
                 </table>
             </div>
@@ -119,9 +119,15 @@ mounted(){
                 this.hotelAdmin.password = this.newPassword;
                 axios.post("http://localhost:8080/api/updateHotelAdmin",this.hotelAdmin)
                 .then(response => {
-                this.hotelAdmin = response.data;
+                alert(response.data)
             });
             }
+        },
+        updateHotelAdminProfile: function() {
+            axios.post("http://localhost:8080/api/updateHotelAdmin",this.hotelAdmin)
+                .then(response => {
+                alert(response.data)
+            });
         }     
     }
        

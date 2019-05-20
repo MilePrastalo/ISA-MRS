@@ -49,7 +49,7 @@
                             <td>{{flightReservation.price}}</td>
                             <td v-if="flightReservation.passangers.length != 0">{{flightReservation.passangers.length}} + (1)</td>
                             <td v-else>1</td>
-                             <td><button>Details</button></td>
+                             <td><button @click="flightReservationDetails(flightReservation.id)">Details</button></td>
                              <td class="ratingtd">
                                 <span class="fa fa-star over clicked" v-if="getRating(flightReservation,5)" @click="reviewFlight(flightReservation,5)" :id="flightReservation.ratings[4]"></span>
                                     <span class="fa fa-star over" v-else @click="review(flightReservation,5)" :id="flightReservation.ratings[4]"></span>
@@ -287,6 +287,9 @@ export default {
     },
     showHotelSearch: function() {
         this.$router.push("/searchHotels");
+    },
+    flightReservationDetails(id){
+        this.$router.push("/flightReservationDetails/"+ id );
     },
     setStars:function(reservation,num){
         for(var i = 1;i<=5;i++){

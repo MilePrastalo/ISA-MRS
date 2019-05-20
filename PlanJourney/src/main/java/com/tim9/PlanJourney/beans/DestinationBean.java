@@ -8,6 +8,7 @@ public class DestinationBean {
 	private String name;
 	private String description;
 	private String coordinates;
+	private Long id;
 	
 	public DestinationBean() {
 		// TODO Auto-generated constructor stub
@@ -42,6 +43,14 @@ public class DestinationBean {
 
 	public void setCoordinates(String coordinates) {
 		this.coordinates = coordinates;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 	
 	

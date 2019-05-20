@@ -14,7 +14,7 @@ import com.tim9.PlanJourney.models.User;
 public class HotelAdmin extends User {
 
 	@ManyToOne
-	@JsonIgnoreProperties("admins")
+	@JsonIgnoreProperties({"admins","reservations"})
 	private Hotel hotel;
 
 	public HotelAdmin() {

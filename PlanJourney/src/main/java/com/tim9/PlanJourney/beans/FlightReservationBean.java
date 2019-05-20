@@ -1,6 +1,10 @@
 package com.tim9.PlanJourney.beans;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
+import com.tim9.PlanJourney.models.flight.Passanger;
 
 
 public class FlightReservationBean {
@@ -10,6 +14,11 @@ public class FlightReservationBean {
 	private ArrayList<PassangerBean> passangers;
 	private ArrayList<Long> hotelReservations;
 	private ArrayList<Long> rentReservations;
+	private FlightBean flight;
+	private Set<Passanger> passangers_;
+	private double price;
+	private String created;
+	
 	
 	
 	public FlightReservationBean() {
@@ -24,7 +33,15 @@ public class FlightReservationBean {
 		this.hotelReservations = hotelReservations;
 		this.rentReservations = rentReservations;
 	}
-
+	
+	
+	public FlightReservationBean(FlightBean flight, Set<Passanger> passangers_, double price, String created) {
+		
+		this.flight = flight;
+		this.passangers_ = passangers_;
+		this.price = price;
+		this.created = created;
+	}
 
 	public Long getFlightId() {
 		return flightId;
@@ -63,6 +80,46 @@ public class FlightReservationBean {
 
 	public void setRentReservations(ArrayList<Long> rentReservations) {
 		this.rentReservations = rentReservations;
+	}
+
+
+	public FlightBean getFlight() {
+		return flight;
+	}
+
+
+	public void setFlight(FlightBean flight) {
+		this.flight = flight;
+	}
+
+
+	public Set<Passanger> getPassangers_() {
+		return passangers_;
+	}
+
+
+	public void setPassangers_(Set<Passanger> passangers_) {
+		this.passangers_ = passangers_;
+	}
+
+
+	public double getPrice() {
+		return price;
+	}
+
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+
+	public String getCreated() {
+		return created;
+	}
+
+
+	public void setCreated(String created) {
+		this.created = created;
 	}
 	
 	
