@@ -43,6 +43,7 @@ public class HotelRoom {
 		this.numberOfBeds = numberOfBeds;
 		this.pricePerDay = pricePerDay;
 		this.additionalCharges = additionalCharges;
+		this.rating = 0;
 	}
 
 	public Long getId() {

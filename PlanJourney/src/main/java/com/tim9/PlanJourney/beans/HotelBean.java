@@ -10,9 +10,12 @@ public class HotelBean {
 	private ArrayList<HotelReservationBean> reservations;
 	private double rating;
 	private DestinationBean destination;
+	private float longitude;
+	private float latitude;
 
 	public HotelBean(String name, String address, String description, ArrayList<HotelRoomBean> rooms,
-			ArrayList<HotelReservationBean> reservations, double rating, DestinationBean destination) {
+			ArrayList<HotelReservationBean> reservations, double rating, DestinationBean destination, float longitude,
+			float latitude) {
 		this.name = name;
 		this.address = address;
 		this.description = description;
@@ -20,6 +23,8 @@ public class HotelBean {
 		this.reservations = reservations;
 		this.rating = rating;
 		this.destination = destination;
+		this.longitude = longitude;
+		this.latitude = latitude;
 	}
 
 	public DestinationBean getDestination() {
@@ -79,5 +84,21 @@ public class HotelBean {
 
 	public void setRating(double rating) {
 		this.rating = rating;
+	}
+
+	public float getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(float longitude) {
+		this.longitude = longitude;
+	}
+
+	public float getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(float latitude) {
+		this.latitude = latitude;
 	}
 }

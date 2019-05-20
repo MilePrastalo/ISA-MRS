@@ -66,7 +66,7 @@
         <td>{{r.discount}}</td>
         <td>{{parseFloat(r.paidPrice) - parseFloat(r.paidPrice) * (parseFloat(r.discount) / 100)}}</td>
         <td>
-          <button @click="reserve(r)">Details</button>
+          <button @click="reserve(r)">Buy</button>
         </td>
       </tr>
     </table>
@@ -74,21 +74,28 @@
       </tr>
     </table>
     
-
     <h2>My Map</h2>
-    <vl-map v-if="loaded = 1" style="height: 400px">
-      <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation" projection="EPSG:4326"></vl-view>
-  
-      <vl-layer-tile id="osm">
-          <vl-source-osm></vl-source-osm>
-      </vl-layer-tile>
-
-      </vl-map>
+    <yandex-map
+      :coords="[this.hotel.latitude,this.hotel.longitude]"
+      zoom="14"
+      style="width:450px;height:300px;"
+      :controlss="['zoomControl']"
+      map-type="hybrid"
+    >
+      <ymap-marker
+        marker-id="1"
+        marker-type="placemark"
+        :coords="[this.hotel.latitude,this.hotel.longitude]"
+        :marker-fill="{color: '#0E4779', opacity: 0.5}"
+        :marker-stroke="{color: '#0E4779',width: 4}"
+      ></ymap-marker>
+    </yandex-map>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import { parse } from 'path';
 export default {
   name: 'hotelProfile',
   components: {
@@ -99,10 +106,6 @@ export default {
     quickReservations: [],
     destinationName: "",
     destintionDesc: "",
-    zoom: 15,
-    center: [0,0],
-    loaded: 0,
-    rotation: 0,
   }
 },
 mounted(){
@@ -114,15 +117,8 @@ mounted(){
          axios.get("http://localhost:8080/api/getHotel/"+this.$route.params.hotelName)
         .then(response => {
             this.hotel = response.data;
-            this.destinationName = response.data.destination.name
-            this.destintionDesc = response.data.destination.description
-            var destCoordSplit = response.data.description.split(",");
-            console.log(destCoordSplit);
-            var falseCenter = [];
-            falseCenter[0] = parseFloat(destCoordSplit[1]);
-            falseCenter[1] = parseFloat(destCoordSplit[0]);
-            this.center = falseCenter;
-            this.loaded = 1;
+            this.destinationName = response.data.destination.name;
+
           // Checks for quick reservations.
           var index = 0;
           for(let r in response.data.reservations) {
@@ -133,8 +129,6 @@ mounted(){
             }
           }
           });
-          
-       
     },
     methods:{  
       showDetails: function(chosenRoom) {
@@ -154,7 +148,7 @@ mounted(){
               alert("Your reservation failed.");
             }
           });
-        }      
+        },
     }
 }
 </script>

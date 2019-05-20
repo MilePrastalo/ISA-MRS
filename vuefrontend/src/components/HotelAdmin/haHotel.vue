@@ -19,6 +19,9 @@
                     <li class="nav-item">
                         <a  class="nav-link" href="#" @click="selectTab(4)" >Add Quick Reservation</a>
                     </li>
+                    <li class="nav-item">
+                        <a  class="nav-link" href="#" @click="selectTab(5)" >Reports</a>
+                    </li>
 
                 </ul>
             </div>
@@ -94,14 +97,13 @@
                     <td>  </td>
                     <td><button v-on:click="addRoom()">Add room</button> </td>   
                 </tr>
-                <tr>
-                    <td>  </td>
-                    <td><button v-on:click="save()">Save changes</button> </td>   
-                </tr>
             </table>      
             </div>
             <div v-if="currentTab == 4">
                 <ha-quick-reservation :hotel="hotel"></ha-quick-reservation>
+            </div>
+             <div v-if="currentTab == 5">
+                <ha-reports :hotel="hotel"></ha-reports>
             </div>
    </div>
 </template>
@@ -109,6 +111,7 @@
 <script>
 
 import haQuickReservation from "./haQuickReservation.vue"
+import haReports from "./haReports.vue"
 
 export default {
   name: 'haHotel',
@@ -116,11 +119,12 @@ export default {
       hotel: Object
   },
   components: {
-      haQuickReservation: haQuickReservation
+      haQuickReservation: haQuickReservation,
+      haReports: haReports
   },
   data: function () {
   return {
-    room: [],
+    room: {},
     ac: [],
     acList: [],
     currentTab: 1
@@ -142,15 +146,16 @@ mounted(){
             this.ac.pricePerDay = "";
         },
         addRoom: function() {
-            this.hotel.rooms.push({roomNumber: this.room.roomNumber,numberOfBeds:this.room.numberOfBeds,pricePerDay:this.room.pricePerDay,additionalCharges:this.acList,rating:0});
-            this.room = [];
-        },
-        save: function() {
-            axios.post("http://localhost:8080/api/updateHotel/",this.hotel)
+            this.room.additionalCharges = this.acList;
+            console.log(this.room)
+            axios.post("http://localhost:8080/api/addHotelRoom/",this.room)
             .then(response => {
-                alert("Done.");
+                alert(response.data);
             })
+            this.hotel.rooms.push({roomNumber: this.room.roomNumber,numberOfBeds:this.room.numberOfBeds,pricePerDay:this.room.pricePerDay,additionalCharges:this.acList,rating:0});
+            this.room = {};
         }
+        
     }
     
 }
