@@ -75,12 +75,27 @@
     </table>
     
     <h2>My Map</h2>
+    <yandex-map
+      :coords="[this.hotel.latitude,this.hotel.longitude]"
+      zoom="14"
+      style="width:450px;height:300px;"
+      :controlss="['zoomControl']"
+      map-type="hybrid"
+    >
+      <ymap-marker
+        marker-id="1"
+        marker-type="placemark"
+        :coords="[this.hotel.latitude,this.hotel.longitude]"
+        :marker-fill="{color: '#0E4779', opacity: 0.5}"
+        :marker-stroke="{color: '#0E4779',width: 4}"
+      ></ymap-marker>
+    </yandex-map>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-import {LMap, LTileLayer, LMarker} from 'vue2-leaflet'
+import { parse } from 'path';
 export default {
   name: 'hotelProfile',
   components: {
@@ -90,7 +105,7 @@ export default {
     hotel : [],
     quickReservations: [],
     destinationName: "",
-    destintionDesc: ""
+    destintionDesc: "",
   }
 },
 mounted(){
@@ -103,7 +118,7 @@ mounted(){
         .then(response => {
             this.hotel = response.data;
             this.destinationName = response.data.destination.name;
-            
+
           // Checks for quick reservations.
           var index = 0;
           for(let r in response.data.reservations) {

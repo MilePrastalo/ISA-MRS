@@ -14,6 +14,14 @@
                     <td> <textarea  rows="5" cols="22" name="description"  v-model="description" style="overflow:scroll;"></textarea> </td>        
                 </tr>
                 <tr>
+                    <td> Input hotel longitude: </td>
+                    <td> <input type="number" v-model="longitude" > </td>        
+                </tr>
+                <tr>
+                    <td> Input hotel latitude: </td>
+                    <td> <input type="number"  v-model="latitude" > </td>        
+                </tr>
+                <tr>
                     <td>  </td>
                     <td><button v-on:click="addHotel()">Add hotel</button> </td>   
                 </tr>
@@ -31,16 +39,20 @@ export default {
   return {
     name: "",
     address: "",
-    description: ""
+    description: "",
+    longitude: 0,
+    latitude: 0
   }
 },
     methods:{
         addHotel: function(){
-             axios.post("http://localhost:8080/api/addHotel",{name:this.name, address: this.address, description: this.description})
+             axios.post("http://localhost:8080/api/addHotel",{name:this.name, address: this.address, description: this.description,longitude:this.longitude,latitude:this.latitude})
             .then(response => {
                 this.name = response.data.name
                 this.address = response.data.address
                 this.description = response.data.description
+                this.longitude = response.data.longitude
+                this.latitude = response.data.latitude
             });  
         }     
     }

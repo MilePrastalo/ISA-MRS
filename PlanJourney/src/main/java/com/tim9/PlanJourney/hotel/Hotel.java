@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
@@ -26,6 +27,12 @@ public class Hotel extends Company {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Destination destination;
+	
+	@Column(name="longitude", nullable = true)
+	private float longitude;
+	
+	@Column(name="latitude", nullable = true)
+	private float latitude;
 
 	public Hotel() {
 		super();
@@ -65,6 +72,22 @@ public class Hotel extends Company {
 
 	public void setDestination(Destination destination) {
 		this.destination = destination;
+	}
+
+	public float getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(float longitude) {
+		this.longitude = longitude;
+	}
+
+	public float getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(float latitude) {
+		this.latitude = latitude;
 	}
 
 }
