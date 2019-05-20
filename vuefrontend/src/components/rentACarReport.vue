@@ -42,7 +42,7 @@
               <div class="row">
             <h2>Average rating of company:{{avgRating}}</h2>
           </div>
-          <div class="row">
+          <div class="row" id="div2">
               <canvas ref="referencedElement" id="myChart" width="600" height="400" style="responsive:true;"></canvas>
           </div>
           </div>
@@ -78,7 +78,7 @@
               <input v-model="earningsType" name="earningspan" type="radio" value="2"/>
               <button @click="searchReservations">Search</button>
           </div>
-          <div class="row">
+          <div class="row" id="div3">
               <canvas ref="referencedElement" id="myChart3" width="600" height="400" style="responsive:true;"></canvas>
           </div>
         </div>
@@ -186,6 +186,8 @@ export default {
             document.getElementById('Reservations').hidden = true;
             var vdata = this.ratingData;
             console.log(vdata);
+            document.getElementById('myChart').remove(); // this is my <canvas> element
+            document.getElementById('div2').innerHTML = '<canvas ref="referencedElement" id="myChart" style="responsive:true;"><canvas>';
             var ctx = document.getElementById('myChart').getContext('2d');
             var myChart = new Chart(ctx, {
             type: 'bar',
@@ -246,6 +248,8 @@ export default {
         var vcounts = this.reservations.counts;
         console.log(vlabels);
         console.log(vcounts);
+        document.getElementById('myChart3').remove(); // this is my <canvas> element
+        document.getElementById('div3').innerHTML = '<canvas ref="referencedElement" id="myChart3" style="responsive:true;"><canvas>';
         var ctx = document.getElementById('myChart3').getContext('2d');
             var myChart = new Chart(ctx, {
             type: 'bar',
