@@ -3,6 +3,8 @@ package com.tim9.PlanJourney.controller;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +27,15 @@ import com.tim9.PlanJourney.beans.DestinationBean;
 import com.tim9.PlanJourney.beans.HotelBean;
 import com.tim9.PlanJourney.beans.HotelReservationBean;
 import com.tim9.PlanJourney.beans.HotelRoomBean;
+import com.tim9.PlanJourney.hotel.AdditionalCharges;
 import com.tim9.PlanJourney.hotel.Hotel;
+import com.tim9.PlanJourney.hotel.HotelAdmin;
 import com.tim9.PlanJourney.hotel.HotelReservation;
 import com.tim9.PlanJourney.hotel.HotelRoom;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.service.DestinationService;
+import com.tim9.PlanJourney.service.HotelAdminService;
 import com.tim9.PlanJourney.service.HotelService;
 import com.tim9.PlanJourney.service.RegisteredUserService;
 
@@ -44,6 +49,9 @@ public class HotelController {
 
 	@Autowired
 	private RegisteredUserService userService;
+
+	@Autowired
+	private HotelAdminService hotelAdminService;
 
 	@RequestMapping(value = "/api/getAllHotels", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -62,7 +70,8 @@ public class HotelController {
 				roomBean.setRoomNumber(r.getRoomNumber());
 				roomBean.setNumberOfBeds(r.getNumberOfBeds());
 				roomBean.setPricePerDay(r.getPricePerDay());
-				roomBean.setAdditionalCharges(r.getAdditionalCharges());
+				ArrayList<AdditionalCharges> ac = new ArrayList<AdditionalCharges>(r.getAdditionalCharges());
+				roomBean.setAdditionalCharges(ac);
 				rb.add(roomBean);
 			}
 			hb.setRooms(rb);
@@ -121,7 +130,8 @@ public class HotelController {
 			roomBean.setRoomNumber(r.getRoomNumber());
 			roomBean.setNumberOfBeds(r.getNumberOfBeds());
 			roomBean.setPricePerDay(r.getPricePerDay());
-			roomBean.setAdditionalCharges(r.getAdditionalCharges());
+			ArrayList<AdditionalCharges> ac = new ArrayList<AdditionalCharges>(r.getAdditionalCharges());
+			roomBean.setAdditionalCharges(ac);
 			rb.add(roomBean);
 		}
 		hb.setRooms(rb);
@@ -238,21 +248,56 @@ public class HotelController {
 		return new ResponseEntity<Hotel>(hotel, HttpStatus.CONFLICT);
 	}
 
-	// Metod za izmenu hotela, dodavanje soba, rezervacija...
+	// Metod za izmenu osnovnih podataka hotela.
 	@RequestMapping(value = "/api/updateHotel", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('HOTEL_ADMIN')")
-	public @ResponseBody Hotel updateHotel(@RequestBody Hotel hotel) {
-		Hotel existingHotel = service.findOne(hotel.getId());
+	public @ResponseBody boolean updateHotel(@RequestBody HotelBean hb) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
-			if (existingHotel.getAddress().equals(hotel.getAddress())
-					&& existingHotel.getName().equals(hotel.getName())) {
-				Hotel h = (Hotel) service.save(hotel);
-				return null;
+			String username = authentication.getName();
+			HotelAdmin admin = (HotelAdmin) hotelAdminService.findByUsername(username);
+			Hotel hotel = admin.getHotel();
+
+			if (hotel.getName().equals(hb.getName())) {
+				hotel.setAddress(hb.getAddress());
+				hotel.setDescription(hb.getDescription());
+				hotel.setLatitude(hb.getLatitude());
+				hotel.setLongitude(hb.getLongitude());
+
+				service.save(hotel);
+				return true;
 			}
 		}
-		return null;
+		return false;
+	}
+
+	@RequestMapping(value = "/api/addHotelRoom", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('HOTEL_ADMIN')")
+	public @ResponseBody boolean addHotelRoom(@RequestBody HotelRoomBean hrb) {
+		System.out.println(hrb);
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String username = authentication.getName();
+			HotelAdmin admin = (HotelAdmin) hotelAdminService.findByUsername(username);
+			Hotel hotel = admin.getHotel();
+
+			HotelRoom hr = new HotelRoom();
+			hr.setNumberOfBeds(hrb.getNumberOfBeds());
+			hr.setPricePerDay(hrb.getPricePerDay());
+			hr.setRating(0);
+			hr.setRoomNumber(hrb.getRoomNumber());
+			Set<AdditionalCharges> ac = new HashSet<AdditionalCharges>(hrb.getAdditionalCharges());
+			hr.setAdditionalCharges(ac);
+			hotel.getRooms().add(hr);
+
+			service.save(hotel);
+			return true;
+		}
+		return false;
 	}
 
 	@RequestMapping(value = "/api/searchHotels/{values}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

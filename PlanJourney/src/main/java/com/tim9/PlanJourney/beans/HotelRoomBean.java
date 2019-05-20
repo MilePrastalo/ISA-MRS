@@ -1,5 +1,6 @@
 package com.tim9.PlanJourney.beans;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,10 +11,10 @@ public class HotelRoomBean {
 	private int numberOfBeds;
 	private float pricePerDay;
 	private double rating;
-	private Set<AdditionalCharges> additionalCharges = new HashSet<AdditionalCharges>();
+	private ArrayList<AdditionalCharges> additionalCharges = new ArrayList<AdditionalCharges>();
 
 	public HotelRoomBean(int roomNumber, int numberOfBeds, float pricePerDay, double rating,
-			Set<AdditionalCharges> additionalCharges) {
+			ArrayList<AdditionalCharges> additionalCharges) {
 		this.roomNumber = roomNumber;
 		this.numberOfBeds = numberOfBeds;
 		this.pricePerDay = pricePerDay;
@@ -56,11 +57,11 @@ public class HotelRoomBean {
 		this.pricePerDay = pricePerDay;
 	}
 
-	public Set<AdditionalCharges> getAdditionalCharges() {
+	public ArrayList<AdditionalCharges> getAdditionalCharges() {
 		return additionalCharges;
 	}
 
-	public void setAdditionalCharges(Set<AdditionalCharges> additionalCharges) {
+	public void setAdditionalCharges(ArrayList<AdditionalCharges> additionalCharges) {
 		this.additionalCharges = additionalCharges;
 	}
 }

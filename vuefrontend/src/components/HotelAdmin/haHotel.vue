@@ -97,10 +97,6 @@
                     <td>  </td>
                     <td><button v-on:click="addRoom()">Add room</button> </td>   
                 </tr>
-                <tr>
-                    <td>  </td>
-                    <td><button v-on:click="save()">Save changes</button> </td>   
-                </tr>
             </table>      
             </div>
             <div v-if="currentTab == 4">
@@ -128,7 +124,7 @@ export default {
   },
   data: function () {
   return {
-    room: [],
+    room: {},
     ac: [],
     acList: [],
     currentTab: 1
@@ -150,15 +146,16 @@ mounted(){
             this.ac.pricePerDay = "";
         },
         addRoom: function() {
-            this.hotel.rooms.push({roomNumber: this.room.roomNumber,numberOfBeds:this.room.numberOfBeds,pricePerDay:this.room.pricePerDay,additionalCharges:this.acList,rating:0});
-            this.room = [];
-        },
-        save: function() {
-            axios.post("http://localhost:8080/api/updateHotel/",this.hotel)
+            this.room.additionalCharges = this.acList;
+            console.log(this.room)
+            axios.post("http://localhost:8080/api/addHotelRoom/",this.room)
             .then(response => {
-                alert("Done.");
+                alert(response.data);
             })
+            this.hotel.rooms.push({roomNumber: this.room.roomNumber,numberOfBeds:this.room.numberOfBeds,pricePerDay:this.room.pricePerDay,additionalCharges:this.acList,rating:0});
+            this.room = {};
         }
+        
     }
     
 }
