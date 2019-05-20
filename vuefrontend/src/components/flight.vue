@@ -104,6 +104,7 @@ mounted(){
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin: 5%;
+  margin-right: 5%;
+  margin-left: 5%;
 }
 </style>

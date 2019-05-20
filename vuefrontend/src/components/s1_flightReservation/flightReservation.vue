@@ -1,6 +1,6 @@
 <template>
    <div id = "flightReservation">
-
+       <navbar/>
         <div v-if="currentStep == 1">
             
             <button @click="goToNextStep(2)"> Next >> </button>
@@ -19,7 +19,7 @@
         </div>
         <div v-if="currentStep == 4">
             <button @click="goToNextStep(5)"> Finish >> </button>
-            <h2>Vehicle reservations</h2>
+            <rentACarReservation :iflightDateArrive="flight.startDate_str" :iflightDateLeaving="flight.endDate_str" v-on:vehicleReserved="carReserved" :ilocation="destination"/>
         </div>
         		
          
@@ -29,6 +29,8 @@
 <script>
 import SeatSelection from './seatsSelection.vue';
 import Passangers from './passangers.vue';
+import rentACarReservation from '.././rentACarReservation.vue'
+import navbar from ".././navbar.vue";
 
 export default {
 
@@ -36,12 +38,15 @@ export default {
     components: {
 
         seat_selection: SeatSelection,
-        passangers: Passangers
+        passangers: Passangers,
+        rentACarReservation,
+        navbar
     },
     data: function () {
         return {
 
             selected_seats: [],
+            destination:"",
             total: 0,
             passangers: [],
             id : 0,
@@ -63,6 +68,8 @@ export default {
         axios.get("http://localhost:8080/api/getFlight/" + flightID)
         .then(response => {
             this.flight = response.data
+            console.log(this.flight);
+            this.destination = this.flight.endDestination;
           }); 
     }, 
     methods: {
@@ -79,7 +86,10 @@ export default {
                 return this.flight.firstClassPrice;
             }
         },
-
+        carReserved:function(id){
+            this.vehicleReservations.push(id);
+            console.log(id);
+        },
         makeReservation: function(){
            
             var idx;
@@ -119,7 +129,7 @@ export default {
                     alert("You must choose at least one seat!");
                 }
                 else if (this.selected_seats.length == 1){
-                    this.makeReservation();
+                    this.currentStep = option;
                 }
                 else{
                     this.currentStep = option;
@@ -168,6 +178,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin: 5%
+  margin-left: 5%;
+  margin-right:5%;
+  margin-top:0%;
 }
 </style>

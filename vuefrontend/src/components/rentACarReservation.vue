@@ -1,8 +1,8 @@
 <template>
     <div id="rentACarReservation">
-        <searchRentACarCompany  v-on:selected="showVehicles" />
+        <searchRentACarCompany :ilocation = "location"  v-on:selected="showVehicles" :iflightDateArrive="flightDateArrive" :iflightDateLeaving="flightDateLeaving" />
         <div id="classic">
-            <table>
+            <table class="table"> 
                 <tr>
                     <td>Name</td>
                     <td>Maker</td>
@@ -65,8 +65,10 @@ export default {
     components: {
       searchRentACarCompany
     },
+    props:['ilocation','iflightDateArrive','iflightDateLeaving'],
     data: function(){
         return{
+            location:this.ilocation,
             cars:[],
             offices:[],
             id:"",
@@ -75,7 +77,8 @@ export default {
             returnoffice:"",
             pickoffice:"",
             quickReservations: [],
-
+            flightDateArrive:this.iflightDateArrive,
+            flightDateLeaving:this.iflightDateLeaving
         };
     },
     methods: {
@@ -116,6 +119,7 @@ export default {
                     .then(response => {
                         console.log(response);
                         alert("Success :D");
+                        this.$emit("vehicleReserved",response.data);
                     }); 
             },
             reserveQuick : function(res){
