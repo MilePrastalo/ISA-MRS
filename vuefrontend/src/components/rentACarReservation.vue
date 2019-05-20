@@ -140,7 +140,7 @@ export default {
                 axios.post("http://localhost:8080/api/reserveVehicle",{id:carid,dateFrom:this.datefrom,dateTo:this.dateto,officePick:this.pickoffice,officeReturn:this.returnoffice})
                     .then(response => {
                         console.log(response);
-                        alert("Success :D");
+                        alert("Success");
                         this.$emit("vehicleReserved",response.data);
                     }); 
             },
@@ -148,7 +148,8 @@ export default {
                 axios.post("http://localhost:8080/api/quickReserveVehicle",{id:res.id})
                     .then(response => {
                         console.log(response);
-                        alert("Success :D");
+                        alert("Success");
+                        this.$emit("vehicleReserved",response.data);
                     }); 
             }
         }

@@ -698,7 +698,7 @@ public class RentACarController {
 	@CrossOrigin()
 	//Makes quick reservation
 	//Creates new reservation and changes bool taken for quick reservation
-	public @ResponseBody boolean quickReserveVehicle(@RequestBody QuickVehicleReserveBean bean) throws Exception { 
+	public @ResponseBody Long quickReserveVehicle(@RequestBody QuickVehicleReserveBean bean) throws Exception { 
 		QuickVehicleReservation quick = quickService.findOne(bean.getId());
 		Vehicle vehicle = quick.getVehicle();
 		RegisteredUser user = getRegisteredUser();
@@ -719,9 +719,9 @@ public class RentACarController {
 		companyService.save(company);
 		userService.save(user);
 		vehicleService.save(vehicle);
-		reservationService.save(reservation);
+		VehicleReservation vr = reservationService.save(reservation);
 
-		return true;
+		return vr.getId();
 	}
 	
 	
