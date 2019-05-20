@@ -196,7 +196,7 @@ export default {
         this.checkDate();
       },
       reserve: function() {
-        if(this.discount === 0) {
+        if(this.discount <= 0) {
           alert("Discount must be grater than zero.");
           return;
         }
