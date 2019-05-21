@@ -1,10 +1,9 @@
 <template>
    <div id = "seatSelection">
 
-            <div class = "row">
+            <br>
                 <h2>Choose seat(s) </h2>
-            </div>
-            <div class='my-legend'>
+            <div class='my-legend' style="margin-left: 5%;">
                 <div class='legend-title'></div>
                 <div class='legend-scale'>
                     <ul class='legend-labels'>
@@ -14,9 +13,10 @@
                         <li><span style='background:orange;'></span>Unavailable</li>
                     </ul>
                 </div>
+                <br><br>
             </div>
             <br><br><br>
-            <div class = "row"> 
+            <div class = "row" style="margin-left: 5%;"> 
                 <table class = "seats">
                     <caption style="caption-side: top; font-weight: bold">Economic class</caption>
                     <tr v-for="r in seatsE.rows" :key ="r"> 
@@ -43,7 +43,7 @@
                 </table>       
             </div>
 
-            <div v-if="selected_seats.length != 0" class = "row" id = "infoArea">
+            <div v-if="selected_seats.length != 0" class = "row" id = "infoArea" style="margin-left: 5%;">
                 <div>
                     <h3> Selected Seats (<span id="counter"> {{selected_seats.length}} </span>):</h3>
                     <ul  id = "selectedSeats">
@@ -244,6 +244,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin: 5%
 }
 </style>

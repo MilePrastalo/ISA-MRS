@@ -1,34 +1,32 @@
 <template>
    <div id = "flightCompanyProfile">
 
-        <br>
-        <div class="row"> 
-                <h2> Company information: </h2>
-        </div>
-        <br>
-
-        <div class = "row">
-                
-            <table  style="text-align: left">
-                <tr>
-                    <td> Name: </td>
-                    <td>  <input type="text" name="name" v-model="name" > </td>
-                </tr>
-                <tr>
-                    <td> Address: </td>
-                    <td>  <input type="text" name="address" v-model="address" > </td>
-                </tr>
-                <tr>
-                    <td> Description: </td>
-                    <td> <textarea  rows="5" cols="22" name="description"  v-model="description" style="overflow:scroll;"></textarea> </td>        
-                </tr>
-                <tr>
-                    <td>  </td>
-                    <td><button v-on:click="updateFlightCompanyProfile()">Edit</button> </td>      
-                </tr>
-            </table>
-        </div>
-
+       <div class = "companyProfile">
+           <br><br>
+            <h2> Company information: </h2>
+            <br>
+            <div class = "centered">
+                    
+                <table class = "centered"  style="text-align: left">
+                    <tr>
+                        <td> Name: </td>
+                        <td>  <input type="text" name="name" v-model="name" > </td>
+                    </tr>
+                    <tr>
+                        <td> Address: </td>
+                        <td>  <input type="text" name="address" v-model="address" > </td>
+                    </tr>
+                    <tr>
+                        <td> Description: </td>
+                        <td> <textarea  rows="5" cols="22" name="description"  v-model="description" style="overflow:scroll;"></textarea> </td>        
+                    </tr>
+                    <tr>
+                        <td>  </td>
+                        <td><button class="btn btn-primary" v-on:click="updateFlightCompanyProfile()">Edit</button> </td>      
+                    </tr>
+                </table>
+            </div>
+       </div>
     </div>
 </template>
 
@@ -74,13 +72,22 @@ mounted(){
 
 </script>
 
-<style>
+<style scopped>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-left: 5%;
+}
+
+.companyProfile{
+    margin-left: auto;
+    margin-right: auto;
+    width: 1000px;
+}
+.centered{
+    margin-left: auto;
+    margin-right: auto;
 }
 </style>

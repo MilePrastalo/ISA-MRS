@@ -1,38 +1,37 @@
 <template>
     <div id="rentACarReport">
-      <div class="row">
-          <button @click="selected(0)" >Vehicles</button>
-          <button @click="selected(1)">Ratings</button>
-          <button @click="selected(2)">Earnings</button>
-          <button @click="selected(3)">Reservations</button>
+      <div class="row centered">
+          <button class="btn-primary space first" @click="selected(0)" >Vehicles</button>
+          <button class="btn-primary space" @click="selected(1)">Ratings</button>
+          <button class="btn-primary space" @click="selected(2)">Earnings</button>
+          <button class="btn-primary space last" @click="selected(3)">Reservations</button>
 
       </div>
-      <div class="row" id="Vehicless">
-          <div class="container">
-              
-            <div class="row">
-                <table>
-            <tr>
-                <th>Name</th>
-                <th>Maker</th>
-                <th>Type</th>
-                <th>Year</th>
-                <th>Price</th>
-                <th>Avaiable from</th>
-                <th>Avaiable to</th>
-                <th>Rating</th>
-            </tr>
-            <tr v-for="car in cars" :key="car.id">
-                <td>{{car.name}}</td>
-                <td>{{car.maker}}</td>
-                <td>{{car.type}}</td>
-                <td>{{car.year}}</td>
-                <td>{{car.price}}</td>
-                <td>{{car.dateFrom}}</td>
-                <td>{{car.dateTo}}</td>
-                <td>{{car.rating}}</td>
-            </tr>
-        </table>
+      <div class="row centered" id="Vehicless">
+          <div class="container centered">     
+            <div class="row centered">
+                <table class="table centered">
+                    <tr>
+                        <th>Name</th>
+                        <th>Maker</th>
+                        <th>Type</th>
+                        <th>Year</th>
+                        <th>Price</th>
+                        <th>Avaiable from</th>
+                        <th>Avaiable to</th>
+                        <th>Rating</th>
+                    </tr>
+                    <tr v-for="car in cars" :key="car.id">
+                        <td>{{car.name}}</td>
+                        <td>{{car.maker}}</td>
+                        <td>{{car.type}}</td>
+                        <td>{{car.year}}</td>
+                        <td>{{car.price}}</td>
+                        <td>{{car.dateFrom}}</td>
+                        <td>{{car.dateTo}}</td>
+                        <td>{{car.rating}}</td>
+                    </tr>
+                </table>
             </div>
           </div>
           
@@ -43,7 +42,7 @@
               <div class="row">
             <h2>Average rating of company:{{avgRating}}</h2>
           </div>
-          <div class="row">
+          <div class="row" id="div2">
               <canvas ref="referencedElement" id="myChart" width="600" height="400" style="responsive:true;"></canvas>
           </div>
           </div>
@@ -79,7 +78,7 @@
               <input v-model="earningsType" name="earningspan" type="radio" value="2"/>
               <button @click="searchReservations">Search</button>
           </div>
-          <div class="row">
+          <div class="row" id="div3">
               <canvas ref="referencedElement" id="myChart3" width="600" height="400" style="responsive:true;"></canvas>
           </div>
         </div>
@@ -168,7 +167,7 @@ export default {
                     return localStorage.getItem('jwtToken');
                 };
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-        axios.post("http://localhost:8080/api/getCompanyReservationsReport",{dateFrom:this.dateFromReservation,dateTo:this.dateToReservation,type:2})
+        axios.post("http://localhost:8080/api/getCompanyReservationsReport",{dateFrom:this.dateFromReservation,dateTo:this.dateToReservation,type:this.earningsType})
                 .then(response => { 
                     console.log(response);
                     this.reservations = response.data;
@@ -187,6 +186,8 @@ export default {
             document.getElementById('Reservations').hidden = true;
             var vdata = this.ratingData;
             console.log(vdata);
+            document.getElementById('myChart').remove(); // this is my <canvas> element
+            document.getElementById('div2').innerHTML = '<canvas ref="referencedElement" id="myChart" style="responsive:true;"><canvas>';
             var ctx = document.getElementById('myChart').getContext('2d');
             var myChart = new Chart(ctx, {
             type: 'bar',
@@ -247,6 +248,8 @@ export default {
         var vcounts = this.reservations.counts;
         console.log(vlabels);
         console.log(vcounts);
+        document.getElementById('myChart3').remove(); // this is my <canvas> element
+        document.getElementById('div3').innerHTML = '<canvas ref="referencedElement" id="myChart3" style="responsive:true;"><canvas>';
         var ctx = document.getElementById('myChart3').getContext('2d');
             var myChart = new Chart(ctx, {
             type: 'bar',
@@ -310,5 +313,19 @@ th,td{
 h2{
   margin: auto;
   margin-bottom: 2%;
+}
+.space{
+    margin: 1%;
+}
+.centered{
+  margin-left: auto;
+  margin-right: auto;
+  width: 800px;
+}
+.first{
+    margin-left: auto;
+}
+.last{
+    margin-right: auto;
 }
 </style>

@@ -1,11 +1,10 @@
 <template>
    <div id = "destinations">
-                <br>
-                <div class = "row">
+        <div class = "destinationContainer">
+            <br><br>
                 <h2>New destination: </h2>
-                </div>
                 <br>
-                <table  style="text-align: left">
+                <table class = "centered" style="text-align: left">
                     <tr>
                         <td> Name: </td>
                         <td> <input type="text" name="DestName" v-model="DestName" > </td>
@@ -17,27 +16,27 @@
                     <tr>
                         <td> Description: </td>
                         <td> <textarea  rows="5" cols="22" name="DestDescription"  v-model="DestDescription" style="overflow:scroll;"></textarea> </td> 
-
                     </tr>
                     <tr>
                         <td></td>
-                        <td><button v-on:click="addNewDestination()">Add destination</button> </td>      
+                        <td><button class="btn btn-primary" v-on:click="addNewDestination()">Add destination</button> </td>      
                     </tr>
                 </table>
-                <br>
-                <div class = "row">
+                <br><br>
                 <h2>All destinations: </h2>
-                </div>
                 <br>
 
                 <div class = "row">
-                <table border="1">
+                <table class = "centered table" border="1">
+                    <thead class="thead-dark">
                     <tr>
-                        <td>Name</td>
-                        <td>Coordinates</td>
-                        <td>Description</td>
-                        <td></td>
+                        <th scope="col">Name</th>
+                        <th scope="col">Coordinates</th>
+                        <th scope="col">Description</th>
+                        <th></th>
+                        <th></th>
                     </tr>
+                    </thead>
                     <tr v-for="(destination,index ) in destinations" :key="index">  
                         <td v-if="editing == true"> <input type="text" name="DestName" v-model="destination.name" > </td>
                         <td v-else>{{destination.name}}</td>
@@ -45,13 +44,15 @@
                         <td v-else> {{destination.coordinates}} </td>
                         <td v-if="editing == true"> <textarea  rows="5" cols="22" name="DestDescription"  v-model="destination.description" style="overflow:scroll;"></textarea> </td> 
                         <td v-else>{{destination.description}}</td>
-                        <td  v-if="editing == false" @click="editDestination"><button>Edit</button></td>
-                        <td v-if="editing == true"><button @click="saveChanges(destination)">Save</button></td>
-                        <td><button @click="deleteDestination(index, destination)">Delete</button></td>
+                        <td  v-if="editing == false" > <button class="btn btn-outline-primary" @click="editDestination">Edit</button></td>
+                        <td v-if="editing == true"><button @click="saveChanges(destination)" class="btn btn-outline-primary">Save</button></td>
+                        <td><button @click="deleteDestination(index, destination)" class="btn btn-outline-primary">Delete</button></td>
                     </tr>
                 </table>
-                </div>  
+                </div>
         </div>
+          
+    </div>
 </template>
 
 <script>
@@ -103,7 +104,7 @@ mounted(){
         
         saveChanges: function(destination){
 
-            if ( this.DestName == "" ||  this.DestCoordinates == "" || this.DestDescription == ""){
+            if ( destination.name == "" ||  destination.coordinates == "" || destination.description == ""){
                 alert("Fields can not be empty!");
                 return;
             }
@@ -141,5 +142,11 @@ mounted(){
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+
+.destinationContainer{
+    margin-left: auto;
+    margin-right: auto;
+    width: 1100px;
 }
 </style>

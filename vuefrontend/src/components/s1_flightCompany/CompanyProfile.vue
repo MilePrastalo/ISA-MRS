@@ -1,8 +1,9 @@
 <template>
     <div id = "CompanyProfile">
-
-        <div class="row">
-            <ul class="nav nav-tabs">
+        <navbar></navbar>
+        <div class = "container">
+            <div class="row">
+            <ul class="nav nav-tabs centered">
                 <li class="nav-item">
                     <a  class="nav-link active" href="#" @click="selectTab(1)" id = 'flights'>Flights</a>
                 </li>
@@ -18,6 +19,7 @@
         <div class = "row" v-if="currentTab == 2" id = "flightCompany">
             <quickReservations :idCompany = "this.companyId"></quickReservations>
         </div>
+        </div>
 
     </div>
 </template>
@@ -28,19 +30,20 @@
 import allFlights from '../allFlights.vue'
 import QuickReservations from '../quickReservations.vue'
 
-
+import navbar from "../navbar.vue";
 export default {
   name: 'CompanyProfile',
   components: {
 
       allFlights: allFlights,
-      quickReservations: QuickReservations
+      quickReservations: QuickReservations,
+      navbar: navbar
   },
   data: function () {
     return {
 
         companyId: 0,
-        currentTab: 1,
+        currentTab: 1
     }
 },
 created: function(){
@@ -71,6 +74,10 @@ methods:{
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-left: 5%;
+}
+
+centered{
+    margin-right: auto;
+    margin-left: auto;
 }
 </style>

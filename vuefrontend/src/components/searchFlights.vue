@@ -1,10 +1,7 @@
 <template>
    <div id = "flightForAdmin">
 
-
-        <div class = "row">
             <h2>Flight Search </h2>
-        </div>
         <br>
 
        <div class = "row">
@@ -164,6 +161,11 @@ mounted(){
   text-align: center;
   color: #303e4d;
   margin: 5%;
+}
+
+.searchForm{
+    margin-left: auto;
+    margin-right: auto;
 }
 
 </style>

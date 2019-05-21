@@ -1,8 +1,9 @@
 <template>
    <div id = "friends">
-
-       <div class="row">
-            <ul class="nav nav-tabs">
+       <navbar></navbar>
+       <div class = "container">
+           <div class = "row">
+            <ul class="nav nav-tabs centered">
                 <li class="nav-item">
                     <a  class="nav-link active" id = "searchUsers" href="#" @click="selectTab(1)">Search users</a>
                 </li>
@@ -27,6 +28,7 @@
             <br><br>
             <myFriends></myFriends>
         </div>
+       </div>
     </div>
 </template>
 
@@ -34,6 +36,7 @@
 import SearchUsers from './searchUsers.vue';
 import FriendRequests from './friendRequests.vue';
 import MyFriends from './myFriends.vue';
+import navbar from "../navbar.vue";
 
 export default {
 
@@ -41,7 +44,8 @@ export default {
     components: {
         searchUsers: SearchUsers,
         friendRequests: FriendRequests,
-        myFriends: MyFriends
+        myFriends: MyFriends,
+        navbar: navbar
     },
     data: function () {
         return {
@@ -77,13 +81,17 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin: 5%;
+}
+
+.centered{
+    margin-left: auto;
+    margin-right: auto;
 }
 </style>

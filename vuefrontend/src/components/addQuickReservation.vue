@@ -4,11 +4,11 @@
         <br><br>
 
         <div v-if="choosen == false">
-             <div class = "row">
+                <br>
                 <h2>Choose flight:</h2>
-            </div>
-            <div class = 'row'>
-                <table style="text-align: left">
+                <br>
+            <div class = 'addQuickContainer'>
+                <table style="text-align: left" class="centered">
                     <tr>
                         <td>Start destination:</td>
                         <td><input v-model="startDestination" type="text"></td>
@@ -26,25 +26,27 @@
                         <td><input v-model="endDate" type="date"></td>
                     </tr>
                     <tr>
-                        <td><button @click="search()">Search</button> </td> 
+                        <td><button class="btn btn-primary" @click="search()">Search</button> </td> 
                     </tr>
                 </table>
             </div>
             <br>
             <div class = "row">
-                <table border="1">
+                <table border="1" class ="table">
+                    <thead class="thead-dark">
                     <tr>
-                        <td>Start destination</td>
-                        <td>End destination</td>
-                        <td>Start date</td>
-                        <td>End date</td>
-                        <td>Flight duration</td>
-                        <td>Flight Length</td>
-                        <td>Economic price</td>
-                        <td>Buisiness price</td>
-                        <td>First class price</td>
-                        <td></td>
+                        <th scope="col">Start destination</th>
+                        <th scope="col">End destination</th>
+                        <th scope="col">Start date</th>
+                        <th scope="col">End date</th>
+                        <th scope="col">Flight duration</th>
+                        <th scope="col">Flight duration</th>
+                        <th scope="col">Flight Length</th>
+                        <th scope="col">Economic price</th>
+                        <th scope="col">Buisiness price</th>
+                        <th scope="col">First class price</th>
                     </tr>
+                    </thead>
                     <tr v-for="flight in flights" :key="flight.id">  
                         <td>{{flight.startDestination}}</td>
                         <td>{{flight.endDestination}}</td>
@@ -55,7 +57,7 @@
                         <td>{{flight.economicPrice}}</td>
                         <td>{{flight.businessPrice}}</td>
                         <td>{{flight.firstClassPrice}}</td>
-                        <td> <Button @click="choseFlight(flight.id)" >Choose </Button></td>
+                        <td> <Button class="btn btn-outline-primary" @click="choseFlight(flight.id)" >Choose </Button></td>
                     </tr>              
                 </table>  
             </div>   
@@ -214,6 +216,17 @@ mounted(){
 </script>
 
 <style>
+
+.addQuickContainer{
+
+    margin-left: auto;
+    margin-right: auto;
+    width: 1100px;
+}
+#addQuickReservation{
+    margin-left: auto;
+    margin-right: auto;
+}
 .seats{
     border-collapse: separate;
     border-spacing: 5px 1rem;
@@ -254,4 +267,5 @@ mounted(){
   text-align: center;
   color: #2c3e50;
 }
+
 </style>

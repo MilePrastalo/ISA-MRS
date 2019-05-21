@@ -1,7 +1,18 @@
 <template>
     <div id="rentACarReservation">
         <searchRentACarCompany :ilocation = "location"  v-on:selected="showVehicles" :iflightDateArrive="flightDateArrive" :iflightDateLeaving="flightDateLeaving" />
-        <div id="classic">
+        <div class="row centered">
+            <ul class="nav nav-tabs col-lg-10 fromTop">
+                <li class="nav-item centered bigTab">
+                    <a id="normal" class="nav-link active " href="#" @click="normal">Vehicles</a>
+                </li>
+                <li class="nav-item centered bigTab">
+                    <a id="quick" class="nav-link" href="#" @click="quick">Quick Reservations</a>
+                    
+                </li>
+            </ul>
+        </div>
+        <div id="classic" v-if="tabselected==0">
             <table class="table"> 
                 <tr>
                     <td>Name</td>
@@ -24,7 +35,7 @@
                 </tr>
             </table>
         </div>
-        <div id="quick">
+        <div id="quick" v-if="tabselected==1">
             <table border="1"  class = "table">
                 <thead class="thead-dark">
                     <tr>
@@ -78,10 +89,21 @@ export default {
             pickoffice:"",
             quickReservations: [],
             flightDateArrive:this.iflightDateArrive,
-            flightDateLeaving:this.iflightDateLeaving
+            flightDateLeaving:this.iflightDateLeaving,
+            tabselected :0
         };
     },
     methods: {
+            normal: function(){
+                this.tabselected = 0;
+                document.getElementById("normal").className="nav-link active ";
+                document.getElementById("quick").className="nav-link ";
+            },
+            quick: function(){
+                this.tabselected = 1;
+                document.getElementById("normal").className="nav-link  ";
+                document.getElementById("quick").className="nav-link active";
+            },
             showVehicles:function(dataPassed){
                 this.offices= dataPassed.offices;
                 console.log(this.offices);
@@ -118,7 +140,7 @@ export default {
                 axios.post("http://localhost:8080/api/reserveVehicle",{id:carid,dateFrom:this.datefrom,dateTo:this.dateto,officePick:this.pickoffice,officeReturn:this.returnoffice})
                     .then(response => {
                         console.log(response);
-                        alert("Success :D");
+                        alert("Success");
                         this.$emit("vehicleReserved",response.data);
                     }); 
             },
@@ -126,12 +148,25 @@ export default {
                 axios.post("http://localhost:8080/api/quickReserveVehicle",{id:res.id})
                     .then(response => {
                         console.log(response);
-                        alert("Success :D");
+                        alert("Success");
+                        this.$emit("vehicleReserved",response.data);
                     }); 
             }
         }
 }
 </script>
 <style scoped>
-
+.fromTop{
+    margin-top: 5%;
+    margin-bottom: 5%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.centered{
+    margin-left: auto;
+    margin-right: auto;
+}
+.bigTab{
+    width: 45%;
+}
 </style>

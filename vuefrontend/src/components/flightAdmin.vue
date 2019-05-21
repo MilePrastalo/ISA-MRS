@@ -1,59 +1,63 @@
 <template>
     <div id = "flightAdmin">
 
-        <div class="row">
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a  class="nav-link active" id = "profile" href="#" @click="selectTab(1)">Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a  class="nav-link" id = "companyProfile" href="#" @click="selectTab(2)">Flight Company profile</a>     
-                 </li>
-                <li class="nav-item">
-                    <a  class="nav-link" id = "flights" href="#" @click="selectTab(3)">Flights</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id = "newFlight" href="#" @click="selectTab(4)">New Flight</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id = "destinations" href="#" @click="selectTab(5)">Destinations</a>
-                </li>
-                 <li class="nav-item">
-                    <a class="nav-link" id = "quickTickets" href="#" @click="selectTab(6)">Quick Tickets</a>
-                </li>
-                 <li class="nav-item">
-                    <a class="nav-link" id = "addQuickTicket" href="#" @click="selectTab(7)">Add Quick Ticket</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id = "reports" href="#" @click="selectTab(8)">Reports</a>
-                </li>
+        <navbar/>
+        <div class = "container">
+             <div class = "row">
+                <ul class="nav nav-tabs centered">
+                    <li class="nav-item">
+                        <a  class="nav-link active" id = "profile" href="#" @click="selectTab(1)">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a  class="nav-link" id = "companyProfile" href="#" @click="selectTab(2)">Flight Company profile</a>     
+                    </li>
+                    <li class="nav-item">
+                        <a  class="nav-link" id = "flights" href="#" @click="selectTab(3)">Flights</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id = "newFlight" href="#" @click="selectTab(4)">New Flight</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id = "destinations" href="#" @click="selectTab(5)">Destinations</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id = "quickTickets" href="#" @click="selectTab(6)">Quick Tickets</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id = "addQuickTicket" href="#" @click="selectTab(7)">Add Quick Ticket</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id = "reports" href="#" @click="selectTab(8)">Reports</a>
+                    </li>
             </ul>
-        </div>
+            </div>
 
-        <div class = "row" v-if="currentTab == 1" id = "editProfile">
-            <userProfile></userProfile>
+            <div class = "row centered" v-if="currentTab == 1" id = "editProfile">
+                <userProfile class="centered"></userProfile>
+            </div>
+            <div class = "row" v-if="currentTab == 2" id = "flightCompany">
+                <flightCompanyProfile></flightCompanyProfile>
+            </div>
+            <div class = "row" v-if="currentTab == 3" id = "flights">
+                <allFlights></allFlights>
+            </div>
+            <div class = "row" v-if="currentTab == 4" id = "newFlight">
+                <newFlight></newFlight>
+            </div>
+            <div class = "row" v-if="currentTab == 5" id = "destinations">
+                <destinations></destinations>
+            </div>
+            <div class = "row" v-if="currentTab == 6" id = "quickReservations">
+                <quickReservations></quickReservations>
+            </div>
+            <div class = "row" v-if="currentTab == 7" id = "addQuickReservation">
+                <addQuickReservation></addQuickReservation>
+            </div>
+            <div class = "row" v-if="currentTab == 8" id = "flightCompanyReport">
+                <flightCompanyReport></flightCompanyReport>
+            </div>
         </div>
-        <div class = "row" v-if="currentTab == 2" id = "flightCompany">
-            <flightCompanyProfile></flightCompanyProfile>
-        </div>
-        <div class = "row" v-if="currentTab == 3" id = "flights">
-            <allFlights></allFlights>
-        </div>
-        <div class = "row" v-if="currentTab == 4" id = "newFlight">
-            <newFlight></newFlight>
-        </div>
-        <div class = "row" v-if="currentTab == 5" id = "destinations">
-            <destinations></destinations>
-        </div>
-        <div class = "row" v-if="currentTab == 6" id = "quickReservations">
-            <quickReservations></quickReservations>
-        </div>
-        <div class = "row" v-if="currentTab == 7" id = "addQuickReservation">
-            <addQuickReservation></addQuickReservation>
-        </div>
-        <div class = "row" v-if="currentTab == 8" id = "flightCompanyReport">
-            <flightCompanyReport></flightCompanyReport>
-        </div>
+       
 
     </div>
 </template>
@@ -68,6 +72,7 @@ import flightCompanyProfile from './flightCompanyProfile.vue'
 import AddQuickReservation from './addQuickReservation.vue'
 import QuickReservations from './quickReservations.vue'
 import FlightCompanyReport from './s1_flightCompany/flightCompanyReports.vue'
+import navbar from "./navbar.vue";
 
 export default {
   name: 'flightAdmin',
@@ -79,7 +84,8 @@ export default {
       destinations: destinations,
       addQuickReservation: AddQuickReservation,
       quickReservations: QuickReservations,
-      flightCompanyReport: FlightCompanyReport
+      flightCompanyReport: FlightCompanyReport,
+      navbar: navbar
   },
   data: function () {
     return {
@@ -135,6 +141,10 @@ methods:{
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-left: 5%;
+}
+
+.centered{
+    margin-right: auto;
+    margin-right: auto;
 }
 </style>

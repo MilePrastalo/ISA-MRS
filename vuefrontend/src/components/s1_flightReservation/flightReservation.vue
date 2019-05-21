@@ -3,17 +3,18 @@
        <navbar/>
         <div v-if="currentStep == 1">
             
-            <button @click="goToNextStep(2)"> Next >> </button>
+            <button @click="goToNextStep(2)"  class="btn btn-success"> Next >> </button>
             <seat_selection :iid= "id"></seat_selection>
 
         </div>
 
         <div v-if="currentStep == 2">
-            <button @click="goToNextStep(3)"> Next >> </button>
+            <button @click="goToNextStep(3)"  class="btn btn-success"> Next >> </button>
             <passangers :iid = "id"></passangers>
         </div>
 
         <div v-if="currentStep == 3">
+
             <button @click="goToNextStep(4)"> Next >> </button>
             <hotelReservation v-on:roomReserved="hotelReserved" :location="destination" :passengers="passangers.length"/>
         </div>
@@ -109,7 +110,7 @@ export default {
             }
             if (passangerSeat.length == 0){
                  var price = this.getPrice(this.selected_seats[0].travelClass);
-                 var obj = {price: price, seatId: this.selected_seats[0].id, firstName: "", lastName: "", passport: ""};
+                 var obj = {price: price, seatId: this.selected_seats[0].id, firstName: "", lastName: "", passport: "", friendId: -1};
                 passangerSeat.push(obj);
             }
             var getJwtToken = function() {

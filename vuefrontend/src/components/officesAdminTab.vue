@@ -3,7 +3,7 @@
         <h2>Branch Offices</h2>
         <addOffice v-if="selected == 1"></addOffice>
         <editOffice v-on:backadd="backAdd" v-on:vedited="veditedDraw" v-if="selected == 2" :iid="id" v-bind:iname="name" v-bind:idestination="destination" v-bind:iaddress = "address"></editOffice>
-        <table>
+        <table class="table centered">
             <tr>
                 <th>Name</th>
                 <th>Destination</th>
@@ -104,5 +104,14 @@ table{
 }
 th{
     border: 1px solid darkgray;
+}
+#officeAdmin{
+  margin-left: auto;
+  margin-right: auto;
+}
+.centered{
+  margin-left: auto;
+  margin-right: auto;
+  width: 800px;
 }
 </style>

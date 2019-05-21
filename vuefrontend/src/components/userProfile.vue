@@ -1,40 +1,39 @@
 <template>
    <div id = "userProfile">
 
-        <br>
-        <div class="row"> 
+       <div class = "profile">
+           <br><br>
             <h2> Your profile: </h2>
-        </div>
-        <br>
-
-        <div class = "row">
-            <table  style="text-align: left">
+            <br>
+        <div class="centered">
+            <table class= "centered" style="text-align: left">
                 <tr>
                     <td> First name: </td>
-                    <td>  <input type="text" name="firstName" v-model="firstName" > </td>
+                    <td>  <input  class="rounded" type="text" name="firstName" v-model="firstName" > </td>
                 </tr>
                 <tr>
                     <td> Last name: </td>
-                    <td>  <input type="text" name="lastName" v-model="lastName" > </td>
+                    <td>  <input  class="rounded" type="text" name="lastName" v-model="lastName" > </td>
                 </tr>
                 <tr>
                     <td> Email: </td>
-                    <td>  <input type="text" name="email" v-model="email" > </td>
+                    <td >  <input  class="rounded" type="text" name="email" v-model="email" > </td>
                 </tr>
                 <tr>
                     <td> Password: </td>
-                    <td>  <input type="password" name="password" v-model="password" > </td>
+                    <td>  <input  class="form-control" type="password" name="password" v-model="password" > </td>
                 </tr>
                  <tr>
                     <td> Confirm password: </td>
-                    <td>  <input type="password" name="password" v-model="repeatedPassword"> </td>
+                    <td>  <input   type="password" name="password" v-model="repeatedPassword"> </td>
                 </tr>
                 <tr>
                     <td>  </td>
-                    <td><button v-on:click="updateUserProfile(password,repeatedPassword)">Edit</button> </td>      
+                    <td><button class="btn btn-primary" v-on:click="updateUserProfile(password,repeatedPassword)">Edit</button> </td>      
                 </tr>  
             </table>
         </div>
+       </div>
     </div>
 </template>
 
@@ -94,7 +93,7 @@ mounted(){
 
 </script>
 
-<style>
+<style scopped>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -102,7 +101,19 @@ mounted(){
   text-align: center;
   color: #2c3e50;
 }
-.row{
-    margin:auto;
+.profile{
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
 }
+.centered{
+    margin-left: auto;
+    margin-right: auto;
+}
+.rounded{
+    border-radius: 25px;
+    padding: 2px;
+    height: 30px;
+}
+
 </style>

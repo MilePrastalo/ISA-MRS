@@ -3,7 +3,7 @@
         <navbar/>
         <div class="container">
             <div class="row">
-                <ul class="nav nav-tabs">
+                <ul class="nav nav-tabs centered">
                     <li class="nav-item">
                         <a id="profile" class="nav-link active" href="#" @click="showProfile">Profile</a>
                     </li>
@@ -23,20 +23,18 @@
                     <li class="nav-item">
                         <a id="Reports" class="nav-link" href="#" @click="showReports">Reports</a>
                     </li>
-                </ul>
-                <Button @click = "logout">Log Out</Button>
-                
+                </ul>                
             </div>
             <div class="row">
                 <div id="Profile" v-if="tabSelected==1">
                     <user-profile></user-profile>
                 </div>
-                <div id="HotelsReservations" v-if="tabSelected==2"><rentacarprofile></rentacarprofile></div>
+                <div id="HotelsReservations centered" v-if="tabSelected==2"><rentacarprofile></rentacarprofile></div>
                 
-                <div id="office" v-if="tabSelected==3"><officeAdmin></officeAdmin></div>
-                <div id="CarsReservations" v-if="tabSelected==4"><vehicleAdminTab></vehicleAdminTab></div>
-                <div id="QuickReservations" v-if="tabSelected==5"><quickVehicle></quickVehicle></div>
-                <div id="Report" v-if="tabSelected==6"><rentACarReport/></div>
+                <div id="office centered" v-if="tabSelected==3"><officeAdmin></officeAdmin></div>
+                <div id="CarsReservations centered" v-if="tabSelected==4"><vehicleAdminTab></vehicleAdminTab></div>
+                <div id="QuickReservations centered" v-if="tabSelected==5"><quickVehicle></quickVehicle></div>
+                <div id="Report centered" v-if="tabSelected==6"><rentACarReport/></div>
             </div>
         </div>
     </div>
@@ -140,10 +138,16 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
-table{
-    border: 1px solid darkgray;
+.centered{
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+      align-content: center;
+  align-items: center;
+  align-self: center;
 }
-th{
-    border: 1px solid darkgray;
+.row{
+    margin-right: auto;
+    margin-left:auto;
 }
 </style>
