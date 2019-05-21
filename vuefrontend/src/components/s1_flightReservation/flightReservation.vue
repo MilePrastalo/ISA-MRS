@@ -14,11 +14,12 @@
         </div>
 
         <div v-if="currentStep == 3">
-            <button @click="goToNextStep(4)"  class="btn btn-success"> Next >> </button>
-            <h2>Hotel reservations</h2>
+
+            <button @click="goToNextStep(4)"> Next >> </button>
+            <hotelReservation v-on:roomReserved="hotelReserved" :location="destination" :passengers="passangers.length"/>
         </div>
         <div v-if="currentStep == 4">
-            <button @click="goToNextStep(5)"  class="btn btn-success"> Finish >> </button>
+            <button @click="goToNextStep(5)"> Finish >> </button>
             <rentACarReservation :iflightDateArrive="flight.startDate_str" :iflightDateLeaving="flight.endDate_str" v-on:vehicleReserved="carReserved" :ilocation="destination"/>
         </div>
         		
@@ -29,8 +30,9 @@
 <script>
 import SeatSelection from './seatsSelection.vue';
 import Passangers from './passangers.vue';
-import rentACarReservation from '.././rentACarReservation.vue'
+import rentACarReservation from '.././rentACarReservation.vue';
 import navbar from ".././navbar.vue";
+import hotelReservation from '.././hotelReservation';
 
 export default {
 
@@ -40,7 +42,8 @@ export default {
         seat_selection: SeatSelection,
         passangers: Passangers,
         rentACarReservation,
-        navbar
+        navbar,
+        hotelReservation
     },
     data: function () {
         return {
@@ -90,6 +93,10 @@ export default {
             this.vehicleReservations.push(id);
             console.log(id);
         },
+        hotelReserved: function(id) {
+            this.hotelReservations.push(id);
+            console.log(id);
+        },
         makeReservation: function(){
            
             var idx;
@@ -129,7 +136,7 @@ export default {
                     alert("You must choose at least one seat!");
                 }
                 else if (this.selected_seats.length == 1){
-                    this.currentStep = option +1;
+                    this.currentStep = option;
                 }
                 else{
                     this.currentStep = option;
@@ -178,5 +185,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  margin-left: 5%;
+  margin-right:5%;
+  margin-top:0%;
 }
 </style>

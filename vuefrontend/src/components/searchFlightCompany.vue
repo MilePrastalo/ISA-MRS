@@ -1,8 +1,6 @@
 <template>
    <div id = "searchFlightCompany">
        <navbar/>
-
-        
             <h2>Flight Company Search </h2>
         <br>
 
@@ -106,5 +104,6 @@ methods:{
     width: 60%;
     margin-right: auto;
     margin-left: auto;
+
 }
 </style>

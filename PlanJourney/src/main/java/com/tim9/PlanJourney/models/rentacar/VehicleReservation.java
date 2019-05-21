@@ -11,6 +11,7 @@ import javax.persistence.OneToOne;
 
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.Reservation;
+import com.tim9.PlanJourney.models.flight.FlightReservation;
 @Entity
 
 public class VehicleReservation extends Reservation {
@@ -35,6 +36,9 @@ public class VehicleReservation extends Reservation {
 	
 	@Column(name = "cena", nullable = false)
 	private double cena;
+	
+	@ManyToOne
+	private FlightReservation flightReservation;
 	
 	public VehicleReservation() {
 		super();
@@ -107,6 +111,15 @@ public class VehicleReservation extends Reservation {
 	public void setDate(Date date) {
 		this.date = date;
 	}
+
+	public FlightReservation getFlightReservation() {
+		return flightReservation;
+	}
+
+	public void setFlightReservation(FlightReservation flightReservation) {
+		this.flightReservation = flightReservation;
+	}
+	
 	
 	
 

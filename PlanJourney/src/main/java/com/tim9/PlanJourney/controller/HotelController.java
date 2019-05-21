@@ -36,6 +36,7 @@ import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.service.DestinationService;
 import com.tim9.PlanJourney.service.HotelAdminService;
+import com.tim9.PlanJourney.service.HotelReservationService;
 import com.tim9.PlanJourney.service.HotelService;
 import com.tim9.PlanJourney.service.RegisteredUserService;
 
@@ -52,6 +53,9 @@ public class HotelController {
 
 	@Autowired
 	private HotelAdminService hotelAdminService;
+
+	@Autowired
+	private HotelReservationService hotelReservationService;
 
 	@RequestMapping(value = "/api/getAllHotels", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -107,6 +111,7 @@ public class HotelController {
 			db.setDescription(h.getDestination().getDescription());
 			db.setCoordinates(h.getDestination().getCoordinates());
 			hb.setDestination(db);
+			hotelBeans.add(hb);
 		}
 		return hotelBeans;
 	}
@@ -337,22 +342,23 @@ public class HotelController {
 		}
 		return foundHotels;
 	}
+	
 
 	@RequestMapping(value = "/api/addHotelReservation", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('REGISTERED')")
-	public @ResponseBody boolean addHotelReservation(@RequestBody HotelReservationBean reservationBean) {
+	public @ResponseBody Long addHotelReservation(@RequestBody HotelReservationBean reservationBean) {
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
 			// checks if hotel already exists on given address and same destination.
 			Hotel hotel = service.findByName(reservationBean.getHotelName());
 			if (hotel == null) {
-				return false;
+				return null;
 			}
 			RegisteredUser user = userService.findByUsername(reservationBean.getUsername());
 			if (user == null) {
-				return false;
+				return null;
 			}
 			HotelRoom room = null;
 			for (HotelRoom r : hotel.getRooms()) {
@@ -362,7 +368,7 @@ public class HotelController {
 				}
 			}
 			if (room == null) {
-				return false;
+				return null;
 			}
 
 			// Creating Date objects
@@ -379,7 +385,7 @@ public class HotelController {
 			lastDay.setTime(c.getTimeInMillis());
 
 			if (!checkDate(firstDay, lastDay, hotel, reservationBean.getRoomNumber())) {
-				return false;
+				return null;
 			}
 
 			// Calculating number of days.
@@ -397,12 +403,14 @@ public class HotelController {
 			hotel.getReservations().add(reservation);
 			user.getHotelReservations().add(reservation);
 
-			service.save(hotel);
-			userService.save(user);
+			// service.save(hotel);
+			HotelReservation newReservation = hotelReservationService.save(reservation);
+			System.out.println(newReservation.getId());
+			// userService.save(user);
 
-			return true;
+			return newReservation.getId();
 		}
-		return false;
+		return null;
 	}
 
 	// Backend checks for adding new reservations.
@@ -432,26 +440,26 @@ public class HotelController {
 	@RequestMapping(value = "/api/buyQuickHotelReservation", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('REGISTERED')")
-	public @ResponseBody boolean buyQuickHotelReservation(@RequestBody HotelReservationBean reservationBean) {
+	public @ResponseBody Long buyQuickHotelReservation(@RequestBody HotelReservationBean reservationBean) {
 		// checks logged user.
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
 			// checks if hotel already exists on given address and same destination.
 			Hotel hotel = service.findByName(reservationBean.getHotelName());
 			if (hotel == null) {
-				return false;
+				return null;
 			}
 
 			// checks registered user
 			String username = authentication.getName();
 			RegisteredUser user = userService.findByUsername(username);
 			if (user == null) {
-				return false;
+				return null;
 			}
 
 			// Splits date and checks if reservation date is valid.
 			Calendar c = Calendar.getInstance();
-
+			HotelReservation foundReservation = new HotelReservation();
 			for (HotelReservation hr : hotel.getReservations()) {
 				if (hr.getRoom().getRoomNumber() == reservationBean.getRoomNumber()) {
 					c.setTime(hr.getFirstDay());
@@ -465,18 +473,20 @@ public class HotelController {
 					if (fYear == reservationBean.getfYear() && fMonth == reservationBean.getfMonth()
 							&& fDay == reservationBean.getfDay() && lYear == reservationBean.getlYear()
 							&& lMonth == reservationBean.getlMonth() && lDay == reservationBean.getlDay()) {
-						hr.setUser(user);
+						foundReservation = hr;
 						break;
 					}
 				}
 			}
 
-			service.save(hotel);
-			userService.save(user);
+			//service.save(hotel);
+			//userService.save(user);
+			foundReservation.setUser(user);
+			hotelReservationService.save(foundReservation);
 
-			return true;
+			return foundReservation.getId();
 		}
-		return false;
+		return null;
 	}
 
 }

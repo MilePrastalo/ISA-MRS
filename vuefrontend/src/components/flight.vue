@@ -107,5 +107,6 @@ mounted(){
 .centered {
     margin-left: auto;
     margin-right: auto;
+
 }
 </style>

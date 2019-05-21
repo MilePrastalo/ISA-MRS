@@ -69,7 +69,6 @@ mounted(){
   text-align: center;
   color: #2c3e50;
 }
-
 :root {
   --input-padding-x: 1.5rem;
   --input-padding-y: .75rem;
@@ -152,5 +151,6 @@ label{
   align-items: center;
   align-self: center;
   width: 800px;
+
 }
 </style>
