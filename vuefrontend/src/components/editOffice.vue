@@ -1,5 +1,5 @@
 <template>
-   <div id = "addOffice">
+   <div id = "editOffice">
        <form action="">
             <div class="form-label-group">
                 <label> Name: </label>
@@ -24,7 +24,7 @@
 <script>
 
 export default {
-  name: 'addOffice',
+  name: 'editOffice',
   components: {
   },
   props: [
@@ -69,5 +69,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+#editOffice{
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>

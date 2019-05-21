@@ -5,7 +5,7 @@
             <navbar/>
             <div class="row "> 
                 <button style="border-radius: 20px;" class="col-sm btn btn-info btn-lg" @click="airlines">Airlines</button>
-                <button style="border-radius: 20px;" class="col-sm btn btn-info btn-lg">Hotels</button>
+                <button style="border-radius: 20px;" class="col-sm btn btn-info btn-lg" @click="hotels">Hotels</button>
                 <button style="border-radius: 20px;" class="col-sm btn btn-info btn-lg" @click="rentACar">Rent a car</button>
                 <button style="border-radius: 20px;" class="col-sm btn btn-info btn-lg" @click="friends">Friends</button>
             </div>
@@ -186,6 +186,12 @@ export default {
   mounted(){
   },
   methods : {
+      friends:function(){
+          window.location = "./friends";
+      },
+      hotels:function(){
+          console.log("");
+      },
       getRating:function(res,rating){
           console.log(res);
           if(res.rating>=rating){

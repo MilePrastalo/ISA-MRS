@@ -1,16 +1,16 @@
 <template>
     <div id="rentACarReport">
-      <div class="row">
-          <button class="btn-primary space" @click="selected(0)" >Vehicles</button>
+      <div class="row centered">
+          <button class="btn-primary space first" @click="selected(0)" >Vehicles</button>
           <button class="btn-primary space" @click="selected(1)">Ratings</button>
           <button class="btn-primary space" @click="selected(2)">Earnings</button>
-          <button class="btn-primary space" @click="selected(3)">Reservations</button>
+          <button class="btn-primary space last" @click="selected(3)">Reservations</button>
 
       </div>
-      <div class="row" id="Vehicless">
-          <div class="container">     
-            <div class="row">
-                <table class="table">
+      <div class="row centered" id="Vehicless">
+          <div class="container centered">     
+            <div class="row centered">
+                <table class="table centered">
                     <tr>
                         <th>Name</th>
                         <th>Maker</th>
@@ -316,5 +316,16 @@ h2{
 }
 .space{
     margin: 1%;
+}
+.centered{
+  margin-left: auto;
+  margin-right: auto;
+  width: 800px;
+}
+.first{
+    margin-left: auto;
+}
+.last{
+    margin-right: auto;
 }
 </style>
