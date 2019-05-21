@@ -15,7 +15,7 @@
 
         <div v-if="currentStep == 3">
             <button @click="goToNextStep(4)"> Next >> </button>
-            <h2>Hotel reservations</h2>
+            <hotelReservation v-on:roomReserved="hotelReserved" :location="destination" :passengers="passangers.length"/>
         </div>
         <div v-if="currentStep == 4">
             <button @click="goToNextStep(5)"> Finish >> </button>
@@ -29,8 +29,9 @@
 <script>
 import SeatSelection from './seatsSelection.vue';
 import Passangers from './passangers.vue';
-import rentACarReservation from '.././rentACarReservation.vue'
+import rentACarReservation from '.././rentACarReservation.vue';
 import navbar from ".././navbar.vue";
+import hotelReservation from '.././hotelReservation';
 
 export default {
 
@@ -40,7 +41,8 @@ export default {
         seat_selection: SeatSelection,
         passangers: Passangers,
         rentACarReservation,
-        navbar
+        navbar,
+        hotelReservation
     },
     data: function () {
         return {
@@ -88,6 +90,10 @@ export default {
         },
         carReserved:function(id){
             this.vehicleReservations.push(id);
+            console.log(id);
+        },
+        hotelReserved: function(id) {
+            this.hotelReservations.push(id);
             console.log(id);
         },
         makeReservation: function(){

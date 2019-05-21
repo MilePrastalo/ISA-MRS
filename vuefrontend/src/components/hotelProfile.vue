@@ -1,5 +1,6 @@
 <template>
-  <div id="hotelProfile">
+<div>
+  <div v-if="currentPage === 1">
     <h1>{{hotel.name}}</h1>
     <table>
       <tr>
@@ -73,7 +74,7 @@
         </td>
       </tr>
     </table>
-    
+
     <h2>My Map</h2>
     <yandex-map
       :coords="[this.hotel.latitude,this.hotel.longitude]"
@@ -90,15 +91,24 @@
         :marker-stroke="{color: '#0E4779',width: 4}"
       ></ymap-marker>
     </yandex-map>
+    </div>
+   <div v-if="currentPage === 2">
+     <hotelRoom :hotelName="hotelName" :roomNumber="roomNum" v-on:hr="reservedHotel"/>
+
+     <button @click="back()">Back</button>
   </div>
+
+</div>
 </template>
 
 <script>
-import axios from 'axios'
-import { parse } from 'path';
+import axios from 'axios';
+import hotelRoom from './hotelRoom.vue';
 export default {
   name: 'hotelProfile',
+  props:["hotelName"],
   components: {
+    hotelRoom:hotelRoom
   },
   data: function () {
   return {
@@ -106,6 +116,8 @@ export default {
     quickReservations: [],
     destinationName: "",
     destintionDesc: "",
+    currentPage: 1,
+    roomNum: 0
   }
 },
 mounted(){
@@ -114,7 +126,7 @@ mounted(){
         };
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
 
-         axios.get("http://localhost:8080/api/getHotel/"+this.$route.params.hotelName)
+         axios.get("http://localhost:8080/api/getHotel/"+this.hotelName)
         .then(response => {
             this.hotel = response.data;
             this.destinationName = response.data.destination.name;
@@ -132,23 +144,29 @@ mounted(){
     },
     methods:{  
       showDetails: function(chosenRoom) {
-        this.$router.push("/hotelRoom/"+ this.$route.params.hotelName+ "/" + chosenRoom);
+        this.roomNum = chosenRoom;
+          this.currentPage = 2;
         },
         back: function() {
-        this.$router.push('/');
+        this.currentPage = 1;
         },
         reserve: function(room) {
           axios.post("http://localhost:8080/api/buyQuickHotelReservation",{hotelName: room.hotelName,fYear:room.fYear,fMonth: room.fMonth,fDay: room.fDay,lYear: room.lYear,lMonth: room.lMonth,lDay: room.lDay, roomNumber: room.roomNumber})
         .then(response => {
-            if(response.data === true) {
+            if(response.data != null) {
               alert("Your reservation is successful.");
               this.quickReservations.splice(room.index);
+              console.log(response.data)
+              this.$emit("rr",response.data);
             
             } else {
               alert("Your reservation failed.");
             }
           });
         },
+        reservedHotel: function(id) {
+          this.$emit("rr",id);
+        }
     }
 }
 </script>
