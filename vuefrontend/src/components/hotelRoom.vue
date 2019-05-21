@@ -50,7 +50,6 @@
                     </tr>
                 </table>
             </div>
-            <button @click="back()">Back</button>
     </div>
 </template>
 
@@ -58,6 +57,7 @@
 import axios from 'axios'
 export default {
   name: 'hotelRoom',
+  props:["hotelName","roomNumber"],
   components: {
   },
   data: function () {
@@ -86,21 +86,18 @@ mounted(){
             this.user = response.data;
           });
 
-         axios.get("http://localhost:8080/api/getHotel/"+this.$route.params.hotelName)
+         axios.get("http://localhost:8080/api/getHotel/"+this.hotelName)
         .then(response => {
             this.hotel = response.data
             for(let r in response.data.rooms) {
 
-             if(response.data.rooms[r].roomNumber == this.$route.params.roomNumber) {
+             if(response.data.rooms[r].roomNumber == this.roomNumber) {
                  this.room = response.data.rooms[r];
              }
          } 
           });      
     },
     methods:{  
-      back: function() {
-        this.$router.push("/hotelProfile/"+ this.$route.params.hotelName);
-        },
         checkReservations: function() {
           for(let r in this.hotel.reservations) {
               if(this.hotel.reservations[r].roomNumber == this.room.roomNumber) { 
@@ -187,11 +184,12 @@ mounted(){
       reserve: function() {
         axios.post("http://localhost:8080/api/addHotelReservation",{username: this.user.username,hotelName: this.hotel.name,fYear: this.fYear,fMonth: this.fMonth,fDay: this.fDay,lYear: this.lYear,lMonth: this.lMonth,lDay: this.lDay, roomNumber: this.room.roomNumber})
         .then(response => {
-            if(response.data === true) {
+            if(response.data != null)  {
               alert("Your reservation is successful.");
               this.available = 0;
               
               this.hotel.reservations.push({username: this.user.username,hotelName: this.hotel.name,fYear: this.fYear,fMonth: this.fMonth,fDay: this.fDay,lYear: this.lYear,lMonth: this.lMonth,lDay: this.lDay, roomNumber: this.room.roomNumber});
+              this.$emit("hr",response.data);
             } else {
               alert("Your reservation failed.");
               this.available = 0;
