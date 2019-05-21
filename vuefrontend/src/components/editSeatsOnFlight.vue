@@ -10,6 +10,7 @@
                      <li><span style='background:yellow;'></span>Quick reservation</li>
                 </ul>
             </div>
+            <br>
         </div>
         <br><br>
         <div class = "row">
@@ -105,10 +106,13 @@ export default {
 </script>
 
 <style>
+
+
 .seats{
     border-collapse: separate;
     border-spacing: 5px 1rem;
     margin-right: 5%;
+    
 }
 .seats td {
     border: 2px solid gray;
@@ -182,6 +186,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin: 5%
 }
 </style>

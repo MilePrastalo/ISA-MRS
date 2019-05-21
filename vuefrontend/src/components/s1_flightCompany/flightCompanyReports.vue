@@ -1,17 +1,15 @@
 <template>
     <div id="flightCompanyReport">
 
-
-        <div class="row">
-            <button @click="selected(0)">Flights</button>
-            <button @click="selected(1)">Rating</button>
-            <button @click="selected(2)">Sold Tickets</button>
-            <button @click="selected(3)">Earnings</button>
+        <br>
+        <div class="reports">
+            <button class="btn-primary space" @click="selected(0)">Flights</button>
+            <button class="btn-primary space" @click="selected(1)">Rating</button>
+            <button class="btn-primary space" @click="selected(2)">Sold Tickets</button>
+            <button class="btn-primary space" @click="selected(3)">Earnings</button>
         </div>
-
-
-      
-        <div class="row" id="Flights" v-if="tabSelected==0">
+        <br><br>
+         <div class="row" v-if="tabSelected==0">
             <table border="1" class = 'table'>
                 <thead class="thead-dark">
                     <tr>
@@ -44,19 +42,19 @@
             </table>  
         </div>
 
-
-        <div  class="row" id="Ratings">
+        <div id="Ratings">
             <h2>Average rate for Flight Company: {{averageRate}}</h2>
-            <div id="ratingsCanvasArea">
-                <canvas ref="referencedElement" id="myChart"  style="responsive:true;"></canvas>
+            <br>
+            <div class = "centered" id="ratingsCanvasArea" >
+                <canvas ref="referencedElement" id="myChart" style="responsive:true;"></canvas>
             </div>
         </div>
 
-        
         <div  class="row" id="SoldTickets">
-            <div class = "row">
-                <form  @submit="onSubmitSoldTickets">
-                    <table style="text-align: left">
+            
+            <div class="reports" >
+                <form   @submit="onSubmitSoldTickets">
+                    <table style="text-align: left" class = "centered">
                         <tr>
                             <td>From:</td>
                             <td><input type="date" v-model="dateFrom"></td>
@@ -87,16 +85,16 @@
                         </tr>
                     </table>
                 </form>
-                <br>
-                <div id = "ticketCanvasArea">
-                    <canvas ref="referencedElement" id="soldTicketsChart" style="responsive:true;"></canvas>
-                </div>
+                 <br>
+            </div>
+            <div id = "ticketCanvasArea" class="row">
+                <canvas ref="referencedElement" id="soldTicketsChart" style="responsive:true;"></canvas>
             </div>
         </div>
-        <div  class="row" id="Earnings">
-            <div class = "row">
+
+        <div  class="reports" id="Earnings">
                 <form @submit="earningsReport">
-                    <table style="text-align: left">
+                    <table style="text-align: left" class="centered">
                         <tr>
                             <td>From:</td>
                             <td><input type="date" v-model="dateFrom" required></td>
@@ -111,11 +109,11 @@
                     </table>
                 </form>
                <br>
-               <div v-if="earningsVisible" class = 'row' style="width: 100%;">
+               <div v-if="earningsVisible" >
                    <h2>Incomes from given period = {{this.earnings}}</h2>
                </div>
-            </div>
         </div>
+
     </div>
 </template>
 
@@ -163,6 +161,7 @@ export default {
   methods:{
         
     selected:function(val){
+        
         this.tabSelected = val;
         if(this.tabSelected == 1){
             document.getElementById('SoldTickets').hidden = true;
@@ -176,9 +175,9 @@ export default {
             document.getElementById('SoldTickets').hidden = false;
         }
         else if (this.tabSelected == 3) {
+            document.getElementById('Earnings').hidden = false;
             document.getElementById('Ratings').hidden = true;
             document.getElementById('SoldTickets').hidden = true;
-            document.getElementById('Earnings').hidden = false;
            
         }
         else {
@@ -312,7 +311,7 @@ export default {
 
 </script>
 
-<style scoped>
+<style scopped>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -320,25 +319,24 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
-table{
-  margin-left:auto;
-  margin-right:auto;
-  margin-top:2%;
-}
-h2{
-  margin: auto;
-  margin-bottom: 2%;
-}
-#flightCompanyReport{
-    margin-top: 2%;
+
+.reports{
+    width: 1150px;
 }
 
 #ratingsCanvasArea{
-    width: 80%;
-    height: 50%
+    width: 700px;
+    height: 500px;
 }
+
 #ticketCanvasArea{
-    width: 80%;
-     height: 50%
+    width: 800px;
+    height: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.space{
+    margin: 1%;
 }
 </style>

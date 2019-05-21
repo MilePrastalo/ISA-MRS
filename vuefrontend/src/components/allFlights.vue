@@ -4,7 +4,7 @@
         <br><br>
 
         <div class = "row">
-            <table style="text-align: left">
+            <table class = "centered" style="text-align: left">
                 <tr>
                     <td>Start destination:</td>
                     <td><input v-model="startDestination" type="text"></td>
@@ -47,15 +47,13 @@
                      </td>
                 </tr>
                 <tr>
-                    <td><button @click="search()">Search</button> </td> 
+                    <td><button class="btn btn-primary" @click="search()">Search</button> </td> 
                 </tr>
             </table>
         </div>
 
         <br>
-        <div class="row"> 
             <h2> All flights: </h2>
-        </div>
         <br>
 
         <div class = "row">
@@ -71,6 +69,8 @@
                     <th scope="col">Economic price</th>
                     <th scope="col">Business price</th>
                     <th scope="col">First class price</th>
+                     <th></th>
+                    <th v-if="role == 'FLIGHT_ADMIN'"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -84,10 +84,9 @@
                     <td>{{flight.economicPrice}}</td>
                     <td>{{flight.businessPrice}}</td>
                     <td>{{flight.firstClassPrice}}</td>
-                    <td v-if="role == 'FLIGHT_ADMIN'"> <Button @click="goToDetails(flight.id)" >Details</Button></td>
-                    <td  v-if="role == 'FLIGHT_ADMIN'"><button>Edit</button></td>
-                    <td  v-if="role == 'FLIGHT_ADMIN'"><button @click="removeFlight(flight, index)">Delete</button></td>
-                    <td  v-if="role == 'REGISTERED'"><button @click="goToDetailsForReservation(flight.id)">Details</button></td>
+                    <td v-if="role == 'FLIGHT_ADMIN'"> <Button class="btn btn-outline-primary" @click="goToDetails(flight.id)" >Details</Button></td>
+                    <td  v-if="role == 'FLIGHT_ADMIN'"><button class="btn btn-outline-primary" @click="removeFlight(flight, index)">Delete</button></td>
+                    <td  v-if="role == 'REGISTERED'"><button class="btn btn-outline-primary" @click="goToDetailsForReservation(flight.id)">Details</button></td>
                 </tr>
                 </tbody>              
             </table>  

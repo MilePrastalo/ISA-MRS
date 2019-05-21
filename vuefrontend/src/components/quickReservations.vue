@@ -1,14 +1,11 @@
 <template>
    <div id = "allFlights">
 
-        <br><br>
-        <div class="row"> 
+        <div class = "quickContainer">
+            <br><br>
             <h2>Quick Tickets: </h2>
-        </div>
-        <br>
-
-        <div class = "row">
-            <table border="1"  class = "table">
+            <br>
+            <table  border="1"  class = "table">
                 <thead class="thead-dark">
                     <tr>
                     <th scope="col">Start destination</th>
@@ -18,6 +15,7 @@
                     <th scope="col">Seat</th>
                     <th scope="col">Origin price</th>
                     <th scope="col">Discount</th>
+                    <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,9 +27,9 @@
                     <td>({{res.seat.seatRow}},{{res.seat.seatColumn}})</td>
                     <td>{{res.originPrice}}</td>
                     <td>{{res.discount}}</td>
-                    <td v-if="role == 'FLIGHT_ADMIN' && res.taken == false"> <Button>Delete</Button></td>
+                    <td v-if="role == 'FLIGHT_ADMIN' && res.taken == false"> <Button class="btn btn-outline-primary">Delete</Button></td>
                     <td v-if="role == 'FLIGHT_ADMIN' && res.taken == true"> Reserved</td>
-                    <td v-if="role == 'REGISTERED' && res.taken == false" @click="bookQuickTicket(res)"> <Button>Book</Button></td>
+                    <td v-if="role == 'REGISTERED' && res.taken == false" @click="bookQuickTicket(res)"> <Button class="btn btn-outline-primary">Book</Button></td>
                 </tr> 
                 </tbody>             
             </table>  
@@ -105,5 +103,11 @@ mounted(){
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+
+.quickContainer{
+    margin-left: auto;
+    margin-right: auto;
+    width: 1100px;
 }
 </style>

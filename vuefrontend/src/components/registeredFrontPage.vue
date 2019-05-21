@@ -7,7 +7,7 @@
                 <button style="border-radius: 20px;" class="col-sm btn btn-info btn-lg" @click="airlines">Airlines</button>
                 <button style="border-radius: 20px;" class="col-sm btn btn-info btn-lg">Hotels</button>
                 <button style="border-radius: 20px;" class="col-sm btn btn-info btn-lg" @click="rentACar">Rent a car</button>
-                <button style="border-radius: 20px;" class="col-sm btn btn-info btn-lg">Friends</button>
+                <button style="border-radius: 20px;" class="col-sm btn btn-info btn-lg" @click="friends">Friends</button>
             </div>
             <div class="row" id="title"> 
                 <h2>Reservations</h2>
@@ -290,6 +290,9 @@ export default {
     },
     flightReservationDetails(id){
         this.$router.push("/flightReservationDetails/"+ id );
+    },
+    friends(){
+        this.$router.push("/friends" );
     },
     setStars:function(reservation,num){
         for(var i = 1;i<=5;i++){
