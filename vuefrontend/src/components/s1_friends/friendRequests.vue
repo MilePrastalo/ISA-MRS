@@ -9,6 +9,7 @@
                         <th scope="col">First Name</th>
                         <th scope="col">Last Name</th>
                         <th scope="col">Username</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -86,6 +87,5 @@ methods: {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin: 5%;
 }
 </style>

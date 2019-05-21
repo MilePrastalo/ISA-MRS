@@ -28,8 +28,9 @@
                     <td>{{res.originPrice}}</td>
                     <td>{{res.discount}}</td>
                     <td v-if="role == 'FLIGHT_ADMIN' && res.taken == false"> <Button class="btn btn-outline-primary">Delete</Button></td>
-                    <td v-if="role == 'FLIGHT_ADMIN' && res.taken == true"> Reserved</td>
+                    <td v-if="role == 'FLIGHT_ADMIN' && res.taken == true" style="color: green; font-weight: bold"> Reserved</td>
                     <td v-if="role == 'REGISTERED' && res.taken == false" @click="bookQuickTicket(res)"> <Button class="btn btn-outline-primary">Book</Button></td>
+                     <td v-if="role == 'REGISTERED'  && res.taken == true" @click="bookQuickTicket(res)" style="color: green; font-weight: bold"> Reserved</td>
                 </tr> 
                 </tbody>             
             </table>  

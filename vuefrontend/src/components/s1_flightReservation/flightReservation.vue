@@ -3,22 +3,22 @@
        <navbar/>
         <div v-if="currentStep == 1">
             
-            <button @click="goToNextStep(2)"> Next >> </button>
+            <button @click="goToNextStep(2)"  class="btn btn-success"> Next >> </button>
             <seat_selection :iid= "id"></seat_selection>
 
         </div>
 
         <div v-if="currentStep == 2">
-            <button @click="goToNextStep(3)"> Next >> </button>
+            <button @click="goToNextStep(3)"  class="btn btn-success"> Next >> </button>
             <passangers :iid = "id"></passangers>
         </div>
 
         <div v-if="currentStep == 3">
-            <button @click="goToNextStep(4)"> Next >> </button>
+            <button @click="goToNextStep(4)"  class="btn btn-success"> Next >> </button>
             <h2>Hotel reservations</h2>
         </div>
         <div v-if="currentStep == 4">
-            <button @click="goToNextStep(5)"> Finish >> </button>
+            <button @click="goToNextStep(5)"  class="btn btn-success"> Finish >> </button>
             <rentACarReservation :iflightDateArrive="flight.startDate_str" :iflightDateLeaving="flight.endDate_str" v-on:vehicleReserved="carReserved" :ilocation="destination"/>
         </div>
         		
@@ -103,7 +103,7 @@ export default {
             }
             if (passangerSeat.length == 0){
                  var price = this.getPrice(this.selected_seats[0].travelClass);
-                 var obj = {price: price, seatId: this.selected_seats[0].id, firstName: "", lastName: "", passport: ""};
+                 var obj = {price: price, seatId: this.selected_seats[0].id, firstName: "", lastName: "", passport: "", friendId: -1};
                 passangerSeat.push(obj);
             }
             var getJwtToken = function() {
@@ -129,7 +129,7 @@ export default {
                     alert("You must choose at least one seat!");
                 }
                 else if (this.selected_seats.length == 1){
-                    this.currentStep = option;
+                    this.currentStep = option +1;
                 }
                 else{
                     this.currentStep = option;
@@ -178,8 +178,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-left: 5%;
-  margin-right:5%;
-  margin-top:0%;
 }
 </style>

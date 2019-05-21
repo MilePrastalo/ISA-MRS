@@ -2,30 +2,31 @@
    <div id = "searchFlightCompany">
        <navbar/>
 
-        <div class = "row">
+        
             <h2>Flight Company Search </h2>
-        </div>
         <br>
 
        <div class = "row">
-        <table  style="text-align: left">
+        <table  style="text-align: left" class = "centered">
            <tr>
                 <td>Company Name:</td>
                 <td><input v-model="companyName" type="text"></td>
             </tr>
             <tr>
-                <td> <button @click="search">Search</button> </td>
+                <td> <button class = "btn btn-primary" @click="search">Search</button> </td>
             </tr>  
         </table>
         </div>
         <br>
-        <div>
-            <table border="1" class = 'table'>
+        <div class = "companyTable">
+            <br>
+            <table border="1" class = 'table centered'>
                 <thead class="thead-dark">
                     <tr>
                     <th scope="col">Name</th>
                     <th scope="col">Address</th>
                     <th scope="col">Description</th>
+                    <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -33,7 +34,7 @@
                     <td>{{company.name}}</td>
                     <td>{{company.address}}</td>
                     <td>{{company.description}}</td>
-                    <td> <Button @click="goToDetails(company.id)">Details</Button></td>
+                    <td> <Button class = "btn btn-outline-primary" @click="goToDetails(company.id)">Details</Button></td>
                 </tr>
                 </tbody>              
             </table>  
@@ -51,7 +52,7 @@ export default {
     },
   data: function () {
   return {
-     companyName: "-",
+     companyName: "",
      companies:[]
   }
 },
@@ -62,11 +63,21 @@ methods:{
         this.check = option;
     },
     search: function(){
-        axios.get("http://localhost:8080/api/searchFlightCompanies/" + this.companyName)
-        .then(response => {
+        if (this.companyName == ""){
+            var name = "-";
+            axios.get("http://localhost:8080/api/searchFlightCompanies/" + name)
+            .then(response => {
             console.log(response);
             this.companies = response.data
         }); 
+        }
+        else{
+            axios.get("http://localhost:8080/api/searchFlightCompanies/" + this.companyName)
+            .then(response => {
+            console.log(response);
+            this.companies = response.data
+        }); 
+        }
     },
     goToDetails: function(id){
         localStorage.setItem("idCompany", id);
@@ -84,7 +95,16 @@ methods:{
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #303e4d;
-  margin-left: 5%;
-  margin-right: 5%;
+}
+
+.centered{
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.companyTable{
+    width: 60%;
+    margin-right: auto;
+    margin-left: auto;
 }
 </style>

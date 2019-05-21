@@ -11,7 +11,7 @@
                     <td><input type="text" v-model="lastName"></td>
                 </tr>
                 <tr>
-                    <td><Button @click="search">Search</Button></td>
+                    <td><Button class= "btn btn-primary" @click="search">Search</Button></td>
                 </tr>  
             </table>
             <div>
@@ -22,6 +22,7 @@
                         <th scope="col">First Name</th>
                         <th scope="col">Last Name</th>
                         <th scope="col">Username</th>
+                        <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -111,6 +112,5 @@ methods: {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin: 5%;
 }
 </style>

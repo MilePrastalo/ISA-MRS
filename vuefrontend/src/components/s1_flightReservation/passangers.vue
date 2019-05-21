@@ -24,7 +24,7 @@
                     </tr>
                 </table>
                 </div> <br>
-                <input type="submit" value="Finish">
+                <input  class="btn btn-primary" type="submit" value="Finish">
             </form>
         </div>
         <br><br>
@@ -42,10 +42,10 @@
                     <td><input type="text" v-model="lastName"></td>
                 </tr>
                 <tr>
-                    <td><Button @click="search">Search</Button></td>
+                    <td><br><Button class="btn btn-primary" @click="search">Search</Button></td>
                 </tr> 
+                <br>
              </table>
-            
             <table class="table">
                 <thead class="thead-dark">
                     <tr>
@@ -59,7 +59,7 @@
                     <td>{{user.user.firstName}}</td>
                     <td>{{user.user.lastName}}</td>
                     <td>{{user.user.username}}</td>
-                    <td v-if="isFriendCalled(user.user) == false"> <button @click="callFriend(user.user)">Call</button> </td>
+                    <td v-if="isFriendCalled(user.user) == false"> <button class="btn btn-outline-primary" @click="callFriend(user.user)">Call</button> </td>
                     <td v-else > Called </td>
                     </tr>
                 </tbody>
@@ -200,6 +200,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin: 5%
+}
+
+#infoPassangers{
+    margin-left: 5%;
 }
 </style>

@@ -1,14 +1,14 @@
 <template>
    <div id = "flightDetails">
         
-        <br>
-        <div class = "row">
+        <navbar></navbar>
+        <div class = "container">
+            <br>
             <h2>Flight details: </h2>
-        </div>
-        <br>
+        <br><br>
 
-        <div class = "row">
-            <table style="text-align: left">
+        <div>
+            <table style="text-align: left" class = "centered">
                 <tr>
                     <td>Flight company: </td>
                     <td> {{flight.flightCompany}}</td>
@@ -50,26 +50,24 @@
                     <td> {{flight.firstClassPrice}}</td>
                 </tr>
                 <tr>
-                    <td><button @click="makeReservation(flight.id)">Make reservation</button> </td>
+                    <td><button class="btn btn-primary" @click="makeReservation(flight.id)">Make reservation</button> </td>
                 </tr>
             </table>
-        </div>
-        <br><br>
-        <div class = "row">
-            <a href = "searchHotels">Search for hotels</a>
-        </div>
-
-        <div class = "row">
+            <br><br>
+            <a  href = "searchHotels">Search for hotels</a>
+            <br>
             <a href = "/searchVehicle">Search for rent a car services</a>
-        </div>    
+        </div> 
+        </div>
     </div>
 </template>
 
 <script>
-
+import navbar from "./navbar.vue";
 export default {
   name: 'flightDetails',
   components: {
+      navbar: navbar
   },
   data: function () {
   return {
@@ -104,7 +102,10 @@ mounted(){
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-right: 5%;
-  margin-left: 5%;
+}
+
+.centered {
+    margin-left: auto;
+    margin-right: auto;
 }
 </style>
