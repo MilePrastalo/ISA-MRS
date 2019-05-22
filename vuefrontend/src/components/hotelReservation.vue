@@ -1,6 +1,8 @@
 <template>
-   <div>
-       <h1>Hotel Search</h1>
+   <div class="Search">
+       <div class="hrSearch">
+       <br>
+       <h2>Hotel Search</h2>
        <br>
         <br>
        <div>
@@ -16,7 +18,7 @@
            <br>
            <div v-if="currentPart === 1"> 
 
-                <table border="1" >
+                <table border="1" id="DataTable" class="table">
                     <tr>
                         <td>Hotel name</td>
                         <td>Destination</td>
@@ -25,13 +27,13 @@
                         <td>Options</td>
                     </tr>
                     <tr v-for="h in hotels" :key="h.id"> 
-                        <div v-if="h.destination.name === location"> 
+                        <template v-if="h.destination.name === location"> 
                         <td>{{h.name}}</td>
                         <td>{{h.destination.name}}</td>
                         <td>{{h.address}}</td>
                         <td>{{h.description}}</td>
                         <td><button @click="showDetails(h.name)">Details</button> </td>
-                        </div>
+                        </template>
                     </tr>
                 </table>
             </div>
@@ -42,6 +44,7 @@
             </div>
                 
         </div>
+       </div> 
     </div>    
 </template>
 
@@ -97,5 +100,31 @@ mounted(){
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+#DataTable{
+    border: 1px solid black;
+    margin:auto;
+    margin-top: 2%;
+}
+#DataTable td{
+    border:1px solid black;
+}
+#DataTable th{
+    border:1px solid black;
+}
+h2{
+    margin: auto;
+}
+#inputfields table{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2%;
+}
+.Search {
+  text-align: center;
+}
+
+.hrSearch {
+  display: inline-block;
 }
 </style>
