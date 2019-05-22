@@ -3,7 +3,7 @@
             <h1>{{hotel.name}}</h1>     
 
             <div>
-              <table>
+              <table class="table">
                 <th>
                   <td>Hotel: </td>
                   <td>{{this.hotel.name}}</td>
@@ -21,11 +21,12 @@
                   <td>{{this.room.pricePerDay}}</td>
                 </tr>
               </table>
-               <table border="1" >
+              <br>
+               <table class="table" >
                         <tr>
-                            <td>Additional Charge</td>
-                            <td>Price Per Day</td>
-                            <td>Check</td>
+                            <td><b>Additional Charge</b></td>
+                            <td><b>Price Per Day</b></td>
+                            <td><b>Check</b></td>
 
                         </tr>
                     <tr v-for="a in room.additionalCharges" :key="a.id">  
@@ -35,13 +36,13 @@
                 </table>
                 <table>
                     <tr>
-                        <td>First Day:</td>
+                        <td><b>First Day:</b></td>
                         <td><input v-model="firstDay" type="date" @click="changedDate()"></td>
-                        <td>Last Day:</td>
+                        <td><b>Last Day:</b></td>
                         <td><input v-model="lastDay" type="date" @click="changedDate()"></td>
                     </tr>
                     <tr>
-                        <td>Check if available: </td>
+                        <td><b>Check if available: </b></td>
                         <td><button @click="splitDate()" >Check</button></td>
                     </tr>
                     <tr v-if="this.available == 1 && this.user.firstName != null">

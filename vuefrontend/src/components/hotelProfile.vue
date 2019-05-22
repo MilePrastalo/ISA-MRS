@@ -1,8 +1,16 @@
 <template>
 <div>
-  <div v-if="currentPage === 1">
-    <h1>{{hotel.name}}</h1>
-    <table>
+  <div v-if="currentPage === 1" class="DescDiv">
+    <div class="hpHotelDesc">
+    <h2>{{hotel.name}}</h2>
+    <br>
+    <table class="table">
+      <tr>
+        <td>
+          <table>
+            <th>
+              <td>Hotel Informations: </td>
+            </th>
       <tr>
         <td>City:</td>
         <td>{{destinationName}}</td>
@@ -19,14 +27,36 @@
         <td>Hotel Rating:</td>
         <td>{{hotel.rating}}</td>
       </tr>
-    </table>
+    </table >
+        </td>
+        <td>
+          <yandex-map
+      :coords="[this.hotel.latitude,this.hotel.longitude]"
+      zoom="14"
+      style="width:350px;height:250px;"
+      :controlss="['zoomControl']"
+      map-type="hybrid"
+    >
+      <ymap-marker
+        marker-id="1"
+        marker-type="placemark"
+        :coords="[this.hotel.latitude,this.hotel.longitude]"
+        :marker-fill="{color: '#0E4779', opacity: 0.5}"
+        :marker-stroke="{color: '#0E4779',width: 4}"
+      ></ymap-marker>
+    </yandex-map>
+        </td>
+      </tr>
+    
+    </table >
+    </div>
     <br>
     <br>
-    <table>
+    <table class="SeperateTable">
       <tr>
         <td>
           <h3>Rooms</h3>
-          <table border="1">
+          <table class="table">
       <tr>
         <td>Room Number</td>
         <td>Number Of Beds</td>
@@ -47,7 +77,7 @@
         </td>
         <td>
           <h3>Quick Reservations</h3>
-          <table border="1">
+          <table class="table">
       <tr>
         <td>Room Number</td>
         <td>Number Of Beds</td>
@@ -74,27 +104,10 @@
         </td>
       </tr>
     </table>
-
-    <h2>My Map</h2>
-    <yandex-map
-      :coords="[this.hotel.latitude,this.hotel.longitude]"
-      zoom="14"
-      style="width:450px;height:300px;"
-      :controlss="['zoomControl']"
-      map-type="hybrid"
-    >
-      <ymap-marker
-        marker-id="1"
-        marker-type="placemark"
-        :coords="[this.hotel.latitude,this.hotel.longitude]"
-        :marker-fill="{color: '#0E4779', opacity: 0.5}"
-        :marker-stroke="{color: '#0E4779',width: 4}"
-      ></ymap-marker>
-    </yandex-map>
     </div>
    <div v-if="currentPage === 2">
      <hotelRoom :hotelName="hotelName" :roomNumber="roomNum" v-on:hr="reservedHotel"/>
-
+      <br>
      <button @click="back()">Back</button>
   </div>
 
@@ -178,5 +191,20 @@ mounted(){
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+.Tables{
+    border: 1px solid black;
+    margin:auto;
+    margin-top: 2%;
+}
+.Tables td{
+    border:1px solid black;
+}
+.Tables th{
+    border:1px solid black;
+}
+.SeperateTable {
+  border-spacing: 70px;
+  border-collapse: separate;
 }
 </style>

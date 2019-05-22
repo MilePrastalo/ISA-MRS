@@ -1,6 +1,6 @@
 <template>
    <div id = "systemAdminProfile">
-
+       <navbar/>
             <br>
              <div class="row"> 
                 <h1>System Admin Profile</h1>
@@ -20,12 +20,6 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#" @click="selectTab(4)">Rent A Cars</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" @click="selectTab(5)">Change Password</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" @click="selectTab(6)">Log Out</a>
                     </li>
                 </ul>
             </div>
@@ -73,12 +67,15 @@
 import saHotels from  './saHotels.vue'
 import saFlightCompanies from "./saFlightCompanies"
 import saRentACar from "./saRentACar"
+import navbar from ".././navbar.vue";
+
 export default {
   name: 'systemAdminProfile',
   components: {
       saHotels: saHotels,
       saFlightCompanies: saFlightCompanies,
-      saRentACar: saRentACar
+      saRentACar: saRentACar,
+      navbar
   },
   data: function () {
   return {
