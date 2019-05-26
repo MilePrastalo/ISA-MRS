@@ -136,7 +136,7 @@ export default {
                     alert("You must choose at least one seat!");
                 }
                 else if (this.selected_seats.length == 1){
-                    this.currentStep = option;
+                    this.currentStep = option+1;
                 }
                 else{
                     this.currentStep = option;

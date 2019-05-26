@@ -41,26 +41,26 @@
                             <th>Review</th>
                         </tr>
                         <tr v-for="flightReservation in flightReservations" :key="flightReservation.id">
-                            <td>{{flightReservation.flight.startDestination.name}}</td>
-                            <td>{{flightReservation.flight.endDestination.name}}</td>
-                            <td>{{flightReservation.flight.startDate}}</td>
-                            <td>{{flightReservation.flight.endDate}}</td>
-                            <td> {{flightReservation.seat.travelClassa}} : ({{flightReservation.seat.seatRow}},{{flightReservation.seat.seatColumn}})</td>
+                            <td>{{flightReservation.startDestination}}</td>
+                            <td>{{flightReservation.endDestination}}</td>
+                            <td>{{flightReservation.startDate}}</td>
+                            <td>{{flightReservation.endDate}}</td>
+                            <td> {{flightReservation.travelClassa}} : ({{flightReservation.seatRow}},{{flightReservation.seatColumn}})</td>
                             <td>{{flightReservation.price}}</td>
-                            <td v-if="flightReservation.passangers.length != 0">{{flightReservation.passangers.length}} + (1)</td>
+                            <td v-if="flightReservation.passangers != 0">{{flightReservation.passangers-1}} + (1)</td>
                             <td v-else>1</td>
                              <td><button @click="flightReservationDetails(flightReservation.id)">Details</button></td>
-                             <td class="ratingtd">
+                             <td class="ratingtd" width="100px">
                                 <span class="fa fa-star over clicked" v-if="getRating(flightReservation,5)" @click="reviewFlight(flightReservation,5)" :id="flightReservation.ratings[4]"></span>
-                                    <span class="fa fa-star over" v-else @click="review(flightReservation,5)" :id="flightReservation.ratings[4]"></span>
+                                    <span class="fa fa-star over" v-else @click="reviewFlight(flightReservation,5)" :id="flightReservation.ratings[4]"></span>
                                 <span class="fa fa-star over clicked" v-if="getRating(flightReservation,4)" @click="reviewFlight(flightReservation,4)" :id="flightReservation.ratings[3]"></span>
-                                    <span class="fa fa-star over" v-else @click="review(flightReservation,4)" :id="flightReservation.ratings[3]"></span>
+                                    <span class="fa fa-star over" v-else @click="reviewFlight(flightReservation,4)" :id="flightReservation.ratings[3]"></span>
                                 <span class="fa fa-star over clicked" v-if="getRating(flightReservation,3)" @click="reviewFlight(flightReservation,3)" :id="flightReservation.ratings[2]"></span>
-                                    <span class="fa fa-star over" v-else @click="review(flightReservation,3)" :id="flightReservation.ratings[2]"></span>
+                                    <span class="fa fa-star over" v-else @click="reviewFlight(flightReservation,3)" :id="flightReservation.ratings[2]"></span>
                                 <span class="fa fa-star over clicked" v-if="getRating(flightReservation,2)" @click="reviewFlight(flightReservation,2)" :id="flightReservation.ratings[1]"></span>
-                                    <span class="fa fa-star over" v-else @click="review(flightReservation,2)" :id="flightReservation.ratings[1]"></span>
+                                    <span class="fa fa-star over" v-else @click="reviewFlight(flightReservation,2)" :id="flightReservation.ratings[1]"></span>
                                 <span class="fa fa-star over clicked" v-if="getRating(flightReservation,1)" @click="reviewFlight(flightReservation,1)" :id="flightReservation.ratings[0]"></span>
-                                    <span class="fa fa-star over" v-else @click="review(flightReservation,1)" :id="flightReservation.ratings[0]"></span>
+                                    <span class="fa fa-star over" v-else @click="reviewFlight(flightReservation,1)" :id="flightReservation.ratings[0]"></span>
                             </td>
                         </tr>
                     </table>
@@ -175,7 +175,7 @@ export default {
                 });
             });  
 
-        axios.get("http://localhost:8080/api/getMyFlightReservations")
+        axios.get("http://localhost:8080/api/getMyReservations")
             .then(response => {
                 this.flightReservations = response.data;
                 this.flightReservations.forEach(element => {
@@ -281,6 +281,7 @@ export default {
                 };
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
         console.log(reservation);
+        console.log(num);
         axios.post("http://localhost:8080/api/reviewFlight",{reservationId:reservation.id,rating:num})
             .then(response => {
                 alert("success");

@@ -1,7 +1,7 @@
 package com.tim9.PlanJourney.beans;
 
 public class UserBean {
-	
+	private Long id;
 	private String username;
 	private String password;
 	private String firstName;
@@ -61,6 +61,16 @@ public class UserBean {
 
 	public void setRepeatedPass(String repeatedPass) {
 		this.repeatedPass = repeatedPass;
+	}
+
+
+	public Long getId() {
+		return id;
+	}
+
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 	
 	

@@ -55,14 +55,19 @@ public class RegisteredUserController {
 			if ((user.getFirstName().equals(searchRequest.getFirstName()) || searchRequest.getFirstName().equals(""))
 					&& (user.getLastName().equals(searchRequest.getLastName())
 							|| searchRequest.getLastName().equals(""))) {
+				UserBean ub = new UserBean();
+				ub.setFirstName(user.getFirstName());
+				ub.setLastName(user.getLastName());
+				ub.setUsername(user.getUsername());
+				ub.setId(user.getId());
 				if (isInList(user, getUserFriends(loggedUser))) {
-					returnValue.add(new FriendBean(user, "Remove"));
+					returnValue.add(new FriendBean(ub, "Remove"));
 				} else if (isInRequests(user, loggedUser.getSendRequests(), true)) {
-					returnValue.add(new FriendBean(user, "Request sent"));
+					returnValue.add(new FriendBean(ub, "Request sent"));
 				} else if (isInRequests(user, loggedUser.getReceivedRequests(), false)) {
-					returnValue.add(new FriendBean(user, "Accept"));
+					returnValue.add(new FriendBean(ub, "Accept"));
 				} else if (user.getId() != loggedUser.getId()) {
-					returnValue.add(new FriendBean(user, "Add"));
+					returnValue.add(new FriendBean(ub, "Add"));
 				}
 			}
 		}
@@ -85,8 +90,12 @@ public class RegisteredUserController {
 			if ((user.getFirstName().equals(searchRequest.getFirstName()) || searchRequest.getFirstName().equals(""))
 					&& (user.getLastName().equals(searchRequest.getLastName())
 							|| searchRequest.getLastName().equals(""))) {
-
-				returnValue.add(new FriendBean(user, "Remove"));
+				UserBean ub = new UserBean();
+				ub.setFirstName(user.getFirstName());
+				ub.setLastName(user.getLastName());
+				ub.setUsername(user.getUsername());
+				ub.setId(user.getId());
+				returnValue.add(new FriendBean(ub, "Remove"));
 			}
 		}
 		return returnValue;

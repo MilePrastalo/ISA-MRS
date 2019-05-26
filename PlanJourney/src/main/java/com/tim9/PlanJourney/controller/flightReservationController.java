@@ -22,11 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.beans.FlightBean;
 import com.tim9.PlanJourney.beans.FlightReservationBean;
+import com.tim9.PlanJourney.beans.FrontFlightReservationBean;
 import com.tim9.PlanJourney.beans.PassangerBean;
 import com.tim9.PlanJourney.beans.QuickFlightReservationBean;
 import com.tim9.PlanJourney.beans.ReservationRequestBean;
 import com.tim9.PlanJourney.hotel.HotelReservation;
 import com.tim9.PlanJourney.models.RegisteredUser;
+import com.tim9.PlanJourney.models.Review;
 import com.tim9.PlanJourney.models.flight.Flight;
 import com.tim9.PlanJourney.models.flight.FlightReservation;
 import com.tim9.PlanJourney.models.flight.Passanger;
@@ -34,6 +36,7 @@ import com.tim9.PlanJourney.models.flight.QuickFlightReservation;
 import com.tim9.PlanJourney.models.flight.Seat;
 import com.tim9.PlanJourney.models.rentacar.VehicleReservation;
 import com.tim9.PlanJourney.service.EmailService;
+import com.tim9.PlanJourney.service.FlightCompanyService;
 import com.tim9.PlanJourney.service.FlightReservationService;
 import com.tim9.PlanJourney.service.FlightService;
 import com.tim9.PlanJourney.service.HotelReservationService;
@@ -64,19 +67,43 @@ public class flightReservationController {
 	private VehicleReservationService vehicleReservationService;
 	@Autowired
 	private HotelReservationService hotelReservationService;
+	@Autowired
+	private FlightCompanyService flightCompanyService;
 	
 	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 	
 	@RequestMapping(value = "/api/getMyReservations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('REGISTERED')")
-	public @ResponseBody Set<FlightReservation> getMyReservations() {
+	public @ResponseBody ArrayList<FrontFlightReservationBean> getMyReservations() {
 
 		RegisteredUser loggedUser = getLoggedRegisteredUser();
 		if (loggedUser == null) {
 			return null;
 		}
-		return loggedUser.getFlightReservations();
+		ArrayList<FrontFlightReservationBean> toReturn = new ArrayList<>();
+		ArrayList<FlightReservation> reservations = new ArrayList<>();
+		reservations.addAll(loggedUser.getFlightReservations());
+		for (FlightReservation flightReservation : reservations) {
+			
+			FrontFlightReservationBean ffrb = new FrontFlightReservationBean(flightReservation.getId(),
+					flightReservation.getFlight().getStartDestination().getName(),
+					flightReservation.getFlight().getEndDestination().getName(),
+					sdf.format(flightReservation.getFlight().getStartDate()),
+					sdf.format(flightReservation.getFlight().getEndDate()),
+					flightReservation.getSeat().getTravelClassa(),
+					flightReservation.getPrice(),
+					flightReservation.getPassangers().size(),
+					0,flightReservation.getSeat().getSeatRow(),flightReservation.getSeat().getSeatColumn());
+					Set<Review> reviews = flightReservation.getReservationReviews();
+			for (Review r : reviews) {
+				if (r.getUser().getUsername().equals(loggedUser.getUsername())) {
+					ffrb.setRating(r.getRating());
+				}
+			}
+			toReturn.add(ffrb);
+		}
+		return toReturn;
 	}
 	
 	@RequestMapping(value = "/api/getFlightReservation/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -151,7 +178,10 @@ public class flightReservationController {
 		passangerService.saveAll(passangersList);
 		
 		FlightReservation reservation = new FlightReservation(loggedUser, main_seat, passangers, flight, total, new Date(), false, hotelReservations, vehicleReservations);
+		flight.getFlightCompany().getFlightReservation().add(reservation);
+		reservation.setCompany(flight.getFlightCompany());
 		reservationService.save(reservation);
+		flightCompanyService.save(flight.getFlightCompany());
 		for (RegisteredUser friend: friends) {
 			try {
 				emailService.sendReservationRequest(friend, reservation.getId());
