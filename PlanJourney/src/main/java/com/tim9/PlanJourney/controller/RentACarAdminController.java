@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,10 +20,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tim9.PlanJourney.beans.AdminBean;
 import com.tim9.PlanJourney.models.Authority;
 import com.tim9.PlanJourney.models.rentacar.RentACarAdmin;
 import com.tim9.PlanJourney.models.rentacar.RentACarCompany;
 import com.tim9.PlanJourney.service.AuthorityService;
+import com.tim9.PlanJourney.service.EmailService;
 import com.tim9.PlanJourney.service.RentACarAdminService;
 import com.tim9.PlanJourney.service.RentACarCompanyService;
 
@@ -37,6 +40,9 @@ public class RentACarAdminController {
 
 	@Autowired
 	private AuthorityService authorityService;
+
+	@Autowired
+	private EmailService emailService;
 
 	@RequestMapping(value = "/api/getRentACarAdmin/{username}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -53,27 +59,41 @@ public class RentACarAdminController {
 	@RequestMapping(value = "/api/addRentACarAdmin", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('SYS_ADMIN')")
-	public @ResponseBody ResponseEntity<RentACarAdmin> addRentACarAdmin(@RequestBody RentACarAdmin admin) {
+	public @ResponseBody boolean addRentACarAdmin(@RequestBody AdminBean admin) {
 		// Finds if new admin's given hotel exists.
-		RentACarCompany r = companyService.findByName(admin.getService().getName());
+		RentACarCompany r = companyService.findByName(admin.getCompanyName());
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
 			if (adminService.findByUsername(admin.getUsername()) == null && r != null) {
 				Authority authority = authorityService.findByName("RENT_ADMIN");
 				ArrayList<Authority> auth = new ArrayList<Authority>();
 				auth.add(authority);
-				admin.setAuthorities(auth);
+				RentACarAdmin rentAdmin = new RentACarAdmin();
+				rentAdmin.setUsername(admin.getUsername());
+				rentAdmin.setFirstName(admin.getFirstName());
+				rentAdmin.setLastName(admin.getLastName());
+				rentAdmin.setEmail(admin.getEmail());
+				rentAdmin.setAuthorities(auth);
+				rentAdmin.setService(r);
+				rentAdmin.setConfirmed(false);
 
-				admin.setService(r);
 				BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 				admin.setPassword(encoder.encode(admin.getPassword()));
-				RentACarAdmin a = (RentACarAdmin) adminService.save(admin);
-				return new ResponseEntity<RentACarAdmin>(a, HttpStatus.OK);
+				rentAdmin.setPassword(encoder.encode(admin.getPassword()));
+
+				adminService.save(rentAdmin);
+
+				try {
+					emailService.sendRegistrationEmail(rentAdmin); // sends email
+				} catch (MailException | InterruptedException e) {
+					e.printStackTrace();
+				}
+				return true;
 			} else {
-				return new ResponseEntity<RentACarAdmin>(admin, HttpStatus.CONFLICT);
+				return false;
 			}
 		}
-		return new ResponseEntity<RentACarAdmin>(admin, HttpStatus.CONFLICT);
+		return false;
 	}
 
 	@RequestMapping(value = "/api/removeRentACarAdmin/{username}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)

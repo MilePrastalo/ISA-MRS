@@ -208,9 +208,13 @@ mounted(){
             })
         },
         addHotelAdmin: function() {
-            axios.post("http://localhost:8080/api/addHotelAdmin",{username:this.admin.username,password:this.admin.password,firstName:this.admin.firstName,lastName:this.admin.lastName,email:this.admin.email,hotel:{name:this.hotelName}}).
+            axios.post("http://localhost:8080/api/addHotelAdmin",{username:this.admin.username,password:this.admin.password,firstName:this.admin.firstName,lastName:this.admin.lastName,email:this.admin.email,companyName:this.hotelName}).
             then(response =>{
-                alert(response.data.username + " has been successfully added.");
+                if(response.data === true) {
+                    alert("Hotel admin has been successfully added.");
+                } else {
+                    alert("Username is taken.");
+                }
             })
         },
         removeHotelAdmin: function() {

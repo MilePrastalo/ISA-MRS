@@ -32,17 +32,16 @@ public class SystemAdminController {
 
 	@Autowired
 	private SystemAdminService service;
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private AuthorityService authorityService;
-	
+
 	@Autowired
 	private DestinationService destinationService;
 
-	
 	@RequestMapping(value = "/api/getSystemAdminProfile", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('SYS_ADMIN')")
@@ -54,12 +53,12 @@ public class SystemAdminController {
 
 			String username = authentication.getName();
 			SystemAdmin user = (SystemAdmin) userService.findOneByUsername(username);
-			
+
 			return user;
 		}
 		return null;
 	}
-	
+
 	@RequestMapping(value = "/api/getSystemAdmin/{username}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	public ResponseEntity<SystemAdmin> getSystemAdmin(@PathVariable("username") String username) {
@@ -81,7 +80,8 @@ public class SystemAdminController {
 			ArrayList<Authority> auth = new ArrayList<Authority>();
 			auth.add(authority);
 			admin.setAuthorities(auth);
-			
+			admin.setConfirmed(true);
+
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 			admin.setPassword(encoder.encode(admin.getPassword()));
 			SystemAdmin a = (SystemAdmin) service.save(admin);
@@ -100,11 +100,11 @@ public class SystemAdminController {
 		if (admin == null) {
 			return new ResponseEntity<SystemAdmin>(admin, HttpStatus.CONFLICT);
 		}
-		
+
 		service.remove(admin.getId());
 		return new ResponseEntity<SystemAdmin>(admin, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/api/getAllDestinations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('SYS_ADMIN')")

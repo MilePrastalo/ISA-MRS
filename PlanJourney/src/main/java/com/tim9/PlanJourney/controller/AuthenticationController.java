@@ -161,9 +161,9 @@ public class AuthenticationController {
 		byte[] decoded = Base64.getDecoder().decode(encoded);
 		String username = new String(decoded,"UTF-8");
 		System.out.println(username);
-		RegisteredUser user = regUserService.findByUsername(username);
+		User user = userService.findOneByUsername(username);
 		user.setConfirmed(true);
-		regUserService.save(user);
+		userService.save(user);
 		RedirectView view = new RedirectView("http://localhost:8081");
 		return view;
 	}

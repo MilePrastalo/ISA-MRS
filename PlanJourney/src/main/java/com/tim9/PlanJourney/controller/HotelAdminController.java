@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tim9.PlanJourney.beans.AdminBean;
 import com.tim9.PlanJourney.beans.DestinationBean;
 import com.tim9.PlanJourney.beans.HotelAdminBean;
 import com.tim9.PlanJourney.beans.HotelBean;
@@ -39,6 +41,7 @@ import com.tim9.PlanJourney.hotel.HotelRoom;
 import com.tim9.PlanJourney.models.Authority;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.service.AuthorityService;
+import com.tim9.PlanJourney.service.EmailService;
 import com.tim9.PlanJourney.service.HotelAdminService;
 import com.tim9.PlanJourney.service.HotelService;
 import com.tim9.PlanJourney.service.UserService;
@@ -57,6 +60,9 @@ public class HotelAdminController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private EmailService emailService;
 
 	@RequestMapping(value = "/api/getHotelAdmin/{username}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -211,27 +217,41 @@ public class HotelAdminController {
 	@RequestMapping(value = "/api/addHotelAdmin", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('SYS_ADMIN')")
-	public @ResponseBody ResponseEntity<HotelAdmin> addHotelAdmin(@RequestBody HotelAdmin admin) {
+	public @ResponseBody boolean addHotelAdmin(@RequestBody AdminBean admin) {
 		// Finds if new admin's given hotel exists.
-		Hotel h = hotelService.findByName(admin.getHotel().getName());
+		Hotel h = hotelService.findByName(admin.getCompanyName());
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
 			if (adminService.findByUsername(admin.getUsername()) == null && h != null) {
 				Authority authority = authorityService.findByName("HOTEL_ADMIN");
 				ArrayList<Authority> auth = new ArrayList<Authority>();
 				auth.add(authority);
-				admin.setAuthorities(auth);
+				HotelAdmin hotelAdmin = new HotelAdmin();
+				hotelAdmin.setUsername(admin.getUsername());
+				hotelAdmin.setFirstName(admin.getFirstName());
+				hotelAdmin.setLastName(admin.getLastName());
+				hotelAdmin.setEmail(admin.getEmail());
+				hotelAdmin.setAuthorities(auth);
+				hotelAdmin.setHotel(h);
 
-				admin.setHotel(h);
 				BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-				admin.setPassword(encoder.encode(admin.getPassword()));
-				HotelAdmin a = (HotelAdmin) adminService.save(admin);
-				return new ResponseEntity<HotelAdmin>(a, HttpStatus.OK);
+				hotelAdmin.setPassword(encoder.encode(admin.getPassword()));
+				hotelAdmin.setConfirmed(false);
+
+				adminService.save(hotelAdmin);
+
+				try {
+					emailService.sendRegistrationEmail(hotelAdmin); // sends email
+				} catch (MailException | InterruptedException e) {
+					e.printStackTrace();
+				}
+
+				return true;
 			} else {
-				return new ResponseEntity<HotelAdmin>(admin, HttpStatus.CONFLICT);
+				return false;
 			}
 		}
-		return new ResponseEntity<HotelAdmin>(admin, HttpStatus.CONFLICT);
+		return false;
 	}
 
 	@RequestMapping(value = "/api/removeHotelAdmin/{username}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
