@@ -1,5 +1,7 @@
 <template>
-   <div>
+   <div class="Search">
+       <div class="hrSearch">
+        <br>
        <h1>Hotel Search</h1>
        <br>
         <br>
@@ -16,22 +18,22 @@
            <br>
            <div v-if="currentPart === 1"> 
 
-                <table border="1" >
+                <table class="table" >
                     <tr>
-                        <td>Hotel name</td>
-                        <td>Destination</td>
-                        <td>Adress</td>
-                        <td>Description</td>
-                        <td>Options</td>
+                        <td><b>Hotel name</b></td>
+                        <td><b>Destination</b></td>
+                        <td><b>Adress</b></td>
+                        <td><b>Description</b></td>
+                        <td><b>Options</b></td>
                     </tr>
                     <tr v-for="h in hotels" :key="h.id"> 
-                        <div v-if="h.destination.name === location"> 
+                        <template v-if="h.destination.name === location"> 
                         <td>{{h.name}}</td>
                         <td>{{h.destination.name}}</td>
                         <td>{{h.address}}</td>
                         <td>{{h.description}}</td>
                         <td><button @click="showDetails(h.name)">Details</button> </td>
-                        </div>
+                        </template>
                     </tr>
                 </table>
             </div>
@@ -40,7 +42,7 @@
                 <hotelProfile :hotelName = "iHotelName" v-on:rr="hotelReserved"/>
 
             </div>
-                
+        </div>
         </div>
     </div>    
 </template>
@@ -97,5 +99,11 @@ mounted(){
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+.Search {
+  text-align: center;
+}
+.hrSearch {
+  display: inline-block;
 }
 </style>

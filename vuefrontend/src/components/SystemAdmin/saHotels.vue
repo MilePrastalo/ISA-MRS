@@ -62,6 +62,14 @@
                     <td>  <input type="text" name="destinationID" v-model="destinationID" > </td>
                 </tr>
                 <tr>
+                    <td> Latitude: </td>
+                    <td>  <input type="number"  v-model="latitude" > </td>
+                </tr>
+                <tr>
+                    <td> Longitude: </td>
+                    <td>  <input type="number"  v-model="longitude" > </td>
+                </tr>
+                <tr>
                     <td> Description: </td>
                     <td> <textarea  rows="5" cols="22" name="description"  v-model="description" style="overflow:scroll;"></textarea> </td>        
                 </tr>
@@ -156,6 +164,8 @@ export default {
     destinationID: 0,
     address: "",
     description: "",
+    latitude: 0,
+    longitude: 0,
     currentTab: 1
   }
 },
@@ -186,9 +196,9 @@ mounted(){
             }
             console.log(this.destinations);
             console.log(this.destinationID)
-            axios.post("http://localhost:8080/api/addHotel",{name:this.name,address:this.address,description:this.description,destination:{id:this.destinationID}}).
+            axios.post("http://localhost:8080/api/addHotel",{name:this.name,address:this.address,description:this.description,longitude:this.longitude,latitude:this.latitude,destination:{id:this.destinationID}}).
             then(response =>{
-                alert(response.data.name + " has been successfully added.");
+                alert("Hotel has been successfully added.");
             })
         },
         removeHotel: function() {

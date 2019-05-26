@@ -81,6 +81,8 @@
                     <td> Input price per day: </td>
                     <td>  <input type="float" room.pricePerDay="room.pricePerDay" v-model="room.pricePerDay" > </td>
                 </tr>
+                <br>
+                <br>
                 <tr>
                     <td> Input name of additional charge: </td>
                     <td>  <input type="text" ac.name="ac.name" v-model="ac.name" > </td>
@@ -93,6 +95,7 @@
                     <td>  </td>
                     <td><button v-on:click="addAC()">Add additional charges</button> </td>   
                 </tr>
+                <br>
                 <tr>
                     <td>  </td>
                     <td><button v-on:click="addRoom()">Add room</button> </td>   
