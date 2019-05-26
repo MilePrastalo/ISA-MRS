@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.beans.DestinationBean;
 import com.tim9.PlanJourney.beans.FlightBean;
+import com.tim9.PlanJourney.beans.FlightCompanyBean;
 import com.tim9.PlanJourney.beans.FlightReportRequestBean;
 import com.tim9.PlanJourney.beans.QuickFlightReservationBean;
 import com.tim9.PlanJourney.beans.FlightCompanyReportBean;
@@ -288,15 +289,21 @@ public class FlightCompanyController {
 	@RequestMapping(value = "/api/searchFlightCompanies/{companyName}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	// Method for searching flight companies
-	public @ResponseBody ArrayList<FlightCompany> searchFlightCompanies(@PathVariable("companyName") String companyName)
+	public @ResponseBody ArrayList<FlightCompanyBean> searchFlightCompanies(@PathVariable("companyName") String companyName)
 			throws Exception {
-
+		
+		ArrayList<FlightCompanyBean> source = new ArrayList<>();
 		ArrayList<FlightCompany> companies = (ArrayList<FlightCompany>) flightCompanyService.findAll();
-		ArrayList<FlightCompany> found = new ArrayList<FlightCompany>();
-		if (companyName.equals("-")) {
-			return companies;
-		}
 		for (FlightCompany c : companies) {
+			FlightCompanyBean fcb = new FlightCompanyBean(c.getId(),c.getName(),
+					c.getAddress(), c.getDescription(), c.getRating());
+			source.add(fcb);
+		}
+		ArrayList<FlightCompanyBean> found = new ArrayList<FlightCompanyBean>();
+		if (companyName.equals("-")) {
+			return source;
+		}
+		for (FlightCompanyBean c : source) {
 			if (c.getName().equalsIgnoreCase(companyName)) {
 				found.add(c);
 			}
