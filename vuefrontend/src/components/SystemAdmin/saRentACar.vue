@@ -163,9 +163,13 @@ mounted(){
             })
         },
         addRentACarAdmin: function() {
-            axios.post("http://localhost:8080/api/addRentACarAdmin",{username:this.admin.username,password:this.admin.password,firstName:this.admin.firstName,lastName:this.admin.lastName,email:this.admin.email,service:{name:this.rentACarName}}).
+            axios.post("http://localhost:8080/api/addRentACarAdmin",{username:this.admin.username,password:this.admin.password,firstName:this.admin.firstName,lastName:this.admin.lastName,email:this.admin.email,companyName:this.rentACarName}).
             then(response =>{
-                alert(response.data.username + " has been successfully added.");
+                if(response.data === true) {
+                    alert("Rent a car admin has been successfully added.");
+                } else {
+                    alert("Username is taken.");
+                }
             })
         },
         removeRentACarAdmin: function() {

@@ -163,9 +163,13 @@ mounted(){
             })
         },
         addFlightCompanyAdmin: function() {
-            axios.post("http://localhost:8080/api/addFlightAdmin",{username:this.admin.username,password:this.admin.password,firstName:this.admin.firstName,lastName:this.admin.lastName,email:this.admin.email,flightCompany:{name:this.flightCompanyName}}).
+            axios.post("http://localhost:8080/api/addFlightAdmin",{username:this.admin.username,password:this.admin.password,firstName:this.admin.firstName,lastName:this.admin.lastName,email:this.admin.email,companyName:this.flightCompanyName}).
             then(response =>{
-                alert(response.data.username + " has been successfully added.");
+                if(response.data === true) {
+                    alert("Flight admin has been successfully added.");
+                } else {
+                    alert("Username is taken.");
+                }
             })
         },
         removeFlightCompanyAdmin: function() {

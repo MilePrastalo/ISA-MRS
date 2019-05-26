@@ -25,7 +25,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class User implements UserDetails{
+public abstract class User implements UserDetails {
 
 	/**
 	 * 
@@ -49,16 +49,16 @@ public abstract class User implements UserDetails{
 
 	@Column(name = "email", unique = false, nullable = false)
 	private String email;
-	
+
 	@Column(name = "last_password_reset_date")
-    private Timestamp lastPasswordResetDate;
-	
+	private Timestamp lastPasswordResetDate;
+
+	@Column(name = "confirmed", nullable = true)
+	private boolean confirmed;
+
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "user_authority",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
-    private List<Authority> authorities;
-	
+	@JoinTable(name = "user_authority", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
+	private List<Authority> authorities;
 
 	public User() {
 	}
@@ -119,22 +119,30 @@ public abstract class User implements UserDetails{
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
 	public Timestamp getLastPasswordResetDate() {
-        return lastPasswordResetDate;
-    }
+		return lastPasswordResetDate;
+	}
 
-    public void setLastPasswordResetDate(Timestamp lastPasswordResetDate) {
-        this.lastPasswordResetDate = lastPasswordResetDate;
-    }
-    public void setAuthorities(List<Authority> authorities) {
-        this.authorities = authorities;
-    }
+	public void setLastPasswordResetDate(Timestamp lastPasswordResetDate) {
+		this.lastPasswordResetDate = lastPasswordResetDate;
+	}
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.authorities;
-    }
-    
+	public void setAuthorities(List<Authority> authorities) {
+		this.authorities = authorities;
+	}
 
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return this.authorities;
+	}
+
+	public boolean isConfirmed() {
+		return confirmed;
+	}
+
+	public void setConfirmed(boolean confirmed) {
+		this.confirmed = confirmed;
+	}
 
 }

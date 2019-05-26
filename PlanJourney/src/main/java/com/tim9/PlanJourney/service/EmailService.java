@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.tim9.PlanJourney.models.RegisteredUser;
+import com.tim9.PlanJourney.models.User;
 import com.tim9.PlanJourney.models.flight.FlightReservation;
 
 @Service
@@ -36,7 +37,7 @@ public class EmailService {
 	}
 	//Sends email with encoded username after registration
 	@Async
-	public void sendRegistrationEmail(RegisteredUser user) throws MailException, InterruptedException {
+	public void sendRegistrationEmail(User user) throws MailException, InterruptedException {
 		System.out.println("Slanje emaila..." + user.getEmail());
 		SimpleMailMessage mail = new SimpleMailMessage();
 		mail.setTo(user.getEmail());
