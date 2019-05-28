@@ -1,7 +1,7 @@
 <template>
    <div id = "quickVehicle">
         <h2 class="centered">Quick Tickets: </h2>
-        <form action="" class="centered">
+        <form v-if="add"  class="centered" @submit="addQuickReservation">
             <div class="form-label-group">
                 <label>VehicleName</label>
                 <h4>{{vehicleName}}</h4>
@@ -27,7 +27,29 @@
                 <input v-model="discount" type="number" required>
             </div>
             <div class="form-label-group">
-                <button class="btn-primary" type="submit" @click="addQuickReservation">Add</button>
+                <button class="btn-primary" type="submit">Add</button>
+            </div>
+        </form>
+        <form v-else class="centered">
+            <div class="form-label-group">
+                <label>VehicleName</label>
+                <h4>{{vehicleName}}</h4>
+            </div>
+                <div class="form-label-group">
+                <label>Date From</label>
+                <input v-model="dateFrom" type="date" required>
+            </div>
+            <div class="form-label-group">
+                <label>Date To</label>
+                <input v-model="dateTo" type="date" required>
+            </div>
+            <div class="form-label-group">
+                <label>Discount</label>
+                <input v-model="discount" type="number" required>
+            </div>
+            <div class="form-label-group">
+                <button class="btn-primary" @click="back">Back</button>
+                <button class="btn-primary" @click="editQuickReservation">Edit</button>
             </div>
         </form>
         <div class="row">
@@ -79,6 +101,7 @@
                     <td>{{res.price}}</td>
                     <td>{{res.discount}}</td>
                     <td>{{(res.price*(100-res.discount)/100)}}</td>
+                    <td><Button @click="edit(res)">Edit</Button></td>
                     <td><Button @click="remove(res)">Cancel</Button></td>
                 </tr> 
                 </tbody>             
@@ -94,6 +117,7 @@ export default {
   data: function () {
   return {
     role: "",
+    quickId : "",
     quickReservations: [],
     vehicleName:"",
     cars:"",
@@ -103,7 +127,8 @@ export default {
     dateFrom:"",
     dateTo:"",
     discount:"",
-    vehicleID:""
+    vehicleID:"",
+    add:true
   }
 },
 
@@ -147,6 +172,41 @@ mounted(){
             this.vehicleName = vehicle.name;
             this.vehicleID = vehicle.id;
         },
+        back:function(){
+          this.add=true;
+          this.dateFrom = "";
+          this.dateTo= "";
+          this.vehicleName = "";
+          this.discount ="";
+        },
+        edit:function(reservation){
+          this.add = false;
+          console.log(reservation);
+          var dateF = reservation.dateFrom.split("-");
+          console.log(dateF);
+          this.dateFrom = dateF[2]+"-"+dateF[1]+"-"+dateF[0];
+          var dateT = reservation.dateTo.split("-");
+          this.dateTo = dateT[2]+"-"+dateT[1]+"-"+dateT[0];
+          this.vehicleName = reservation.vehicleName;
+          this.discount = reservation.discount;
+          this.quickId = reservation.id;
+        },
+        editQuickReservation:function(){
+          console.log("Called");
+          var getJwtToken = function() {
+                return localStorage.getItem('jwtToken');
+            };
+            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken(); 
+            axios.post("http://localhost:8080/api/editQuickVehicleReservation",{id:this.quickId,dateFrom:this.dateFrom,dateTo:this.dateTo,vehicleName:this.vehicleName,discount:this.discount})
+            .then(response=>{
+                if(response.data == "OK"){
+                  alert("OK");
+                }
+                else{
+                  alert("ERROR");
+                }
+            });
+        },
         remove:function(reservation){
           var getJwtToken = function() {
                 return localStorage.getItem('jwtToken');
@@ -158,8 +218,6 @@ mounted(){
                 if(response.data == "OK"){
                   var index = 0;
                   for (let element of quickReservations){
-                    console.log(element);
-                    console.log(reservation);
                     if(element.id == reservation.id){
                       break;
                     }
