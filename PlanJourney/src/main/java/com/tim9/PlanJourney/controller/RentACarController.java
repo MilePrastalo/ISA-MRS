@@ -616,9 +616,6 @@ public class RentACarController {
 		officeReturn.getId();
 		QuickVehicleReservation quick = new QuickVehicleReservation(vehicle, vehicle.getPrice(), bean.getDiscount(), dateFrom, dateTo, officePick, officeReturn, false);
 		quick.setOriginalPrice(vehicle.getPrice());
-		System.out.println(quick.getVehicle().getName());
-		System.out.println(quick.getOfficePick().getName());
-		System.out.println(quick.getOfficeReturn().getName());
 		vehicle.getQuickReservations().add(quick);
 		officePick.getCompany().getQuickReservations().add(quick);
 		companyService.save(officePick.getCompany());
@@ -722,6 +719,40 @@ public class RentACarController {
 		VehicleReservation vr = reservationService.save(reservation);
 
 		return vr.getId();
+	}
+	
+	@RequestMapping(value = "/api/removeQuickReservation", method = RequestMethod.POST, produces= MediaType.TEXT_PLAIN_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	//Makes quick reservation
+	//Creates new reservation and changes bool taken for quick reservation
+	public String removeQuickReservation(@RequestBody QuickVehicleReserveBean bean) throws Exception { 
+		QuickVehicleReservation quick = quickService.findOne(bean.getId());
+		if(!quick.isTaken()) {
+			quickService.remove(bean.getId());
+			return "OK";
+		}else {
+			return "TAKEN";
+		}
+	}
+	
+	@RequestMapping(value = "/api/editQuickVehicleReservation", method = RequestMethod.POST, produces= MediaType.TEXT_PLAIN_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	//Makes quick reservation
+	//Creates new reservation and changes bool taken for quick reservation
+	public String removeQuickReservation(@RequestBody VehicleReservationBean bean) throws Exception { 
+		QuickVehicleReservation quick = quickService.findOne(bean.getId());
+		if(!quick.isTaken()) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date dateFrom = sdf.parse(bean.getDateFrom());
+			Date dateTo = sdf.parse(bean.getDateTo());
+			quick.setDateFrom(dateFrom);
+			quick.setDateTo(dateTo);
+			quick.setDiscount(bean.getDiscount());
+			quickService.save(quick);
+			return "OK";
+		}else {
+			return "TAKEN";
+		}
 	}
 	
 	
