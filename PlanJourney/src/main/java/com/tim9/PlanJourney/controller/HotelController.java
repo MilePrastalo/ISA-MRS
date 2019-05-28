@@ -34,7 +34,9 @@ import com.tim9.PlanJourney.hotel.HotelReservation;
 import com.tim9.PlanJourney.hotel.HotelRoom;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.flight.Destination;
+import com.tim9.PlanJourney.models.flight.FlightReservation;
 import com.tim9.PlanJourney.service.DestinationService;
+import com.tim9.PlanJourney.service.FlightReservationService;
 import com.tim9.PlanJourney.service.HotelAdminService;
 import com.tim9.PlanJourney.service.HotelReservationService;
 import com.tim9.PlanJourney.service.HotelService;
@@ -56,6 +58,9 @@ public class HotelController {
 
 	@Autowired
 	private HotelReservationService hotelReservationService;
+
+	@Autowired
+	private FlightReservationService flightReservationService;
 
 	@RequestMapping(value = "/api/getAllHotels", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -342,7 +347,6 @@ public class HotelController {
 		}
 		return foundHotels;
 	}
-	
 
 	@RequestMapping(value = "/api/addHotelReservation", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -479,14 +483,59 @@ public class HotelController {
 				}
 			}
 
-			//service.save(hotel);
-			//userService.save(user);
+			// service.save(hotel);
+			// userService.save(user);
 			foundReservation.setUser(user);
 			hotelReservationService.save(foundReservation);
 
 			return foundReservation.getId();
 		}
 		return null;
+	}
+
+	@RequestMapping(value = "/api/cancelHotelReservation", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('REGISTERED')")
+	public @ResponseBody boolean cancelHotelReservation(@RequestBody HotelReservationBean reservationBean) {
+		HotelReservation hr = hotelReservationService.findOne(reservationBean.getId());
+		System.out.println("Odje puko 1");
+		System.out.println(reservationBean.getId());
+		if (!hr.getUser().getUsername().equals(reservationBean.getUsername())) {
+			return false;
+		}
+
+		if (!hr.getHotel().getName().equals(reservationBean.getHotelName())) {
+			return false;
+		}
+		System.out.println("Odje puko 2");
+		// Checks if cancelation is less than 3 days before.
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(hr.getFirstDay());
+		cal.add(Calendar.DATE, -3);
+		Date dateBefore3Days = cal.getTime();
+		if (dateBefore3Days.after(new Date())) {
+			return false;
+		}
+		System.out.println("Odje puko 3");
+		// Removing hotel reservation from flight reservation.
+		ArrayList<HotelReservation> flightsHotelReservations = new ArrayList<HotelReservation>();
+		FlightReservation fr = flightReservationService.findOne(hr.getFlightReservation().getId());
+		System.out.println(fr.getId());
+		for (HotelReservation h : fr.getHoteReservations()) {
+			if (!(h.getId() == hr.getId())) {
+				flightsHotelReservations.add(h);
+			}
+		}
+		System.out.println("Odje puko 4");
+		HashSet<HotelReservation> setFHR = new HashSet<HotelReservation>();
+		setFHR.addAll(flightsHotelReservations);
+		fr.setHoteReservations(setFHR);
+		System.out.println("Odje puko 5");
+		flightReservationService.save(fr);
+		System.out.println("Odje puko 6");
+		hotelReservationService.remove(hr.getId());
+
+		return true;
 	}
 
 }

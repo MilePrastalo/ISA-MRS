@@ -17,10 +17,13 @@
                         <a  class="nav-link" href="#" @click="selectTab(3)" >Add Room</a>
                     </li>
                     <li class="nav-item">
-                        <a  class="nav-link" href="#" @click="selectTab(4)" >Add Quick Reservation</a>
+                        <a  class="nav-link" href="#" @click="selectTab(4)">Quick Reservations </a>
                     </li>
                     <li class="nav-item">
-                        <a  class="nav-link" href="#" @click="selectTab(5)" >Reports</a>
+                        <a  class="nav-link" href="#" @click="selectTab(5)" >Add Quick Reservation</a>
+                    </li>
+                    <li class="nav-item">
+                        <a  class="nav-link" href="#" @click="selectTab(6)" >Reports</a>
                     </li>
 
                 </ul>
@@ -103,9 +106,36 @@
             </table>      
             </div>
             <div v-if="currentTab == 4">
+                 <h3>Quick Reservations</h3>
+          <table class="table">
+      <tr>
+        <td>Room Number</td>
+        <td>Number Of Beds</td>
+        <td>First Day</td>
+        <td>Last Day</td>
+        <td>Original Price</td>
+        <td>Discount</td>
+        <td>Discounted Price</td>
+        <td>Options</td>
+      </tr>
+      <tr v-for="r in quickReservations" :key="r.id">
+        <td>{{r.roomNumber}}</td>
+        <td>{{r.numberOfBeds}}</td>
+        <td>{{r.fDay +"."+r.fMonth +"."+r.fYear+"."}}</td>
+        <td>{{r.lDay +"."+r.lMonth +"."+r.lYear+"."}}</td>
+        <td>{{r.paidPrice}}</td>
+        <td>{{r.discount}}</td>
+        <td>{{parseFloat(r.paidPrice) - parseFloat(r.paidPrice) * (parseFloat(r.discount) / 100)}}</td>
+        <td>
+          <button @click="cancelQuickReservation(r)">Cancel</button>
+        </td>
+      </tr>
+    </table>
+            </div>
+            <div v-if="currentTab == 5">
                 <ha-quick-reservation :hotel="hotel"></ha-quick-reservation>
             </div>
-             <div v-if="currentTab == 5">
+             <div v-if="currentTab == 6">
                 <ha-reports :hotel="hotel"></ha-reports>
             </div>
    </div>
@@ -115,6 +145,7 @@
 
 import haQuickReservation from "./haQuickReservation.vue"
 import haReports from "./haReports.vue"
+import { constants } from 'crypto';
 
 export default {
   name: 'haHotel',
@@ -130,6 +161,7 @@ export default {
     room: {},
     ac: [],
     acList: [],
+    quickReservations: [],
     currentTab: 1
   }
 },
@@ -138,10 +170,14 @@ mounted(){
             return localStorage.getItem('jwtToken');
         };
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        
     },
     methods:{
         selectTab: function(tabId){
             this.currentTab = tabId;
+            if(tabId === 4) {
+                this.findQuickReservations();
+            }
         },
         addAC: function() {
             this.acList.push({name:this.ac.name, pricePerDay: this.ac.pricePerDay});
@@ -157,6 +193,35 @@ mounted(){
             })
             this.hotel.rooms.push({roomNumber: this.room.roomNumber,numberOfBeds:this.room.numberOfBeds,pricePerDay:this.room.pricePerDay,additionalCharges:this.acList,rating:0});
             this.room = {};
+        },
+        findQuickReservations: function() {
+            this.quickReservations = [];
+            this.hotel.reservations.forEach(element => {
+            if(element.username === null) {
+                this.quickReservations.push(element);
+            }
+            
+        });
+        },
+        cancelQuickReservation: function(r) {
+            axios.post("http://localhost:8080/api/cancelQuickHotelReservation",r)
+            .then(response => {
+                if(response.data == true) {
+                    alert("Quick reservation has been successfully canceled.");
+                    this.quickReservations.forEach(element => {
+                        if(element.id == r.id) {
+                            this.quickReservations.splice(r,1);
+                        }
+                    });
+                    this.hotel.reservations.forEach(element => {
+                            if(element.id == r.id) {
+                                this.hotel.reservations.splice(r,1)
+                            }
+                    });
+                } else {
+                    alert("There was a problem with canceling quick reservation.");
+                }
+            });
         }
         
     }

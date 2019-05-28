@@ -74,6 +74,7 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET,"/api/searchHotels/**").permitAll()
 				.antMatchers(HttpMethod.GET,"/api/getHotel/**").permitAll()
 				
+				
 				// svaki zahtev mora biti autorizovan
 				.anyRequest().authenticated().and()
 				
