@@ -79,7 +79,7 @@
                     <td>{{res.price}}</td>
                     <td>{{res.discount}}</td>
                     <td>{{(res.price*(100-res.discount)/100)}}</td>
-                    <td><Button>Cancel</Button></td>
+                    <td><Button @click="remove(res)">Cancel</Button></td>
                 </tr> 
                 </tbody>             
             </table>  
@@ -141,11 +141,35 @@ mounted(){
             locationReturn:this.returnoffice,vehicleName:this.vehicleName,discount:this.discount})
             .then(response=>{
                 alert("SUCCESS");
-            })  
+            });  
         },
         select:function(vehicle){
             this.vehicleName = vehicle.name;
             this.vehicleID = vehicle.id;
+        },
+        remove:function(reservation){
+          var getJwtToken = function() {
+                return localStorage.getItem('jwtToken');
+            };
+            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken(); 
+            axios.post("http://localhost:8080/api/removeQuickReservation",
+            {id:reservation.id})
+            .then(response=>{
+                if(response.data == "OK"){
+                  var index = 0;
+                  for (let element of quickReservations){
+                    console.log(element);
+                    console.log(reservation);
+                    if(element.id == reservation.id){
+                      break;
+                    }
+                    index++;
+                  }
+                  quickReservations.splice(index, 1);
+                }else{
+                  alert("RESERVATION IS TAKEN");
+                }
+            });
         }
     }
 }

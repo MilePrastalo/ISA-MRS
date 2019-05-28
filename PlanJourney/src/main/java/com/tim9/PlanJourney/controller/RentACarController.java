@@ -724,5 +724,19 @@ public class RentACarController {
 		return vr.getId();
 	}
 	
+	@RequestMapping(value = "/api/removeQuickReservation", method = RequestMethod.POST, produces= MediaType.TEXT_PLAIN_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	//Makes quick reservation
+	//Creates new reservation and changes bool taken for quick reservation
+	public String removeQuickReservation(@RequestBody QuickVehicleReserveBean bean) throws Exception { 
+		QuickVehicleReservation quick = quickService.findOne(bean.getId());
+		if(!quick.isTaken()) {
+			quickService.remove(bean.getId());
+			return "OK";
+		}else {
+			return "TAKEN";
+		}
+	}
+	
 	
 }
