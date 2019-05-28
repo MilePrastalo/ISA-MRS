@@ -160,6 +160,11 @@ export default new Router({
       path: '/flightReservationDetails/:reservationId',
       name: 'flightReservationDetails',
       component: () => import('./components/s1_flightReservation/flightReservationDetails.vue')
+    },
+    {
+      path: '/FirstLogin',
+      name: 'FirstLogin',
+      component: () => import('./components/FirstLogin.vue')
     }
   ]
 })
