@@ -1,13 +1,7 @@
 package com.tim9.PlanJourney.hotel;
 
-import java.util.Collection;
-
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-
-import org.springframework.security.core.GrantedAuthority;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tim9.PlanJourney.models.User;
 
@@ -17,6 +11,7 @@ public class HotelAdmin extends User {
 	@ManyToOne
 	@JsonIgnoreProperties({ "admins", "reservations" })
 	private Hotel hotel;
+	
 
 	public HotelAdmin() {
 		super();
@@ -62,5 +57,6 @@ public class HotelAdmin extends User {
 		// TODO Auto-generated method stub
 		return true;
 	}
+
 
 }

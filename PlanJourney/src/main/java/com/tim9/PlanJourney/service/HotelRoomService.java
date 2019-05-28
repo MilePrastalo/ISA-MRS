@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import com.tim9.PlanJourney.hotel.HotelReservation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import com.tim9.PlanJourney.hotel.HotelRoom;
-import com.tim9.PlanJourney.repository.HotelReservationRepository;
 import com.tim9.PlanJourney.repository.HotelRoomRepository;
 
 @Service
+@Transactional(readOnly = true)
 public class HotelRoomService {
 	@Autowired
 	private HotelRoomRepository repository;
@@ -29,10 +29,12 @@ public class HotelRoomService {
 		return repository.findAll(page);
 	}
 
+	@Transactional(readOnly = false)
 	public HotelRoom save(HotelRoom hotel) {
 		return repository.save(hotel);
 	}
 
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public void remove(Long id) {
 		repository.deleteById(id);
 	}
