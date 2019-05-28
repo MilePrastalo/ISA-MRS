@@ -155,6 +155,16 @@ export default new Router({
       path: '/CompanyProfile',
       name: 'CompanyProfile',
       component: () => import('./components/s1_flightCompany/CompanyProfile.vue')
+    },
+    {
+      path: '/flightReservationDetails/:reservationId',
+      name: 'flightReservationDetails',
+      component: () => import('./components/s1_flightReservation/flightReservationDetails.vue')
+    },
+    {
+      path: '/FirstLogin',
+      name: 'FirstLogin',
+      component: () => import('./components/FirstLogin.vue')
     }
   ]
 })
