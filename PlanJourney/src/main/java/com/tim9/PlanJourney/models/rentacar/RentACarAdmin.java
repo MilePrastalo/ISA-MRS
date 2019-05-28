@@ -3,6 +3,7 @@ package com.tim9.PlanJourney.models.rentacar;
 import java.util.Collection;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -22,6 +23,7 @@ public class RentACarAdmin extends User {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JsonIgnoreProperties("admins")
 	private RentACarCompany service;
+	
 
 	public RentACarAdmin() {
 		super();

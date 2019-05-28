@@ -16,6 +16,20 @@ public class VehicleReservationBean {
 	public VehicleReservationBean() {
 		super();
 	}
+	 
+	public VehicleReservationBean(String vehicleName, String locationPick,
+			String locationReturn, String dateFrom, String dateTo, double price) {
+		super();
+		this.vehicleName = vehicleName;
+		this.locationPick = locationPick;
+		this.locationReturn = locationReturn;
+		this.dateFrom = dateFrom;
+		this.dateTo = dateTo;
+		this.price = price;
+	}
+
+
+
 	public Long getId() {
 		return id;
 	}

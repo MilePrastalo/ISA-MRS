@@ -4,24 +4,24 @@ import com.tim9.PlanJourney.models.RegisteredUser;
 
 public class FriendBean {
 	
-	private RegisteredUser user;
+	private UserBean user;
 	private String state;
 	
 	public FriendBean() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public FriendBean(RegisteredUser user, String status) {
+	public FriendBean(UserBean user, String status) {
 		super();
 		this.user = user;
 		this.state = status;
 	}
 
-	public RegisteredUser getUser() {
+	public UserBean getUser() {
 		return user;
 	}
 
-	public void setUser(RegisteredUser user) {
+	public void setUser(UserBean user) {
 		this.user = user;
 	}
 

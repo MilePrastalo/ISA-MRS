@@ -81,7 +81,7 @@ public class FlightAdminController {
 				flightAdmin.setPassword(encoder.encode(admin.getPassword()));
 				flightAdmin.setAuthorities(auth);
 				flightAdmin.setConfirmed(false);
-
+				flightAdmin.setLoggedBefore(false);
 				adminService.save(flightAdmin);
 
 				try {

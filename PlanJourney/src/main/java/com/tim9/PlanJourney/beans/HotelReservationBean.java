@@ -14,6 +14,8 @@ public class HotelReservationBean {
 	private int discount;
 	private float paidPrice;
 	private int numberOfBeds;
+	private String firstDay;
+	private String lastDay;
 
 	public HotelReservationBean(String hotelName, String username, int roomNumber, int fYear, int fMonth, int fDay,
 			int lYear, int lMonth, int lDay, int discount, float paidPrice, int numberOfBeds) {
@@ -136,6 +138,22 @@ public class HotelReservationBean {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getFirstDay() {
+		return firstDay;
+	}
+
+	public void setFirstDay(String firstDay) {
+		this.firstDay = firstDay;
+	}
+
+	public String getLastDay() {
+		return lastDay;
+	}
+
+	public void setLastDay(String lastDay) {
+		this.lastDay = lastDay;
 	}
 	
 

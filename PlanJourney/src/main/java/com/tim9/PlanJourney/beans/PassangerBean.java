@@ -9,18 +9,40 @@ public class PassangerBean {
 	private String passport;
 	private double price;
 	private Long friendId;
+	private int seatRow;
+	private int seatColumn;
+	private String travelClass;
 	
 	public PassangerBean() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public PassangerBean(Long seatId, String firstName, String lastName, String passport, double price) {
+	
+
+	public PassangerBean(Long seatId, String firstName, String lastName, String passport, double price, Long friendId,
+			int seatRow, int seatColumn, String travelClass) {
 		super();
 		this.seatId = seatId;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.passport = passport;
 		this.price = price;
+		this.friendId = friendId;
+		this.seatRow = seatRow;
+		this.seatColumn = seatColumn;
+		this.travelClass = travelClass;
+	}
+	
+	public PassangerBean(String firstName, String lastName, String passport, double price,
+			int seatRow, int seatColumn, String travelClass) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.passport = passport;
+		this.price = price;
+		this.seatRow = seatRow;
+		this.seatColumn = seatColumn;
+		this.travelClass = travelClass;
 	}
 
 	public Long getSeatId() {
@@ -69,6 +91,42 @@ public class PassangerBean {
 
 	public void setFriendId(Long friendId) {
 		this.friendId = friendId;
+	}
+
+
+
+	public int getSeatRow() {
+		return seatRow;
+	}
+
+
+
+	public void setSeatRow(int seatRow) {
+		this.seatRow = seatRow;
+	}
+
+
+
+	public int getSeatColumn() {
+		return seatColumn;
+	}
+
+
+
+	public void setSeatColumn(int seatColumn) {
+		this.seatColumn = seatColumn;
+	}
+
+
+
+	public String getTravelClass() {
+		return travelClass;
+	}
+
+
+
+	public void setTravelClass(String travelClass) {
+		this.travelClass = travelClass;
 	}
 	
 	
