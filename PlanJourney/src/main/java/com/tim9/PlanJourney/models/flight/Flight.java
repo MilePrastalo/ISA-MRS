@@ -14,9 +14,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "flight")
@@ -70,6 +70,9 @@ public class Flight {
 	
 	@Column(name = "firstClassPrice", unique = false, nullable = true)
 	private double firstClassPrice;
+	
+	@Version
+	private Long version;
 	
 	public Flight() {
 		// TODO Auto-generated constructor stub
@@ -238,6 +241,16 @@ public class Flight {
 
 	public void setQuickReservations(Set<QuickFlightReservation> quickReservations) {
 		this.quickReservations = quickReservations;
+	}
+
+
+	public Long getVersion() {
+		return version;
+	}
+
+
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 
 	

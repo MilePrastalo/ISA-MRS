@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Version;
 
 @Entity
 public class QuickFlightReservation {
@@ -29,6 +30,9 @@ public class QuickFlightReservation {
 	
 	@Column(name = "taken")
 	private boolean taken;
+	
+	@Version
+	private Long version;
 	
 	public QuickFlightReservation() {
 		// TODO Auto-generated constructor stub
@@ -89,6 +93,14 @@ public class QuickFlightReservation {
 
 	public void setTaken(boolean taken) {
 		this.taken = taken;
+	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 	
 	

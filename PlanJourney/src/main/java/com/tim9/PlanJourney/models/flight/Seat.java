@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 @Entity
 @Table(name = "seat")
@@ -34,6 +35,9 @@ public class Seat {
     
     @Column(name = "quick", unique = false, nullable = false)
    	private boolean quick;
+    
+    @Version
+    private Long version;
 	
 	
 	public Seat() {
@@ -123,6 +127,16 @@ public class Seat {
 
 	public void setQuick(boolean quick) {
 		this.quick = quick;
+	}
+
+
+	public Long getVersion() {
+		return version;
+	}
+
+
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 
 
