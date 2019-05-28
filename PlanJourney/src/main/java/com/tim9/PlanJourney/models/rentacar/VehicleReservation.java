@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Version;
 
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.Reservation;
@@ -39,6 +40,9 @@ public class VehicleReservation extends Reservation {
 	
 	@ManyToOne
 	private FlightReservation flightReservation;
+	
+	@Version
+	private Long version;
 	
 	public VehicleReservation() {
 		super();
@@ -119,6 +123,15 @@ public class VehicleReservation extends Reservation {
 	public void setFlightReservation(FlightReservation flightReservation) {
 		this.flightReservation = flightReservation;
 	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
+	}
+	
 	
 	
 	

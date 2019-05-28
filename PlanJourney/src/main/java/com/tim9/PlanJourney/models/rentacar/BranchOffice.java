@@ -8,33 +8,34 @@ import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Version;
 
 import com.tim9.PlanJourney.models.flight.Destination;
 
-
 @Entity
 
-public class BranchOffice {	
+public class BranchOffice {
 	@Id
 	@GeneratedValue
 	private Long id;
-	
-	@Column(name="name",nullable=false)
+
+	@Column(name = "name", nullable = false)
 	private String name;
-	@Column(name="address",nullable=false)
+	@Column(name = "address", nullable = false)
 	private String address;
-	
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	private RentACarCompany company;
-	
-	@ManyToOne(fetch=FetchType.EAGER)
+
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Destination destination;
-	
+
+	@Version
+	private Long version;
+
 	public BranchOffice() {
 		super();
 	}
-	
-	
 
 	public BranchOffice(String name, String address, RentACarCompany company, Destination destination) {
 		super();
@@ -44,30 +45,34 @@ public class BranchOffice {
 		this.destination = destination;
 	}
 
-
-
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	public RentACarCompany getCompany() {
 		return company;
 	}
+
 	public void setCompany(RentACarCompany company) {
 		this.company = company;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public Destination getDestination() {
 		return destination;
 	}
+
 	public void setDestination(Destination destination) {
 		this.destination = destination;
 	}
@@ -79,7 +84,13 @@ public class BranchOffice {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	
-	
-	
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
+	}
+
 }
