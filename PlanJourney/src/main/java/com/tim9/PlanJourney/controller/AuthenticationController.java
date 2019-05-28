@@ -98,6 +98,7 @@ public class AuthenticationController {
 		if(notConfrirmed) {
 			return ResponseEntity.ok("NOT CONFIRMED");
 		}
+		
 		return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
 	}
 	@CrossOrigin()

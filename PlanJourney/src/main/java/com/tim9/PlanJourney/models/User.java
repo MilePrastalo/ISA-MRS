@@ -55,6 +55,9 @@ public abstract class User implements UserDetails {
 
 	@Column(name = "confirmed", nullable = true)
 	private boolean confirmed;
+	
+	@Column(name = "loggedBefore", nullable = true)
+	private boolean loggedBefore;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "user_authority", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "authority_id", referencedColumnName = "id"))
@@ -144,5 +147,18 @@ public abstract class User implements UserDetails {
 	public void setConfirmed(boolean confirmed) {
 		this.confirmed = confirmed;
 	}
+
+	public boolean isLoggedBefore() {
+		return loggedBefore;
+	}
+
+	public void setLoggedBefore(boolean loggedBefore) {
+		this.loggedBefore = loggedBefore;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
 
 }

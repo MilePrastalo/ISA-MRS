@@ -81,7 +81,7 @@ public class SystemAdminController {
 			auth.add(authority);
 			admin.setAuthorities(auth);
 			admin.setConfirmed(true);
-
+			admin.setLoggedBefore(true);
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 			admin.setPassword(encoder.encode(admin.getPassword()));
 			SystemAdmin a = (SystemAdmin) service.save(admin);

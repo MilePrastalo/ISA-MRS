@@ -1,23 +1,22 @@
 <template>
-    <div id="loginPage">
+    <div id="FirstLogin">
       <div class="container">
         <div class="row">
           <div class="col-sm-9 col-md-7 col-lg-5 mx-auto blue-border">
             <div class="card card-signin my-5">
               <div class="card-body">
-                <h5 class="card-title text-center">Login</h5>
+                <h5 class="card-title text-center">Password change</h5>
                 <form class="form-signin">
                   <div class="form-label-group">
-                    <input v-model="username" id="inputEmail" class="form-control" placeholder="Username" required autofocus>
-                    <label for="inputEmail">Username</label>
+                    <input type="password" v-model="password" id="inputEmail" class="form-control" required autofocus>
+                    <label for="inputEmail">Password</label>
                   </div>
 
                   <div class="form-label-group">
-                    <input v-model="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-                    <label for="inputPassword">Password</label>
+                    <input v-model="confirmedPassword" type="password" id="inputPassword" class="form-control" required>
+                    <label  for="inputPassword">Confirm</label>
                   </div>
-                  <button @click="login" class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Log in</button>
-                  <button @click="goBack" class="btn btn-lg btn-warning btn-block text-uppercase">Back</button>
+                  <button @click="ChangePassword" class="btn btn-lg btn-primary btn-block text-uppercase">Set Password</button>
                   </form>
               </div>
             </div>
@@ -30,70 +29,30 @@
 <script>
 
 export default {
-  name: 'loginPage',
+  name: 'FirstLogin',
   data:function(){
     return {
-      username:"",
-      password:""
+      password:"",
+      confirmedPassword:""
     }
   },
   methods:{
-    goBack:function(e){
-      e.preventDefault();
-      console.log("clicked");
-      window.location.href = "/";
-    },
-    login:function(e){
-      e.preventDefault();
-      if(this.username != "" && this.password != ""){
-        axios.post("http://localhost:8080/auth/login",{username : this.username, password: this.password})
+    ChangePassword:function(e){
+        e.preventDefault();
+        var getJwtToken = function() {
+            return localStorage.getItem('jwtToken');
+            };
+      axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+
+      axios.post("http://localhost:8080/api/firstLogin",{password:this.password,confirmed:this.confirmedPassword})
+        .then(response => {
+            if(response.data !=="OK"){
+                alert("ERROR");
+                window.location="./";
+            }
+            else{
+                axios.get("http://localhost:8080/api/getUserRole")
                     .then(response => {
-                      console.log(response);
-                        if(response.status == 200){
-                          console.log(response.data.accessToken);
-                          localStorage.setItem('jwtToken',response.data.accessToken);
-                          if(response.data == "NOT CONFIRMED"){
-                            alert("Account not confirmed");
-                            window.location = "./";
-                          }
-                          else{
-                            this.checkFirstLogin();
-                          }
-                          
-                        }
-                        else{
-                          alert("Wrong username or password");
-                        }
-                    }); 
-      }else{
-        alert("All fields must be filled");
-      }
-     
-    },
-    checkFirstLogin:function(){
-      console.log("GET ROLE");
-      var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
-            };
-      axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-      axios.get("http://localhost:8080/api/getFirstLogged")
-            .then(response => {
-                console.log(response);
-                if(response.data == "NOT"){
-                  window.location ="./FirstLogin";
-                }else{
-                  this.getRole(); 
-                }
-            });
-    },
-    getRole : function(){
-      console.log("GET ROLE");
-      var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
-            };
-      axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-      axios.get("http://localhost:8080/api/getUserRole")
-            .then(response => {
                 console.log(response);
                 if(response.data == "RENT_ADMIN"){
                   window.location ="./RAindex";
@@ -110,8 +69,11 @@ export default {
                 }
                 
             });
-        
+            }
+        });
+      
     }
+    
   }
 }
 

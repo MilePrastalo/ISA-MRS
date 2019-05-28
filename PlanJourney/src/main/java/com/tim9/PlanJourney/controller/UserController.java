@@ -13,11 +13,13 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tim9.PlanJourney.beans.FirstLoginBean;
 import com.tim9.PlanJourney.beans.UserBean;
 import com.tim9.PlanJourney.hotel.HotelAdmin;
 import com.tim9.PlanJourney.models.Authority;
@@ -108,5 +110,37 @@ public class UserController {
 		}
 		return null;
 	}
+	@RequestMapping(value = "/api/getFirstLogged", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN_VALUE)
+	@CrossOrigin()
+	public @ResponseBody String getFirstLogged() throws Exception {
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String username = authentication.getName();
+			User user = (User) userService.findOneByUsername(username);
+			if(!user.isLoggedBefore()) {
+				return "NOT";
+			}
+		}
+		return null;
+	}
+	@RequestMapping(value = "/api/firstLogin", method = RequestMethod.POST, consumes=MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+	@CrossOrigin()
+	public String firstLogin(@RequestBody FirstLoginBean flb) throws Exception {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String username = authentication.getName();
+			User user = (User) userService.findOneByUsername(username);
+			BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
+			if(flb.getPassword().equals(flb.getConfirmed())) {
+				user.setPassword(bc.encode(flb.getPassword()));
+				user.setLoggedBefore(true);
+				userService.save(user);
+				return "OK";
+			}
+		}
+		return null;
+	}
+	
 
 }
