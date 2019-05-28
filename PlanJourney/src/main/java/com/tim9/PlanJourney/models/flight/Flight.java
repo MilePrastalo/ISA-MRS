@@ -55,6 +55,10 @@ public class Flight {
 	@OneToMany(mappedBy = "flight")
 	private Set<FlightReservation> flightReservations = new HashSet<FlightReservation>();
 	
+	@JsonIgnore
+	@OneToMany(mappedBy = "flight")
+	private Set<QuickFlightReservation> quickReservations = new HashSet<>();
+	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Seat> seats = new HashSet<Seat>();
 	
@@ -224,6 +228,16 @@ public class Flight {
 
 	public void setFlightCompany(FlightCompany flightCompany) {
 		this.flightCompany = flightCompany;
+	}
+
+
+	public Set<QuickFlightReservation> getQuickReservations() {
+		return quickReservations;
+	}
+
+
+	public void setQuickReservations(Set<QuickFlightReservation> quickReservations) {
+		this.quickReservations = quickReservations;
 	}
 
 	

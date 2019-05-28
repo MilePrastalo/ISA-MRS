@@ -19,7 +19,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                <tr v-for="res in quickReservations" :key="res.id">  
+                <tr v-for="(res,index) in quickReservations" :key="index">  
                     <td>{{res.flight.startDestination.name}}</td>
                     <td>{{res.flight.endDestination.name}}</td>
                     <td>{{res.flight.startDate}}</td>
@@ -27,9 +27,9 @@
                     <td>({{res.seat.seatRow}},{{res.seat.seatColumn}})</td>
                     <td>{{res.originPrice}}</td>
                     <td>{{res.discount}}</td>
-                    <td v-if="role == 'FLIGHT_ADMIN' && res.taken == false"> <Button class="btn btn-outline-primary">Delete</Button></td>
+                    <td v-if="role == 'FLIGHT_ADMIN' && res.taken == false"> <Button class="btn btn-outline-primary" @click="remove(res.id, index)">Delete</Button></td>
                     <td v-if="role == 'FLIGHT_ADMIN' && res.taken == true" style="color: green; font-weight: bold"> Reserved</td>
-                    <td v-if="role == 'REGISTERED' && res.taken == false" @click="bookQuickTicket(res)"> <Button class="btn btn-outline-primary">Book</Button></td>
+                    <td v-if="role == 'REGISTERED' && res.taken == false" @click="bookQuickTicket(res)"> <Button class="btn btn-outline-primary">Reserve</Button></td>
                      <td v-if="role == 'REGISTERED'  && res.taken == true" @click="bookQuickTicket(res)" style="color: green; font-weight: bold"> Reserved</td>
                 </tr> 
                 </tbody>             
@@ -90,6 +90,19 @@ mounted(){
                 else{
                     alert(response.data);
                 }
+            });
+        },
+
+        remove: function(id, index){
+            alert(id);
+            var getJwtToken = function() {
+                return localStorage.getItem('jwtToken');
+            };
+            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.get("http://localhost:8080/api/removeQuickFlightReservation/" + id)
+            .then(response => {
+                alert(response.data);
+                this.quickReservations.splice(index,1);
             });
         }
     }

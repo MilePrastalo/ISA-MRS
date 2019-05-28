@@ -31,12 +31,14 @@ import com.tim9.PlanJourney.models.flight.Flight;
 import com.tim9.PlanJourney.models.flight.FlightAdmin;
 import com.tim9.PlanJourney.models.flight.FlightCompany;
 import com.tim9.PlanJourney.models.flight.FlightReservation;
+import com.tim9.PlanJourney.models.flight.QuickFlightReservation;
 import com.tim9.PlanJourney.models.flight.Seat;
 import com.tim9.PlanJourney.service.DestinationService;
 import com.tim9.PlanJourney.service.EmailService;
 import com.tim9.PlanJourney.service.FlightAdminSerice;
 import com.tim9.PlanJourney.service.FlightCompanyService;
 import com.tim9.PlanJourney.service.FlightService;
+import com.tim9.PlanJourney.service.QuickFlightReservationService;
 import com.tim9.PlanJourney.service.SeatService;
 
 @RestController
@@ -54,6 +56,8 @@ public class FlifgtController {
 	EmailService emailService;
 	@Autowired
 	SeatService seatService;
+	@Autowired
+	QuickFlightReservationService quickService;
 
 	private static SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	private static SimpleDateFormat sdf2 = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
@@ -217,6 +221,9 @@ public class FlifgtController {
 		Flight flight = flightService.findOne(flightId);
 		if (flight.getFlightReservations().size() > 0) {
 			return "You can not remove this flight, there are some reservations";
+		}
+		for (QuickFlightReservation q : flight.getQuickReservations()) {
+			quickService.remove(q.getId());
 		}
 		flightService.remove(flightId);
 		return "success";

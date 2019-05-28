@@ -25,27 +25,27 @@
 
                     <tr>
                         <td>From: </td>
-                        <td >{{reservation.flight.startDestination.name}}</td>
+                        <td >{{reservation.startDestination}}</td>
                     </tr>
                     <tr>
                         <td>To: </td>
-                        <td >{{reservation.flight.endDestination}}</td>
+                        <td >{{reservation.endDestination}}</td>
                     </tr>
                     <tr>
                         <td>Start date: </td>
-                        <td > {{reservation.flight.startDate_str}} </td>
+                        <td > {{reservation.startDate}} </td>
                     </tr>
                     <tr>
                         <td>End date: </td>
-                        <td > {{reservation.flight.endDate_str}} </td>
+                        <td > {{reservation.endDate}} </td>
                     </tr>
                     <tr>
                         <td>Flight duration: </td>
-                        <td > {{reservation.flight.flightDuration}} </td>
+                        <td > {{reservation.flightDuration}} </td>
                     </tr>
                     <tr>
                         <td>Flight length: </td>
-                        <td > {{reservation.flight.flightLength}} </td>
+                        <td > {{reservation.flightLenght}} </td>
                     </tr>
                 </table>
             </div>
@@ -55,17 +55,17 @@
             </div>
             <br>
             <div class = "row">
-                <table style="text-align: left; margin-right: 5%" v-for="passanger in reservation.passangers_" :key="passanger.id" border = "1">
+                <table style="text-align: left; margin-right: 5%" v-for="passanger in reservation.passangersInfo" :key="passanger.id" border = "1">
                     <tr>
-                        <th colspan="2">{{passanger.firstName}}</th>
+                        <th colspan="2">{{passanger.firstName}} {{passanger.lastName}}</th>
                     </tr>
                     <tr>
                         <td>Seat: </td>
-                        <td >({{passanger.seat.seatRow}}, {{passanger.seat.seatColumn}})</td>
+                        <td >({{passanger.seatRow}}, {{passanger.seatColumn}})</td>
                     </tr>
                     <tr>
                         <td>Class: </td>
-                        <td >{{passanger.seat.travelClassa}}</td>
+                        <td >{{passanger.travelClass}}</td>
                     </tr>
                     <tr>
                         <td>Passport: </td>
@@ -79,14 +79,44 @@
             </div>
             <br>
             <div class = "row">
-                <table style="text-align: left">
+                <table style="text-align: left; margin-right: 5%" v-for="hotel in reservation.hotelsReservations" :key="hotel.hotelName" border = "1">
+                    <tr>
+                        <th colspan="2">{{hotel.hotelName}}</th>
+                    </tr>
+                    <tr>
+                        <td>From: </td>
+                        <td >{{hotel.firstDay}}</td>
+                    </tr>
+                    <tr>
+                        <td>To: </td>
+                        <td >{{hotel.lastDay}}</td>
+                    </tr>
+                    <tr>
+                        <td>Paid price: </td>
+                        <td> {{hotel.paidPrice}} </td>
+                    </tr>
                 </table>
             </div>
              <div class = "row">
                 <h2>Vehicle Reservations:</h2>
             </div>
             <div class = "row">
-                <table style="text-align: left">
+                <table style="text-align: left; margin-right: 5%" v-for="rent in reservation.rentReservations" :key="rent.id" border = "1">
+                    <tr>
+                        <th colspan="2">{{rent.vehicleName}}</th>
+                    </tr>
+                    <tr>
+                        <td>From: </td>
+                        <td >{{rent.dateFrom}}</td>
+                    </tr>
+                    <tr>
+                        <td>To: </td>
+                        <td >{{rent.dateTo}}</td>
+                    </tr>
+                    <tr>
+                        <td>Paid price: </td>
+                        <td >{{rent.price}}</td>
+                    </tr>
                 </table>
             </div>
         </div>

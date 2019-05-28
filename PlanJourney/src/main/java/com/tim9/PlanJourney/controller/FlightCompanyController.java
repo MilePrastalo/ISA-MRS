@@ -35,6 +35,7 @@ import com.tim9.PlanJourney.beans.FlightReportRequestBean;
 import com.tim9.PlanJourney.beans.QuickFlightReservationBean;
 import com.tim9.PlanJourney.beans.FlightCompanyReportBean;
 import com.tim9.PlanJourney.models.Authority;
+import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.Review;
 import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.models.flight.Flight;
@@ -344,6 +345,26 @@ public class FlightCompanyController {
 			return null;
 		}
 		return loggedAdmin.getFlightCompany().getQuickFlightReservations();
+	}
+	
+	@RequestMapping(value = "/api/removeQuickFlightReservation/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
+	public @ResponseBody String removeQuickFlightReservation(@PathVariable("id") Long id) {
+		FlightAdmin loggedUser = getLoggedFlightAdmin();
+		if (loggedUser == null) {
+			return null;
+		}
+		QuickFlightReservation reservation = quickReservationService.findOne(id);
+		if (reservation == null) {
+			return null;
+		}
+		if (reservation.isTaken()) {
+			return "It's already reserved, you can not remove.";
+		}
+		reservation.getSeat().setQuick(false);
+		quickReservationService.remove(id);
+		return "success";
 	}
 
 	@RequestMapping(value = "/api/getQuickReservationsCompany/{idCompany}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

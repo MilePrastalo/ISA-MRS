@@ -1,5 +1,7 @@
 package com.tim9.PlanJourney.beans;
 
+import java.util.ArrayList;
+
 public class FrontFlightReservationBean {
 	private Long id;
 	private String startDestination;
@@ -12,6 +14,12 @@ public class FrontFlightReservationBean {
 	private  int rating;
 	private int seatRow;
 	private int seatColumn;
+	private int flightDuration;
+	private int flightLenght;
+	private String created;
+	private ArrayList<PassangerBean> passangersInfo;
+	private ArrayList<HotelReservationBean> hotelsReservations;
+	private ArrayList<VehicleReservationBean> rentReservations;
 	
 	
 	public FrontFlightReservationBean(Long id, String startDestination, String endDestination, String startDate,
@@ -98,6 +106,42 @@ public class FrontFlightReservationBean {
 	}
 	public void setSeatColumn(int seatColumn) {
 		this.seatColumn = seatColumn;
+	}
+	public int getFlightDuration() {
+		return flightDuration;
+	}
+	public void setFlightDuration(int flightDuration) {
+		this.flightDuration = flightDuration;
+	}
+	public int getFlightLenght() {
+		return flightLenght;
+	}
+	public void setFlightLenght(int flightLenght) {
+		this.flightLenght = flightLenght;
+	}
+	public String getCreated() {
+		return created;
+	}
+	public void setCreated(String created) {
+		this.created = created;
+	}
+	public ArrayList<PassangerBean> getPassangersInfo() {
+		return passangersInfo;
+	}
+	public void setPassangersInfo(ArrayList<PassangerBean> passangersInfo) {
+		this.passangersInfo = passangersInfo;
+	}
+	public ArrayList<HotelReservationBean> getHotelsReservations() {
+		return hotelsReservations;
+	}
+	public void setHotelsReservations(ArrayList<HotelReservationBean> hotelsReservations) {
+		this.hotelsReservations = hotelsReservations;
+	}
+	public ArrayList<VehicleReservationBean> getRentReservations() {
+		return rentReservations;
+	}
+	public void setRentReservations(ArrayList<VehicleReservationBean> rentReservations) {
+		this.rentReservations = rentReservations;
 	}
 	
 	
