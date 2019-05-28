@@ -12,9 +12,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.Reservation;
+import com.tim9.PlanJourney.models.flight.FlightReservation;
 
 @Entity
 public class HotelReservation extends Reservation {
@@ -40,7 +42,11 @@ public class HotelReservation extends Reservation {
 
 	@Column(name = "discount", unique = false, nullable = false)
 	private int discount;
-
+	
+	@ManyToOne
+	@JsonIgnore
+	private FlightReservation flightReservation;
+	
 	public HotelReservation() {
 	}
 
@@ -116,6 +122,14 @@ public class HotelReservation extends Reservation {
 
 	public void setPaidPrice(float paidPrice) {
 		this.paidPrice = paidPrice;
+	}
+
+	public FlightReservation getFlightReservation() {
+		return flightReservation;
+	}
+
+	public void setFlightReservation(FlightReservation flightReservation) {
+		this.flightReservation = flightReservation;
 	}
 
 }

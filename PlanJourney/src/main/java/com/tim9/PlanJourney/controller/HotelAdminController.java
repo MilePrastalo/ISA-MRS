@@ -40,9 +40,11 @@ import com.tim9.PlanJourney.hotel.HotelReservation;
 import com.tim9.PlanJourney.hotel.HotelRoom;
 import com.tim9.PlanJourney.models.Authority;
 import com.tim9.PlanJourney.models.RegisteredUser;
+import com.tim9.PlanJourney.models.flight.FlightReservation;
 import com.tim9.PlanJourney.service.AuthorityService;
 import com.tim9.PlanJourney.service.EmailService;
 import com.tim9.PlanJourney.service.HotelAdminService;
+import com.tim9.PlanJourney.service.HotelReservationService;
 import com.tim9.PlanJourney.service.HotelService;
 import com.tim9.PlanJourney.service.UserService;
 
@@ -63,6 +65,9 @@ public class HotelAdminController {
 
 	@Autowired
 	private EmailService emailService;
+
+	@Autowired
+	private HotelReservationService hotelReservationService;
 
 	@RequestMapping(value = "/api/getHotelAdmin/{username}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -85,12 +90,13 @@ public class HotelAdminController {
 			// Setting hotel
 			Hotel hotel = admin.getHotel();
 			HotelBean hb = new HotelBean();
-			hb.setAddress(hb.getAddress());
-			hb.setDescription(hb.getDescription());
-			hb.setDestination(hb.getDestination());
-			hb.setName(hb.getName());
-			hb.setRating(hb.getRating());
-			hb.setReservations(hb.getReservations());
+			hb.setAddress(hotel.getAddress());
+			hb.setDescription(hotel.getDescription());
+			DestinationBean db = new DestinationBean(hotel.getDestination().getName(),
+					hotel.getDestination().getDescription(), hotel.getDestination().getCoordinates());
+			hb.setDestination(db);
+			hb.setName(hotel.getName());
+			hb.setRating(hotel.getRating());
 			ArrayList<HotelRoomBean> rb = new ArrayList<HotelRoomBean>();
 			for (HotelRoom r : hotel.getRooms()) {
 				HotelRoomBean roomBean = new HotelRoomBean();
@@ -124,6 +130,7 @@ public class HotelAdminController {
 				reservationBean.setDiscount(hr.getDiscount());
 				reservationBean.setNumberOfBeds(hr.getRoom().getNumberOfBeds());
 				reservationBean.setPaidPrice(hr.getPaidPrice());
+				reservationBean.setId(hr.getId());
 				reservationBeans.add(reservationBean);
 			}
 			hb.setReservations(reservationBeans);
@@ -203,6 +210,7 @@ public class HotelAdminController {
 				reservationBean.setDiscount(hr.getDiscount());
 				reservationBean.setNumberOfBeds(hr.getRoom().getNumberOfBeds());
 				reservationBean.setPaidPrice(hr.getPaidPrice());
+				reservationBean.setId(hr.getId());
 				reservationBeans.add(reservationBean);
 			}
 			hb.setReservations(reservationBeans);
@@ -448,6 +456,21 @@ public class HotelAdminController {
 				}
 			}
 		}
+		return true;
+	}
+
+	@RequestMapping(value = "/api/cancelQuickHotelReservation", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('HOTEL_ADMIN')")
+	public @ResponseBody boolean cancelQuickHotelReservation(@RequestBody HotelReservationBean reservationBean) {
+		HotelReservation hr = hotelReservationService.findOne(reservationBean.getId());
+
+		if (hr.getUser() != null) {
+			return false;
+		}
+
+		hotelReservationService.remove(hr.getId());
+
 		return true;
 	}
 

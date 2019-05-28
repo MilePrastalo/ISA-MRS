@@ -81,7 +81,7 @@
                         <td>{{r.fDay + "-" + r.fMonth + "-" + r.fYear}}</td>
                         <td>{{r.lDay + "-" + r.lMonth + "-" + r.lYear}}</td>
                         <td><button @click="showDetails(r.hotelName,r.roomNumber)">Details</button></td>
-                        <td></td>
+                        <td><button @click="cancelHotelReservation(r.hotelName,r.roomNumber)">Cancel</button></td>
                         <td class="ratingtd">
                                 <span class="fa fa-star over clicked" v-if="getRating(r,5)" @click="reviewHotel(r,5)" :id="r.ratings[4]"></span>
                                     <span class="fa fa-star over" v-else @click="reviewHotel(r,5)" :id="r.ratings[4]"></span>
@@ -141,6 +141,7 @@
 <script>
 import { setTimeout } from 'timers';
 import navbar from "./navbar.vue";
+import { hostname } from 'os';
 
 
 export default {
@@ -190,12 +191,9 @@ export default {
           window.location = "./friends";
       },
       hotels:function(){
-          console.log("");
       },
       getRating:function(res,rating){
-          console.log(res);
           if(res.rating>=rating){
-              console.log("true");
               return true;
           }
           return false;
@@ -245,7 +243,6 @@ export default {
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
         axios.post("http://localhost:8080/api/cancelVehicleReservation",reservation)
             .then(response => {
-                console.log(response);
                 alert("success");
             }); 
     },
@@ -254,7 +251,6 @@ export default {
                     return localStorage.getItem('jwtToken');
                 };
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-        console.log(reservation);
         axios.post("http://localhost:8080/api/reviewVehicle",{reservationId:reservation.id,rating:num})
             .then(response => {
                 alert("success");
@@ -267,7 +263,6 @@ export default {
                     return localStorage.getItem('jwtToken');
                 };
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-        console.log(reservation);
         axios.post("http://localhost:8080/api/reviewHotel",{reservationId:reservation.id,rating:num})
             .then(response => {
                 alert("success");
@@ -280,7 +275,6 @@ export default {
                     return localStorage.getItem('jwtToken');
                 };
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-        console.log(reservation);
         axios.post("http://localhost:8080/api/reviewFlight",{reservationId:reservation.id,rating:num})
             .then(response => {
                 alert("success");
@@ -311,6 +305,28 @@ export default {
             }
         }
         
+    },
+    cancelHotelReservation: function(hotelName,roomNumber) {
+        var r;
+        this.hotelReservations.forEach(element=> {
+            if(element.hotelName == hotelName && element.roomNumber == roomNumber) {
+                r = element;
+                }
+        });
+        console.log(r)
+        axios.post("http://localhost:8080/api/cancelHotelReservation",r)
+            .then(response => {
+                if(response.data == true) {
+                    alert("Hotel reservation has been successfully canceled.");
+                    this.hotelReservations.forEach(element=> {
+                        if(element.hotelName == hostname && element.roomNumber == roomNumber) {
+                            this.hotelReservations.splice(element,1);
+                        }
+                    })
+                } else {
+                    alert("There was a problem with hotel cancelation.")
+                }
+            });
     }
   }
 }
