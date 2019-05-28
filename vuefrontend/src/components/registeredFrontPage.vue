@@ -49,7 +49,8 @@
                             <td>{{flightReservation.price}}</td>
                             <td v-if="flightReservation.passangers != 0">{{flightReservation.passangers-1}} + (1)</td>
                             <td v-else>1</td>
-                             <td><button @click="flightReservationDetails(flightReservation.id)">Details</button></td>
+                            <td><button @click="flightReservationDetails(flightReservation.id)">Details</button></td>
+                            <td><button @click="cancelFlightReservation(flightReservation.id)">Cancel</button></td>
                              <td class="ratingtd" width="100px">
                                 <span class="fa fa-star over clicked" v-if="getRating(flightReservation,5)" @click="reviewFlight(flightReservation,5)" :id="flightReservation.ratings[4]"></span>
                                     <span class="fa fa-star over" v-else @click="reviewFlight(flightReservation,5)" :id="flightReservation.ratings[4]"></span>
@@ -109,14 +110,14 @@
                             <th>Price</th>
                             <th>Cancel</th>
                         </tr>
-                        <tr v-for="reservation in vehiclereservations" :key="reservation.id">
+                        <tr v-for="(reservation, index) in vehiclereservations" :key="index">
                             <td>{{reservation.locationPick}}</td>
                             <td>{{reservation.locationReturn}}</td>
                             <td>{{reservation.vehicleName}}</td>
                             <td>{{reservation.dateFrom}}</td>
                             <td>{{reservation.dateTo}}</td>
                             <td>{{reservation.price}}</td>
-                            <td><Button v-if="reservation.status == 0" @click="cancel(reservation)">Cancel</Button></td>
+                            <td><Button v-if="reservation.status == 0" @click="cancel(reservation, index)">Cancel</Button></td>
                             <td class="ratingtd" v-if="reservation.status == 2" >
                                 <span class="fa fa-star over clicked" v-if="getRating(reservation,5)==true" @click="review(reservation,5)" :id="reservation.ratings[4]"></span>
                                     <span class="fa fa-star over" v-else @click="review(reservation,5)" :id="reservation.ratings[4]"></span>
@@ -238,7 +239,7 @@ export default {
     airlines:function(){
         window.location="./searchFlightCompany";
     },
-    cancel:function(reservation){
+    cancel:function(reservation, index){
         var getJwtToken = function() {
                     return localStorage.getItem('jwtToken');
                 };
@@ -247,7 +248,7 @@ export default {
             .then(response => {
                 console.log(response);
                 alert("success");
-            }); 
+            });
     },
     review:function(reservation,num){
         var getJwtToken = function() {
@@ -288,6 +289,17 @@ export default {
             });
         reservation.rating = num;
         this.setStars(reservation,num);
+    },
+    cancelFlightReservation: function(reservationId, index){
+        var getJwtToken = function() {
+                    return localStorage.getItem('jwtToken');
+                };
+        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.get("http://localhost:8080/api/cancelFlightReservation/"+ reservationId)
+            .then(response => {
+                alert(response.data);
+                 this.flightReservations.splice(index,1) 
+        });
     },
     showDetails: function(hotelName,chosenRoom) {
         this.$router.push("/hotelRoom/"+ hotelName + "/" + chosenRoom);

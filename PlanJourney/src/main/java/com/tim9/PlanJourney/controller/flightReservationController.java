@@ -2,6 +2,7 @@ package com.tim9.PlanJourney.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -152,6 +153,39 @@ public class flightReservationController {
 		}
 		returnValue.setRentReservations(rentReservations);
 		return returnValue;
+	}
+	
+	@RequestMapping(value = "/api/cancelFlightReservation/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('REGISTERED')")
+	public @ResponseBody String removeFlightReservation(@PathVariable("id") Long id) {
+		RegisteredUser loggedUser = getLoggedRegisteredUser();
+		if (loggedUser == null) {
+			return null;
+		}
+		FlightReservation reservation = reservationService.findOne(id);
+		if (reservation == null) {
+			return null;
+		}
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(reservation.getFlight().getStartDate());
+		cal.add(Calendar.DATE, -3);
+		Date dateBefore3Days = cal.getTime();
+		if (dateBefore3Days.after(new Date())) {
+			return "You can not cancel because it's less than 3 days before starting!";
+		}
+		for (HotelReservation h : reservation.getHoteReservations()) {
+			
+			hotelReservationService.remove(h.getId());
+		}
+		for (VehicleReservation v : reservation.getVehicleReservations()) {
+			vehicleReservationService.remove(v.getId());
+		}
+		for (Passanger p : reservation.getPassangers()) {
+			p.getSeat().setTaken(false);
+		}
+		reservationService.remove(id);
+		return "success";
 	}
 	
 	@RequestMapping(value = "/api/getReservationRequest/{requestId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
