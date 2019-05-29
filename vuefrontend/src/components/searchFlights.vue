@@ -52,38 +52,42 @@
                      </td>
             </tr>
             <tr>
-                <td><Button v-on:click="search">Search</Button></td>
+                <td><Button class = "btn btn-primary" v-on:click="search">Search</Button></td>
             </tr>  
         </table>
         </div>
         <br>
         <div>
-            <table border="1" hidden ref = "results" >
-            <tr>
-                        <td>Flight company</td>
-                        <td>Start destination</td>
-                        <td>End destination</td>
-                        <td>Start date</td>
-                        <td>End date</td>
-                        <td>Flight duration</td>
-                        <td>Flight Length</td>
-                        <td>Economic price</td>
-                        <td>Buisiness price</td>
-                        <td>First class price</td>
-                    </tr>
-            <tr v-for="flight in flights" :key="flight.id"> 
-                <td>{{flight.flightCompany}}</td> 
-                <td>{{flight.startDestination}}</td>
-                <td>{{flight.endDestination}}</td>
-                <td>{{flight.startDate_str}}</td>
-                <td>{{flight.endDate_str}}</td>
-                <td>{{flight.flightDuration}}</td>
-                <td>{{flight.flightLength}}</td>
-                <td>{{flight.economicPrice}}</td>
-                <td>{{flight.businessPrice}}</td>
-                <td>{{flight.firstClassPrice}}</td>
-                <td> <Button @click="goToDetails(flight.id)" >Details</Button></td>
-            </tr>
+            <table border="1" hidden ref = "results" class = "table" >
+                <thead class="thead-dark">
+                   
+                <tr>
+                    <th>Flight company</th>
+                    <th>Start destination</th>
+                    <th>End destination</th>
+                    <th>Start date</th>
+                    <th>End date</th>
+                    <th>Flight duration</th>
+                    <th>Flight Length</th>
+                    <th>Economic price</th>
+                    <th>Buisiness price</th>
+                    <th>First class price</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tr v-for="flight in flights" :key="flight.id"> 
+                    <td>{{flight.flightCompany}}</td> 
+                    <td>{{flight.startDestination}}</td>
+                    <td>{{flight.endDestination}}</td>
+                    <td>{{flight.startDate_str}}</td>
+                    <td>{{flight.endDate_str}}</td>
+                    <td>{{flight.flightDuration}}</td>
+                    <td>{{flight.flightLength}}</td>
+                    <td>{{flight.economicPrice}}</td>
+                    <td>{{flight.businessPrice}}</td>
+                    <td>{{flight.firstClassPrice}}</td>
+                    <td> <Button class = "btn btn-outline-success" @click="goToDetails(flight.id)" >Details</Button></td>
+                </tr>
             </table>
         </div>        
     </div>
@@ -160,7 +164,6 @@ mounted(){
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #303e4d;
-  margin: 5%;
 }
 
 .searchForm{

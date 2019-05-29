@@ -29,6 +29,7 @@
             <div class="row">
                 <div id="FlightsReservations" class="centered col-lg-10">
                     <table class="table">
+                        <thead>
                         <tr>
                             <th>Start destination</th>
                             <th>End destination</th>
@@ -40,6 +41,7 @@
                             <th>Details</th>
                             <th>Review</th>
                         </tr>
+                        </thead>
                         <tr v-for="flightReservation in flightReservations" :key="flightReservation.id">
                             <td>{{flightReservation.startDestination}}</td>
                             <td>{{flightReservation.endDestination}}</td>
@@ -49,8 +51,8 @@
                             <td>{{flightReservation.price}}</td>
                             <td v-if="flightReservation.passangers != 0">{{flightReservation.passangers-1}} + (1)</td>
                             <td v-else>1</td>
-                            <td><button @click="flightReservationDetails(flightReservation.id)">Details</button></td>
-                            <td><button @click="cancelFlightReservation(flightReservation.id)">Cancel</button></td>
+                            <td><button class = "btn btn-outline-success" @click="flightReservationDetails(flightReservation.id)">Details</button></td>
+                            <td><button class = "btn btn-outline-success" @click="cancelFlightReservation(flightReservation.id)">Cancel</button></td>
                              <td class="ratingtd" width="100px">
                                 <span class="fa fa-star over clicked" v-if="getRating(flightReservation,5)" @click="reviewFlight(flightReservation,5)" :id="flightReservation.ratings[4]"></span>
                                     <span class="fa fa-star over" v-else @click="reviewFlight(flightReservation,5)" :id="flightReservation.ratings[4]"></span>

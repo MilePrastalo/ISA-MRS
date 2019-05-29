@@ -1,17 +1,18 @@
 <template>
     <div id = "CompanyProfile">
         <navbar></navbar>
-        <div class = "container">
-            <div class="row">
-            <ul class="nav nav-tabs centered">
-                <li class="nav-item">
-                    <a  class="nav-link active" href="#" @click="selectTab(1)" id = 'flights'>Flights</a>
-                </li>
-                <li class="nav-item">
-                    <a  class="nav-link" href="#" @click="selectTab(2)" id = 'quick'>Quick Reservations</a>     
-                 </li>
-            </ul>
+        <h1>Company Profile</h1>
+        <br>
+        <div class = "centered" >
+             <nav>
+                <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                    <a @click="selectTab(1)" id="flights" class="nav-item nav-link active" data-toggle="tab" role="tab" aria-controls="nav-home" aria-selected="true">Flights</a>
+                    <a @click="selectTab(2)" id="quick" class="nav-item nav-link"  data-toggle="tab" role="tab" aria-controls="nav-profile" aria-selected="false">Quick Reservations</a>
+                </div>
+                </nav>
         </div>
+        <div class = "container">
+          
 
         <div class = "row" v-if="currentTab == 1" id = "editProfile">
             <allFlights :idCompany = "this.companyId"></allFlights>
@@ -54,12 +55,12 @@ created: function(){
 methods:{
         selectTab: function(tabId){
             if (tabId == 1){
-                document.getElementById("flights").className="nav-link active";
-                document.getElementById("quick").className="nav-link";
+                document.getElementById("flights").className="nav-item nav-link active";
+                document.getElementById("quick").className="nav-item nav-link";
             }
             else if (tabId == 2){
-                document.getElementById("quick").className="nav-link active";
-                document.getElementById("flights").className="nav-link";
+                document.getElementById("quick").className="nav-item nav-link active";
+                document.getElementById("flights").className="nav-item nav-link";
             }
             this.currentTab = tabId;
         }, 
@@ -80,4 +81,59 @@ centered{
     margin-right: auto;
     margin-left: auto;
 }
+.clicked{
+    color: orange;
+}
+#nav-tab{
+    margin-left:10%;
+    margin-right:10%;
+}
+
+nav > .nav.nav-tabs{
+
+  border: none;
+    color:#fff;
+    background:#272e38;
+    border-radius:0;
+
+}
+
+nav > div a.nav-item.nav-link,
+nav > div a.nav-item.nav-link.active
+{
+  border: none;
+    padding: 18px 25px;
+    color:#fff;
+    background:#272e38;
+    border-radius:0;
+}
+
+nav > div a.nav-item.nav-link.active:after
+ {
+  content: "";
+  position: relative;
+  bottom: -60px;
+  left: -10%;
+  border: 15px solid transparent;
+  border-top-color: #428bca ;
+}
+.tab-content{
+  background: #fdfdfd;
+    line-height: 25px;
+    border: 1px solid #ddd;
+    border-top:5px solid #428bca;
+    border-bottom:5px solid #428bca;
+    padding:30px 25px;
+}
+
+nav > div a.nav-item.nav-link:hover,
+nav > div a.nav-item.nav-link:focus
+{
+  border: none;
+    background: #428bca;
+    color:#fff;
+    border-radius:0;
+    transition:background 0.20s linear;
+}
+
 </style>
