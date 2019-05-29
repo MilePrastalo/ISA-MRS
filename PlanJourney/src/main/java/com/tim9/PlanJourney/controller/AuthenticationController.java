@@ -117,6 +117,7 @@ public class AuthenticationController {
 		authorities.add(aut);
 		user.setAuthorities(authorities);
 		user.setConfirmed(false);
+		user.setLoggedBefore(true);
 		userService.save(user);
 		try {
 			emailService.sendRegistrationEmail(user); // sends email

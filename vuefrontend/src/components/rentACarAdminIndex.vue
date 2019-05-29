@@ -150,4 +150,8 @@ export default {
     margin-right: auto;
     margin-left:auto;
 }
+
+
+
+
 </style>

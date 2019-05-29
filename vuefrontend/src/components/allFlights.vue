@@ -2,8 +2,8 @@
    <div id = "allFlights">
 
         <br><br>
-
-        <div class = "row">
+        <div class = "container">
+        <div class = "tableContainer">
             <table class = "centered" style="text-align: left">
                 <tr>
                     <td>Start destination:</td>
@@ -57,7 +57,7 @@
         <br>
 
         <div class = "row">
-            <table border="1" class = 'table'>
+            <table border="1" class = 'table table-hover'>
                 <thead class="thead-dark">
                     <tr>
                     <th scope="col">Start destination</th>
@@ -90,7 +90,8 @@
                 </tr>
                 </tbody>              
             </table>  
-        </div>   
+        </div> 
+        </div>  
     </div>
 </template>
 
@@ -225,5 +226,8 @@ mounted(){
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+.tableContainer{
+    margin-left: 30%;
 }
 </style>

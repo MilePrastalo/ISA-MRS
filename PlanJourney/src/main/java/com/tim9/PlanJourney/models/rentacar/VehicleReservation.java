@@ -13,42 +13,41 @@ import javax.persistence.Version;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.Reservation;
 import com.tim9.PlanJourney.models.flight.FlightReservation;
+
 @Entity
 
 public class VehicleReservation extends Reservation {
 
 	@ManyToOne
 	private Vehicle vehicle;
-	
+
 	@Column(name = "dateFrom", nullable = false)
 	private Date dateFrom;
-	
+
 	@Column(name = "dateTo", nullable = false)
 	private Date dateTo;
-	
+
 	@Column(name = "date", nullable = false)
 	private Date date;
-	
+
 	@ManyToOne
 	private BranchOffice officePick;
-	
+
 	@ManyToOne
 	private BranchOffice officeReturn;
-	
+
 	@Column(name = "cena", nullable = false)
 	private double cena;
-	
+
 	@ManyToOne
 	private FlightReservation flightReservation;
-	
-	@Version
-	private Long version;
-	
+
 	public VehicleReservation() {
 		super();
 	}
 
-	public VehicleReservation(Vehicle vehicle, RegisteredUser user,Date date, Date dateFrom, Date dateTo, double cena) {
+	public VehicleReservation(Vehicle vehicle, RegisteredUser user, Date date, Date dateFrom, Date dateTo,
+			double cena) {
 		super();
 		this.date = date;
 		this.vehicle = vehicle;
@@ -58,7 +57,6 @@ public class VehicleReservation extends Reservation {
 		setUser(user);
 	}
 
-
 	public Vehicle getVehicle() {
 		return vehicle;
 	}
@@ -66,7 +64,6 @@ public class VehicleReservation extends Reservation {
 	public void setVehicle(Vehicle vehicle) {
 		this.vehicle = vehicle;
 	}
-
 
 	public Date getDateFrom() {
 		return dateFrom;
@@ -124,20 +121,4 @@ public class VehicleReservation extends Reservation {
 		this.flightReservation = flightReservation;
 	}
 
-	public Long getVersion() {
-		return version;
-	}
-
-	public void setVersion(Long version) {
-		this.version = version;
-	}
-	
-	
-	
-	
-
-	
-	
-	
-	
 }

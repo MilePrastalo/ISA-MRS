@@ -50,7 +50,7 @@
                     <td> {{flight.firstClassPrice}}</td>
                 </tr>
                 <tr>
-                    <td><button class="btn btn-primary" @click="makeReservation(flight.id)">Make reservation</button> </td>
+                    <td><button v-if="role == 'REGISTERED'" class="btn btn-primary" @click="makeReservation(flight.id)">Make reservation</button> </td>
                 </tr>
             </table>
             <br><br>
@@ -72,11 +72,20 @@ export default {
   data: function () {
   return {
       
-     flight: {}
+    role: "",
+    flight: {}
   }
 },
 mounted(){
 
+    var getJwtToken = function() {
+        return localStorage.getItem('jwtToken');
+    };
+    axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+    axios.get("http://localhost:8080/api/getUserRole")
+    .then(response => {
+        this.role = response.data;   
+    });    
     var flightID = localStorage.getItem("flightID");
     axios.get("http://localhost:8080/api/getFlight/" + flightID)
         .then(response => {

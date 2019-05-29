@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.Version;
 
 @Entity
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
@@ -30,6 +31,9 @@ public abstract class Company {
 	
 	@Column(name="rating", nullable = true)
 	private double rating;
+	
+	@Version
+	private Long version;
 	
 	public Company() {
 		super();
@@ -80,6 +84,14 @@ public abstract class Company {
 	}
 	public void setRating(double rating) {
 		this.rating = rating;
+	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 	
 	

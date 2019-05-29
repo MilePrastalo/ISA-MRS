@@ -9,6 +9,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -30,6 +31,9 @@ public abstract class Reservation {
 	@OneToMany
 	private Set<Review> reservationReviews;
 
+	@Version
+	private Long version;
+	
 	public Reservation() {
 		super();
 	}
@@ -64,6 +68,14 @@ public abstract class Reservation {
 
 	public void setReservationReviews(Set<Review> reservationReviews) {
 		this.reservationReviews = reservationReviews;
+	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 	
 	
