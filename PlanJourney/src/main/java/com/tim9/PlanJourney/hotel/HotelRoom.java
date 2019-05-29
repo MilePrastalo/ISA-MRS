@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
 
 @Entity
 public class HotelRoom {
@@ -30,9 +31,12 @@ public class HotelRoom {
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<AdditionalCharges> additionalCharges = new HashSet<AdditionalCharges>();
 
-	@Column(name="rating", nullable = true)
+	@Column(name = "rating", nullable = true)
 	private double rating;
-	
+
+	@Version
+	private Long version;
+
 	public HotelRoom() {
 	}
 
@@ -93,6 +97,13 @@ public class HotelRoom {
 	public void setRating(double rating) {
 		this.rating = rating;
 	}
-	
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
+	}
 
 }

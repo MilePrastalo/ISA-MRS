@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Version;
 
 import com.tim9.PlanJourney.models.flight.Flight;
 import com.tim9.PlanJourney.models.flight.Seat;
@@ -20,7 +21,6 @@ public class QuickVehicleReservation {
 		
 	@ManyToOne
 	private Vehicle vehicle;
-	
 	
 	@Column(name = "originalPrice")
 	private double originalPrice;
@@ -42,6 +42,9 @@ public class QuickVehicleReservation {
 	
 	@Column(name = "taken")
 	private boolean taken;
+	
+	@Version
+	private Long version;
 
 	public QuickVehicleReservation() {
 		super();
@@ -131,6 +134,15 @@ public class QuickVehicleReservation {
 	public void setTaken(boolean taken) {
 		this.taken = taken;
 	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
+	}
+	
 	
 	
 

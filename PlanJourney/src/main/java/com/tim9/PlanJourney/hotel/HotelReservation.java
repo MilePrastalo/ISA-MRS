@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -42,11 +43,14 @@ public class HotelReservation extends Reservation {
 
 	@Column(name = "discount", unique = false, nullable = false)
 	private int discount;
-	
+
 	@ManyToOne
 	@JsonIgnore
 	private FlightReservation flightReservation;
-	
+
+	@Version
+	private Long version;
+
 	public HotelReservation() {
 	}
 
@@ -130,6 +134,14 @@ public class HotelReservation extends Reservation {
 
 	public void setFlightReservation(FlightReservation flightReservation) {
 		this.flightReservation = flightReservation;
+	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 
 }

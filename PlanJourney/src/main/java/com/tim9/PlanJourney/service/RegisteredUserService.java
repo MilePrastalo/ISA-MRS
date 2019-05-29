@@ -6,11 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.repository.RegisteredUserRepository;
 
 @Service
+@Transactional(readOnly = true)
 public class RegisteredUserService {
 
 	
@@ -33,10 +36,12 @@ public class RegisteredUserService {
 		return repository.findAll(page);
 	}
 
+	@Transactional(readOnly = false)
 	public RegisteredUser save(RegisteredUser user) {
 		return repository.save(user);
 	}
 
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public void remove(Long id) {
 		repository.deleteById(id);
 	}

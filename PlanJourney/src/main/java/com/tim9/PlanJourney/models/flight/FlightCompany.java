@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
 
 import com.tim9.PlanJourney.models.Company;
 
@@ -32,6 +33,9 @@ public class FlightCompany extends Company {
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<QuickFlightReservation>  quickFlightReservations = new  HashSet<QuickFlightReservation>();
+	
+	@Version
+	private Long version;
 	
 	public FlightCompany() {
 		super();
@@ -97,6 +101,14 @@ public class FlightCompany extends Company {
 
 	public void setQuickFlightReservations(Set<QuickFlightReservation> quickFlightReservations) {
 		this.quickFlightReservations = quickFlightReservations;
+	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 
 	

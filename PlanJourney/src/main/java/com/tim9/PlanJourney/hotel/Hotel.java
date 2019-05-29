@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
 
 import com.tim9.PlanJourney.models.Company;
 import com.tim9.PlanJourney.models.flight.Destination;
@@ -34,6 +35,9 @@ public class Hotel extends Company {
 	@Column(name="latitude", nullable = true)
 	private float latitude;
 
+	@Version
+	private Long version;
+	
 	public Hotel() {
 		super();
 	}
@@ -88,6 +92,14 @@ public class Hotel extends Company {
 
 	public void setLatitude(float latitude) {
 		this.latitude = latitude;
+	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 
 }

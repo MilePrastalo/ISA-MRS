@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tim9.PlanJourney.hotel.HotelReservation;
@@ -40,6 +41,9 @@ public class RegisteredUser extends User {
 	
 	@Column(name = "confirmed", nullable = true)
 	private boolean confirmed;
+	
+	@Version
+	private Long version;
 	
 	public RegisteredUser() {
 		// TODO Auto-generated constructor stub
@@ -132,6 +136,14 @@ public class RegisteredUser extends User {
 
 	public void setConfirmed(boolean confirmed) {
 		this.confirmed = confirmed;
+	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 	
 
