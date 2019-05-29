@@ -166,6 +166,10 @@ mounted(){
   color: #303e4d;
 }
 
+table{
+    
+}
+
 .searchForm{
     margin-left: auto;
     margin-right: auto;

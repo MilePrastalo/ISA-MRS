@@ -20,12 +20,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tim9.PlanJourney.beans.FlightCompanyBean;
 import com.tim9.PlanJourney.beans.FriendBean;
 import com.tim9.PlanJourney.beans.FriendRequestBean;
 import com.tim9.PlanJourney.beans.UserBean;
 import com.tim9.PlanJourney.models.FriendRequest;
 import com.tim9.PlanJourney.models.RegisteredUser;
+import com.tim9.PlanJourney.models.flight.FlightAdmin;
+import com.tim9.PlanJourney.models.flight.FlightCompany;
 import com.tim9.PlanJourney.models.flight.FlightReservation;
+import com.tim9.PlanJourney.service.FlightCompanyService;
 import com.tim9.PlanJourney.service.FriendRequestService;
 import com.tim9.PlanJourney.service.RegisteredUserService;
 
@@ -36,6 +40,8 @@ public class RegisteredUserController {
 	private RegisteredUserService service;
 	@Autowired
 	private FriendRequestService friendReqestsService;
+	@Autowired
+	private FlightCompanyService companyService;
 	
 
 	// Method for searching and filtering registered users
@@ -248,6 +254,24 @@ public class RegisteredUserController {
 			return null;
 		}
 		return loggedUser.getFlightReservations();
+	}
+	
+	@RequestMapping(value = "/api/getFlightCompanyProfileRegitered/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('REGISTERED')")
+	// Method returns flightCompany information
+	public @ResponseBody FlightCompanyBean getFlightCompanyProfileRegitered(@PathVariable("id") Long id) throws Exception {
+
+		RegisteredUser loggedUser = getLoggedRegisteredUser();
+		if (loggedUser == null) {
+			return null;
+		}
+		FlightCompany fc = companyService.findOne(id);
+		FlightCompanyBean bean = new FlightCompanyBean();
+		bean.setDescription(fc.getDescription());
+		bean.setAddress(fc.getAddress());
+		bean.setName(fc.getName());
+		return bean;
 	}
 
 

@@ -31,9 +31,9 @@
                 </table>
             </div>
             <br>
-            <div class = "row">
+            <div class = "container">
                 <table border="1" class ="table">
-                    <thead class="thead-dark">
+                    <thead>
                     <tr>
                         <th scope="col">Start destination</th>
                         <th scope="col">End destination</th>
@@ -63,12 +63,10 @@
             </div>   
         </div>
 
-        <div  v-if="choosen == true && seatChosen == false" >
-            <div class = "row">
+        <div  v-if="choosen == true && seatChosen == false" class = "container">
                 <h2>Choose seat:</h2>
-            </div>
             <br>
-            <div class = "row">
+            <div class = "row" style="margin-left: 5%;">
                 <table class = "seats">
                     <caption style="caption-side: top; font-weight: bold">Economic class</caption>
                     <tr v-for="r in seatsE.rows" :key ="r"> 
@@ -95,9 +93,9 @@
                 </table>
             </div>
         </div>
-        <div v-if="choosen == true && seatChosen == true" class = "row" >
+        <div v-if="choosen == true && seatChosen == true" class = "centered" >
             <form @submit="addQuickReservation">
-                <table>
+                <table class = "centered">
                     <th colspan="2">Seat: ({{this.seat.seatRow}}, {{this.seat.seatColumn}})</th>
                     <tr>
                         <td>Discount:</td>

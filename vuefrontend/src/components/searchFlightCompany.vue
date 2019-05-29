@@ -1,6 +1,6 @@
 <template>
    <div id = "searchFlightCompany">
-       <navbar/>
+       <navbar  itype="1"/>
             <h2>Flight Company Search </h2>
         <br>
 
@@ -54,7 +54,14 @@ export default {
      companies:[]
   }
 },
-mounted(){},
+mounted(){
+    var name = "-";
+    axios.get("http://localhost:8080/api/searchFlightCompanies/" + name)
+        .then(response => {
+        console.log(response);
+        this.companies = response.data
+    }); 
+},
 
 methods:{
     checkedClass: function(option){

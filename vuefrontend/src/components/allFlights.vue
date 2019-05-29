@@ -1,10 +1,10 @@
 <template>
    <div id = "allFlights">
 
-        <br><br>
-        <div class = "container">
-        <div class = "tableContainer">
-            <table class = "centered" style="text-align: left">
+        <br><br><br>
+       
+        <div class = "centered">
+            <table style="text-align: left;  margin-left: 30%" >
                 <tr>
                     <td>Start destination:</td>
                     <td><input v-model="startDestination" type="text"></td>
@@ -51,14 +51,12 @@
                 </tr>
             </table>
         </div>
-
-        <br>
-            <h2> All flights: </h2>
-        <br>
-
-        <div class = "row">
+        <div class = "quickContainer">
+            <br><br>
+            <h2>All Flights: </h2>
+            <br>
             <table border="1" class = 'table table-hover'>
-                <thead class="thead-dark">
+                <thead>
                     <tr>
                     <th scope="col">Start destination</th>
                     <th scope="col">End destination</th>
@@ -91,7 +89,7 @@
                 </tbody>              
             </table>  
         </div> 
-        </div>  
+         
     </div>
 </template>
 
@@ -228,6 +226,8 @@ mounted(){
   color: #2c3e50;
 }
 .tableContainer{
-    margin-left: 30%;
+    margin-left: 35%;
 }
+
+
 </style>

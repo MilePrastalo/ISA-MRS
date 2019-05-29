@@ -9,9 +9,9 @@
             <button class="btn-primary space" @click="selected(3)">Earnings</button>
         </div>
         <br><br>
-         <div class="row" v-if="tabSelected==0">
+         <div class="container" v-if="tabSelected==0">
             <table border="1" class = 'table'>
-                <thead class="thead-dark">
+                <thead>
                     <tr>
                     <th scope="col">Start destination</th>
                     <th scope="col">End destination</th>

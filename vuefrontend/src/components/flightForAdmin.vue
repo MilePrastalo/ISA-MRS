@@ -1,15 +1,15 @@
 <template>
    <div id = "flightForAdmin">
-        <navbar/>
-        <div class = "flightForAdminContainer">
-            <a style="float: left" href = "/flightAdmin">Back to profile</a>
+
+        <navbar itype="1"/>
+        <div class = "container">
             <br><br>
                 <h2>Flight details: </h2>
             <br><br>
 
-            <div>
+            <div class = "flightForAdminContainer">
                 <form @submit="editFlight">
-                    <table style="text-align: left" >
+                    <table style="text-align: left" class = "centered" >
                         <tr>
                             <td>From: </td>
                             <td >{{flight.startDestination}}</td>
@@ -174,7 +174,7 @@ export default {
 }
 
 .flightForAdminContainer{
-    margin-left: 5%;
+    margin-left: 35%;
 }
 
 
