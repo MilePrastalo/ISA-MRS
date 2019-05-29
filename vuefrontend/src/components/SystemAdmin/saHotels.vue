@@ -1,5 +1,5 @@
 <template>
-   <div id = "saHotels">
+   <div id = "saHotels" class="container">
 
             <br>
              <div class="row"> 
@@ -8,7 +8,7 @@
              <div class="row">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a  class="nav-link active" href="#" @click="selectTab(1)">Hotels</a>
+                        <a  class="nav-link" href="#" @click="selectTab(1)">Hotels</a>
                     </li>
                     <li class="nav-item">
                         <a  class="nav-link" href="#" @click="selectTab(2)">Add Hotel</a>
@@ -29,14 +29,16 @@
             <div v-if="currentTab == 1">
                 <br>
                 <br>
-                <table border="1" >
+                <table class="table" >
+                    <thead class="thead-dark">
                     <tr>
-                        <td>Hotel name</td>
-                        <td>Destination</td>
-                        <td>Adress</td>
-                        <td>Description</td>
-                        <td>Rating</td>
+                        <th>Hotel name</th>
+                        <th>Destination</th>
+                        <th>Adress</th>
+                        <th>Description</th>
+                        <th>Rating</th>
                     </tr>
+                    </thead>
             <tr v-for="h in this.hotels" :key="h.id">  
                 <td>{{h.name}}</td>
                 <td>{{h.destination.name}}</td>
@@ -48,43 +50,54 @@
             </div>
 
             <div  v-if="currentTab == 2"> 
-                 <table>
+                <table class="SeperateTable">
+                    <tr>
+                        <td>
+                            <table class="table">
+                                <th>
+                                    Hotel Info: 
+                                </th>
                 <tr>
-                    <td> Name: </td>
+                    <td><b> Name: </b></td>
                     <td>  <input type="text" name="name" v-model="name" > </td>
                 </tr>
                 <tr>
-                    <td> Address: </td>
+                    <td><b> Address: </b></td>
                     <td>  <input type="text" name="address" v-model="address" > </td>
                 </tr>
                 <tr>
-                    <td> Destination ID: </td>
+                    <td><b> Destination ID: </b></td>
                     <td>  <input type="text" name="destinationID" v-model="destinationID" > </td>
                 </tr>
                 <tr>
-                    <td> Latitude: </td>
+                    <td><b> Latitude: </b></td>
                     <td>  <input type="number"  v-model="latitude" > </td>
                 </tr>
                 <tr>
-                    <td> Longitude: </td>
+                    <td><b> Longitude: </b></td>
                     <td>  <input type="number"  v-model="longitude" > </td>
                 </tr>
                 <tr>
-                    <td> Description: </td>
+                    <td><b>Description: </b></td>
                     <td> <textarea  rows="5" cols="22" name="description"  v-model="description" style="overflow:scroll;"></textarea> </td>        
                 </tr>
                 <tr>
                     <td>  </td>
-                    <td><button v-on:click="addHotel()">Add Hotel</button> </td>      
+                    <td><button v-on:click="addHotel()" class="btn-primary">Add Hotel</button> </td>      
                 </tr>
             </table>   
-            <div>
-                <table border="1" >
-                    <tr>
-                        <td>ID</td>
-                        <td>Destination name</td>
-                        <td>Description</td>
+                        </td>
+                        <td>
+                            <div>
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                        <th>ID</th>
+                        <th>Destination name</th>
+                        <th>Description</th>
                     </tr>
+                    </thead>
+                    
             <tr v-for="d in this.destinations" :key="d.id">  
                 <td>{{d.id}}</td>
                 <td>{{d.name}}</td>
@@ -92,6 +105,11 @@
             </tr>
             </table>
             </div>   
+                        </td>
+                    </tr>
+                </table>
+                 
+            
             </div> 
 
             <div  v-if="currentTab == 3">
@@ -99,39 +117,39 @@
                 <tr>
                     <td> Enter hotel's name you want to remove: </td>
                     <td>  <input type="text" name="name" v-model="name" > </td>
-                    <td><button v-on:click="removeHotel()">Remove Hotel</button> </td> 
+                    <td><button v-on:click="removeHotel()" class="btn-primary">Remove Hotel</button> </td> 
                 </tr>
                 </table>
             </div>
             <div  v-if="currentTab == 4">
                  <table>
                 <tr>
-                    <td> Username: </td>
+                    <td><b> Username: </b></td>
                     <td>  <input type="text" name="admin.username" v-model="admin.username" > </td>
                 </tr>
                 <tr>
-                    <td> Password: </td>
+                    <td><b> Password: </b></td>
                     <td>  <input type="text" name="admin.password" v-model="admin.password" > </td>
                 </tr>
                 <tr>
-                    <td> First Name: </td>
+                    <td><b> First Name: </b></td>
                     <td> <input type="text" name="admin.firstName" v-model="admin.firstName" > </td>        
                 </tr>
                 <tr>
-                    <td> Last Name: </td>
+                    <td><b> Last Name: </b></td>
                     <td> <input type="text" name="admin.lastName" v-model="admin.lastName" > </td>        
                 </tr>
                 <tr>
-                    <td> Email: </td>
+                    <td><b> Email: </b></td>
                     <td> <input type="text" name="admin.email" v-model="admin.email" > </td>        
                 </tr>
                 <tr>
-                    <td> Hotel Name: </td>
+                    <td><b> Hotel Name: </b></td>
                     <td> <input type="text" name="hotelName" v-model="hotelName" > </td>        
                 </tr>
                 <tr>
                     <td>  </td>
-                    <td><button v-on:click="addHotelAdmin()">Add Hotel Admin</button> </td>      
+                    <td><button v-on:click="addHotelAdmin()" class="btn-primary">Add Hotel Admin</button> </td>      
                 </tr>
             </table>     
             </div>
@@ -140,7 +158,7 @@
                 <tr>
                     <td> Enter hotel admin's username you want to remove: </td>
                     <td>  <input type="text" name="admin.username" v-model="admin.username" > </td>
-                    <td><button v-on:click="removeHotelAdmin()">Remove Hotel Admin</button> </td> 
+                    <td><button v-on:click="removeHotelAdmin()" class="btn-primary">Remove Hotel Admin</button> </td> 
                 </tr>
                 </table>
         </div>
@@ -236,5 +254,9 @@ mounted(){
   text-align: center;
   color: #2c3e50;
   margin-left: 5%;
+}
+.SeperateTable {
+  border-spacing: 70px;
+  border-collapse: separate;
 }
 </style>

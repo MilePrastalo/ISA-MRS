@@ -1,66 +1,38 @@
 <template>
    <div id = "systemAdminProfile">
        <navbar/>
+       <div class="container">
             <br>
-             <div class="row"> 
+             <div class="row centered"> 
                 <h1>System Admin Profile</h1>
             </div>
              <br>
-             <div class="row">
-                <ul class="nav nav-tabs">
+             <div class="row centered">
+                <ul class="nav nav-tabs centered">
                     <li class="nav-item">
-                        <a  class="nav-link active" href="#" @click="selectTab(1)">Profile</a>
-                    </li>
-                    <li class="nav-item">
-                        <a  class="nav-link" href="#" @click="selectTab(2)">Hotels</a>
+                        <a  class="nav-link" href="#" @click="selectTab(1)">Hotels</a>
                         
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" @click="selectTab(3)">Flight Companies</a>
+                    <li class="nav-item centered">
+                        <a class="nav-link" href="#" @click="selectTab(2)">Flight Companies</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" @click="selectTab(4)">Rent A Cars</a>
+                    <li class="nav-item centered">
+                        <a class="nav-link" href="#" @click="selectTab(3)">Rent A Cars</a>
                     </li>
                 </ul>
             </div>
-            
-            <div v-if="currentTab == 1" id = "profile">
-                <br>
-                <br>
-                <table>
-                    <tr>
-                        <td> Username </td>
-                        <td>  <input type="text" name="systemAdmin.username" v-model="systemAdmin.username"> </td>
-                    </tr>
-                    <tr>
-                        <td> First name: </td>
-                        <td>  <input type="text" name="systemAdmin.firstName" v-model="systemAdmin.firstName" > </td>
-                    </tr>
-                    <tr>
-                        <td> Last name: </td>
-                        <td> <input type="text" name="systemAdmin.lastName"  v-model="systemAdmin.lastName" > </td>        
-                    </tr>
-                    <tr>
-                        <td> Email: </td>
-                        <td> <input type="text" name="systemAdmin.email"  v-model="systemAdmin.email" > </td>        
-                    </tr>
-                </table>
-            </div>
 
-            <div  v-if="currentTab == 2" id = "hotels"> 
-                <sa-hotels></sa-hotels>
+            <div  v-if="currentTab == 1" id = "hotels"> 
+                <sa-hotels class="container"></sa-hotels>
             </div> 
-            <div  v-if="currentTab == 3" id = "flight companies">
-                <sa-flight-companies></sa-flight-companies>
+            <div  v-if="currentTab == 2" id = "flight companies">
+                <sa-flight-companies class="container"></sa-flight-companies>
             </div>
-            <div  v-if="currentTab == 4" id = "rent a cars">
-                <sa-rent-a-car></sa-rent-a-car>
-            </div>
-            <div  v-if="currentTab == 5" id = "change password">
-            </div>
-            <div  v-if="currentTab == 6" id = "log out" v-on="logOut()">
+            <div  v-if="currentTab == 3" id = "rent a cars">
+                <sa-rent-a-car class="container"></sa-rent-a-car>
             </div>
         </div>
+    </div>
 </template>
 
 <script>
@@ -133,5 +105,10 @@ mounted(){
   text-align: center;
   color: #2c3e50;
   margin-left: 5%;
+}
+
+.centered{
+    margin-right: auto;
+    margin-right: auto;
 }
 </style>

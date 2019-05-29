@@ -1,92 +1,23 @@
 <template>
    <div id = "hotelAdminProfile">
-
-            <br>
-             <div class="row"> 
-                <h1>Hotel Admin Profile</h1>
-            </div>
-             <br>
-             <div class="row">
-                <ul class="nav nav-tabs">
-                    <li class="nav-item">
-                        <a  class="nav-link active" href="#" @click="selectTab(1)">Profile</a>
-                    </li>
-                    <li class="nav-item">
-                        <a  class="nav-link" href="#" @click="selectTab(2)">Hotel</a>
-                        
-                    </li>
-                    <li class="nav-item">
-                        <a  class="nav-link active" href="#" @click="selectTab(3)">Change Password</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" @click="selectTab(4)">Log Out</a>
-                    </li>
-                </ul>
-            </div>
-            
-            <div v-if="currentTab == 1" id = "profile">
-                <br>
-                <br>
-                <table>
-                    <tr>
-                        <td> Username </td>
-                        <td>  <input type="text" name="hotelAdmin.username" v-model="hotelAdmin.username"> </td>
-                    </tr>
-                    <tr>
-                        <td> First name: </td>
-                        <td>  <input type="text" name="hotelAdmin.firstName" v-model="hotelAdmin.firstName" > </td>
-                    </tr>
-                    <tr>
-                        <td> Last name: </td>
-                        <td> <input type="text" name="hotelAdmin.lastName"  v-model="hotelAdmin.lastName" > </td>        
-                    </tr>
-                    <tr>
-                        <td> Email: </td>
-                        <td> <input type="text" name="hotelAdmin.email"  v-model="hotelAdmin.email" > </td>        
-                    </tr>
-                    <tr>
-                        <td>  </td>
-                        <td><button v-on:click="updateHotelAdminProfile()">Edit</button> </td>        
-                    </tr>
-                </table>
-            </div>
-
-            <div  v-if="currentTab == 2" id = "hotel"> 
-                <ha-hotel :hotel="hotelAdmin.hotel"></ha-hotel>
-            </div> 
-            <div  v-if="currentTab == 3" id = "Change Password">
-                <table>
-                    <tr>
-                        <td> Enter old password: </td>
-                        <td>  <input type="text" name="oldPassword" v-model="oldPassword"> </td>
-                    </tr>
-                    <tr>
-                        <td> Enter new password: </td>
-                        <td>  <input type="text" name="newPassword" v-model="newPassword" > </td>
-                    </tr>
-                    <tr>
-                        <td> Repeat new password: </td>
-                        <td> <input type="text" name="repeatPassword"  v-model="repeatPassword" > </td>        
-                    </tr>
-                    <tr>
-                        <td>  </td>
-                        <td><button v-on:click="changePassword()">Change Password</button> </td>        
-                    </tr>
-                </table>
-            </div>
-            <div  v-if="currentTab == 4" id = "Log Out" v-on="logOut()">
-            </div>
+        <navbar />
+       <div class="container">
+          
+                <ha-hotel :hotel="hotelAdmin.hotel" class="container"></ha-hotel>
+        </div>
         </div>
 </template>
 
 <script>
 
 import haHotel from "./haHotel.vue"
+import navbar from ".././navbar.vue";
 
 export default {
   name: 'hotelAdminProfile',
   components: {
-      haHotel: haHotel
+      haHotel: haHotel,
+      navbar
   },
   data: function () {
   return {
@@ -142,6 +73,5 @@ mounted(){
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-left: 5%;
 }
 </style>
