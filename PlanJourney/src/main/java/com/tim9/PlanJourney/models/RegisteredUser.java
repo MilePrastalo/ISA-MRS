@@ -15,42 +15,37 @@ import com.tim9.PlanJourney.models.rentacar.VehicleReservation;
 
 @Entity
 public class RegisteredUser extends User {
-	
-	@JsonIgnore
-	@OneToMany(mappedBy="user")
-	private Set<FlightReservation> flightReservations = new HashSet<FlightReservation>(); 
 
-	
+	@JsonIgnore
+	@OneToMany(mappedBy = "user")
+	private Set<FlightReservation> flightReservations = new HashSet<FlightReservation>();
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "sender")
 	private Set<FriendRequest> sendRequests = new HashSet<FriendRequest>();
-	
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "reciever")
 	private Set<FriendRequest> receivedRequests = new HashSet<FriendRequest>();
 
-	@OneToMany(mappedBy="user")
+	@OneToMany(mappedBy = "user")
 	private Set<Review> userReviews;
 
+	@OneToMany(mappedBy = "user")
+	private Set<VehicleReservation> vehicleReservations = new HashSet<>();
 
-	@OneToMany(mappedBy="user")
-	private Set<VehicleReservation> vehicleReservations  = new HashSet<>();
-	
-	@OneToMany(mappedBy="user")
-	private Set<HotelReservation> hotelReservations   = new HashSet<>();
-	
+	@OneToMany(mappedBy = "user")
+	private Set<HotelReservation> hotelReservations = new HashSet<>();
+
 	@Column(name = "confirmed", nullable = true)
 	private boolean confirmed;
-	
-	@Version
-	private Long version;
-	
+
 	public RegisteredUser() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	public RegisteredUser( String username, String password, String firstName, String lastName, String email) {
-		super(username,password,firstName,lastName,email);
+
+	public RegisteredUser(String username, String password, String firstName, String lastName, String email) {
+		super(username, password, firstName, lastName, email);
 	}
 
 	public Set<VehicleReservation> getVehicleReservations() {
@@ -84,9 +79,7 @@ public class RegisteredUser extends User {
 	public void setReceivedRequests(Set<FriendRequest> receivedRequests) {
 		this.receivedRequests = receivedRequests;
 	}
-	
-	
-	
+
 	public Set<HotelReservation> getHotelReservations() {
 		return hotelReservations;
 	}
@@ -94,8 +87,6 @@ public class RegisteredUser extends User {
 	public void setHotelReservations(Set<HotelReservation> hotelReservations) {
 		this.hotelReservations = hotelReservations;
 	}
-	
-	
 
 	public Set<Review> getUserReviews() {
 		return userReviews;
@@ -111,13 +102,15 @@ public class RegisteredUser extends User {
 		// TODO Auto-generated method stub
 		return true;
 	}
-    @JsonIgnore
+
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonLocked() {
 		// TODO Auto-generated method stub
 		return true;
 	}
-    @JsonIgnore
+
+	@JsonIgnore
 	@Override
 	public boolean isCredentialsNonExpired() {
 		// TODO Auto-generated method stub
@@ -138,14 +131,4 @@ public class RegisteredUser extends User {
 		this.confirmed = confirmed;
 	}
 
-	public Long getVersion() {
-		return version;
-	}
-
-	public void setVersion(Long version) {
-		this.version = version;
-	}
-	
-
 }
-

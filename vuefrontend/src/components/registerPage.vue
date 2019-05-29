@@ -80,7 +80,7 @@ export default {
                         console.log(response);
                           if(response.data =="OK"){
                             alert("Registration is successfull");
-                            window.location="/";
+                            window.location="./";
                           }
                           else{
                             alert("User with that username already exists");

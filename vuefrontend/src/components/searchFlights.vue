@@ -160,7 +160,6 @@ mounted(){
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #303e4d;
-  margin: 5%;
 }
 
 .searchForm{
