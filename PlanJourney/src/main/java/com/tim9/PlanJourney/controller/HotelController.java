@@ -406,7 +406,16 @@ public class HotelController {
 			reservation.setUser(user);
 			hotel.getReservations().add(reservation);
 			user.getHotelReservations().add(reservation);
-
+			
+			
+			// Adds choosen additional charges to reservation.
+			for(String aCName : reservationBean.getAdditionalCharges()) {
+				for(AdditionalCharges ac : room.getAdditionalCharges()) {
+					if(ac.getName().equals(aCName)) {
+						reservation.getAdditionalCharges().add(ac);
+					}
+				}
+			}
 			// service.save(hotel);
 			HotelReservation newReservation = hotelReservationService.save(reservation);
 			System.out.println(newReservation.getId());
@@ -498,7 +507,6 @@ public class HotelController {
 	@PreAuthorize("hasAuthority('REGISTERED')")
 	public @ResponseBody boolean cancelHotelReservation(@RequestBody HotelReservationBean reservationBean) {
 		HotelReservation hr = hotelReservationService.findOne(reservationBean.getId());
-		System.out.println("Odje puko 1");
 		System.out.println(reservationBean.getId());
 		if (!hr.getUser().getUsername().equals(reservationBean.getUsername())) {
 			return false;
@@ -507,7 +515,6 @@ public class HotelController {
 		if (!hr.getHotel().getName().equals(reservationBean.getHotelName())) {
 			return false;
 		}
-		System.out.println("Odje puko 2");
 		// Checks if cancelation is less than 3 days before.
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(hr.getFirstDay());
@@ -516,7 +523,6 @@ public class HotelController {
 		if (dateBefore3Days.after(new Date())) {
 			return false;
 		}
-		System.out.println("Odje puko 3");
 		// Removing hotel reservation from flight reservation.
 		ArrayList<HotelReservation> flightsHotelReservations = new ArrayList<HotelReservation>();
 		FlightReservation fr = flightReservationService.findOne(hr.getFlightReservation().getId());
@@ -526,13 +532,10 @@ public class HotelController {
 				flightsHotelReservations.add(h);
 			}
 		}
-		System.out.println("Odje puko 4");
 		HashSet<HotelReservation> setFHR = new HashSet<HotelReservation>();
 		setFHR.addAll(flightsHotelReservations);
 		fr.setHoteReservations(setFHR);
-		System.out.println("Odje puko 5");
 		flightReservationService.save(fr);
-		System.out.println("Odje puko 6");
 		hotelReservationService.remove(hr.getId());
 
 		return true;
