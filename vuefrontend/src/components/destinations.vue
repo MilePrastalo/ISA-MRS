@@ -28,7 +28,7 @@
 
                 <div class = "row">
                 <table class = "centered table" border="1">
-                    <thead class="thead-dark">
+                    <thead>
                     <tr>
                         <th scope="col">Name</th>
                         <th scope="col">Coordinates</th>

@@ -1,5 +1,5 @@
 <template>
-   <div id = "saRentACar">
+   <div id = "saRentACar" class="container">
 
             <br>
              <div class="row"> 
@@ -8,7 +8,7 @@
              <div class="row">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a  class="nav-link active" href="#" @click="selectTab(1)">Rent A Cars</a>
+                        <a  class="nav-link" href="#" @click="selectTab(1)">Rent A Cars</a>
                     </li>
                     <li class="nav-item">
                         <a  class="nav-link" href="#" @click="selectTab(2)">Add Rent A Car</a>
@@ -29,13 +29,16 @@
             <div v-if="currentTab == 1">
                 <br>
                 <br>
-                <table border="1" >
+                <table class="table">
+                    <thead class="thead-dark">
+                    
                     <tr>
-                        <td>Flight company name</td>
-                        <td>Adress</td>
-                        <td>Description</td>
-                        <td>Rating</td>
+                        <th>Flight company name</th>
+                        <th>Adress</th>
+                        <th>Description</th>
+                        <th>Rating</th>
                     </tr>
+                    </thead>
             <tr v-for="r in this.racs" :key="r.id">  
                 <td>{{r.name}}</td>
                 <td>{{r.address}}</td>
@@ -48,20 +51,20 @@
             <div  v-if="currentTab == 2"> 
                  <table>
                 <tr>
-                    <td> Name: </td>
+                    <td><b> Name: </b></td>
                     <td>  <input type="text" name="name" v-model="name" > </td>
                 </tr>
                 <tr>
-                    <td> Address: </td>
+                    <td><b> Address: </b></td>
                     <td>  <input type="text" name="address" v-model="address" > </td>
                 </tr>
                 <tr>
-                    <td> Description: </td>
+                    <td><b> Description: </b></td>
                     <td> <textarea  rows="5" cols="22" name="description"  v-model="description" style="overflow:scroll;"></textarea> </td>        
                 </tr>
                 <tr>
                     <td>  </td>
-                    <td><button v-on:click="addRentACar()">Add Rent A Car</button> </td>      
+                    <td><button v-on:click="addRentACar()" class="btn-primary">Add Rent A Car</button> </td>      
                 </tr>
             </table>      
             </div> 
@@ -71,39 +74,39 @@
                 <tr>
                     <td> Enter rent a car's name you want to remove: </td>
                     <td>  <input type="text" name="name" v-model="name" > </td>
-                    <td><button v-on:click="removeRentACar()">Remove Rent A Car</button> </td> 
+                    <td><button v-on:click="removeRentACar()" class="btn-primary">Remove Rent A Car</button> </td> 
                 </tr>
                 </table>
             </div>
             <div  v-if="currentTab == 4">
                  <table>
                 <tr>
-                    <td> Username: </td>
+                    <td><b> Username: </b></td>
                     <td>  <input type="text" name="admin.username" v-model="admin.username" > </td>
                 </tr>
                 <tr>
-                    <td> Password: </td>
+                    <td><b> Password: </b></td>
                     <td>  <input type="text" name="admin.password" v-model="admin.password" > </td>
                 </tr>
                 <tr>
-                    <td> First Name: </td>
+                    <td><b> First Name: </b></td>
                     <td> <input type="text" name="admin.firstName" v-model="admin.firstName" > </td>        
                 </tr>
                 <tr>
-                    <td> Last Name: </td>
+                    <td><b> Last Name: </b></td>
                     <td> <input type="text" name="admin.lastName" v-model="admin.lastName" > </td>        
                 </tr>
                 <tr>
-                    <td> Email: </td>
+                    <td><b> Email: </b></td>
                     <td> <input type="text" name="admin.email" v-model="admin.email" > </td>        
                 </tr>
                 <tr>
-                    <td> Flight Company Name: </td>
+                    <td><b> Flight Company Name: </b></td>
                     <td> <input type="text" name="rentACarName" v-model="rentACarName" > </td>        
                 </tr>
                 <tr>
                     <td>  </td>
-                    <td><button v-on:click="addRentACarAdmin()">Add Rent A Car Admin</button> </td>      
+                    <td><button v-on:click="addRentACarAdmin()" class="btn-primary">Add Rent A Car Admin</button> </td>      
                 </tr>
             </table>     
             </div>
@@ -112,7 +115,7 @@
                 <tr>
                     <td> Enter rent a car admin's username you want to remove: </td>
                     <td>  <input type="text" name="admin.username" v-model="admin.username" > </td>
-                    <td><button v-on:click="removeRentACarAdmin()">Remove Rent A Car Admin</button> </td> 
+                    <td><button v-on:click="removeRentACarAdmin()" class="btn-primary">Remove Rent A Car Admin</button> </td> 
                 </tr>
                 </table>
             </div>

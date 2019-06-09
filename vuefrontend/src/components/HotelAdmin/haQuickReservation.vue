@@ -7,26 +7,29 @@
       <tr>
         <td>
           <h3>Choose Room</h3>
-          <table border="1">
-      <tr>
-        <td>Room Number</td>
-        <td>Number Of Beds</td>
-        <td>Price Per Day</td>
-        <td>Rating</td>
-        <td>Options</td>
+          <table class="table">
+            <thead class="thead-dark">
+              <tr>
+        <th>Room Number</th>
+        <th>Number Of Beds</th>
+        <th>Price Per Day</th>
+        <th>Rating</th>
+        <th>Options</th>
       </tr>
+            </thead>
+      
       <tr v-for="r in hotel.rooms" :key="r.id">
         <td>{{r.roomNumber}}</td>
         <td>{{r.numberOfBeds}}</td>
         <td>{{r.pricePerDay}}</td>
         <td>{{r.rating}}</td>
         <td>
-          <button @click="chooseRoom(r)">Choose</button>
+          <button @click="chooseRoom(r)" class="btn-primary">Choose</button>
         </td>
       </tr>
     </table>
         </td>
-        <td border="1" v-if="showReservation == 1">
+        <td v-if="showReservation == 1">
           <h3>Make Quick Reservation</h3>
         <table>
                 <tr>
@@ -46,13 +49,16 @@
                   <td><input type="text" v-model="discount" ></td>
                 </tr>
               </table>
-               <table border="1" >
-                        <tr>
-                            <td>Additional Charge</td>
-                            <td>Price Per Day</td>
-                            <td>Check</td>
+               <table class="table" >
+                 <thead class="thead-dark">
+                   <tr>
+                            <th>Additional Charge</th>
+                            <th>Price Per Day</th>
+                            <th>Check</th>
 
                         </tr>
+                 </thead>
+                        
                     <tr v-for="a in room.additionalCharges" :key="a.id">  
                         <td>{{a.name}}</td>
                         <td>{{a.pricePerDay}}</td>
@@ -67,11 +73,11 @@
                     </tr>
                     <tr>
                         <td>Check if available: </td>
-                        <td><button @click="splitDate()" >Check</button></td>
+                        <td><button @click="splitDate()" class="btn-primary">Check</button></td>
                     </tr>
                     <tr v-if="this.available == 1">
                       <td>Make reservation: </td>
-                      <td><button @click="reserve()">Reserve Room</button></td>
+                      <td><button @click="reserve()" class="btn-primary">Reserve Room</button></td>
                     </tr>
                 </table>
         </td>

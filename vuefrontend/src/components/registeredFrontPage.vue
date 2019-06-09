@@ -1,3 +1,4 @@
+
 <template>
     <div id="registeredUserFrontPage">
         <navbar :itype="1"/>

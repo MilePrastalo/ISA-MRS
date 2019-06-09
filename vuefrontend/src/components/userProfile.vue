@@ -1,31 +1,32 @@
 <template>
    <div id = "userProfile">
 
+       <navbar  itype="1"/>
        <div class = "profile">
            <br><br>
             <h2> Your profile: </h2>
             <br>
-        <div class="centered">
+        <div class="container">
             <table class= "centered" style="text-align: left">
                 <tr>
                     <td> First name: </td>
-                    <td>  <input  class="rounded" type="text" name="firstName" v-model="firstName" > </td>
+                    <td>  <input   type="text" name="firstName" v-model="firstName" > </td>
                 </tr>
                 <tr>
                     <td> Last name: </td>
-                    <td>  <input  class="rounded" type="text" name="lastName" v-model="lastName" > </td>
+                    <td>  <input   type="text" name="lastName" v-model="lastName" > </td>
                 </tr>
                 <tr>
                     <td> Email: </td>
-                    <td >  <input  class="rounded" type="text" name="email" v-model="email" > </td>
+                    <td >  <input   type="text" name="email" v-model="email" > </td>
                 </tr>
                 <tr>
                     <td> Password: </td>
-                    <td>  <input  class="form-control" type="password" name="password" v-model="password" > </td>
+                    <td>  <input   type="password" name="password" v-model="password" > </td>
                 </tr>
                  <tr>
                     <td> Confirm password: </td>
-                    <td>  <input   type="password" name="password" v-model="repeatedPassword"> </td>
+                    <td>  <input  name="password" v-model="repeatedPassword"> </td>
                 </tr>
                 <tr>
                     <td>  </td>
@@ -38,10 +39,11 @@
 </template>
 
 <script>
-
+import navbar from "./navbar.vue";
 export default {
   name: 'userProfile',
   components: {
+       navbar: navbar
   },
   data: function () {
   return {
@@ -110,10 +112,6 @@ mounted(){
     margin-left: auto;
     margin-right: auto;
 }
-.rounded{
-    border-radius: 25px;
-    padding: 2px;
-    height: 30px;
-}
+
 
 </style>
