@@ -1,15 +1,11 @@
 package com.tim9.PlanJourney.models.rentacar;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
 
@@ -31,9 +27,6 @@ public class RentACarCompany extends Company {
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<QuickVehicleReservation> quickReservations = new HashSet<QuickVehicleReservation>();
-
-	@Version
-	private Long version;
 
 	public RentACarCompany() {
 		super();
@@ -93,13 +86,6 @@ public class RentACarCompany extends Company {
 		this.quickReservations = quickReservations;
 	}
 
-	public Long getVersion() {
-		return version;
-	}
-
-	public void setVersion(Long version) {
-		this.version = version;
-	}
 	
 
 }

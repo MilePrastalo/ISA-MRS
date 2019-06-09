@@ -10,20 +10,43 @@
                     </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
-                    <a class="nav-link" href="./index">Home
+                    <li v-if="type==1" class="nav-item active">
+                        <a class="nav-link" href="./index">Home
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li v-if="type==2" class="nav-item active">
+                        <a class="nav-link" href="./index">Home
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li v-if="type==1" class="nav-item">
                     <a class="nav-link" href="#">Invites</a>
                     </li>
-                    <li class="nav-item">
+                    <li v-if="type==1" class="nav-item">
                     <a class="nav-link" href="./userProfile">Profile</a>
                     </li>
-                    <li class="nav-item">
+                    <li v-if="type==1" class="nav-item">
                     <a @click="logout" class="nav-link">Logout</a>
                     </li>
+                    <li v-if="type==2" class="nav-item">
+                    <a class="nav-link" href="./userProfile">Profile</a>
+                    </li>
+                    <li v-if="type==2" class="nav-item">
+                    <a @click="logout" class="nav-link">Logout</a>
+                    </li>
+
+
+                    <li v-if="type==0" class="nav-item active">
+                        <a class="nav-link" href="./loginPage">Login
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li v-if="type==0" class="nav-item">
+                    <a  class="nav-link" href="./registerPage" >Register</a>
+                    </li>
+
+
                 </ul>
                 </div>
             </div>
@@ -34,6 +57,12 @@
 
 export default {
   name: 'navbar',
+  props:["itype"],
+  data:function(){
+      return{
+          type:this.itype
+      }
+  },
   methods:{
       logout:function(){
       window.location="./";

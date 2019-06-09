@@ -35,8 +35,6 @@ public class Hotel extends Company {
 	@Column(name="latitude", nullable = true)
 	private float latitude;
 
-	@Version
-	private Long version;
 	
 	public Hotel() {
 		super();
@@ -94,12 +92,5 @@ public class Hotel extends Company {
 		this.latitude = latitude;
 	}
 
-	public Long getVersion() {
-		return version;
-	}
-
-	public void setVersion(Long version) {
-		this.version = version;
-	}
 
 }

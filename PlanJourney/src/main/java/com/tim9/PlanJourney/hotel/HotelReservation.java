@@ -48,9 +48,6 @@ public class HotelReservation extends Reservation {
 	@JsonIgnore
 	private FlightReservation flightReservation;
 
-	@Version
-	private Long version;
-
 	public HotelReservation() {
 	}
 
@@ -134,14 +131,6 @@ public class HotelReservation extends Reservation {
 
 	public void setFlightReservation(FlightReservation flightReservation) {
 		this.flightReservation = flightReservation;
-	}
-
-	public Long getVersion() {
-		return version;
-	}
-
-	public void setVersion(Long version) {
-		this.version = version;
 	}
 
 }

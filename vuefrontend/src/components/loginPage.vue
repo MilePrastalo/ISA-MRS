@@ -71,7 +71,6 @@ export default {
      
     },
     checkFirstLogin:function(){
-      console.log("GET ROLE");
       var getJwtToken = function() {
             return localStorage.getItem('jwtToken');
             };

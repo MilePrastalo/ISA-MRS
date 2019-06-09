@@ -1,59 +1,42 @@
 <template>
     <div id = "flightAdmin">
 
-        <navbar/>
-        <div class = "container">
-             <div class = "row">
-                <ul class="nav nav-tabs centered">
-                    <li class="nav-item">
-                        <a  class="nav-link active" id = "profile" href="#" @click="selectTab(1)">Profile</a>
-                    </li>
-                    <li class="nav-item">
-                        <a  class="nav-link" id = "companyProfile" href="#" @click="selectTab(2)">Flight Company profile</a>     
-                    </li>
-                    <li class="nav-item">
-                        <a  class="nav-link" id = "flights" href="#" @click="selectTab(3)">Flights</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id = "newFlight" href="#" @click="selectTab(4)">New Flight</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id = "destinations" href="#" @click="selectTab(5)">Destinations</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id = "quickTickets" href="#" @click="selectTab(6)">Quick Tickets</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id = "addQuickTicket" href="#" @click="selectTab(7)">Add Quick Ticket</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id = "reports" href="#" @click="selectTab(8)">Reports</a>
-                    </li>
-            </ul>
-            </div>
+        <navbar  itype="1"/>
+        <br>
+        <div class = "centered" style="margin-left:8.4%; margin-right:8.4%" >
+             <nav>
+                <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                    <a @click="selectTab(2)" id="companyProfile" class="nav-item nav-link active"  data-toggle="tab" role="tab" aria-controls="nav-profile" aria-selected="false">Flight Company profile</a>
+                    <a @click="selectTab(3)" id="flights" class="nav-item nav-link"  data-toggle="tab" role="tab" aria-controls="nav-profile" aria-selected="false">Flights</a>
+                    <a @click="selectTab(4)" id="newFlight" class="nav-item nav-link"  data-toggle="tab" role="tab" aria-controls="nav-profile" aria-selected="false">New Flight</a>
+                    <a @click="selectTab(5)" id="destinations" class="nav-item nav-link"  data-toggle="tab" role="tab" aria-controls="nav-profile" aria-selected="false">Destinations</a>
+                    <a @click="selectTab(6)" id="quickTickets" class="nav-item nav-link"  data-toggle="tab" role="tab" aria-controls="nav-profile" aria-selected="false">Quick Tickets</a>
+                    <a @click="selectTab(7)" id="addQuickTicket" class="nav-item nav-link"  data-toggle="tab" role="tab" aria-controls="nav-profile" aria-selected="false">Add Quick Ticket</a>
+                    <a @click="selectTab(8)" id="reports" class="nav-item nav-link"  data-toggle="tab" role="tab" aria-controls="nav-profile" aria-selected="false">Reports</a>
 
-            <div class = "row centered" v-if="currentTab == 1" id = "editProfile">
-                <userProfile class="centered"></userProfile>
-            </div>
-            <div class = "row" v-if="currentTab == 2" id = "flightCompany">
+                </div>
+            </nav>
+        </div>
+         <div  class="tab-content py-3 px-3 px-sm-0 container" id="nav-tabContent" style="min-height: 450px;">
+            <div  class="centered col-lg-10" v-if="currentTab == 2" >
                 <flightCompanyProfile></flightCompanyProfile>
             </div>
-            <div class = "row" v-if="currentTab == 3" id = "flights">
+            <div  v-if="currentTab == 3" >
                 <allFlights></allFlights>
             </div>
-            <div class = "row" v-if="currentTab == 4" id = "newFlight">
+            <div v-if="currentTab == 4" >
                 <newFlight></newFlight>
             </div>
-            <div class = "row" v-if="currentTab == 5" id = "destinations">
+            <div  v-if="currentTab == 5" >
                 <destinations></destinations>
             </div>
-            <div class = "row" v-if="currentTab == 6" id = "quickReservations">
+            <div v-if="currentTab == 6" >
                 <quickReservations></quickReservations>
             </div>
-            <div class = "row" v-if="currentTab == 7" id = "addQuickReservation">
+            <div  v-if="currentTab == 7" >
                 <addQuickReservation></addQuickReservation>
             </div>
-            <div class = "row" v-if="currentTab == 8" id = "flightCompanyReport">
+            <div  v-if="currentTab == 8" >
                 <flightCompanyReport></flightCompanyReport>
             </div>
         </div>
@@ -89,46 +72,40 @@ export default {
   },
   data: function () {
     return {
-        currentTab: 1,
+        currentTab: 2,
     }
 },
 methods:{
         selectTab: function(tabId){
-
-            document.getElementById("profile").className="nav-link";
-            document.getElementById("companyProfile").className="nav-link";
-            document.getElementById("flights").className="nav-link";
-            document.getElementById("newFlight").className="nav-link";
-            document.getElementById("destinations").className="nav-link";
-            document.getElementById("quickTickets").className="nav-link";
-            document.getElementById("addQuickTicket").className="nav-link";
-            document.getElementById("reports").className="nav-link";
-            if (tabId == 1){
-                document.getElementById("profile").className="nav-link active";
-            }
-            else if (tabId == 2){
-                document.getElementById("companyProfile").className="nav-link active";
+            document.getElementById("companyProfile").className="nav-item nav-link";
+            document.getElementById("flights").className="nav-item nav-link";
+            document.getElementById("newFlight").className="nav-item nav-link";
+            document.getElementById("destinations").className="nav-item nav-link";
+            document.getElementById("quickTickets").className="nav-item nav-link";
+            document.getElementById("addQuickTicket").className="nav-item nav-link";
+            document.getElementById("reports").className="nav-item nav-link";
+            if (tabId == 2){
+                document.getElementById("companyProfile").className="nav-item nav-link active";
             }
             else if (tabId == 3){
-                document.getElementById("flights").className="nav-link active";
+                document.getElementById("flights").className="nav-item nav-link active";
             }
             else if (tabId == 4){
-                document.getElementById("newFlight").className="nav-link active";
+                document.getElementById("newFlight").className="nav-item nav-link active";
             }
             else if (tabId == 5){
-                document.getElementById("destinations").className="nav-link active";
+                document.getElementById("destinations").className="nav-item nav-link active";
             }
             else if (tabId == 6){
-                document.getElementById("quickTickets").className="nav-link active";
+                document.getElementById("quickTickets").className="nav-item nav-link active";
             }
             else if (tabId == 7){
-                document.getElementById("addQuickTicket").className="nav-link active";
+                document.getElementById("addQuickTicket").className="nav-item nav-link active";
             }
             else if (tabId == 8){
-                document.getElementById("reports").className="nav-link active";
+                document.getElementById("reports").className="nav-item nav-link active";
             }
             this.currentTab = tabId;
-
         }, 
     }
 }
@@ -146,5 +123,55 @@ methods:{
 .centered{
     margin-right: auto;
     margin-right: auto;
+}
+#nav-tab{
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+nav > .nav.nav-tabs{
+
+  border: none;
+    color:#fff;
+    background:#272e38;
+    border-radius:0;
+
+}
+nav > div a.nav-item.nav-link,
+nav > div a.nav-item.nav-link.active
+{
+  border: none;
+    padding: 18px 25px;
+    color:#fff;
+    background:#272e38;
+    border-radius:0;
+}
+
+nav > div a.nav-item.nav-link.active:after
+ {
+  content: "";
+  position: relative;
+  bottom: -60px;
+  left: -10%;
+  border: 15px solid transparent;
+  border-top-color: #428bca ;
+}
+.tab-content{
+  background: #fdfdfd;
+    line-height: 25px;
+    border: 1px solid #ddd;
+    border-top:5px solid #428bca;
+    border-bottom:5px solid #428bca;
+    padding:30px 25px;
+}
+
+nav > div a.nav-item.nav-link:hover,
+nav > div a.nav-item.nav-link:focus
+{
+  border: none;
+    background: #428bca;
+    color:#fff;
+    border-radius:0;
+    transition:background 0.20s linear;
 }
 </style>

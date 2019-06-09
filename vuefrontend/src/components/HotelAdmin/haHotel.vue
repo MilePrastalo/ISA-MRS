@@ -1,14 +1,11 @@
 <template>
    <div id = "haHotel">
-
+       <div class="container">
             <br>
-             <div class="row"> 
-            </div>
-             <br>
              <div class="row">
                 <ul class="nav nav-tabs">
                     <li class="nav-item">
-                        <a  class="nav-link active" href="#" @click="selectTab(1)" >Hotel Profile</a>
+                        <a  class="nav-link" href="#" @click="selectTab(1)" >Hotel Profile</a>
                     </li>
                     <li class="nav-item">
                         <a  class="nav-link" href="#" @click="selectTab(2)" >Rooms</a>
@@ -29,40 +26,43 @@
                 </ul>
             </div>
             
-            <div v-if="currentTab == 1">
-
-            <table border="1" >
+            <div v-if="currentTab == 1" class="centered">
+            <br>
+            <table class="centered">
                 <tr>
-                        <td> Name </td>
+                        <td><b> Name: </b></td>
                         <td>  <input type="text" name="hotel.name" v-model="hotel.name"> </td>
                     </tr>
                     <tr>
-                        <td> Destination: </td>
+                        <td><b> Destination: </b></td>
                         <td>  <input type="text" name="hotel.destination.name" v-model="hotel.destination.name" > </td>
                     </tr>
                     <tr>
-                        <td> Destination description: </td>
+                        <td><b> Destination description: </b></td>
                         <td> <input type="text" name="hotel.destination.description"  v-model="hotel.destination.description" > </td>        
                     </tr>
                     <tr>
-                        <td> Hotel description: </td>
+                        <td><b> Hotel description: </b></td>
                         <td> <input type="text" name="hotel.description"  v-model="hotel.description" > </td>        
                     </tr>
                     <tr>
                         <td>  </td>
-                        <td><button v-on:click="updateSystemAdminProfile()">Edit</button> </td>        
+                        <td><button v-on:click="updateSystemAdminProfile()" class="btn-primary">Edit</button> </td>        
                     </tr>
             </table>
             </div>
 
-            <div  v-if="currentTab == 2"> 
-
-                    <table border="1" >
-                        <tr>
-                            <td>Room Number</td>
-                            <td>Number Of Beds</td>
-                            <td>Price Per Day</td>
+            <div  v-if="currentTab == 2" class="centered"> 
+                <br>
+                    <table  class="table centered">
+                        <thead class="thead-dark">
+                            <tr>
+                            <th>Room Number</th>
+                            <th>Number Of Beds</th>
+                            <th>Price Per Day</th>
                         </tr>
+                        </thead>
+                        
                     <tr v-for="r in hotel.rooms" :key="r.id">  
                         <td>{{r.roomNumber}}</td>
                         <td>{{r.numberOfBeds}}</td>
@@ -70,8 +70,9 @@
                     </tr>
                 </table>
             </div>
-            <div  v-if="currentTab == 3"> 
-                   <table>
+            <div  v-if="currentTab == 3" class="centered"> 
+                <br>
+                   <table class="centered">
                 <tr>
                     <td> Input room number: </td>
                     <td>  <input type="int" room.roomNumber="room.roomNumber" v-model="room.roomNumber" > </td>
@@ -96,28 +97,31 @@
                 </tr>
                 <tr>
                     <td>  </td>
-                    <td><button v-on:click="addAC()">Add additional charges</button> </td>   
+                    <td><button v-on:click="addAC()" class="btn-primary">Add additional charges</button> </td>   
                 </tr>
                 <br>
                 <tr>
                     <td>  </td>
-                    <td><button v-on:click="addRoom()">Add room</button> </td>   
+                    <td><button v-on:click="addRoom()" class="btn-primary">Add room</button> </td>   
                 </tr>
             </table>      
             </div>
             <div v-if="currentTab == 4">
-                 <h3>Quick Reservations</h3>
-          <table class="table">
-      <tr>
-        <td>Room Number</td>
-        <td>Number Of Beds</td>
-        <td>First Day</td>
-        <td>Last Day</td>
-        <td>Original Price</td>
-        <td>Discount</td>
-        <td>Discounted Price</td>
-        <td>Options</td>
+                 <br>
+          <table class="table centered">
+              <thead class="thead-dark">
+                  <tr>
+        <th>Room Number</th>
+        <th>Number Of Beds</th>
+        <th>First Day</th>
+        <th>Last Day</th>
+        <th>Original Price</th>
+        <th>Discount</th>
+        <th>Discounted Price</th>
+        <th>Options</th>
       </tr>
+              </thead>
+      
       <tr v-for="r in quickReservations" :key="r.id">
         <td>{{r.roomNumber}}</td>
         <td>{{r.numberOfBeds}}</td>
@@ -127,7 +131,7 @@
         <td>{{r.discount}}</td>
         <td>{{parseFloat(r.paidPrice) - parseFloat(r.paidPrice) * (parseFloat(r.discount) / 100)}}</td>
         <td>
-          <button @click="cancelQuickReservation(r)">Cancel</button>
+          <button @click="cancelQuickReservation(r)" class="btn-primary">Cancel</button>
         </td>
       </tr>
     </table>
@@ -138,6 +142,7 @@
              <div v-if="currentTab == 6">
                 <ha-reports :hotel="hotel"></ha-reports>
             </div>
+   </div>
    </div>
 </template>
 
@@ -237,6 +242,9 @@ mounted(){
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-left: 5%;
+}
+.centered{
+    margin-left: auto;
+    margin-right: auto;
 }
 </style>

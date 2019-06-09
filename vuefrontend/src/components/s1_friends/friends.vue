@@ -1,6 +1,6 @@
 <template>
    <div id = "friends">
-       <navbar></navbar>
+       <navbar  itype="1"></navbar>
        <div class = "container">
            <div class = "row">
             <ul class="nav nav-tabs centered">

@@ -2,11 +2,11 @@
    <div id = "allFlights">
 
         <div class = "quickContainer">
-            <br><br>
+            <br><br><br>
             <h2>Quick Tickets: </h2>
             <br>
             <table  border="1"  class = "table">
-                <thead class="thead-dark">
+                <thead>
                     <tr>
                     <th scope="col">Start destination</th>
                     <th scope="col">End destination</th>
@@ -124,4 +124,5 @@ mounted(){
     margin-right: auto;
     width: 1100px;
 }
+
 </style>
