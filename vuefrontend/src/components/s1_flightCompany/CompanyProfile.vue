@@ -1,6 +1,6 @@
 <template>
     <div id = "CompanyProfile">
-        <navbar itype="1"></navbar>
+        <navbar></navbar>
         <h1>{{company.name}}</h1>
         <br>
 
