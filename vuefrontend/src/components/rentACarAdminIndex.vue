@@ -1,6 +1,6 @@
 <template>
     <div id="registeredUserFrontPage">
-        <navbar/>
+        <navbar :itype="2"/>
         <div class="container">
             <div class="row">
                 <ul class="nav nav-tabs centered">

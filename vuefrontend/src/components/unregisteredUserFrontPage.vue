@@ -1,6 +1,7 @@
 <template>
-    <div id="unregisteredUserFrontPage"  class="container">
+    <div id="unregisteredUserFrontPage">
         <navbar :itype="0"/>
+
         <nav>
             <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
                 <a @click="showFlight" id="flsearch" class="nav-item nav-link active" data-toggle="tab" role="tab" aria-controls="nav-home" aria-selected="true">Flight Search</a>
