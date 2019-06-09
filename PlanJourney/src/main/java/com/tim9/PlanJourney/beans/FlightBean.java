@@ -1,6 +1,5 @@
 package com.tim9.PlanJourney.beans;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.tim9.PlanJourney.models.flight.Flight;
@@ -26,27 +25,38 @@ public class FlightBean {
 	private double maxEconomic;
 	private double maxFirstClass;
 	private String flightCompany;
-	private String  economicCapacity;
-	private String buisinesssCapacity;
-	private String firstClassCapacity;
 	private Long id;
 	private Long companyId;
 	private double rate;
+	
+	private int firstClassRows;
+	private int firstClassColumns;
+	private int businessRows;
+	private int businessColumns;
+	private int economicRows;
+	private int economicColumns;
 	
 	
 	public FlightBean() {
 		// TODO Auto-generated constructor stub
 	}
 
+	
 
-	public FlightBean(String startDestination, String endDestination, Date startDate, Date endDate, int flightDuration,
-			int flightLength, double businessPrice, double economicPrice, double firstClassPrice, double minBusiness,
-			double minEconomic, double minFirstClass, double maxBusiness, double maxEconomic, double maxFirstClass,
-			String flightCompany, String economicCapacity, String buisinesssCapacity, String firstClassCapacity, Long companyId) {
+
+
+	public FlightBean(String startDestination, String endDestination, Date startDate, String startDate_str,
+			String endDate_str, Date endDate, int flightDuration, int flightLength, double businessPrice,
+			double economicPrice, double firstClassPrice, double minBusiness, double minEconomic, double minFirstClass,
+			double maxBusiness, double maxEconomic, double maxFirstClass, String flightCompany, Long id, Long companyId,
+			double rate, int firstClassRows, int firstClassColumns, int businessRows, int businessColumns,
+			int economicRows, int economicColumns) {
 		super();
 		this.startDestination = startDestination;
 		this.endDestination = endDestination;
 		this.startDate = startDate;
+		this.startDate_str = startDate_str;
+		this.endDate_str = endDate_str;
 		this.endDate = endDate;
 		this.flightDuration = flightDuration;
 		this.flightLength = flightLength;
@@ -60,12 +70,21 @@ public class FlightBean {
 		this.maxEconomic = maxEconomic;
 		this.maxFirstClass = maxFirstClass;
 		this.flightCompany = flightCompany;
-		this.economicCapacity = economicCapacity;
-		this.buisinesssCapacity = buisinesssCapacity;
-		this.firstClassCapacity = firstClassCapacity;
+		this.id = id;
 		this.companyId = companyId;
+		this.rate = rate;
+		this.firstClassRows = firstClassRows;
+		this.firstClassColumns = firstClassColumns;
+		this.businessRows = businessRows;
+		this.businessColumns = businessColumns;
+		this.economicRows = economicRows;
+		this.economicColumns = economicColumns;
 	}
-	
+
+
+
+
+
 	public FlightBean(Flight flight, String companyName, String startDate, String endDate) {
 		this.startDestination = flight.getStartDestination().getName();
 		this.endDestination = flight.getEndDestination().getName();;
@@ -243,36 +262,6 @@ public class FlightBean {
 	}
 
 
-	public String getEconomicCapacity() {
-		return economicCapacity;
-	}
-
-
-	public void setEconomicCapacity(String economicCapacity) {
-		this.economicCapacity = economicCapacity;
-	}
-
-
-	public String getBuisinesssCapacity() {
-		return buisinesssCapacity;
-	}
-
-
-	public void setBuisinesssCapacity(String buisinesssCapacity) {
-		this.buisinesssCapacity = buisinesssCapacity;
-	}
-
-
-	public String getFirstClassCapacity() {
-		return firstClassCapacity;
-	}
-
-
-	public void setFirstClassCapacity(String firstClassCapacity) {
-		this.firstClassCapacity = firstClassCapacity;
-	}
-
-
 	public String getStartDate_str() {
 		return startDate_str;
 	}
@@ -321,6 +310,111 @@ public class FlightBean {
 	public void setRate(double rate) {
 		this.rate = rate;
 	}
+
+
+
+
+
+	public int getFirstClassRows() {
+		return firstClassRows;
+	}
+
+
+
+
+
+	public void setFirstClassRows(int firstClassRows) {
+		this.firstClassRows = firstClassRows;
+	}
+
+
+
+
+
+	public int getFirstClassColumns() {
+		return firstClassColumns;
+	}
+
+
+
+
+
+	public void setFirstClassColumns(int firstClassColumns) {
+		this.firstClassColumns = firstClassColumns;
+	}
+
+
+
+
+
+	public int getBusinessRows() {
+		return businessRows;
+	}
+
+
+
+
+
+	public void setBusinessRows(int businessRows) {
+		this.businessRows = businessRows;
+	}
+
+
+
+
+
+	public int getBusinessColumns() {
+		return businessColumns;
+	}
+
+
+
+
+
+	public void setBusinessColumns(int businessColumns) {
+		this.businessColumns = businessColumns;
+	}
+
+
+
+
+
+	public int getEconomicRows() {
+		return economicRows;
+	}
+
+
+
+
+
+	public void setEconomicRows(int economicRows) {
+		this.economicRows = economicRows;
+	}
+
+
+
+
+
+	public int getEconomicColumns() {
+		return economicColumns;
+	}
+
+
+
+
+
+	public void setEconomicColumns(int economicColumns) {
+		this.economicColumns = economicColumns;
+	}
+
+
+	
+
+
+	
+
+
+
 	
 	
 

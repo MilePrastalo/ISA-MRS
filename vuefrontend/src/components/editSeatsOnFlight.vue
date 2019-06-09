@@ -81,7 +81,7 @@ export default {
     
         modify: function(seat){
             
-            if (seat.booked == false && seat.quick == false){
+            if (seat.taken == false && seat.quick == false){
                 var getJwtToken = function() {
                     return localStorage.getItem('jwtToken');
                 };

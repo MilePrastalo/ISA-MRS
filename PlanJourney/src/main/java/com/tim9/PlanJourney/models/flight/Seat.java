@@ -41,7 +41,11 @@ public class Seat {
 	
 	
 	public Seat() {
-		// TODO Auto-generated constructor stub
+		this.active = false;
+		this.unavailable = false;
+		this.quick = false;
+		this.version = 0L;
+		this.taken = false;
 	}
 
 	
@@ -54,6 +58,7 @@ public class Seat {
 		this.active = false;
 		this.unavailable = false;
 		this.quick = false;
+		this.version = 0L;
 	}
 
 
