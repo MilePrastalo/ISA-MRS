@@ -1,5 +1,9 @@
 package com.tim9.PlanJourney.beans;
 
+import java.util.ArrayList;
+
+import com.tim9.PlanJourney.hotel.AdditionalCharges;
+
 public class HotelReservationBean {
 	private Long id;
 	private String hotelName;
@@ -16,9 +20,10 @@ public class HotelReservationBean {
 	private int numberOfBeds;
 	private String firstDay;
 	private String lastDay;
+	private ArrayList<String> additionalCharges;
 
 	public HotelReservationBean(String hotelName, String username, int roomNumber, int fYear, int fMonth, int fDay,
-			int lYear, int lMonth, int lDay, int discount, float paidPrice, int numberOfBeds) {
+			int lYear, int lMonth, int lDay, int discount, float paidPrice, int numberOfBeds, ArrayList<String> ac) {
 		this.hotelName = hotelName;
 		this.username = username;
 		this.roomNumber = roomNumber;
@@ -31,6 +36,7 @@ public class HotelReservationBean {
 		this.discount = discount;
 		this.paidPrice = paidPrice;
 		this.numberOfBeds = numberOfBeds;
+		this.additionalCharges = ac;
 	}
 
 	public float getPaidPrice() {
@@ -155,6 +161,13 @@ public class HotelReservationBean {
 	public void setLastDay(String lastDay) {
 		this.lastDay = lastDay;
 	}
-	
+
+	public ArrayList<String> getAdditionalCharges() {
+		return additionalCharges;
+	}
+
+	public void setAdditionalCharges(ArrayList<String> additionalCharges) {
+		this.additionalCharges = additionalCharges;
+	}
 
 }
