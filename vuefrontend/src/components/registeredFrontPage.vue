@@ -1,9 +1,10 @@
 
 <template>
     <div id="registeredUserFrontPage">
+        <navbar :itype="1"/>
         <div class="container">
 
-            <navbar :itype="1"/>
+            
             <div class="row "> 
                 <button style="border-radius: 20px;" class="col-sm btn btn-info btn-lg" @click="airlines">Airlines</button>
                 <button style="border-radius: 20px;" class="col-sm btn btn-info btn-lg" @click="hotels">Hotels</button>
