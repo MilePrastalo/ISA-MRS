@@ -331,6 +331,7 @@ public class FlightCompanyController {
 				quickReservationBean.getDiscount());
 		quickReservationService.save(quickReservation);
 		loggedAdmin.getFlightCompany().getQuickFlightReservations().add(quickReservation);
+		flightCompanyService.save(loggedAdmin.getFlightCompany());
 		userService.save(loggedAdmin);
 		return quickReservation;
 	}
@@ -338,13 +339,24 @@ public class FlightCompanyController {
 	@RequestMapping(value = "/api/getQuickReservations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
-	public @ResponseBody Set<QuickFlightReservation> getQuickReservations() {
+	public @ResponseBody ArrayList<QuickFlightReservationBean> getQuickReservations() {
 
 		FlightAdmin loggedAdmin = getLoggedFlightAdmin();
 		if (loggedAdmin == null) {
 			return null;
 		}
-		return loggedAdmin.getFlightCompany().getQuickFlightReservations();
+		ArrayList<QuickFlightReservationBean> returnValue = new ArrayList<>();
+		String startDate, endDate;
+		for (QuickFlightReservation quick :  loggedAdmin.getFlightCompany().getQuickFlightReservations()) {
+			startDate = sdf.format(quick.getFlight().getStartDate());
+			endDate = sdf.format(quick.getFlight().getEndDate());
+			returnValue.add(new QuickFlightReservationBean(quick.getId(),  quick.getFlight().getId(), quick.getSeat().getId(),
+					quick.getOriginPrice(), quick.getDiscount(),
+					startDate, endDate,
+					quick.getFlight().getStartDestination().getNaziv(), quick.getFlight().getEndDestination().getNaziv(),
+					quick.getSeat().getSeatRow(), quick.getSeat().getSeatColumn(), quick.getSeat().getTravelClassa(), quick.isTaken()));
+		}
+		return returnValue;
 	}
 	
 	@RequestMapping(value = "/api/removeQuickFlightReservation/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -370,11 +382,23 @@ public class FlightCompanyController {
 	@RequestMapping(value = "/api/getQuickReservationsCompany/{idCompany}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('REGISTERED')")
-	public @ResponseBody Set<QuickFlightReservation> getQuickReservationsCompany(
+	public @ResponseBody ArrayList<QuickFlightReservationBean> getQuickReservationsCompany(
 			@PathVariable("idCompany") Long idCompany) {
-
+		
 		FlightCompany company = flightCompanyService.findOne(idCompany);
-		return company.getQuickFlightReservations();
+		ArrayList<QuickFlightReservationBean> returnValue = new ArrayList<>();
+		String startDate, endDate;
+		for (QuickFlightReservation quick :  company.getQuickFlightReservations()) {
+			startDate = sdf.format(quick.getFlight().getStartDate());
+			endDate = sdf.format(quick.getFlight().getEndDate());
+			returnValue.add(new QuickFlightReservationBean(quick.getId(), quick.getFlight().getId(), quick.getSeat().getId(),
+					quick.getOriginPrice(), quick.getDiscount(),
+					startDate, endDate,
+					quick.getFlight().getStartDestination().getNaziv(), quick.getFlight().getEndDestination().getNaziv(),
+					quick.getSeat().getSeatRow(), quick.getSeat().getSeatColumn(), quick.getSeat().getTravelClassa(), quick.isTaken()));
+		}
+		return returnValue;
+
 	}
 
 	private FlightAdmin getLoggedFlightAdmin() {
