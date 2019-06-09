@@ -10,32 +10,17 @@
                     </button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">
-                    <li v-if="type==1" class="nav-item active">
-                        <a class="nav-link" href="./index">Home
+                    <li v-if="type!=0" class="nav-item active">
+                        <a class="nav-link" :href="homePage">Home
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
-                    <li v-if="type==2" class="nav-item active">
-                        <a class="nav-link" href="./index">Home
-                            <span class="sr-only">(current)</span>
-                        </a>
-                    </li>
-                    <li v-if="type==1" class="nav-item">
-                    <a class="nav-link" href="#">Invites</a>
-                    </li>
-                    <li v-if="type==1" class="nav-item">
+                    <li v-if="type!=0" class="nav-item">
                     <a class="nav-link" href="./userProfile">Profile</a>
                     </li>
-                    <li v-if="type==1" class="nav-item">
+                    <li v-if="type!=0" class="nav-item">
                     <a @click="logout" class="nav-link">Logout</a>
                     </li>
-                    <li v-if="type==2" class="nav-item">
-                    <a class="nav-link" href="./userProfile">Profile</a>
-                    </li>
-                    <li v-if="type==2" class="nav-item">
-                    <a @click="logout" class="nav-link">Logout</a>
-                    </li>
-
 
                     <li v-if="type==0" class="nav-item active">
                         <a class="nav-link" href="./loginPage">Login
@@ -57,15 +42,43 @@
 
 export default {
   name: 'navbar',
-  props:["itype"],
   data:function(){
       return{
-          type:this.itype
+          type:0,
+          homePage:""
       }
+  },
+  mounted(){
+       console.log(this.type);
+      var getJwtToken = function() {
+            return localStorage.getItem('jwtToken');
+            };
+      axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+      axios.get("http://localhost:8080/api/getUserRole")
+            .then(response => {
+                this.type = 1;
+                console.log(response);
+                if(response.data == "RENT_ADMIN"){
+                  this.homePage ="./RAindex";
+                }else if (response.data == "FLIGHT_ADMIN"){
+                  this.homePage ="./flightAdmin";
+                }else if (response.data == "SYS_ADMIN"){
+                  this.homePage ="./systemAdminPage";
+                }else if (response.data == "REGISTERED"){
+                  this.homePage ="./index";
+                }else if (response.data == "HOTEL_ADMIN"){
+                  this.homePage ="./hotelAdminPage";
+                }else{
+                  this.homePage ="./";
+                  this.type = 0;
+                }
+                
+            });
   },
   methods:{
       logout:function(){
-      window.location="./";
+        localStorage.setItem('jwtToken',"");
+        window.location="./";
     },
   }
 }
