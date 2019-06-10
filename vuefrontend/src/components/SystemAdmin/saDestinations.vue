@@ -18,6 +18,7 @@
             </div>
             
             <div v-if="currentTab == 1">
+                <div v-if="editing == false">
                 <br>
                 <br>
                 <table class="table">
@@ -36,7 +37,7 @@
                 <td>{{d.name}}</td>
                 <td>{{d.coordinates}}</td>
                 <td>{{d.description}}</td>
-                <td><button class="btn-primary">Edit</button></td>
+                <td><button class="btn-primary" v-on:click="editDestination(d)">Edit</button></td>
             </tr>
             </table>
             </div>
@@ -58,7 +59,28 @@
                     <td>  </td>
                     <td><button v-on:click="addDestination()" class="btn-primary">Add Destination</button> </td>      
                 </tr>
-            </table>   
+            </table>
+            </div>   
+            <div v-if="editing == true">
+                <table>
+                    <tr>
+                    <td><b> Destination Name: </b></td>
+                    <td>  <input type="text" v-model="ed.name" > </td>
+                </tr>
+                <tr>
+                    <td><b> Coordinates: </b></td>
+                    <td>  <input type="text" v-model="ed.coordinates" > </td>
+                </tr>
+                <tr>
+                    <td><b>Description: </b></td>
+                    <td> <textarea  rows="5" cols="22" name="description"  v-model="ed.description" style="overflow:scroll;"></textarea> </td>        
+                </tr>
+                    <tr>
+                        <td><button v-on:click="saveDestination()" class="btn-primary">Save</button></td>
+                        <td><button v-on:click="cancelEditing()" class="btn-primary">Cancel</button></td>
+                    </tr>
+                </table>
+            </div>
             </div>
         </div>
 </template>
@@ -72,8 +94,11 @@ export default {
   data: function () {
   return {
     destinations: [],
-      newDestination: {},
-    currentTab: 1
+    newDestination: {},
+    ed: {},
+    cancelED: {},
+    currentTab: 1,
+    editing: false
   }
 },
 mounted(){
@@ -109,6 +134,7 @@ mounted(){
                     return;
                 }
             }
+
             axios.post("http://localhost:8080/api/sysAdminAddDestination",this.newDestination)
             .then(response => {
                 if(response.data == -1) {
@@ -134,6 +160,69 @@ mounted(){
                     return;
                 }
             })
+        },
+        editDestination: function(id) {
+            this.ed = id;
+            this.cancelED.name = id.name;
+            this.cancelED.coordinates = id.coordinates;
+            this.cancelED.description = id.description;
+            this.editing = true;
+        },
+        saveDestination: function(){
+            if(this.ed.name == "") {
+                alert("You must enter destination name");
+                return;
+            }
+            if(this.ed.coordinates == "") {
+                alert("You must enter coordinates");
+                return;
+            }
+
+            for(let d in this.destinations) {
+                if(this.destinations[d].name == this.ed.name && this.destinations[d].id != this.ed.id) {
+                    alert("Destination with given name already exists here.");
+                        return;
+                    }
+                if(this.destinations[d].coordinates == this.ed.coordinates && this.destinations[d].id != this.ed.id) {
+                    alert("Destination with given coordinates already exists.");
+                        return;
+                    }
+            }
+
+            axios.post("http://localhost:8080/api/sysAdminEditDestination",this.ed)
+            .then(response => {
+                if(response.data == -1) {
+                    alert("Destination with given name already exists.");
+                    return;
+                } else if(response.data == -2) {
+                    alert("Destination with given coordinates already exists.");
+                    return;
+                } else if(response.data == -3) {
+                    alert("There was an error with authority.");
+                    return;
+                } else if(response.data == -4) {
+                    alert("You must enter destination name");
+                return;
+                } else if(response.data == -5) {
+                    alert("You must enter coordinates");
+                return;
+                } else if(response.data == -6) {
+                    alert("Destination with given ID does not exist.");
+                return;
+                } else {
+
+                    alert("Destination has been successfully edited.");
+                    return;
+                }
+            })
+
+            this.editing = false;
+        },
+        cancelEditing: function() {
+            this.ed.name = this.cancelED.name;
+            this.ed.coordinates = this.cancelED.coordinates;
+            this.ed.description = this.cancelED.description;
+            this.editing = false;
         }
     }
 }

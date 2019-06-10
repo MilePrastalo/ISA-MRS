@@ -139,14 +139,14 @@ public class SystemAdminController {
 
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
 			// Returns -4 if given destination name is null or empty.
-			if(destinationBean.getName() == null || destinationBean.getName().equals("".trim())) {
+			if (destinationBean.getName() == null || destinationBean.getName().equals("".trim())) {
 				return (long) -4;
 			}
 			// Returns -5 if given destination coordinates are null or empty.
-			if(destinationBean.getCoordinates() == null || destinationBean.getCoordinates().equals("".trim())) {
+			if (destinationBean.getCoordinates() == null || destinationBean.getCoordinates().equals("".trim())) {
 				return (long) -5;
 			}
-			
+
 			ArrayList<Destination> destinations = (ArrayList<Destination>) destinationService.findAll();
 			for (Destination d : destinations) {
 				// Returns -1 if destinations with given name already exists.
@@ -164,9 +164,58 @@ public class SystemAdminController {
 			newDestination.setCoordinates(destinationBean.getCoordinates());
 			newDestination.setDescription(destinationBean.getDescription());
 
-			newDestination =  destinationService.save(newDestination);
+			newDestination = destinationService.save(newDestination);
 
 			return newDestination.getId();
+		}
+		// Returns -3 if there was an error with authority.
+		return (long) -3;
+	}
+
+	@RequestMapping(value = "/api/sysAdminEditDestination", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('SYS_ADMIN')")
+	public @ResponseBody Long sysAdminEditDestination(@RequestBody DestinationBean destinationBean) throws Exception {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			// Returns -4 if given destination name is null or empty.
+			if (destinationBean.getName() == null || destinationBean.getName().equals("".trim())) {
+				return (long) -4;
+			}
+			// Returns -5 if given destination coordinates are null or empty.
+			if (destinationBean.getCoordinates() == null || destinationBean.getCoordinates().equals("".trim())) {
+				return (long) -5;
+			}
+
+			Destination dest = null;
+			ArrayList<Destination> destinations = (ArrayList<Destination>) destinationService.findAll();
+			for (Destination d : destinations) {
+				// Returns -1 if destinations with given name already exists.
+				if (d.getName().equals(destinationBean.getName()) && d.getId() != destinationBean.getId()) {
+					return (long) -1;
+				}
+				// Return -2 if destination with given coordinates already exists.
+				if (d.getCoordinates().equals(destinationBean.getCoordinates())
+						&& d.getId() != destinationBean.getId()) {
+					return (long) -2;
+				}
+				if (d.getId() == destinationBean.getId()) {
+					dest = d;
+				}
+			}
+			// Returns -6 if destination with given ID does not exist.
+			if (dest == null) {
+				return (long) -6;
+			}
+
+			dest.setName(destinationBean.getName());
+			dest.setCoordinates(destinationBean.getCoordinates());
+			dest.setDescription(destinationBean.getDescription());
+
+			dest = destinationService.save(dest);
+
+			return dest.getId();
 		}
 		// Returns -3 if there was an error with authority.
 		return (long) -3;
