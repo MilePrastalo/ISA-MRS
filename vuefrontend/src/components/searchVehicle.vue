@@ -45,6 +45,7 @@
 
 export default {
   name: 'searchVehicle',
+  props:['iCompany'],
   components: {
   },
   data: function () {
@@ -57,7 +58,8 @@ export default {
     older:"",
     type:"",
     producers:["Mercedes","Audi","BMW"],
-    types:["Sedan","Jeep"]
+    types:["Sedan","Jeep"],
+    company = this.iCompany
   }
 },
 mounted(){

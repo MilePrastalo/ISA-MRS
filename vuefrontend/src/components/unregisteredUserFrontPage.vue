@@ -12,7 +12,7 @@
         <div class="row"  id="searches" >
                 <div  class="searches" id="Flight" v-if="tabSelected==1"><SearchFlights></SearchFlights></div>
                 <div  class="searches" id="Hotel" v-if="tabSelected==2"><searchHotels></searchHotels></div>
-                <div class="searches" id="Rent" v-if="tabSelected==3"><searchRentACarCompany></searchRentACarCompany></div>
+                <div class="searches" id="Rent" v-if="tabSelected==3"><rentACarReservation></rentACarReservation></div>
             </div>
     </div>
     
@@ -23,11 +23,11 @@ import SearchFlights from './searchFlights';
 import searchRentACarCompany from './searchRentACarCompany.vue';
 import searchHotels from './searchHotels.vue';
 import navbar from "./navbar.vue";
-
+import rentACarReservation from "./rentACarReservation.vue";
 export default {
   name: 'unregisteredUserFrontPage',
   components: {
-      SearchFlights,searchHotels,searchRentACarCompany,navbar
+      SearchFlights,searchHotels,searchRentACarCompany,navbar,rentACarReservation
   },
   data: function(){
       return{

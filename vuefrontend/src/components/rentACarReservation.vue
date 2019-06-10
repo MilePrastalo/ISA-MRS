@@ -7,12 +7,13 @@
                     <a id="normal" class="nav-link active " href="#" @click="normal">Vehicles</a>
                 </li>
                 <li class="nav-item centered bigTab">
-                    <a id="quick" class="nav-link" href="#" @click="quick">Quick Reservations</a>
+                    <a id="quick" class="nav-link" href="#" @click="quick" v-if="justSearch == false">Quick Reservations</a>
                     
                 </li>
             </ul>
         </div>
         <div id="classic" v-if="tabselected==0">
+            <searchVehicle/>
             <table class="table"> 
                 <tr>
                     <td>Name</td>
@@ -29,14 +30,14 @@
                     <td>{{car.year}}</td>
                     <td>{{car.price}}</td>
                     <td>{{car.rating}}</td>
-                    <td><select v-model="pickoffice" name="" id=""><option v-for="office in offices" v-bind:value=office.id :key="office.id">{{office.name}}</option></select></td>
-                    <td><select v-model="returnoffice" name="" id=""><option v-for="office in offices" v-bind:value=office.id :key="office.id">{{office.name}}</option></select></td>
-                    <td><Button @click="reserve(car.id)">Reserve</Button></td>
+                    <td><select v-if="justSearch == false" v-model="pickoffice" name="" id=""><option v-for="office in offices" v-bind:value=office.id :key="office.id">{{office.name}}</option></select></td>
+                    <td><select v-if="justSearch == false" v-model="returnoffice" name="" id=""><option v-for="office in offices" v-bind:value=office.id :key="office.id">{{office.name}}</option></select></td>
+                    <td><Button v-if="justSearch == false" @click="reserve(car.id)">Reserve</Button></td>
                 </tr>
             </table>
         </div>
         <div id="quick" v-if="tabselected==1">
-            <table border="1"  class = "table">
+            <table border="1"  class = "table" v-if="justSearch == false">
                 <thead class="thead-dark">
                     <tr>
                     <th scope="col">Office to pick up</th>
@@ -70,11 +71,11 @@
 </template>
 <script>
 import searchRentACarCompany from './searchRentACarCompany.vue';
-
+import searchVehicle from './searchVehicle.vue';
 export default {
     name: 'rentACarReservation',
     components: {
-      searchRentACarCompany
+      searchRentACarCompany,searchVehicle
     },
     props:['ilocation','iflightDateArrive','iflightDateLeaving'],
     data: function(){
@@ -90,8 +91,17 @@ export default {
             quickReservations: [],
             flightDateArrive:this.iflightDateArrive,
             flightDateLeaving:this.iflightDateLeaving,
-            tabselected :0
+            tabselected :0,
+            justSearch:false
         };
+    },
+    mounted(){
+        if(this.location == undefined){
+            this.justSearch = true;
+        }
+        else{
+            this.justSearch = false;
+        }
     },
     methods: {
             normal: function(){

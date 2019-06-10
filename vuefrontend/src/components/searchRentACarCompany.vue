@@ -65,6 +65,15 @@ export default {
   }
 },
 mounted(){
+        if (this.location == undefined){
+            console.log("lokacija undefined");
+            this.location = "";
+        }
+        if (this.flightDateArrive == undefined){
+            this.flightDateArrive = "";
+            this.flightDateLeaving = "";
+        }
+        else{
         var arrive = this.flightDateArrive.split(" ");
         var date1 = arrive[0].split(".");
         var fd1 = new Date(date1[2],date1[1]-1,date1[0]);
@@ -82,7 +91,7 @@ mounted(){
         month = ("0" + (fd2.getMonth() + 1)).slice(-2);
         datef = fd2.getFullYear()+"-"+(month)+"-"+(day) ;
         this.dateTo = datef ;
-        console.log(this.dateTo);
+        }
     },
     methods:{
            search:function(){
