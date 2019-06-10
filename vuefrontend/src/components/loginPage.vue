@@ -28,9 +28,10 @@
 </template>
 
 <script>
-
+import axios from 'axios'
 export default {
   name: 'loginPage',
+  props: ["requestId"],
   data:function(){
     return {
       username:"",
@@ -101,7 +102,12 @@ export default {
                 }else if (response.data == "SYS_ADMIN"){
                   window.location ="./systemAdminPage";
                 }else if (response.data == "REGISTERED"){
-                  window.location ="./index";
+                  if (window.location.pathname.startsWith('/confirmationPage')){
+                    this.$emit('currentDiv',2);
+                  }
+                  else{
+                    window.location ="./index";
+                  }
                 }else if (response.data == "HOTEL_ADMIN"){
                   window.location ="./hotelAdminPage";
                 }else{

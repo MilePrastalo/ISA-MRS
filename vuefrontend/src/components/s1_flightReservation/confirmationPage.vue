@@ -1,73 +1,172 @@
 <template>
    <div id = "confirmationPage">
+
+       <div v-if="currentDiv == 1">
+           <login :requestId="requestId" v-on:currentDiv="changeDiv"></login>   
+       </div>
+
+       <div v-if="currentDiv == 2" class="container">
+        <h1>Reservation Request</h1><br><br>
         
-        <h2>Reservation request</h2>
-        <table style="text-align: left">
+        <table style="text-align: left; margin-left: auto; margin-right: auto">
             <tr>
                 <td>From: </td>
-                <td>{{request.passangers[0].firstName}} {{request.passangers[0].lastName}}</td>
+                <td>{{request.creator}}</td>
             </tr>
+             <tr>
+                <td>Total: </td>
+                <td>{{request.price}}</td>
+            </tr>
+            <br><h2>Flight Info</h2><br>
             <tr>
                 <td> Start destination: </td>
-                <td> {{request.flight.startDestination.name}} </td>
+                <td> {{request.startDestination}} </td>
             </tr>
              <tr>
                 <td>End destination: </td>
-                <td>{{request.flight.endDestination.name}}</td>
+                <td>{{request.endDestination}}</td>
             </tr>
              <tr>
                 <td>Start date: </td>
-                <td>{{request.flight.startDate}}</td>
+                <td>{{request.startDate}}</td>
             </tr>
             <tr>
                 <td>End date: </td>
-                <td>{{request.flight.endDate}}</td>
+                <td>{{request.endDate}}</td>
+            </tr>
+            <br><h2>Your Seat</h2><br>
+             <tr>
+                <td>Class: </td>
+                <td>{{request.travelClassa}} </td>
             </tr>
             <tr>
                 <td>Seat: </td>
-                <td>red: {{request.seat.seatRow}}, kolona: {{request.seat.seatColumn}} </td>
+                <td>row: {{request.seatRow}}, column: {{request.seatColumn}} </td>
             </tr>
             <tr>
-                <td>Enter your username: </td>
-                <td><input type="text" v-model="username"></td>
+                <td>Price: </td>
+                <td>{{request.priceForSeat}} </td>
             </tr>
+             <br><h2>Passangers</h2><br>
+             <tr>
+                <td  v-for="passanger in request.passangersInfo" :key="passanger.id">
+                    <table style="text-align: left;" border = "1">
+                        <tr>
+                            <th colspan="2">{{passanger.firstName}} {{passanger.lastName}}</th>
+                        </tr>
+                        <tr>
+                            <td>Seat: </td>
+                            <td >({{passanger.seatRow}}, {{passanger.seatColumn}})</td>
+                        </tr>
+                        <tr>
+                            <td>Class: </td>
+                            <td >{{passanger.travelClass}}</td>
+                        </tr>
+                        <tr>
+                            <td>Passport: </td>
+                            <td >{{passanger.passport}}</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <br><h2>Hotel Reservation</h2><br>
+             <tr>
+                <td   v-for="hotel in request.hotelsReservations" :key="hotel.hotelName">
+                    <table style="text-align: left;" border = "1">
+                        <tr>
+                            <th colspan="2">{{hotel.hotelName}}</th>
+                        </tr>
+                        <tr>
+                            <td>From: </td>
+                            <td >{{hotel.firstDay}}</td>
+                        </tr>
+                        <tr>
+                            <td>To: </td>
+                            <td >{{hotel.lastDay}}</td>
+                        </tr>
+                        <tr>
+                            <td>Paid price: </td>
+                            <td> {{hotel.paidPrice}} </td>
+                        </tr>
+                        </table>
+                </td>
+            </tr>
+            <br><h2>Rent-A-Car Reservation</h2><br>
             <tr>
-                <td>Enter your passwors: </td>
-                <td><input type="text" v-model="password"></td>
+                <td v-for="rent in request.rentReservations" :key="rent.id">
+                    <table style="text-align: left;" border = "1">
+                        <tr>
+                            <th colspan="2">{{rent.vehicleName}}</th>
+                        </tr>
+                        <tr>
+                            <td>From: </td>
+                            <td >{{rent.dateFrom}}</td>
+                        </tr>
+                        <tr>
+                            <td>To: </td>
+                            <td >{{rent.dateTo}}</td>
+                        </tr>
+                        <tr>
+                            <td>Paid price: </td>
+                            <td >{{rent.price}}</td>
+                        </tr>
+                    </table>
+                </td>
             </tr>
+           
         </table>
-        <button v-if="this.selected == false" @click="confirmRequest">Confirm</button>
-        <button  v-if="this.selected == false" @click="refuseRequest">Reject</button>
+        <button v-if="this.selected == false" class="btn btn-success" @click="confirmRequest">Confirm</button>
+        <button  v-if="this.selected == false" class="btn btn-danger" @click="refuseRequest">Reject</button>
+       </div>
+        
+        
          
     </div>
 </template>
 
 <script>
 import axios from 'axios'
+import loginPage from "../loginPage.vue";
 export default {
     name: 'confirmationPage',
     components: {
+        login: loginPage
     },
     data: function () {
 
         return {
             username : "",
             password: "",
-            request: "",
+            request: {},
             requestId: this.$route.params.requestId,
-            selected: false
+            selected: false,
+            currentDiv: 1,
         }
     },
     created: function(){
-
-        axios.get("http://localhost:8080/api/getReservationRequest/" + this.requestId)
-        .then(response => {
-            this.request = response.data
-        }); 
     },
+
     mounted(){
     }, 
     methods: {
+
+        changeDiv: function(div){
+            
+            if (div == 2){
+                axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('jwtToken');
+                axios.get("http://localhost:8080/api/getReservationRequest/" + this.requestId)
+                .then(response => {
+                    if (response.data == ""){
+                        alert("You did'n sign in or it's not your invitation")
+                        this.currentDiv = 1;
+                        return;
+                    }
+                    this.request = response.data
+                    this.currentDiv = div;
+                });
+            }
+
+        },
 
         confirmRequest: function(){
            if (this.username == "" || this.password == ""){
@@ -101,11 +200,7 @@ export default {
 </script>
 
 <style>
-#confirmationPage{
-    background-color: mediumspringgreen;
-    width:50%;
-    height: 50%;
-}
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

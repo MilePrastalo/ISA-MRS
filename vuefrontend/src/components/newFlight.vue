@@ -145,15 +145,13 @@ mounted(){
 
             var startDateTime = this.startDate + " " + this.startDate_time;
             var endDateTime = this.endDate +  " " + this.endDate_time;
-
-            var economicCapacity = this.economicCapacity_rows + "|" + this.economicCapacity_columns;
-            var buisinesssCapacity = this.buisinesssCapacity_rows + "|" + this.buisinesssCapacity_columns;
-            var firstClassCapacity = this.firstClassCapacity_rows + "|" + this.firstClassCapacity_columns;
             var newFlight = {startDestination: this.startDestination.name, endDestination: this.endDestination.name,
                 startDate_str: startDateTime, endDate_str: endDateTime, 
                 flightDuration: this.flightDuration, flightLength: this.flightLength, 
                 businessPrice: this.buisinesssPrice, economicPrice: this.economicPrice, firstClassPrice: this.firstClassPrice,
-                economicCapacity: economicCapacity, buisinesssCapacity: buisinesssCapacity, firstClassCapacity: firstClassCapacity }
+                economicRows: this.economicCapacity_rows, economicColumns: this.economicCapacity_columns, 
+                businessRows:this.buisinesssCapacity_rows, businessColumns: this.buisinesssCapacity_columns,
+                firstClassRows: this.firstClassCapacity_rows, firstClassColumns: this.firstClassCapacity_columns }
             var getJwtToken = function() {
                 return localStorage.getItem('jwtToken');
             };

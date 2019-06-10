@@ -150,9 +150,9 @@ public class FlifgtController {
 			return null;
 		}
 		Set<Seat> seats = new HashSet<Seat>();
-		makeSeats(seats, newFlightInfo.getEconomicCapacity(), "economic");
-		makeSeats(seats, newFlightInfo.getBuisinesssCapacity(), "business");
-		makeSeats(seats, newFlightInfo.getFirstClassCapacity(), "first class");
+		makeSeats(seats, newFlightInfo.getEconomicRows(), newFlightInfo.getEconomicColumns(), "economic");
+		makeSeats(seats, newFlightInfo.getBusinessRows(), newFlightInfo.getBusinessColumns(), "business");
+		makeSeats(seats, newFlightInfo.getFirstClassRows(), newFlightInfo.getFirstClassColumns(), "first class");
 
 		Flight newFlight = new Flight(flightCompany, startDate, endDate, newFlightInfo.getFlightDuration(),
 				newFlightInfo.getFlightLength(), startDestination, endDestination, new HashSet<FlightReservation>(),
@@ -278,9 +278,7 @@ public class FlifgtController {
 		return null;
 	}
 
-	private Set<Seat> makeSeats(Set<Seat> seats, String capacity, String flightClass) {
-		int rows = Integer.parseInt(capacity.split("|")[0]);
-		int columns = Integer.parseInt(capacity.split("|")[2]);
+	private Set<Seat> makeSeats(Set<Seat> seats, int rows, int columns, String flightClass) {
 		for (int row = 1; row <= rows; row++) {
 			for (int col = 1; col <= columns; col++) {
 				seats.add(new Seat(false, row, col, flightClass));
