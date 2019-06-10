@@ -27,17 +27,6 @@
             </tr>
         </table>
     </div>
-    <div>
-        <table >
-            <tr v-for="car in cars" :key="car.name">  
-                <td>{{car.name}}</td>
-                <td>{{car.maker}}</td>
-                <td>{{car.year}}</td>
-                <td>{{car.price}}</td>
-                <td>{{car.rating}}</td>
-            </tr>
-        </table>
-    </div>
   </div>
 </template>
 
@@ -45,7 +34,7 @@
 
 export default {
   name: 'searchVehicle',
-  props:['iCompany'],
+  props:['iCompany','idateFrom','idateTo'],
   components: {
   },
   data: function () {
@@ -59,7 +48,9 @@ export default {
     type:"",
     producers:["Mercedes","Audi","BMW"],
     types:["Sedan","Jeep"],
-    company = this.iCompany
+    company : this.iCompany,
+    dateFrom:this.idateFrom,
+    dateTo:this.idateTo
   }
 },
 mounted(){
@@ -79,9 +70,13 @@ mounted(){
     },
     methods:{
         search: function(){
-            axios.post("http://localhost:8080/api/vehicleSearch",{producer : this.producer, priceFrom: this.priceFrom, priceTo:this.priceTo, newer:this.newer, older:this.older,type:this.type})
+          var data = {};
+          var parent = this;
+          console.log(this.company);
+            axios.post("http://localhost:8080/api/vehicleSearch",{dateFrom:this.dateFrom,dateTo:this.dateTo,company:this.company, producer : this.producer, priceFrom: this.priceFrom, priceTo:this.priceTo, newer:this.newer, older:this.older,type:this.type})
             .then(response => {
-                this.cars = response.data
+              console.log(response.data);
+                parent.$emit('searched',response.data);
             }); 
         }     
     }

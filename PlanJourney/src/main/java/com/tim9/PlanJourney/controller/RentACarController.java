@@ -85,7 +85,12 @@ public class RentACarController {
 	// Visible to everyone
 	public @ResponseBody ArrayList<VehicleSearchReturnBean> searchVehicles(@RequestBody VehicleSearchBean search)
 			throws Exception {
-		ArrayList<Vehicle> vehicles = new ArrayList<>();
+		VehicleReservationSearchBean vrsb = new VehicleReservationSearchBean();
+		vrsb.setId(search.getCompany());
+		vrsb.setDateFrom(search.getDateFrom());
+		vrsb.setDateTo(search.getDateTo());
+		ArrayList<Vehicle> vehicles = getAvaiableVehicles(vrsb);
+		companyService.findOne(Long.parseLong(search.getCompany()));
 		vehicles = (ArrayList<Vehicle>) vehicleService.findAll();
 		ArrayList<VehicleSearchReturnBean> foundVehicles = new ArrayList<>();
 		System.out.println("Poziv");
@@ -97,8 +102,10 @@ public class RentACarController {
 					&& (vehicle.getYear() > search.getNewer() || search.getNewer() == 0)
 					&& (vehicle.getYear() < search.getOlder() || search.getOlder() == 0)
 					&& (vehicle.getType().equals(search.getType()) || search.getType().equals(""))) {
-				foundVehicles.add(new VehicleSearchReturnBean(vehicle.getName(), vehicle.getMaker(), vehicle.getType(),
-						vehicle.getYear(), vehicle.getPrice(),vehicle.getRating()));
+				VehicleSearchReturnBean bean =	new VehicleSearchReturnBean(vehicle.getName(), vehicle.getMaker(), vehicle.getType(),
+						vehicle.getYear(), vehicle.getPrice(),vehicle.getRating());
+				bean.setId(Long.toString(vehicle.getId()));
+				foundVehicles.add(bean);
 			}
 		}
 		return foundVehicles;
@@ -232,11 +239,9 @@ public class RentACarController {
 		}
 		return returnBean;
 	}
-	@RequestMapping(value = "/api/getAvaiableVehicles", method = RequestMethod.POST, produces= MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
-	@CrossOrigin()
+	
 	//Returns vehicles that are avaiable for reservation in selected company
-	public @ResponseBody ArrayList<VehicleSearchReturnBean>  getAvaiableVehicles(@RequestBody VehicleReservationSearchBean search) throws Exception { 
-		ArrayList<VehicleSearchReturnBean> found = new ArrayList<>();
+	private ArrayList<Vehicle>  getAvaiableVehicles(VehicleReservationSearchBean search) throws Exception { 
 		ArrayList<Vehicle> vehicles = new ArrayList<>();
 		RentACarCompany company = companyService.findOne(Long.parseLong(search.getId()));
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -264,12 +269,7 @@ public class RentACarController {
 				}
 			}
 		}
-		for (Vehicle vehicle : vehicles) {
-			VehicleSearchReturnBean be = new VehicleSearchReturnBean(vehicle.getName(), vehicle.getMaker(), vehicle.getType(), vehicle.getYear(), vehicle.getPrice(),vehicle.getRating());
-			be.setId(Long.toString(vehicle.getId()));
-			found.add(be);
-		}
-		return found;
+		return vehicles;
 		
 	}
 	private RegisteredUser getRegisteredUser() {

@@ -1,6 +1,6 @@
 <template>
     <div id="rentACarReservation">
-        <searchRentACarCompany :ilocation = "location"  v-on:selected="showVehicles" :iflightDateArrive="flightDateArrive" :iflightDateLeaving="flightDateLeaving" />
+        <searchRentACarCompany :ijustSearch="justSearch"  :ilocation = "location"  v-on:selected="showVehicles" :iflightDateArrive="flightDateArrive" :iflightDateLeaving="flightDateLeaving" />
         <div class="row centered">
             <ul class="nav nav-tabs col-lg-10 fromTop">
                 <li class="nav-item centered bigTab">
@@ -13,7 +13,7 @@
             </ul>
         </div>
         <div id="classic" v-if="tabselected==0">
-            <searchVehicle/>
+            <searchVehicle :idateFrom="datefrom" :idateTo="dateto" v-if="selected" :iCompany="companySelected" v-on:searched="showFound"/>
             <table class="table"> 
                 <tr>
                     <td>Name</td>
@@ -92,7 +92,9 @@ export default {
             flightDateArrive:this.iflightDateArrive,
             flightDateLeaving:this.iflightDateLeaving,
             tabselected :0,
-            justSearch:false
+            justSearch:false,
+            companySelected:"",
+            selected:false
         };
     },
     mounted(){
@@ -114,33 +116,34 @@ export default {
                 document.getElementById("normal").className="nav-link  ";
                 document.getElementById("quick").className="nav-link active";
             },
+            showFound(data){
+                this.cars = data;
+                this.cars.forEach(function(item,index){
+                    console.log(item);
+                    if(item.rating == -1){
+                        item.rating = "No ratings";
+                    }
+                });
+            },
             showVehicles:function(dataPassed){
+                this.companySelected = dataPassed.id;
+                this.selected = true;
                 this.offices= dataPassed.offices;
-                console.log(this.offices);
                 this.id = dataPassed.id;
                 this.datefrom = dataPassed.dateFrom;
                 this.dateto = dataPassed.dateTo;
-                console.log(dataPassed);
-                var getJwtToken = function() {
-                    return localStorage.getItem('jwtToken');
-                };
-                axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-                axios.post("http://localhost:8080/api/getAvaiableVehicles",{id:this.id,dateFrom:this.datefrom,dateTo:this.dateto})
-                    .then(response => {
-                        console.log(response);
-                        this.cars = response.data;
-                        this.cars.forEach(function(item,index){
-                            console.log(item);
-                            if(item.rating == -1){
-                                item.rating = "No ratings";
-                            }
+                if(!this.justSearch){
+                    var getJwtToken = function() {
+                        return localStorage.getItem('jwtToken');
+                    };
+                    axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+                    axios.post("http://localhost:8080/api/getQuickReservations",{id:this.id,dateFrom:this.datefrom,dateTo:this.dateto})
+                        .then(response => {
+                            console.log(response.data);
+                            this.quickReservations = response.data;
                         });
-                    }); 
-                axios.post("http://localhost:8080/api/getQuickReservations",{id:this.id,dateFrom:this.datefrom,dateTo:this.dateto})
-                    .then(response => {
-                        console.log(response.data);
-                        this.quickReservations = response.data;
-                    });
+                }
+                
             },
             reserve:function(carid){
                 var getJwtToken = function() {

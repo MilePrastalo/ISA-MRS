@@ -7,7 +7,7 @@
                 <td>Rent a company name:</td>
                 <td><input v-model="name" type="text"></td>
                 <td>Location</td>
-                <td><input v-model="location" type="text" readonly></td>
+                <td><input id="locationInput" v-model="location" type="text" readonly></td>
             </tr>
             <tr>
                 <td>Date from</td>
@@ -51,7 +51,7 @@ export default {
   name: 'searchRentACarCompany',
   components: {
   },
-  props:['ilocation','iflightDateArrive','iflightDateLeaving'],
+  props:['ilocation','iflightDateArrive','iflightDateLeaving','ijustSearch'],
   data: function () {
   return {
     companies:[],
@@ -60,14 +60,14 @@ export default {
     datefrom:"",
     dateTo:"",
     flightDateArrive:this.iflightDateArrive,
-    flightDateLeaving:this.iflightDateLeaving
-
+    flightDateLeaving:this.iflightDateLeaving,
+    justSearch:this.ijustSearch
   }
 },
 mounted(){
         if (this.location == undefined){
-            console.log("lokacija undefined");
             this.location = "";
+            document.getElementById("locationInput").readOnly = false;
         }
         if (this.flightDateArrive == undefined){
             this.flightDateArrive = "";
@@ -95,22 +95,28 @@ mounted(){
     },
     methods:{
            search:function(){
-               var d1 = new Date(this.datefrom);
-               d1.setHours(0);
-               var d2 = new Date(this.dateTo);
-               d2.setHours(0);
-               var arrive = this.flightDateArrive.split(" ");
-               var date1 = arrive[0].split(".");
-               var fd1 = new Date(date1[2],date1[1]-1,date1[0]);
-               arrive = this.flightDateLeaving.split(" ");
-               date1 = arrive[0].split(".");
-               var fd2 = new Date(date1[2],date1[1]-1,date1[0]);
-               console.log(fd1);
-               console.log(fd2);
-               if (d1<fd1 || d2>fd2){
-                   alert("Date must me after flight arrives and before flight returns");
-                   return;
+               console.log(this.datefrom);
+               console.log(this.dateTo);
+               if(!this.justSearch){
+                   console.log(this.justSearch);
+                    var d1 = new Date(this.datefrom);
+                    d1.setHours(0);
+                    var d2 = new Date(this.dateTo);
+                    d2.setHours(0);
+                    var arrive = this.flightDateArrive.split(" ");
+                    var date1 = arrive[0].split(".");
+                    var fd1 = new Date(date1[2],date1[1]-1,date1[0]);
+                    arrive = this.flightDateLeaving.split(" ");
+                    date1 = arrive[0].split(".");
+                    var fd2 = new Date(date1[2],date1[1]-1,date1[0]);
+                    console.log(fd1);
+                    console.log(fd2);
+                    if (d1<fd1){
+                        alert("Date must me after flight takes off");
+                        return;
+                    }
                }
+               
                axios.post("http://localhost:8080/api/getRentACarCompanies",{name : this.name, location: this.location, dateFrom:this.datefrom, dateTo:this.dateTo})
                 .then(response => {
                     console.log(response.data);
