@@ -103,9 +103,7 @@ export default {
                   window.location ="./systemAdminPage";
                 }else if (response.data == "REGISTERED"){
                   if (window.location.pathname.startsWith('/confirmationPage')){
-                    
-                    window.localStorage.setItem('currentDiv',2);
-                    window.location ="/confirmationPage/" + this.requestId;
+                    this.$emit('currentDiv',2);
                   }
                   else{
                     window.location ="./index";

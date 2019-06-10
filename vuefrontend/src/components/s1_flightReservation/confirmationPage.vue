@@ -2,10 +2,10 @@
    <div id = "confirmationPage">
 
        <div v-if="currentDiv == 1">
-           <login :requestId="requestId"></login>   
+           <login :requestId="requestId" v-on:currentDiv="changeDiv"></login>   
        </div>
 
-       <div v-else class="container">
+       <div v-if="currentDiv == 2" class="container">
         <h1>Reservation Request</h1><br><br>
         
         <table style="text-align: left; margin-left: auto; margin-right: auto">
@@ -140,44 +140,33 @@ export default {
             request: {},
             requestId: this.$route.params.requestId,
             selected: false,
-            currentDiv: 2,
+            currentDiv: 1,
         }
     },
     created: function(){
-         
-
-            if (window.localStorage.getItem('currentDiv') == undefined){
-                this.currentDiv = 1;
-            }
-            else{
-                
-                if (window.localStorage.getItem('currentDiv')  == 2){
-                    axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('jwtToken');
-                    axios.get("http://localhost:8080/api/getReservationRequest/" + this.requestId)
-                    .then(response => {
-                        this.request = response.data
-                        if (response.data == ""){
-                            alert("You did'n sign in or it's not your invitation")
-                            this.currentDiv = 1;
-                            return;
-                        }else{
-                             this.currentDiv = 2;
-                        }
-                    });
-                }
-                else{
-                     this.currentDiv = window.localStorage.getItem('currentDiv');
-                }
-                window.localStorage.removeItem('currentDiv');
-            }
-           
-      
-        
-        
     },
+
     mounted(){
     }, 
     methods: {
+
+        changeDiv: function(div){
+            
+            if (div == 2){
+                axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('jwtToken');
+                axios.get("http://localhost:8080/api/getReservationRequest/" + this.requestId)
+                .then(response => {
+                    if (response.data == ""){
+                        alert("You did'n sign in or it's not your invitation")
+                        this.currentDiv = 1;
+                        return;
+                    }
+                    this.request = response.data
+                    this.currentDiv = div;
+                });
+            }
+
+        },
 
         confirmRequest: function(){
            if (this.username == "" || this.password == ""){
