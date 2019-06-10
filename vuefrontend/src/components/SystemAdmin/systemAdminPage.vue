@@ -19,6 +19,9 @@
                     <li class="nav-item centered">
                         <a class="nav-link" href="#" @click="selectTab(3)">Rent A Cars</a>
                     </li>
+                    <li class="nav-item centered">
+                        <a class="nav-link" href="#" @click="selectTab(4)">Destinations</a>
+                    </li>
                 </ul>
             </div>
 
@@ -31,6 +34,9 @@
             <div  v-if="currentTab == 3" id = "rent a cars">
                 <sa-rent-a-car class="container"></sa-rent-a-car>
             </div>
+            <div  v-if="currentTab == 4" id = "destinations">
+                <sa-destinations class="container"></sa-destinations>
+            </div>
         </div>
     </div>
 </template>
@@ -39,6 +45,7 @@
 import saHotels from  './saHotels.vue'
 import saFlightCompanies from "./saFlightCompanies"
 import saRentACar from "./saRentACar"
+import saDestinations from "./saDestinations"
 import navbar from ".././navbar.vue";
 
 export default {
@@ -47,6 +54,7 @@ export default {
       saHotels: saHotels,
       saFlightCompanies: saFlightCompanies,
       saRentACar: saRentACar,
+      saDestinations: saDestinations,
       navbar
   },
   data: function () {
