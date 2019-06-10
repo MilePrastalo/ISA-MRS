@@ -14,13 +14,18 @@ public class FrontFlightReservationBean {
 	private  int rating;
 	private int seatRow;
 	private int seatColumn;
+	private double priceForSeat;
 	private int flightDuration;
 	private int flightLenght;
 	private String created;
 	private ArrayList<PassangerBean> passangersInfo;
 	private ArrayList<HotelReservationBean> hotelsReservations;
 	private ArrayList<VehicleReservationBean> rentReservations;
+	private String creator;
 	
+	public FrontFlightReservationBean() {
+		super();
+	}
 	
 	public FrontFlightReservationBean(Long id, String startDestination, String endDestination, String startDate,
 			String endDate, String travelClassa, double price, int passangers, int rating, int seatRow,
@@ -38,9 +43,20 @@ public class FrontFlightReservationBean {
 		this.seatRow = seatRow;
 		this.seatColumn = seatColumn;
 	}
-	public FrontFlightReservationBean() {
+	
+	
+	public FrontFlightReservationBean(Long id, String startDestination, String endDestination, String startDate,
+			String endDate,  double price, int passangers) {
 		super();
+		this.id = id;
+		this.startDestination = startDestination;
+		this.endDestination = endDestination;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.price = price;
+		this.passangers = passangers;
 	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -142,6 +158,22 @@ public class FrontFlightReservationBean {
 	}
 	public void setRentReservations(ArrayList<VehicleReservationBean> rentReservations) {
 		this.rentReservations = rentReservations;
+	}
+
+	public double getPriceForSeat() {
+		return priceForSeat;
+	}
+
+	public void setPriceForSeat(double priceForSeat) {
+		this.priceForSeat = priceForSeat;
+	}
+
+	public String getCreator() {
+		return creator;
+	}
+
+	public void setCreator(String creator) {
+		this.creator = creator;
 	}
 	
 	

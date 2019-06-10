@@ -20,11 +20,11 @@
                 </thead>
                 <tbody>
                 <tr v-for="(res,index) in quickReservations" :key="index">  
-                    <td>{{res.flight.startDestination.name}}</td>
-                    <td>{{res.flight.endDestination.name}}</td>
-                    <td>{{res.flight.startDate}}</td>
-                    <td>{{res.flight.endDate}}</td>
-                    <td>({{res.seat.seatRow}},{{res.seat.seatColumn}})</td>
+                    <td>{{res.startDestination}}</td>
+                    <td>{{res.endDestination}}</td>
+                    <td>{{res.startDate}}</td>
+                    <td>{{res.endDate}}</td>
+                    <td>{{res.travelClass}} ({{res.seatRow}},{{res.seatColumn}})</td>
                     <td>{{res.originPrice}}</td>
                     <td>{{res.discount}}</td>
                     <td v-if="role == 'FLIGHT_ADMIN' && res.taken == false"> <Button class="btn btn-outline-primary" @click="remove(res.id, index)">Delete</Button></td>
@@ -81,8 +81,8 @@ mounted(){
                 alert("Sorry, it's already taken!");
                 return;
             }
-             var obj = {id: res.id, flightId: res.flight.id, seatId: res.seat.id, originPrice: res.originPrice, discount: res.discount};
-             axios.post("http://localhost:8080/api/makeQuickReservation", obj)
+             var obj = {id: res.id, flightId: res.flightId, seatId: res.seatId, originPrice: res.originPrice, discount: res.discount};
+            axios.post("http://localhost:8080/api/makeQuickReservation", obj)
             .then(response => {
                 if (response.data == 'success'){
                     alert("Reservation was successful! You will get e-mail about it.");
@@ -90,6 +90,7 @@ mounted(){
                 else{
                     alert(response.data);
                 }
+                 res.taken = true;
             });
         },
 
