@@ -165,7 +165,7 @@ mounted(){
             {vehicleId:this.vehicleID,dateFrom:this.dateFrom,dateTo:this.dateTo,locationPick:this.pickoffice,
             locationReturn:this.returnoffice,vehicleName:this.vehicleName,discount:this.discount})
             .then(response=>{
-                alert("SUCCESS");
+                alert(response.data);
             });  
         },
         select:function(vehicle){
