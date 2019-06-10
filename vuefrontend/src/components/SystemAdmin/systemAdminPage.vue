@@ -22,6 +22,9 @@
                     <li class="nav-item centered">
                         <a class="nav-link" href="#" @click="selectTab(4)">Destinations</a>
                     </li>
+                    <li class="nav-item centered">
+                        <a class="nav-link" href="#" @click="selectTab(5)">Add System Admin</a>
+                    </li>
                 </ul>
             </div>
 
@@ -37,6 +40,9 @@
             <div  v-if="currentTab == 4" id = "destinations">
                 <sa-destinations class="container"></sa-destinations>
             </div>
+            <div  v-if="currentTab == 5" id = "destinations">
+                <sa-add-system-admin class="container"></sa-add-system-admin>
+            </div>
         </div>
     </div>
 </template>
@@ -46,6 +52,7 @@ import saHotels from  './saHotels.vue'
 import saFlightCompanies from "./saFlightCompanies"
 import saRentACar from "./saRentACar"
 import saDestinations from "./saDestinations"
+import saAddSystemAdmin from "./saAddSystemAdmin"
 import navbar from ".././navbar.vue";
 
 export default {
@@ -55,6 +62,7 @@ export default {
       saFlightCompanies: saFlightCompanies,
       saRentACar: saRentACar,
       saDestinations: saDestinations,
+      saAddSystemAdmin: saAddSystemAdmin,
       navbar
   },
   data: function () {

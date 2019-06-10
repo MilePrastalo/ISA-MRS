@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.beans.DestinationBean;
+import com.tim9.PlanJourney.beans.SystemAdminBean;
 import com.tim9.PlanJourney.models.Authority;
 import com.tim9.PlanJourney.models.SystemAdmin;
 import com.tim9.PlanJourney.models.flight.Destination;
@@ -75,21 +76,44 @@ public class SystemAdminController {
 
 	@RequestMapping(value = "/api/addSystemAdmin", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	public @ResponseBody ResponseEntity<SystemAdmin> addSystemAdmin(@RequestBody SystemAdmin admin) {
+	@PreAuthorize("hasAuthority('SYS_ADMIN')")
+	public @ResponseBody boolean addSystemAdmin(@RequestBody SystemAdminBean admin) {
+
+		if (admin.getUsername() == null || admin.getUsername().equals("".trim())) {
+			return false;
+		}
+		if (admin.getFirstName() == null || admin.getFirstName().equals("".trim())) {
+			return false;
+		}
+		if (admin.getLastName() == null || admin.getLastName().equals("".trim())) {
+			return false;
+		}
+		if (admin.getEmail() == null || admin.getEmail().equals("".trim())) {
+			return false;
+		}
+		if (admin.getPassword() == null || admin.getPassword().equals("".trim())) {
+			return false;
+		}
 
 		if (service.findByUsername(admin.getUsername()) == null) {
+			SystemAdmin newSystemAdmin = new SystemAdmin();
+
+			newSystemAdmin.setUsername(admin.getUsername());
+			newSystemAdmin.setFirstName(admin.getFirstName());
+			newSystemAdmin.setLastName(admin.getLastName());
+			newSystemAdmin.setEmail(admin.getEmail());
 			Authority authority = authorityService.findByName("SYS_ADMIN");
 			ArrayList<Authority> auth = new ArrayList<Authority>();
 			auth.add(authority);
-			admin.setAuthorities(auth);
-			admin.setConfirmed(true);
-			admin.setLoggedBefore(true);
+			newSystemAdmin.setAuthorities(auth);
+			newSystemAdmin.setConfirmed(true);
+			newSystemAdmin.setLoggedBefore(true);
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-			admin.setPassword(encoder.encode(admin.getPassword()));
-			SystemAdmin a = (SystemAdmin) service.save(admin);
-			return new ResponseEntity<SystemAdmin>(a, HttpStatus.OK);
+			newSystemAdmin.setPassword(encoder.encode(admin.getPassword()));
+			service.save(newSystemAdmin);
+			return true;
 		} else {
-			return new ResponseEntity<SystemAdmin>(admin, HttpStatus.CONFLICT);
+			return false;
 		}
 	}
 
