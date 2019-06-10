@@ -71,6 +71,12 @@
                         <td>Passport: </td>
                         <td >{{passanger.passport}}</td>
                     </tr>
+                    <tr>
+                        <td>Status: </td>
+                        <td v-if="passanger.status == 'Confirmed'" style="color: green;">{{passanger.status}}</td>
+                        <td v-if="passanger.status == 'Waiting'" style="color:blue;">{{passanger.status}}</td>
+                        <td v-if="passanger.status == 'Refused'" style="color: red;">{{passanger.status}}</td>
+                    </tr>
                 </table>
             </div>
             <br>
@@ -149,6 +155,7 @@ export default {
         axios.get("http://localhost:8080/api/getFlightReservation/" + this.reservationId)
         .then(response => {
             this.reservation = response.data
+            alert(JSON.stringify(this.reservation));
         });
     },
 

@@ -27,6 +27,9 @@ public class Passanger {
 	@Column(name = "price", unique = false, nullable = false)
 	private double price;
 	
+	@Column(name = "confirmed", unique = false, nullable = false)
+	private boolean confirmed;
+	
 	@OneToOne
 	private RegisteredUser friend;
 	
@@ -45,6 +48,7 @@ public class Passanger {
 		this.seat = seat;
 		this.friend = friend;
 		this.price = price;
+		this.confirmed = false;
 	}
 
 
@@ -111,6 +115,14 @@ public class Passanger {
 
 	public void setPrice(double price) {
 		this.price = price;
+	}
+
+	public boolean isConfirmed() {
+		return confirmed;
+	}
+
+	public void setConfirmed(boolean confirmed) {
+		this.confirmed = confirmed;
 	}
 
 }

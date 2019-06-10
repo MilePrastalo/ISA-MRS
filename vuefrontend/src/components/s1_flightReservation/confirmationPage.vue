@@ -66,6 +66,12 @@
                             <td>Passport: </td>
                             <td >{{passanger.passport}}</td>
                         </tr>
+                        <tr>
+                            <td>Status: </td>
+                            <td v-if="passanger.status == 'Confirmed'" style="color: green;">{{passanger.status}}</td>
+                            <td v-if="passanger.status == 'Waiting'" style="color:blue;">{{passanger.status}}</td>
+                            <td v-if="passanger.status == 'Refused'" style="color: red;">{{passanger.status}}</td>
+                        </tr>
                     </table>
                 </td>
             </tr>
@@ -169,23 +175,25 @@ export default {
         },
 
         confirmRequest: function(){
-           if (this.username == "" || this.password == ""){
-                alert("You mast fill in username and password!");
-                return;
-            }
-            this.selected = true;
-        },
-
-        refuseRequest: function(){
-            if (this.username == "" || this.password == ""){
-                alert("You mast fill in username and password!");
-                return;
-            }
             var getJwtToken = function() {
             return localStorage.getItem('jwtToken');
             };
             axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-            axios.post("http://localhost:8080/api/refuseReservationRequest" ,{requestId:  this.requestId, username: this.username, password: this.password })
+            axios.get("http://localhost:8080/api/confirmReservationRequest/" + this.requestId )
+            .then(response => {
+                alert(response.data)
+                if (response.data == 'success'){
+                     this.selected = true;
+                }
+            });
+        },
+
+        refuseRequest: function(){
+            var getJwtToken = function() {
+            return localStorage.getItem('jwtToken');
+            };
+            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.get("http://localhost:8080/api/refuseReservationRequest/" + this.requestId )
             .then(response => {
                 alert(response.data)
                 if (response.data == 'success'){
