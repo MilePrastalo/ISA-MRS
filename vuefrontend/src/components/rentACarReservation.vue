@@ -1,18 +1,19 @@
 <template>
     <div id="rentACarReservation">
-        <searchRentACarCompany :ilocation = "location"  v-on:selected="showVehicles" :iflightDateArrive="flightDateArrive" :iflightDateLeaving="flightDateLeaving" />
+        <searchRentACarCompany :ijustSearch="justSearch"  :ilocation = "location"  v-on:selected="showVehicles" :iflightDateArrive="flightDateArrive" :iflightDateLeaving="flightDateLeaving" />
         <div class="row centered">
             <ul class="nav nav-tabs col-lg-10 fromTop">
                 <li class="nav-item centered bigTab">
                     <a id="normal" class="nav-link active " href="#" @click="normal">Vehicles</a>
                 </li>
                 <li class="nav-item centered bigTab">
-                    <a id="quick" class="nav-link" href="#" @click="quick">Quick Reservations</a>
+                    <a id="quick" class="nav-link" href="#" @click="quick" v-if="justSearch == false">Quick Reservations</a>
                     
                 </li>
             </ul>
         </div>
         <div id="classic" v-if="tabselected==0">
+            <searchVehicle :idateFrom="datefrom" :idateTo="dateto" v-if="selected" :iCompany="companySelected" v-on:searched="showFound"/>
             <table class="table"> 
                 <tr>
                     <td>Name</td>
@@ -29,14 +30,14 @@
                     <td>{{car.year}}</td>
                     <td>{{car.price}}</td>
                     <td>{{car.rating}}</td>
-                    <td><select v-model="pickoffice" name="" id=""><option v-for="office in offices" v-bind:value=office.id :key="office.id">{{office.name}}</option></select></td>
-                    <td><select v-model="returnoffice" name="" id=""><option v-for="office in offices" v-bind:value=office.id :key="office.id">{{office.name}}</option></select></td>
-                    <td><Button @click="reserve(car.id)">Reserve</Button></td>
+                    <td><select v-if="justSearch == false" v-model="pickoffice" name="" id=""><option v-for="office in offices" v-bind:value=office.id :key="office.id">{{office.name}}</option></select></td>
+                    <td><select v-if="justSearch == false" v-model="returnoffice" name="" id=""><option v-for="office in offices" v-bind:value=office.id :key="office.id">{{office.name}}</option></select></td>
+                    <td><Button v-if="justSearch == false" @click="reserve(car.id)">Reserve</Button></td>
                 </tr>
             </table>
         </div>
         <div id="quick" v-if="tabselected==1">
-            <table border="1"  class = "table">
+            <table border="1"  class = "table" v-if="justSearch == false">
                 <thead class="thead-dark">
                     <tr>
                     <th scope="col">Office to pick up</th>
@@ -70,11 +71,11 @@
 </template>
 <script>
 import searchRentACarCompany from './searchRentACarCompany.vue';
-
+import searchVehicle from './searchVehicle.vue';
 export default {
     name: 'rentACarReservation',
     components: {
-      searchRentACarCompany
+      searchRentACarCompany,searchVehicle
     },
     props:['ilocation','iflightDateArrive','iflightDateLeaving'],
     data: function(){
@@ -90,8 +91,19 @@ export default {
             quickReservations: [],
             flightDateArrive:this.iflightDateArrive,
             flightDateLeaving:this.iflightDateLeaving,
-            tabselected :0
+            tabselected :0,
+            justSearch:false,
+            companySelected:"",
+            selected:false
         };
+    },
+    mounted(){
+        if(this.location == undefined){
+            this.justSearch = true;
+        }
+        else{
+            this.justSearch = false;
+        }
     },
     methods: {
             normal: function(){
@@ -104,33 +116,34 @@ export default {
                 document.getElementById("normal").className="nav-link  ";
                 document.getElementById("quick").className="nav-link active";
             },
+            showFound(data){
+                this.cars = data;
+                this.cars.forEach(function(item,index){
+                    console.log(item);
+                    if(item.rating == -1){
+                        item.rating = "No ratings";
+                    }
+                });
+            },
             showVehicles:function(dataPassed){
+                this.companySelected = dataPassed.id;
+                this.selected = true;
                 this.offices= dataPassed.offices;
-                console.log(this.offices);
                 this.id = dataPassed.id;
                 this.datefrom = dataPassed.dateFrom;
                 this.dateto = dataPassed.dateTo;
-                console.log(dataPassed);
-                var getJwtToken = function() {
-                    return localStorage.getItem('jwtToken');
-                };
-                axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-                axios.post("http://localhost:8080/api/getAvaiableVehicles",{id:this.id,dateFrom:this.datefrom,dateTo:this.dateto})
-                    .then(response => {
-                        console.log(response);
-                        this.cars = response.data;
-                        this.cars.forEach(function(item,index){
-                            console.log(item);
-                            if(item.rating == -1){
-                                item.rating = "No ratings";
-                            }
+                if(!this.justSearch){
+                    var getJwtToken = function() {
+                        return localStorage.getItem('jwtToken');
+                    };
+                    axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+                    axios.post("http://localhost:8080/api/getQuickReservations",{id:this.id,dateFrom:this.datefrom,dateTo:this.dateto})
+                        .then(response => {
+                            console.log(response.data);
+                            this.quickReservations = response.data;
                         });
-                    }); 
-                axios.post("http://localhost:8080/api/getQuickReservations",{id:this.id,dateFrom:this.datefrom,dateTo:this.dateto})
-                    .then(response => {
-                        console.log(response.data);
-                        this.quickReservations = response.data;
-                    });
+                }
+                
             },
             reserve:function(carid){
                 var getJwtToken = function() {

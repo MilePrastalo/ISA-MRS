@@ -1,12 +1,16 @@
 package com.tim9.PlanJourney.beans;
 
 public class VehicleSearchBean {
+	private String id;
+	private String company;
 	private String producer;
 	private int newer;
 	private int older;
 	private int priceFrom;
 	private int priceTo;
 	private String type;
+	private String dateFrom;
+	private String dateTo;
 	public VehicleSearchBean() {
 		super();
 	}
@@ -46,6 +50,31 @@ public class VehicleSearchBean {
 	public void setType(String type) {
 		this.type = type;
 	}
+	public String getCompany() {
+		return company;
+	}
+	public void setCompany(String company) {
+		this.company = company;
+	}
+	public String getDateFrom() {
+		return dateFrom;
+	}
+	public void setDateFrom(String dateFrom) {
+		this.dateFrom = dateFrom;
+	}
+	public String getDateTo() {
+		return dateTo;
+	}
+	public void setDateTo(String dateTo) {
+		this.dateTo = dateTo;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	
 	
 	
 	

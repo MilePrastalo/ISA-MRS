@@ -125,27 +125,27 @@
                  <table>
                 <tr>
                     <td><b> Username: </b></td>
-                    <td>  <input type="text" name="admin.username" v-model="admin.username" > </td>
+                    <td>  <input type="text" v-model="admin.username" > </td>
                 </tr>
                 <tr>
                     <td><b> Password: </b></td>
-                    <td>  <input type="text" name="admin.password" v-model="admin.password" > </td>
+                    <td>  <input type="text" v-model="admin.password" > </td>
                 </tr>
                 <tr>
                     <td><b> First Name: </b></td>
-                    <td> <input type="text" name="admin.firstName" v-model="admin.firstName" > </td>        
+                    <td> <input type="text" v-model="admin.firstName" > </td>        
                 </tr>
                 <tr>
                     <td><b> Last Name: </b></td>
-                    <td> <input type="text" name="admin.lastName" v-model="admin.lastName" > </td>        
+                    <td> <input type="text" v-model="admin.lastName" > </td>        
                 </tr>
                 <tr>
                     <td><b> Email: </b></td>
-                    <td> <input type="text" name="admin.email" v-model="admin.email" > </td>        
+                    <td> <input type="text" v-model="admin.email" > </td>        
                 </tr>
                 <tr>
                     <td><b> Hotel Name: </b></td>
-                    <td> <input type="text" name="hotelName" v-model="hotelName" > </td>        
+                    <td> <input type="text" v-model="hotelName" > </td>        
                 </tr>
                 <tr>
                     <td>  </td>
