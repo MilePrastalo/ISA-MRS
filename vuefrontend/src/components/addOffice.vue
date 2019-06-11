@@ -1,7 +1,7 @@
 <template>
-   <div id = "addOffice">  
-     <form action="">
-       <div class="form-label-group">
+   <div id = "addOffice" class='row'>  
+     <div class="col">
+        <div class="form-label-group">
           <label> Name: </label>
           <input type="text" name="name" v-model="name" >
       </div>
@@ -14,9 +14,35 @@
           <input type="text" name="destination" v-model="destination" >
       </div>
       <div class="form-label-group">
-          <button type="submit" v-on:click="addOffice()">Add Office</button>
-      </div>     
-     </form>
+          <label> Latitude: </label>
+          <input type="number" step="0.001" name="latitude" v-model="latitude" >
+      </div>
+      <div class="form-label-group">
+          <label> Longitude: </label>
+          <input type="number" step="0.001" name="longitude" v-model="longitude" >
+      </div>
+      <div class="form-label-group">
+          <button @click="addOffice()">Add Office</button>
+      </div>
+     </div>
+            
+     <div class="col">
+        <yandex-map
+        :coords="[this.latitude,this.longitude]"
+        zoom="14"
+        style="width:350px;height:250px;"
+        :controlss="['zoomControl']"
+        map-type="hybrid"
+      >
+        <ymap-marker
+          marker-id="1"
+          marker-type="placemark"
+          :coords="[this.latitude,this.longitude]"
+          :marker-fill="{color: '#0E4779', opacity: 0.5}"
+          :marker-stroke="{color: '#0E4779',width: 4}"
+        ></ymap-marker>
+      </yandex-map>
+     </div>
   </div>     
 </template>
 
@@ -31,32 +57,20 @@ export default {
     name: "",
     address: "",
     destination: "",
+    longitude:0.00,
+    latitude:0.00,
     map:""
   }
 },
 mounted(){
-    this.map = new ol.Map({
-        target: 'map',
-        layers: [
-          new ol.layer.Tile({
-            source: new ol.source.OSM()
-          })
-        ],
-        view: new ol.View({
-          center: ol.proj.fromLonLat([37.41, 8.82]),
-          zoom: 4
-        })
-      });
-    this.map.getView().setCenter ([40,40]);
 },
     methods:{
-        addOffice: function(e){
-            e.preventDefault();
+        addOffice: function(){
             var getJwtToken = function() {
             return localStorage.getItem('jwtToken');
             };
             axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-             axios.post("http://localhost:8080/api/addOffice",{name:this.name, destination: this.destination,address:this.address})
+             axios.post("http://localhost:8080/api/addOffice",{name:this.name, destination: this.destination,address:this.address,longitude:this.longitude,latitude:this.latitude})
             .then(response => {
                 alert("Office added");
             });  
@@ -146,5 +160,9 @@ label{
 .form-label-group>input,
 .form-label-group>label {
   padding: var(--input-padding-y) var(--input-padding-x);
+}
+.centeredmap{
+   margin-left: 25%;
+    margin-right: auto;
 }
 </style>

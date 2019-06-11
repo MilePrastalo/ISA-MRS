@@ -29,6 +29,12 @@ public class BranchOffice {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Destination destination;
+	
+	@Column(name="longitude", nullable = true)
+	private float longitude;
+	
+	@Column(name="latitude", nullable = true)
+	private float latitude;
 
 	@Version
 	private Long version;
@@ -92,5 +98,22 @@ public class BranchOffice {
 	public void setVersion(Long version) {
 		this.version = version;
 	}
+
+	public float getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(float longitude) {
+		this.longitude = longitude;
+	}
+
+	public float getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(float latitude) {
+		this.latitude = latitude;
+	}
+	
 
 }

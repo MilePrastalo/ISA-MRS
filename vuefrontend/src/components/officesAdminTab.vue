@@ -2,7 +2,7 @@
     <div id="officeAdmin">
         <h2>Branch Offices</h2>
         <addOffice v-if="selected == 1"></addOffice>
-        <editOffice v-on:backadd="backAdd" v-on:vedited="veditedDraw" v-if="selected == 2" :iid="id" v-bind:iname="name" v-bind:idestination="destination" v-bind:iaddress = "address"></editOffice>
+        <editOffice v-on:backadd="backAdd" v-on:vedited="veditedDraw" v-if="selected == 2" :iid="id" v-bind:iname="name" v-bind:idestination="destination" v-bind:iaddress="address" :ilongitude="longitude" :ilatitude="latitude"></editOffice>
         <table class="table centered">
             <tr>
                 <th>Name</th>
@@ -15,7 +15,7 @@
                 <td>{{office.name}}</td>
                 <td>{{office.destination}}</td>
                 <td>{{office.address}}</td>
-                <td><Button @click="editOfficeMethod(office.id,office.name,office.destination,office.address)">Edit</Button></td>
+                <td><Button @click="editOfficeMethod(office.id,office.name,office.destination,office.address,office.latitude,office.longitude)">Edit</Button></td>
                 <td><Button @click="removeOffice(office.id)">Remove</Button></td>
             </tr>
         </table>
@@ -40,7 +40,10 @@ export default {
           id:"",
           name:"aa",
           destination:"aaa",
-          address:""
+          address:"",
+          latitude:0,
+          longitude:0
+
       }
   },
   mounted(){
@@ -54,12 +57,14 @@ export default {
             }); 
   },
   methods : {
-      editOfficeMethod : function(id_,name_,destination_,address_){
+      editOfficeMethod : function(id_,name_,destination_,address_,latitude,longitude){
           this.selected=2;
           this.id = id_;
           this.name = name_;
           this.destination = destination_;
           this.address = address_;
+          this.latitude = latitude;
+          this.longitude = longitude;
       },
       veditedDraw : function(){
          var getJwtToken = function() {
@@ -113,5 +118,9 @@ th{
   margin-left: auto;
   margin-right: auto;
   width: 800px;
+}
+h2{
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 </style>
