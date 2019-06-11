@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -177,25 +178,39 @@ public class flightReservationController {
 		if (reservation == null) {
 			return null;
 		}
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(reservation.getFlight().getStartDate());
-		cal.add(Calendar.DATE, -3);
-		Date dateBefore3Days = cal.getTime();
-		if (dateBefore3Days.after(new Date())) {
+		Date today = new Date();
+		long diffInMillies = reservation.getFlight().getStartDate().getTime() - today.getTime();
+		long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+		if (diff < 3) {
 			return "You can not cancel because it's less than 3 days before starting!";
 		}
-		for (HotelReservation h : reservation.getHoteReservations()) {
+		if (reservation.getUser().getId() != loggedUser.getId()) {
+			for (Passanger p : reservation.getPassangers()) {
+				if (p.getFriend() != null && p.getFriend().getId() == loggedUser.getId()) {
+					p.getSeat().setTaken(false);
+					reservation.setPrice(reservation.getPrice() - p.getPrice());
+					reservation.getPassangers().remove(p);
+					reservationService.save(reservation);
+					passangerService.remove(p.getId());
+					return "success";
+				}
+			}
+		}
+		else {
+			for (HotelReservation h : reservation.getHoteReservations()) {
 
-			hotelReservationService.remove(h.getId());
+				hotelReservationService.remove(h.getId());
+			}
+			for (VehicleReservation v : reservation.getVehicleReservations()) {
+				vehicleReservationService.remove(v.getId());
+			}
+			for (Passanger p : reservation.getPassangers()) {
+				p.getSeat().setTaken(false);
+			}
+			reservationService.remove(id);
+			return "success";
 		}
-		for (VehicleReservation v : reservation.getVehicleReservations()) {
-			vehicleReservationService.remove(v.getId());
-		}
-		for (Passanger p : reservation.getPassangers()) {
-			p.getSeat().setTaken(false);
-		}
-		reservationService.remove(id);
-		return "success";
+		return "It's not your reservation.";
 	}
 
 	@RequestMapping(value = "/api/getReservationRequest/{requestId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
