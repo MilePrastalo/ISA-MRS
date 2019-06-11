@@ -263,6 +263,12 @@ public class RentACarController {
 							isAvaiable = false;
 						}
 					}
+					for (QuickVehicleReservation reservation : vehicle.getQuickReservations()) {
+						if(!((toDate.before(reservation.getDateFrom()) && toDate.after(fromDate)) || 
+								(fromDate.after(reservation.getDateTo()) && toDate.after(fromDate)))) {
+							isAvaiable = false;
+						}
+					}
 					if(isAvaiable) {
 						vehicles.add(vehicle);
 					}	
@@ -604,12 +610,28 @@ public class RentACarController {
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('RENT_ADMIN')")
 	//Adds quick reservation to database
-	public void addQuickReservation(@RequestBody VehicleReservationBean bean) throws Exception {
+	public String addQuickReservation(@RequestBody VehicleReservationBean bean) throws Exception {
 		Vehicle vehicle = vehicleService.findOne(bean.getVehicleId());
 		vehicle.getId();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date dateFrom = sdf.parse(bean.getDateFrom());
 		Date dateTo = sdf.parse(bean.getDateTo());
+		if(dateFrom.after(dateTo)) {
+			return "Neodgovarajuci datum";
+		}
+		for (VehicleReservation reservation : vehicle.getReservations()) {
+			if(!(dateTo.before(reservation.getDateFrom()) || dateFrom.after(reservation.getDateTo()))) {
+				return "Vec postoji rezervacija za taj period";
+
+			}
+		}
+		for (QuickVehicleReservation reservation : vehicle.getQuickReservations()) {
+			if(!(dateTo.before(reservation.getDateFrom()) || dateFrom.after(reservation.getDateTo()))) {
+				return "Vec postoji rezervacija za taj period";
+			}
+		}
+		
+		
 		BranchOffice officePick = bs.findOne(Long.parseLong(bean.getLocationPick()));
 		officePick.getId();
 		BranchOffice officeReturn = bs.findOne(Long.parseLong(bean.getLocationReturn()));
@@ -620,6 +642,7 @@ public class RentACarController {
 		officePick.getCompany().getQuickReservations().add(quick);
 		companyService.save(officePick.getCompany());
 		quickService.save(quick);
+		return "Uspesno je rezervisano";
 	}
 	
 	@RequestMapping(value = "/api/getQuickReservations", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -745,6 +768,21 @@ public class RentACarController {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Date dateFrom = sdf.parse(bean.getDateFrom());
 			Date dateTo = sdf.parse(bean.getDateTo());
+			
+			for (VehicleReservation reservation : quick.getVehicle().getReservations()) {
+				if(!(dateTo.before(reservation.getDateFrom()) || dateFrom.after(reservation.getDateTo()))) {
+					return "Vec postoji rezervacija za taj period";
+
+				}
+			}
+			for (QuickVehicleReservation reservation : quick.getVehicle().getQuickReservations()) {
+				if(!(dateTo.before(reservation.getDateFrom()) || dateFrom.after(reservation.getDateTo()))) {
+					if(!reservation.getId().equals(quick.getId())) {
+						return "Vec postoji rezervacija za taj period";
+					}
+				}
+			}
+			
 			quick.setDateFrom(dateFrom);
 			quick.setDateTo(dateTo);
 			quick.setDiscount(bean.getDiscount());

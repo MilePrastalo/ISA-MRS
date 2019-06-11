@@ -5,10 +5,7 @@
             <div class="row">
                 <ul class="nav nav-tabs centered">
                     <li class="nav-item">
-                        <a id="profile" class="nav-link active" href="#" @click="showProfile">Profile</a>
-                    </li>
-                    <li class="nav-item">
-                        <a id="companyProfile" class="nav-link" href="#" @click="showCompanyProfile">Company Profile</a>
+                        <a id="companyProfile" class="nav-link active" href="#" @click="showCompanyProfile">Company Profile</a>
                         
                     </li>
                     <li class="nav-item">
@@ -26,15 +23,12 @@
                 </ul>                
             </div>
             <div class="row">
-                <div id="Profile" v-if="tabSelected==1">
-                    <user-profile></user-profile>
-                </div>
-                <div id="HotelsReservations centered" v-if="tabSelected==2"><rentacarprofile></rentacarprofile></div>
+                <div id="HotelsReservations centered" v-if="tabSelected==1"><rentacarprofile></rentacarprofile></div>
                 
-                <div id="office centered" v-if="tabSelected==3"><officeAdmin></officeAdmin></div>
-                <div id="CarsReservations centered" v-if="tabSelected==4"><vehicleAdminTab></vehicleAdminTab></div>
-                <div id="QuickReservations centered" v-if="tabSelected==5"><quickVehicle></quickVehicle></div>
-                <div id="Report centered" v-if="tabSelected==6"><rentACarReport/></div>
+                <div id="office centered" v-if="tabSelected==2"><officeAdmin></officeAdmin></div>
+                <div id="CarsReservations centered" v-if="tabSelected==3"><vehicleAdminTab></vehicleAdminTab></div>
+                <div id="QuickReservations centered" v-if="tabSelected==4"><quickVehicle></quickVehicle></div>
+                <div id="Report centered" v-if="tabSelected==5"><rentACarReport/></div>
             </div>
         </div>
     </div>
@@ -67,18 +61,9 @@ export default {
       }
   },
   methods : {
-      showProfile : function(){
-            this.tabSelected = 1;
-            document.getElementById("profile").className="nav-link active";
-            document.getElementById("companyProfile").className="nav-link";
-            document.getElementById("Branch_offices").className="nav-link";
-            document.getElementById("Vehicles").className="nav-link";
-            document.getElementById("QuickReservations").className="nav-link";
-
-      },
+      
       showCompanyProfile : function(){
-            this.tabSelected = 2;
-            document.getElementById("profile").className="nav-link";
+            this.tabSelected = 1;
             document.getElementById("companyProfile").className="nav-link active";
             document.getElementById("Branch_offices").className="nav-link";
             document.getElementById("Vehicles").className="nav-link";
@@ -86,8 +71,7 @@ export default {
 
       },
       showOffices : function(){
-            this.tabSelected = 3;
-            document.getElementById("profile").className="nav-link";
+            this.tabSelected = 2;
             document.getElementById("companyProfile").className="nav-link";
             document.getElementById("Branch_offices").className="nav-link active";
             document.getElementById("Vehicles").className="nav-link";
@@ -95,8 +79,7 @@ export default {
 
       },
       showVehicles: function(){
-            this.tabSelected = 4;
-            document.getElementById("profile").className="nav-link";
+            this.tabSelected = 3;
             document.getElementById("companyProfile").className="nav-link";
             document.getElementById("Branch_offices").className="nav-link";
             document.getElementById("Vehicles").className="nav-link active";
@@ -104,8 +87,7 @@ export default {
 
       },
       showQuick:function(){
-        this.tabSelected = 5;
-        document.getElementById("profile").className="nav-link";
+        this.tabSelected = 4;
         document.getElementById("companyProfile").className="nav-link";
         document.getElementById("Branch_offices").className="nav-link";
         document.getElementById("Vehicles").className="nav-link";
@@ -114,8 +96,7 @@ export default {
         
       },
       showReports:function(){
-          this.tabSelected=6;
-          document.getElementById("profile").className="nav-link";
+          this.tabSelected=5;
         document.getElementById("companyProfile").className="nav-link";
         document.getElementById("Branch_offices").className="nav-link";
         document.getElementById("Vehicles").className="nav-link";
