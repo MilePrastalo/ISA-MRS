@@ -101,10 +101,12 @@ public class RentACarController {
 					&& (vehicle.getPrice() < search.getPriceTo() || search.getPriceTo() == 0)
 					&& (vehicle.getYear() > search.getNewer() || search.getNewer() == 0)
 					&& (vehicle.getYear() < search.getOlder() || search.getOlder() == 0)
-					&& (vehicle.getType().equals(search.getType()) || search.getType().equals(""))) {
+					&& (vehicle.getType().equals(search.getType()) || search.getType().equals(""))
+					&& (vehicle.getSeats()==search.getSeats()) || (search.getSeats()==0)) {
 				VehicleSearchReturnBean bean =	new VehicleSearchReturnBean(vehicle.getName(), vehicle.getMaker(), vehicle.getType(),
 						vehicle.getYear(), vehicle.getPrice(),vehicle.getRating());
 				bean.setId(Long.toString(vehicle.getId()));
+				bean.setSeats(vehicle.getSeats());
 				foundVehicles.add(bean);
 			}
 		}

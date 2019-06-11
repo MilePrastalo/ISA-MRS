@@ -20,6 +20,7 @@
                     <td>Maker</td>
                     <td>Type</td>
                     <td>Year</td>
+                    <td>Seats</td>
                     <td>Price</td>
                     <td>Rating</td>
                 </tr>
@@ -28,6 +29,7 @@
                     <td>{{car.maker}}</td>
                     <td>{{car.type}}</td>
                     <td>{{car.year}}</td>
+                    <td>{{car.seats}}</td>
                     <td>{{car.price}}</td>
                     <td>{{car.rating}}</td>
                     <td><select v-if="justSearch == false" v-model="pickoffice" name="" id=""><option v-for="office in offices" v-bind:value=office.id :key="office.id">{{office.name}}</option></select></td>
