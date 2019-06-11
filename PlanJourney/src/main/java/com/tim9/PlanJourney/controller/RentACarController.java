@@ -289,26 +289,8 @@ public class RentACarController {
 	@CrossOrigin()
 	//Returns vehicles that are avaiable for reservation in selected company
 	public @ResponseBody Long reserveVehicle(@RequestBody VehicleReservationSearchBean search) throws Exception { 
-		Vehicle vehicle = vehicleService.findOne(Long.parseLong(search.getId()));
 		RegisteredUser user = getRegisteredUser();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date dateFrom = sdf.parse(search.getDateFrom());
-		Date dateTo = sdf.parse(search.getDateTo());
-		BranchOffice pick = bs.findOne(Long.parseLong(search.getOfficePick()));
-		BranchOffice ret = bs.findOne(Long.parseLong(search.getOfficeReturn()));
-		VehicleReservation reservation = new VehicleReservation(vehicle, user,new Date(), dateFrom, dateTo, (double)( (dateTo.getTime() - dateFrom.getTime()) / (1000 * 60 * 60 * 24)) * vehicle.getPrice() );
-		reservation.setOfficePick(pick);
-		reservation.setOfficeReturn(ret);
-		RentACarCompany company = vehicle.getCompany();
-		reservation.setCompany(company);
-		reservationService.save(reservation);
-		user.getVehicleReservations().add(reservation);
-		vehicle.getReservations().add(reservation);
-		company.getReservations().add(reservation);
-		companyService.save(company);
-		userService.save(user);
-		vehicleService.save(vehicle);
-		VehicleReservation reser=  reservationService.save(reservation);
+		VehicleReservation reser=  vehicleService.reserve(search, user);
 		return reser.getId();
 		 
 	}
