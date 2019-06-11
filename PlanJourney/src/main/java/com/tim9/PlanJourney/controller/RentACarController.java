@@ -707,27 +707,9 @@ public class RentACarController {
 	//Makes quick reservation
 	//Creates new reservation and changes bool taken for quick reservation
 	public @ResponseBody Long quickReserveVehicle(@RequestBody QuickVehicleReserveBean bean) throws Exception { 
-		QuickVehicleReservation quick = quickService.findOne(bean.getId());
-		Vehicle vehicle = quick.getVehicle();
+
 		RegisteredUser user = getRegisteredUser();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date dateFrom = quick.getDateFrom();
-		Date dateTo = quick.getDateTo();
-		BranchOffice pick =quick.getOfficePick();
-		BranchOffice ret = quick.getOfficeReturn();
-		VehicleReservation reservation = new VehicleReservation(vehicle, user,new Date(), dateFrom, dateTo, quick.getOriginalPrice()*(100-quick.getDiscount()/100) );
-		reservation.setOfficePick(pick);
-		reservation.setOfficeReturn(ret);
-		reservationService.save(reservation);
-		quick.setTaken(true);
-		user.getVehicleReservations().add(reservation);
-		vehicle.getReservations().add(reservation);
-		RentACarCompany company = vehicle.getCompany();
-		company.getReservations().add(reservation);
-		companyService.save(company);
-		userService.save(user);
-		vehicleService.save(vehicle);
-		VehicleReservation vr = reservationService.save(reservation);
+		VehicleReservation vr = vehicleService.reserveQuick(bean, user);
 
 		return vr.getId();
 	}

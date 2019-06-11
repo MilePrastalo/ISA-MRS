@@ -11,10 +11,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import com.tim9.PlanJourney.beans.QuickVehicleReserveBean;
 import com.tim9.PlanJourney.beans.VehicleReservationSearchBean;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.rentacar.BranchOffice;
+import com.tim9.PlanJourney.models.rentacar.QuickVehicleReservation;
 import com.tim9.PlanJourney.models.rentacar.RentACarCompany;
 import com.tim9.PlanJourney.models.rentacar.Vehicle;
 import com.tim9.PlanJourney.models.rentacar.VehicleReservation;
@@ -37,6 +40,9 @@ public class VehicleService {
 	
 	@Autowired
 	BranchOfficeService bs;
+	
+	@Autowired
+	QuickVehicleReservationService quickService;
 	
 	public Vehicle findOne(Long id) {
 		return repository.getOne(id);//repository.findOne();
@@ -82,4 +88,32 @@ public class VehicleService {
 		VehicleReservation reser=  reservationService.save(reservation);
 		return reser;
 	}
+	
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public VehicleReservation reserveQuick(@RequestBody QuickVehicleReserveBean bean, RegisteredUser user) throws ParseException {
+		
+		QuickVehicleReservation quick = quickService.findOne(bean.getId());
+		Vehicle vehicle = quick.getVehicle();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date dateFrom = quick.getDateFrom();
+		Date dateTo = quick.getDateTo();
+		BranchOffice pick =quick.getOfficePick();
+		BranchOffice ret = quick.getOfficeReturn();
+		VehicleReservation reservation = new VehicleReservation(vehicle, user,new Date(), dateFrom, dateTo, quick.getOriginalPrice()*(100-quick.getDiscount()/100) );
+		reservation.setOfficePick(pick);
+		reservation.setOfficeReturn(ret);
+		reservationService.save(reservation);
+		quick.setTaken(true);
+		user.getVehicleReservations().add(reservation);
+		vehicle.getReservations().add(reservation);
+		RentACarCompany company = vehicle.getCompany();
+		company.getReservations().add(reservation);
+		companyService.save(company);
+		userService.save(user);
+		save(vehicle);
+		VehicleReservation vr = reservationService.save(reservation);
+		return vr;
+	}
+	
+	
 }
