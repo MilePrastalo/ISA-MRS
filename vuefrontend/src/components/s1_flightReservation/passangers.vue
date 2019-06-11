@@ -8,6 +8,12 @@
         <div class="row">
             <form   @submit="submitPassangers" id = "passangersForm" >
                 <div class="row" >
+                <table>
+                    <th colspan="2"> Your passport</th>
+                    <tr>
+                        <td><input type="text" v-model="passangers[0].passport"></td>
+                    </tr>
+                </table>
                 <table v-for="i in (seats_count-1)" :key="i">
                     <th colspan="2"> Seat: ( {{passangers[i].seat.seatRow}}, {{passangers[i].seat.seatColumn}} ) </th>
                     <tr>

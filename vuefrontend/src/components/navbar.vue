@@ -56,20 +56,21 @@ export default {
       axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
       axios.get("http://localhost:8080/api/getUserRole")
             .then(response => {
+              console.log(response.data);
                 this.type = 1;
                 console.log(response);
                 if(response.data == "RENT_ADMIN"){
-                  this.homePage ="./RAindex";
+                  this.homePage ="/RAindex";
                 }else if (response.data == "FLIGHT_ADMIN"){
-                  this.homePage ="./flightAdmin";
+                  this.homePage ="/flightAdmin";
                 }else if (response.data == "SYS_ADMIN"){
-                  this.homePage ="./systemAdminPage";
+                  this.homePage ="/systemAdminPage";
                 }else if (response.data == "REGISTERED"){
-                  this.homePage ="./index";
+                  this.homePage ="/index";
                 }else if (response.data == "HOTEL_ADMIN"){
-                  this.homePage ="./hotelAdminPage";
+                  this.homePage ="/hotelAdminPage";
                 }else{
-                  this.homePage ="./";
+                  this.homePage ="/";
                   this.type = 0;
                 }
                 

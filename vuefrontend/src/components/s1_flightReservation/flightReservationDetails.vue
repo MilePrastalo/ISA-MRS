@@ -1,6 +1,6 @@
 <template>
     <div id = "flightReservationDetails">
-         <navbar/>
+         <navbar />
         <div class = "container">
             <div class = "row">
 
