@@ -558,6 +558,8 @@ public class RentACarController {
 	    	ob.setName(office.getName());
 	    	ob.setAddress(office.getAddress());
 	    	ob.setDestination(office.getDestination().getName());
+	    	ob.setLatitude(office.getLatitude());
+	    	ob.setLongitude(office.getLongitude());
 	    	officessToReturn.add(ob);
 		}
 	    return officessToReturn;
@@ -575,6 +577,8 @@ public class RentACarController {
 	    o.setName(officeBean.getName());
 	    o.setAddress(officeBean.getAddress());
 	    o.setDestination(ds.findByName(officeBean.getDestination())); 
+	    o.setLatitude(officeBean.getLatitude());
+	    o.setLongitude(officeBean.getLongitude());
 	    bs.save(o);		
 	}
 	
@@ -587,6 +591,8 @@ public class RentACarController {
 		    RentACarCompany company = admin.getService();
 		    Destination destination = ds.findByName(bean.getDestination());
 		    BranchOffice bo = new BranchOffice(bean.getName(), bean.getAddress(), company, destination);
+		    bo.setLatitude(bean.getLatitude());
+		    bo.setLongitude(bean.getLongitude());
 		    bs.save(bo);
 		    companyService.save(company);
 	}

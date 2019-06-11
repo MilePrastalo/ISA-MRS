@@ -1,10 +1,14 @@
 package com.tim9.PlanJourney.beans;
 
+
 public class BranchOfficeBean {
 	private Long id;
 	private String name;
 	private String address;
 	private String destination;
+	private float longitude;
+	private float latitude;
+	
 	public BranchOfficeBean(String name, String destination) {
 		super();
 		this.name = name;
@@ -45,6 +49,23 @@ public class BranchOfficeBean {
 	public void setAddress(String address) {
 		this.address = address;
 	}
+
+	public float getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(float longitude) {
+		this.longitude = longitude;
+	}
+
+	public float getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(float latitude) {
+		this.latitude = latitude;
+	}
+	
 	
 	
 	
