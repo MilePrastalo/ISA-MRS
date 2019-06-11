@@ -16,11 +16,11 @@
             </div>
             <div class="form-label-group">
                 <label>Office to pick from</label>
-                <select v-model="pickoffice" name="" id=""><option v-for="office in offices" v-bind:value=office.id :key="office.id">{{office.name}}</option></select>
+                <select v-model="pickoffice" name="" id=""><option v-for="office in offices" v-bind:value=office :key="office.id">{{office.name}}</option></select>
             </div>
             <div class="form-label-group">
                 <label>Office to return to</label>
-                <select v-model="returnoffice" name="" id=""><option v-for="office in offices" v-bind:value=office.id :key="office.id">{{office.name}}</option></select>
+                <select v-model="returnoffice" name="" id=""><option v-for="office in offices" v-bind:value=office :key="office.id">{{office.name}}</option></select>
             </div>
             <div class="form-label-group">
                 <label>Discount</label>
@@ -133,7 +133,6 @@ export default {
 },
 
 mounted(){
-
         var getJwtToken = function() {
             return localStorage.getItem('jwtToken');
         };
@@ -162,10 +161,32 @@ mounted(){
             };
             axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken(); 
             axios.post("http://localhost:8080/api/addQuickVehicleReservation",
-            {vehicleId:this.vehicleID,dateFrom:this.dateFrom,dateTo:this.dateTo,locationPick:this.pickoffice,
-            locationReturn:this.returnoffice,vehicleName:this.vehicleName,discount:this.discount})
+            {vehicleId:this.vehicleID,dateFrom:this.dateFrom,dateTo:this.dateTo,locationPick:this.pickoffice.id,
+            locationReturn:this.returnoffice.id,vehicleName:this.vehicleName,discount:this.discount})
             .then(response=>{
-                alert(response.data);
+              
+              alert(response.data);
+              if(response.data=="Uspesno je rezervisano"){
+                this.dateFrom = this.dateFrom.split('-');
+                this.dateFrom = this.dateFrom[2]+"-"+this.dateFrom[1]+'-'+this.dateFrom[0];
+
+                this.dateTo = this.dateTo.split('-');
+                this.dateTo = this.dateTo[2]+"-"+this.dateTo[1]+'-'+this.dateTo[0];
+
+                var vehicleName = "";
+                var vehicleId = "";
+                var price = 0;
+                this.cars.forEach(element => {
+                if (element.id == this.vehicleID){
+                  vehicleId = element.id;
+                  vehicleName = element.name;
+                  price = element.price;
+                }
+              });
+                this.quickReservations.push({vehicleId:vehicleId,dateFrom:this.dateFrom,dateTo:this.dateTo,locationPick:this.pickoffice.destination,
+              locationReturn:this.returnoffice.destination,vehicleName:vehicleName,discount:this.discount, price:price});
+              }
+                
             });  
         },
         select:function(vehicle){
@@ -181,9 +202,7 @@ mounted(){
         },
         edit:function(reservation){
           this.add = false;
-          console.log(reservation);
           var dateF = reservation.dateFrom.split("-");
-          console.log(dateF);
           this.dateFrom = dateF[2]+"-"+dateF[1]+"-"+dateF[0];
           var dateT = reservation.dateTo.split("-");
           this.dateTo = dateT[2]+"-"+dateT[1]+"-"+dateT[0];
@@ -200,7 +219,21 @@ mounted(){
             axios.post("http://localhost:8080/api/editQuickVehicleReservation",{id:this.quickId,dateFrom:this.dateFrom,dateTo:this.dateTo,vehicleName:this.vehicleName,discount:this.discount})
             .then(response=>{
                 if(response.data == "OK"){
-                  alert("OK");
+                  this.quickReservations.forEach(element => {
+                    if(element.id == this.quickId){
+                      this.dateFrom = this.dateFrom.split('-');
+                this.dateFrom = this.dateFrom[2]+"-"+this.dateFrom[1]+'-'+this.dateFrom[0];
+
+                this.dateTo = this.dateTo.split('-');
+                this.dateTo = this.dateTo[2]+"-"+this.dateTo[1]+'-'+this.dateTo[0];
+
+                      element.dateFrom=this.dateFrom;
+                      element.dateTo=this.dateTo;
+                      element.vehicleName=this.vehicleName;
+                      element.discount=this.discount;
+                    }
+                  });
+                  
                 }
                 else{
                   alert("ERROR");

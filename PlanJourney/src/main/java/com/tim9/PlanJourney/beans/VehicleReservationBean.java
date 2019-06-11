@@ -12,6 +12,7 @@ public class VehicleReservationBean {
 	private int status;
 	private int rating;
 	private int discount;
+	private String responseStatus;
 	
 	public VehicleReservationBean() {
 		super();
@@ -95,6 +96,14 @@ public class VehicleReservationBean {
 	}
 	public void setDiscount(int discount) {
 		this.discount = discount;
+	}
+
+	public String getResponseStatus() {
+		return responseStatus;
+	}
+
+	public void setResponseStatus(String responseStatus) {
+		this.responseStatus = responseStatus;
 	}
 	
 	
