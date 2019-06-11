@@ -125,7 +125,7 @@ public class FlightCompanyController {
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
 	// Method for adding new destination on which flight company operates
-	public @ResponseBody Destination addDestination(@RequestBody DestinationBean destInfo) throws Exception {
+	public @ResponseBody String addDestination(@RequestBody DestinationBean destInfo) throws Exception {
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
@@ -134,16 +134,18 @@ public class FlightCompanyController {
 			FlightAdmin user = (FlightAdmin) userService.findOneByUsername(username);
 			FlightCompany flightCompany = user.getFlightCompany();
 			if (flightCompany == null) {
-				System.out.println("Flight admin doesnt't have flight company.");
-				return null;
+				return "Flight admin doesnt't have flight company.";
 			}
-			Destination newDestination = new Destination(destInfo.getName(), destInfo.getDescription(),
-					destInfo.getCoordinates());
+			Destination newDestination = new Destination();
+			newDestination.setName(destInfo.getName());
+			newDestination.setAddress(destInfo.getAddress());
+			newDestination.setDescription(destInfo.getDescription());
+			newDestination.setLongitude(destInfo.getLongitude());
+			newDestination.setLatitude(destInfo.getLatitude());
 			destinationService.save(newDestination);
 			flightCompany.getDestinations().add(newDestination);
-			// update flight company
 			flightCompanyService.save(flightCompany);
-			return newDestination;
+			return "success";
 		}
 		return null;
 	}
@@ -195,25 +197,21 @@ public class FlightCompanyController {
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
 	// Method returns list of destinations on which flight company operates
-	public @ResponseBody ArrayList<Destination> getDestinations() throws Exception {
+	public @ResponseBody ArrayList<DestinationBean> getDestinations() throws Exception {
 
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (!(authentication instanceof AnonymousAuthenticationToken)) {
-
-			String username = authentication.getName();
-			FlightAdmin user = (FlightAdmin) userService.findOneByUsername(username);
-			FlightCompany flightCompany = user.getFlightCompany();
-			if (flightCompany == null) {
-				System.out.println("Flight admin doesnt't have flight company.");
-				return null;
-			}
-			ArrayList<Destination> destinations = new ArrayList<>();
-			for (Destination d : flightCompany.getDestinations()) {
-				destinations.add(d);
-			}
-			return destinations;
+		FlightAdmin logged = getLoggedFlightAdmin();
+		if (logged == null) {
+			return null;
 		}
-		return null;
+		FlightCompany flightCompany = logged.getFlightCompany();
+		if (flightCompany == null) {
+			return null;
+		}
+		ArrayList<DestinationBean> destinations = new ArrayList<>();
+		for (Destination d : flightCompany.getDestinations()) {
+			destinations.add(new DestinationBean(d.getId(), d.getName(), d.getDescription(), d.getAddress(), d.getLongitude(), d.getLatitude()));
+		}
+		return destinations;
 	}
 	
 	@RequestMapping(value = "/api/editDestination", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -226,9 +224,11 @@ public class FlightCompanyController {
 			return null;
 		}
 		Destination destination = destinationService.findOne(destInfo.getId());
-		destination.setCoordinates(destInfo.getCoordinates());
-		destination.setDescription(destInfo.getDescription());
+		destination.setLongitude(destInfo.getLongitude());
+		destination.setLatitude(destInfo.getLatitude());
+		destination.setAddress(destInfo.getAddress());;
 		destination.setName(destInfo.getName());
+		destination.setDescription(destInfo.getDescription());
 		destinationService.save(destination);
 		return "success";
 	}
