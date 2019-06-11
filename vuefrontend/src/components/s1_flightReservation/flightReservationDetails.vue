@@ -154,8 +154,7 @@ export default {
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/getFlightReservation/" + this.reservationId)
         .then(response => {
-            this.reservation = response.data
-            alert(JSON.stringify(this.reservation));
+            this.reservation = response.data;
         });
     },
 

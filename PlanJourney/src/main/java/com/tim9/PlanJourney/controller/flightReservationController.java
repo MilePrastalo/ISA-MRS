@@ -26,7 +26,6 @@ import com.tim9.PlanJourney.beans.FrontFlightReservationBean;
 import com.tim9.PlanJourney.beans.HotelReservationBean;
 import com.tim9.PlanJourney.beans.PassangerBean;
 import com.tim9.PlanJourney.beans.QuickFlightReservationBean;
-import com.tim9.PlanJourney.beans.ReservationRequestBean;
 import com.tim9.PlanJourney.beans.VehicleReservationBean;
 import com.tim9.PlanJourney.hotel.HotelReservation;
 import com.tim9.PlanJourney.models.RegisteredUser;
@@ -71,9 +70,9 @@ public class flightReservationController {
 	private HotelReservationService hotelReservationService;
 	@Autowired
 	private FlightCompanyService flightCompanyService;
-
 	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 
+	
 	@RequestMapping(value = "/api/getMyReservations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('REGISTERED')")
@@ -84,35 +83,55 @@ public class flightReservationController {
 			return null;
 		}
 		ArrayList<FrontFlightReservationBean> toReturn = new ArrayList<>();
-		ArrayList<FlightReservation> reservations = new ArrayList<>();
-		reservations.addAll(loggedUser.getFlightReservations());
-		for (FlightReservation flightReservation : reservations) {
-
-			FrontFlightReservationBean ffrb = new FrontFlightReservationBean(flightReservation.getId(),
-					flightReservation.getFlight().getStartDestination().getName(),
-					flightReservation.getFlight().getEndDestination().getName(),
-					sdf.format(flightReservation.getFlight().getStartDate()),
-					sdf.format(flightReservation.getFlight().getEndDate()),
-					flightReservation.getSeat().getTravelClassa(), flightReservation.getPrice(),
-					flightReservation.getPassangers().size(), 0, flightReservation.getSeat().getSeatRow(),
-					flightReservation.getSeat().getSeatColumn());
-			Set<Review> reviews = flightReservation.getReservationReviews();
-			for (Review r : reviews) {
-				if (r.getUser().getUsername().equals(loggedUser.getUsername())) {
-					ffrb.setRating(r.getRating());
+		ArrayList<FlightReservation> allReservations = (ArrayList<FlightReservation>) reservationService.findAll();
+		for (FlightReservation flightReservation : allReservations) {
+			if (flightReservation.getUser().getId() == loggedUser.getId()) {
+				toReturn.add(makeReservationBean(flightReservation, loggedUser, null));
+			} else {
+				for (Passanger p : flightReservation.getPassangers()) {
+					if (p.getFriend() != null && p.getFriend().getId() == loggedUser.getId() && p.isConfirmed()) {
+						toReturn.add(makeReservationBean(flightReservation, loggedUser, p.getSeat()));
+						break;
+					}
 				}
 			}
-			int count = 0;
-			for (Passanger p : flightReservation.getPassangers()) {
-				if (p.getSeat().isTaken() == true) {
-					count++;
-				}
-			}
-			ffrb.setPassangers(count);
-			toReturn.add(ffrb);
 		}
 		return toReturn;
 	}
+
+	private FrontFlightReservationBean makeReservationBean(FlightReservation flightReservation,
+			RegisteredUser loggedUser, Seat seat) {
+		FrontFlightReservationBean ffrb = new FrontFlightReservationBean(flightReservation.getId(),
+				flightReservation.getFlight().getStartDestination().getName(),
+				flightReservation.getFlight().getEndDestination().getName(),
+				sdf.format(flightReservation.getFlight().getStartDate()),
+				sdf.format(flightReservation.getFlight().getEndDate()), flightReservation.getPrice(),
+				flightReservation.getPassangers().size(), 0);
+		if (seat == null) {
+			ffrb.setSeatRow(flightReservation.getSeat().getSeatRow());
+			ffrb.setSeatColumn(flightReservation.getSeat().getSeatColumn());
+			ffrb.setTravelClassa(flightReservation.getSeat().getTravelClassa());
+		} else {
+			ffrb.setSeatRow(seat.getSeatRow());
+			ffrb.setSeatColumn(seat.getSeatColumn());
+			ffrb.setTravelClassa(seat.getTravelClassa());
+		}
+		Set<Review> reviews = flightReservation.getReservationReviews();
+		for (Review r : reviews) {
+			if (r.getUser().getUsername().equals(loggedUser.getUsername())) {
+				ffrb.setRating(r.getRating());
+			}
+		}
+		int count = 0;
+		for (Passanger p : flightReservation.getPassangers()) {
+			if (p.getSeat().isTaken() == true) {
+				count++;
+			}
+		}
+		ffrb.setPassangers(count);
+		return ffrb;
+	}
+	
 
 	@RequestMapping(value = "/api/getFlightReservation/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -145,8 +164,6 @@ public class flightReservationController {
 		returnValue.setRentReservations(rentReservations);
 		return returnValue;
 	}
-
-	
 
 	@RequestMapping(value = "/api/cancelFlightReservation/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -214,7 +231,8 @@ public class flightReservationController {
 		bean.setHotelsReservations(hotelReservations);
 		ArrayList<VehicleReservationBean> rentReservations = makeRentReservationBeans(request.getVehicleReservations());
 		bean.setRentReservations(rentReservations);
-		bean.setCreator(request.getUser().getFirstName() + " " +request.getUser().getLastName() + " ( " + request.getUser().getUsername() + " )");
+		bean.setCreator(request.getUser().getFirstName() + " " + request.getUser().getLastName() + " ( "
+				+ request.getUser().getUsername() + " )");
 		return bean;
 	}
 
@@ -359,6 +377,7 @@ public class flightReservationController {
 		for (Passanger p : request.getPassangers()) {
 			if (p.getFriend() != null && p.getFriend().getId() == logged.getId()) {
 				p.setConfirmed(true);
+				p.getSeat().setTaken(true);
 				passangerService.save(p);
 				reservationService.save(request);
 				return "success";
@@ -367,7 +386,7 @@ public class flightReservationController {
 		return "It's not your reservation request";
 	}
 
-	@RequestMapping(value = "/api/refuseReservationRequest/{requestId}", method = RequestMethod.GET,  produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/api/refuseReservationRequest/{requestId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('REGISTERED')")
 	public @ResponseBody String refuseReservationRequest(@PathVariable("requestId") Long requestId) {
@@ -381,6 +400,7 @@ public class flightReservationController {
 			if (passanger.getFriend() != null) {
 				if (passanger.getFriend().getId() == logged.getId()) {
 					passanger.getSeat().setTaken(false);
+					passanger.setConfirmed(false);
 					seatService.save(passanger.getSeat());
 					reservation.setPrice(reservation.getPrice() - passanger.getPrice());
 					reservationService.save(reservation);
@@ -401,7 +421,7 @@ public class flightReservationController {
 		}
 		return null;
 	}
-	
+
 	private ArrayList<HotelReservationBean> makeHotelReservationBeans(Set<HotelReservation> reservations) {
 
 		ArrayList<HotelReservationBean> hotelReservations = new ArrayList<HotelReservationBean>();
@@ -427,7 +447,7 @@ public class flightReservationController {
 		}
 		return rentReservations;
 	}
-	
+
 	private ArrayList<PassangerBean> makePassangersBeans(Set<Passanger> passangerObjects) {
 
 		ArrayList<PassangerBean> passangers = new ArrayList<PassangerBean>();
