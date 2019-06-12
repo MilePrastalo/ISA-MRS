@@ -36,15 +36,15 @@ public class FlightBean {
 	private int economicRows;
 	private int economicColumns;
 	
+	private float latitude;
+	private float longitude;
+	
 	
 	public FlightBean() {
 		// TODO Auto-generated constructor stub
 	}
-
 	
-
-
-
+	
 	public FlightBean(String startDestination, String endDestination, Date startDate, String startDate_str,
 			String endDate_str, Date endDate, int flightDuration, int flightLength, double businessPrice,
 			double economicPrice, double firstClassPrice, double minBusiness, double minEconomic, double minFirstClass,
@@ -99,6 +99,8 @@ public class FlightBean {
 		this.id = flight.getId();
 		this.startDate_str = startDate;
 		this.endDate_str = endDate;
+		this.latitude = flight.getEndDestination().getLatitude();
+		this.longitude = flight.getEndDestination().getLongitude();
 	}
 
 
@@ -405,6 +407,38 @@ public class FlightBean {
 
 	public void setEconomicColumns(int economicColumns) {
 		this.economicColumns = economicColumns;
+	}
+
+
+
+
+
+	public float getLatitude() {
+		return latitude;
+	}
+
+
+
+
+
+	public void setLatitude(float latitude) {
+		this.latitude = latitude;
+	}
+
+
+
+
+
+	public float getLongitude() {
+		return longitude;
+	}
+
+
+
+
+
+	public void setLongitude(float longitude) {
+		this.longitude = longitude;
 	}
 
 

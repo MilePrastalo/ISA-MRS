@@ -16,13 +16,10 @@
                 </table>
             </div>
             <br>
-             <div class = "row">
-                <h2>Flight Info:</h2>
-            </div>
             <br>
             <div class = "row">
-                <table style="text-align: left">
-
+                <table style="text-align: left;">
+                     <h2>Flight Info:</h2>
                     <tr>
                         <td>From: </td>
                         <td >{{reservation.startDestination}}</td>
@@ -48,6 +45,23 @@
                         <td > {{reservation.flightLenght}} </td>
                     </tr>
                 </table>
+                <div class="col" style=" margin-left: 5%">
+                        <yandex-map
+                        :coords="[reservation.latitude,reservation.longitude]"
+                        zoom="14"
+                        style="width:370px;height:230px;"
+                        :controlss="['zoomControl']"
+                        map-type="hybrid"
+                        >
+                        <ymap-marker
+                        marker-id="1"
+                        marker-type="placemark"
+                        :coords="[this.DestLatitude,this.DestLongitude]"
+                        :marker-fill="{color: '#0E4779', opacity: 0.5}"
+                        :marker-stroke="{color: '#0E4779',width: 4}"
+                        ></ymap-marker>
+                    </yandex-map>
+                    </div>
             </div>
             <br>
             <div class = "row">

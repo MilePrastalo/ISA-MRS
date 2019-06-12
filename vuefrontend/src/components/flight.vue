@@ -5,10 +5,11 @@
         <div class = "container">
             <br>
             <h2>Flight details: </h2>
-        <br><br>
+        <br><br><br>
 
-        <div>
-            <table style="text-align: left" class = "centered">
+        <div class = "row">
+            <div class = "col">
+                 <table style="text-align: left" class = "centered">
                 <tr>
                     <td>Flight company: </td>
                     <td> {{flight.flightCompany}}</td>
@@ -52,11 +53,29 @@
                 <tr>
                     <td><button v-if="role == 'REGISTERED'" class="btn btn-primary" @click="makeReservation(flight.id)">Make reservation</button> </td>
                 </tr>
-            </table>
-            <br><br>
+                <br><br>
             <a  href = "searchHotels">Search for hotels</a>
             <br>
             <a href = "/searchVehicle">Search for rent a car services</a>
+            </table>
+            </div>
+            <div class="col">
+                        <yandex-map
+                        :coords="[this.flight.latitude,this.flight.longitude]"
+                        zoom="14"
+                        style="width:350px;height:280px;"
+                        :controlss="['zoomControl']"
+                        map-type="hybrid"
+                        >
+                        <ymap-marker
+                        marker-id="1"
+                        marker-type="placemark"
+                        :coords="[this.DestLatitude,this.DestLongitude]"
+                        :marker-fill="{color: '#0E4779', opacity: 0.5}"
+                        :marker-stroke="{color: '#0E4779',width: 4}"
+                        ></ymap-marker>
+                    </yandex-map>
+                    </div>
         </div> 
         </div>
     </div>
