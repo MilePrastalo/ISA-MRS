@@ -36,30 +36,45 @@
                     </div>
                 </div>
                 <br>
-                
-                <div style="margin-left: 20%;">
-                    <h2>Airports: </h2>
-                <br>
-                <table class = "table table-hover" border="1">
-                    <thead>
-                    <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Address</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Coordinates</th>
-                    </tr>
-                    </thead>
-                    <tr v-for="destination in company.airports" :key="destination.id">  
-                        <td >{{destination.name}}</td>
-                        <td>{{destination.address}}</td>
-                        <td >{{destination.description}}</td>
-                        <td> {{destination.longitude}}, {{destination.latitude}} </td>
-                    </tr>
-                </table>
+                <h1>Airports</h1><br>
+                <div class = "row">
+                    <table class = "table table-hover col" style="width: 1000px" border="1">
+                        <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Address</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Coordinates</th>
+                        </tr>
+                        </thead>
+                        <tr v-for="destination in company.airports" :key="destination.id" @click="showOnMap(destination.longitude, destination.latitude)">  
+                            <td >{{destination.name}}</td>
+                            <td>{{destination.address}}</td>
+                            <td >{{destination.description}}</td>
+                            <td> {{destination.latitude}}, {{destination.longitude}} </td>
+                        </tr>
+                    </table>
+                     <div class="col-2">
+                        <yandex-map
+                        :coords="[this.latitude,this.longitude]"
+                        zoom="14"
+                        style="width:320px;height:280px;"
+                        :controlss="['zoomControl']"
+                        map-type="hybrid"
+                        >
+                        <ymap-marker
+                        marker-id="1"
+                        marker-type="placemark"
+                        :coords="[this.DestLatitude,this.DestLongitude]"
+                        :marker-fill="{color: '#0E4779', opacity: 0.5}"
+                        :marker-stroke="{color: '#0E4779',width: 4}"
+                        ></ymap-marker>
+                    </yandex-map>
+                    </div>
                 </div>
                 </div>
              </div>
-        </div>
+        
 
     </div>
 </template>
@@ -83,7 +98,9 @@ export default {
 
         companyId: 0,
         company: {},
-        currentTab: 3
+        currentTab: 3,
+        longitude: 0,
+        latitude: 0
     }
 },
 created: function(){
@@ -118,7 +135,11 @@ methods:{
                 document.getElementById("flights").className="nav-item nav-link";
             }
             this.currentTab = tabId;
-        }, 
+        },
+        showOnMap: function(y,x){
+            this.latitude = x;
+            this.longitude =y;
+        } 
     }
 }
 

@@ -155,6 +155,8 @@ public class flightReservationController {
 		returnValue.setFlightLenght(reservation.getFlight().getFlightLength());
 		returnValue.setPrice(reservation.getPrice());
 		returnValue.setCreated(sdf.format(reservation.getDate()));
+		returnValue.setLatitude(reservation.getFlight().getEndDestination().getLatitude());
+		returnValue.setLongitude(reservation.getFlight().getEndDestination().getLongitude());
 		ArrayList<PassangerBean> passangers = makePassangersBeans(reservation.getPassangers());
 		returnValue.setPassangersInfo(passangers);
 		ArrayList<HotelReservationBean> hotelReservations = makeHotelReservationBeans(

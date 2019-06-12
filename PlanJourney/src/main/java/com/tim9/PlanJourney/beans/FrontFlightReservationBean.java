@@ -22,6 +22,8 @@ public class FrontFlightReservationBean {
 	private ArrayList<HotelReservationBean> hotelsReservations;
 	private ArrayList<VehicleReservationBean> rentReservations;
 	private String creator;
+	private float latitude;
+	private float longitude;
 	
 	public FrontFlightReservationBean() {
 		super();
@@ -170,6 +172,22 @@ public class FrontFlightReservationBean {
 
 	public void setCreator(String creator) {
 		this.creator = creator;
+	}
+
+	public float getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(float latitude) {
+		this.latitude = latitude;
+	}
+
+	public float getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(float longitude) {
+		this.longitude = longitude;
 	}
 	
 	
