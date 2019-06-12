@@ -1,6 +1,5 @@
 package com.tim9.PlanJourney.controller;
 
-import java.beans.DesignMode;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +20,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.beans.DestinationBean;
+import com.tim9.PlanJourney.beans.EditCityBean;
 import com.tim9.PlanJourney.beans.SystemAdminBean;
 import com.tim9.PlanJourney.models.Authority;
+import com.tim9.PlanJourney.models.City;
 import com.tim9.PlanJourney.models.SystemAdmin;
 import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.service.AuthorityService;
+import com.tim9.PlanJourney.service.CityService;
 import com.tim9.PlanJourney.service.DestinationService;
 import com.tim9.PlanJourney.service.SystemAdminService;
 import com.tim9.PlanJourney.service.UserService;
@@ -44,6 +46,9 @@ public class SystemAdminController {
 
 	@Autowired
 	private DestinationService destinationService;
+
+	@Autowired
+	private CityService cityService;
 
 	@RequestMapping(value = "/api/getSystemAdminProfile", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -155,94 +160,89 @@ public class SystemAdminController {
 		return destinationBeans;
 	}
 
-	@RequestMapping(value = "/api/sysAdminAddDestination", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/api/getAllCities", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('SYS_ADMIN')")
-	public @ResponseBody Long sysAdminAddDestination(@RequestBody DestinationBean destinationBean) throws Exception {
+	public @ResponseBody ArrayList<City> getAllCities() throws Exception {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		ArrayList<City> cities = new ArrayList<City>();
 
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
-			// Returns -4 if given destination name is null or empty.
-			if (destinationBean.getName() == null || destinationBean.getName().equals("".trim())) {
-				return (long) -4;
-			}
-			// Returns -5 if given destination coordinates are null or empty.
-			if (destinationBean.getCoordinates() == null || destinationBean.getCoordinates().equals("".trim())) {
-				return (long) -5;
-			}
 
-			ArrayList<Destination> destinations = (ArrayList<Destination>) destinationService.findAll();
-			for (Destination d : destinations) {
-				// Returns -1 if destinations with given name already exists.
-				if (d.getName().equals(destinationBean.getName())) {
-					return (long) -1;
-				}
-				// Return -2 if destination with given coordinates already exists.
-				if (d.getCoordinates().equals(destinationBean.getCoordinates())) {
-					return (long) -2;
-				}
-			}
-
-			Destination newDestination = new Destination();
-			newDestination.setName(destinationBean.getName());
-			newDestination.setCoordinates(destinationBean.getCoordinates());
-			newDestination.setDescription(destinationBean.getDescription());
-
-			newDestination = destinationService.save(newDestination);
-
-			return newDestination.getId();
+			cities = (ArrayList<City>) cityService.findAll();
 		}
-		// Returns -3 if there was an error with authority.
-		return (long) -3;
+		return cities;
 	}
 
-	@RequestMapping(value = "/api/sysAdminEditDestination", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/api/addCity", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('SYS_ADMIN')")
-	public @ResponseBody Long sysAdminEditDestination(@RequestBody DestinationBean destinationBean) throws Exception {
+	public @ResponseBody boolean getCity(@RequestBody City city) throws Exception {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-		if (!(authentication instanceof AnonymousAuthenticationToken)) {
-			// Returns -4 if given destination name is null or empty.
-			if (destinationBean.getName() == null || destinationBean.getName().equals("".trim())) {
-				return (long) -4;
-			}
-			// Returns -5 if given destination coordinates are null or empty.
-			if (destinationBean.getCoordinates() == null || destinationBean.getCoordinates().equals("".trim())) {
-				return (long) -5;
-			}
-
-			Destination dest = null;
-			ArrayList<Destination> destinations = (ArrayList<Destination>) destinationService.findAll();
-			for (Destination d : destinations) {
-				// Returns -1 if destinations with given name already exists.
-				if (d.getName().equals(destinationBean.getName()) && d.getId() != destinationBean.getId()) {
-					return (long) -1;
-				}
-				// Return -2 if destination with given coordinates already exists.
-				if (d.getCoordinates().equals(destinationBean.getCoordinates())
-						&& d.getId() != destinationBean.getId()) {
-					return (long) -2;
-				}
-				if (d.getId() == destinationBean.getId()) {
-					dest = d;
-				}
-			}
-			// Returns -6 if destination with given ID does not exist.
-			if (dest == null) {
-				return (long) -6;
-			}
-
-			dest.setName(destinationBean.getName());
-			dest.setCoordinates(destinationBean.getCoordinates());
-			dest.setDescription(destinationBean.getDescription());
-
-			dest = destinationService.save(dest);
-
-			return dest.getId();
+		if (city.getName() == null || city.getName().equals("".trim())) {
+			return false;
 		}
-		// Returns -3 if there was an error with authority.
-		return (long) -3;
+
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+
+			ArrayList<City> cities = (ArrayList<City>) cityService.findAll();
+
+			for (City c : cities) {
+				if (c.getName().equals(city.getName())) {
+					return false;
+				}
+			}
+
+			cityService.save(city);
+
+			return true;
+		}
+		return false;
+	}
+
+	@RequestMapping(value = "/api/editCity", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('SYS_ADMIN')")
+	public @ResponseBody boolean editCity(@RequestBody EditCityBean city) throws Exception {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		if (city.getOldName() == null || city.getOldName().equals("".trim())) {
+			return false;
+		}
+
+		if (city.getNewName() == null || city.getNewName().equals("".trim())) {
+			return false;
+		}
+
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+
+			ArrayList<City> cities = (ArrayList<City>) cityService.findAll();
+			// Checks if city with old name exists.
+			City foundCity = null;
+			for (City c : cities) {
+				if (c.getName().equals(city.getOldName())) {
+					foundCity = c;
+					break;
+				}
+			}
+			if (foundCity == null) {
+				return false;
+			}
+
+			// Checks if there is already a city with new name
+			for (City c : cities) {
+				if (c.getName().equals(city.getNewName())) {
+					return false;
+				}
+			}
+			foundCity.setName(city.getNewName());
+
+			cityService.save(foundCity);
+
+			return true;
+		}
+		return false;
 	}
 
 }
