@@ -1,5 +1,6 @@
 package com.tim9.PlanJourney.beans;
 
+import java.util.ArrayList;
 
 public class FlightCompanyBean {
 	
@@ -7,6 +8,7 @@ public class FlightCompanyBean {
 	private String name;
 	private String address;
 	private String description;
+	private ArrayList<DestinationBean> airports;
 	private double rating;
 	
 	public FlightCompanyBean() {
@@ -60,6 +62,14 @@ public class FlightCompanyBean {
 		this.address = address;
 		this.description = description;
 		this.rating = rating;
+	}
+
+	public ArrayList<DestinationBean> getAirports() {
+		return airports;
+	}
+
+	public void setAirports(ArrayList<DestinationBean> airports) {
+		this.airports = airports;
 	}
 	
 
