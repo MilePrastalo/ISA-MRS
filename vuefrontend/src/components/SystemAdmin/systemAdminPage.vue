@@ -20,7 +20,7 @@
                         <a class="nav-link" href="#" @click="selectTab(3)">Rent A Cars</a>
                     </li>
                     <li class="nav-item centered">
-                        <a class="nav-link" href="#" @click="selectTab(4)">Destinations</a>
+                        <a class="nav-link" href="#" @click="selectTab(4)">Cities</a>
                     </li>
                     <li class="nav-item centered">
                         <a class="nav-link" href="#" @click="selectTab(5)">Add System Admin</a>
@@ -38,7 +38,7 @@
                 <sa-rent-a-car class="container"></sa-rent-a-car>
             </div>
             <div  v-if="currentTab == 4" id = "destinations">
-                <sa-destinations class="container"></sa-destinations>
+                <sa-cities class="container"></sa-cities>
             </div>
             <div  v-if="currentTab == 5" id = "destinations">
                 <sa-add-system-admin class="container"></sa-add-system-admin>
@@ -51,7 +51,7 @@
 import saHotels from  './saHotels.vue'
 import saFlightCompanies from "./saFlightCompanies"
 import saRentACar from "./saRentACar"
-import saDestinations from "./saDestinations"
+import saCities from "./saCities"
 import saAddSystemAdmin from "./saAddSystemAdmin"
 import navbar from ".././navbar.vue";
 
@@ -61,7 +61,7 @@ export default {
       saHotels: saHotels,
       saFlightCompanies: saFlightCompanies,
       saRentACar: saRentACar,
-      saDestinations: saDestinations,
+      saCities: saCities,
       saAddSystemAdmin: saAddSystemAdmin,
       navbar
   },
