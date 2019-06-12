@@ -20,13 +20,13 @@
                         <td> Description: </td>
                         <td> <textarea  rows="5" cols="22" name="DestDescription"  v-model="DestDescription" style="overflow:scroll;" required></textarea> </td> 
                     </tr>
+                     <tr>
+                        <td> Latitude: </td>
+                        <td > <input type="text" name="DestLatitude" v-model="DestLatitude" required > </td>
+                    </tr>
                     <tr>
                         <td> Longitude: </td>
                         <td > <input type="text" name="DestLongitude" v-model="DestLongitude" required> </td>
-                    </tr>
-                    <tr>
-                        <td> Latitude: </td>
-                        <td > <input type="text" name="DestLatitude" v-model="DestLatitude" required > </td>
                     </tr>
                     <tr>
                         <td></td>
