@@ -21,11 +21,15 @@
     <div>
         <table id="DataTable"  class="table">
             <tr>
+                <th></th>
                 <th>Name</th>
                 <th>Offices</th>
                 <th>Rating</th>
+                <th></th>
+                <th></th>
             </tr>
             <tr v-for="company in companies" :key="company.name">  
+                <td><img src="../assets/rent.jpg" width="50px" height="50px" alt=""></td>
                 <td>{{company.name}}</td>
                 <td><table class="table">
                     <tr><th>Office name</th>
@@ -38,6 +42,7 @@
                     </tr>
                     </table></td>
                 <td>{{company.rating}}</td>
+                <td><Button @click="details(company)">Details</Button></td>
                 <td><Button @click="select(company)">Select</Button></td>
             </tr>
         </table>
@@ -130,6 +135,10 @@ mounted(){
                o.dateTo = this.dateTo;
                o.offices = company.offices
                this.$emit('selected',o);
+           },
+           details(company){
+               console.log("emituj");
+               this.$emit('details',company);
            }
     }
 }
@@ -162,5 +171,8 @@ h2{
     margin-left: auto;
     margin-right: auto;
     margin-top: 2%;
+}
+td{
+    vertical-align: middle;
 }
 </style>
