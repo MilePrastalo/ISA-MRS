@@ -9,7 +9,7 @@
                     <a @click="selectTab(2)" id="companyProfile" class="nav-item nav-link active"  data-toggle="tab" role="tab" aria-controls="nav-profile" aria-selected="false">Flight Company profile</a>
                     <a @click="selectTab(3)" id="flights" class="nav-item nav-link"  data-toggle="tab" role="tab" aria-controls="nav-profile" aria-selected="false">Flights</a>
                     <a @click="selectTab(4)" id="newFlight" class="nav-item nav-link"  data-toggle="tab" role="tab" aria-controls="nav-profile" aria-selected="false">New Flight</a>
-                    <a @click="selectTab(5)" id="destinations" class="nav-item nav-link"  data-toggle="tab" role="tab" aria-controls="nav-profile" aria-selected="false">Destinations</a>
+                    <a @click="selectTab(5)" id="destinations" class="nav-item nav-link"  data-toggle="tab" role="tab" aria-controls="nav-profile" aria-selected="false">Airports</a>
                     <a @click="selectTab(6)" id="quickTickets" class="nav-item nav-link"  data-toggle="tab" role="tab" aria-controls="nav-profile" aria-selected="false">Quick Tickets</a>
                     <a @click="selectTab(7)" id="addQuickTicket" class="nav-item nav-link"  data-toggle="tab" role="tab" aria-controls="nav-profile" aria-selected="false">Add Quick Ticket</a>
                     <a @click="selectTab(8)" id="reports" class="nav-item nav-link"  data-toggle="tab" role="tab" aria-controls="nav-profile" aria-selected="false">Reports</a>

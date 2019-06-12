@@ -20,12 +20,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tim9.PlanJourney.beans.DestinationBean;
 import com.tim9.PlanJourney.beans.FlightCompanyBean;
 import com.tim9.PlanJourney.beans.FriendBean;
 import com.tim9.PlanJourney.beans.FriendRequestBean;
 import com.tim9.PlanJourney.beans.UserBean;
 import com.tim9.PlanJourney.models.FriendRequest;
 import com.tim9.PlanJourney.models.RegisteredUser;
+import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.models.flight.FlightAdmin;
 import com.tim9.PlanJourney.models.flight.FlightCompany;
 import com.tim9.PlanJourney.models.flight.FlightReservation;
@@ -267,10 +269,13 @@ public class RegisteredUserController {
 			return null;
 		}
 		FlightCompany fc = companyService.findOne(id);
-		FlightCompanyBean bean = new FlightCompanyBean();
-		bean.setDescription(fc.getDescription());
-		bean.setAddress(fc.getAddress());
-		bean.setName(fc.getName());
+		FlightCompanyBean bean = new FlightCompanyBean(fc.getId(), fc.getName(), fc.getAddress(), fc.getDescription(), fc.getRating());
+		ArrayList<DestinationBean> destinations = new ArrayList<>();
+		for (Destination d : fc.getDestinations()) {
+			destinations.add(new DestinationBean(d.getId(), d.getName(), d.getDescription(),
+					d.getAddress(), d.getLongitude(), d.getLatitude()));
+		}
+		bean.setAirports(destinations);
 		return bean;
 	}
 

@@ -7,14 +7,14 @@
         <div class = "centered" style="margin-left:8.4%; margin-right:8.4%" >
              <nav>
                 <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                    <a @click="selectTab(1)" id="flights" class="nav-item nav-link active" data-toggle="tab" role="tab" aria-controls="nav-home" aria-selected="true">Flights</a>
+                      <a @click="selectTab(3)" id="info" class="nav-item nav-link active"  data-toggle="tab" role="tab" aria-controls="nav-profile" aria-selected="false">Information</a>
+                    <a @click="selectTab(1)" id="flights" class="nav-item nav-link" data-toggle="tab" role="tab" aria-controls="nav-home" aria-selected="true">Flights</a>
                     <a @click="selectTab(2)" id="quick" class="nav-item nav-link"  data-toggle="tab" role="tab" aria-controls="nav-profile" aria-selected="false">Quick Reservations</a>
-                    <a @click="selectTab(3)" id="info" class="nav-item nav-link"  data-toggle="tab" role="tab" aria-controls="nav-profile" aria-selected="false">Information</a>
                 </div>
             </nav>
         </div>
         
-        <div  class="tab-content py-3 px-3 px-sm-0 container" id="nav-tabContent" style="min-height: 450px;">
+        <div  class="tab-content py-3 px-3 px-sm-0 container" id="nav-tabContent" style="min-height: 650px;">
 
             <div v-if="currentTab == 1">
                 <allFlights :idCompany = "this.companyId"></allFlights>
@@ -24,11 +24,41 @@
                 <quickReservations :idCompany = "this.companyId"></quickReservations>
             </div>
 
-            <div v-if="currentTab == 3" id = "info" class="centered col-lg-10" role="tabpanel" aria-labelledby="info">
-                <br><br><br>
-                <div class ="mapDiv" ></div>
-                <p >{{company.description}}</p>  
-            </div>
+
+            <div  v-if="currentTab == 3" id = "info" class="centered col-lg-10" role="tabpanel" aria-labelledby="info">
+                <br><br>
+                <div class = "row" style="width: 1100px">
+                    <div class="span4" style=" width: 100%;">
+                        <img style="height: 350px; width: 400px;" class="rounded float-right" src="../../assets/flightCompany.jpg"/>
+                        <div class="content-heading"><h1>Rating: {{company.rating}}</h1></div>
+                        <p>Address: {{company.address}}</p><br>
+                        <p style="text-align: justify; padding-left: 2%; padding-right: 40%;">{{company.description}}</p>
+                    </div>
+                </div>
+                <br>
+                
+                <div style="margin-left: 20%;">
+                    <h2>Airports: </h2>
+                <br>
+                <table class = "table table-hover" border="1">
+                    <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Coordinates</th>
+                    </tr>
+                    </thead>
+                    <tr v-for="destination in company.airports" :key="destination.id">  
+                        <td >{{destination.name}}</td>
+                        <td>{{destination.address}}</td>
+                        <td >{{destination.description}}</td>
+                        <td> {{destination.longitude}}, {{destination.latitude}} </td>
+                    </tr>
+                </table>
+                </div>
+                </div>
+             </div>
         </div>
 
     </div>
@@ -53,7 +83,7 @@ export default {
 
         companyId: 0,
         company: {},
-        currentTab: 1
+        currentTab: 3
     }
 },
 created: function(){
@@ -106,11 +136,12 @@ centered{
     margin-right: auto;
     margin-left: auto;
 }
-.mapDiv{
-    width: 300px;
-    height: 300px; 
-    background-color: gray; 
+
+.span4 .img-right {
     float: right;
+}
+.span4 img {
+    margin-right: 10px;
 }
 .centered{
     margin-right: auto;

@@ -1,29 +1,60 @@
 <template>
    <div id = "destinations">
-        <div class = "destinationContainer">
+
+        <div class = "container">
             <br><br>
-                <h2>New destination: </h2>
+            <h2>New Airport: </h2><br><br>
+            <div class = "row" style="margin-left: 20%">
                 <br>
-                <table class = "centered" style="text-align: left">
+                    <form @submit="addNewDestination">
+                        <table class = "centered" style="text-align: left">
                     <tr>
                         <td> Name: </td>
-                        <td> <input type="text" name="DestName" v-model="DestName" > </td>
+                        <td> <input type="text" name="DestName" v-model="DestName" required> </td>
                     </tr>
                     <tr>
-                        <td> Coordinates: </td>
-                        <td > <input type="text" name="DestCoordinates" v-model="DestCoordinates" > </td>
+                        <td> Address: </td>
+                        <td> <input type = "text"   name="DestAddress"  v-model="DestAddress" required/> </td> 
                     </tr>
                     <tr>
                         <td> Description: </td>
-                        <td> <textarea  rows="5" cols="22" name="DestDescription"  v-model="DestDescription" style="overflow:scroll;"></textarea> </td> 
+                        <td> <textarea  rows="5" cols="22" name="DestDescription"  v-model="DestDescription" style="overflow:scroll;" required></textarea> </td> 
+                    </tr>
+                    <tr>
+                        <td> Longitude: </td>
+                        <td > <input type="text" name="DestLongitude" v-model="DestLongitude" required> </td>
+                    </tr>
+                    <tr>
+                        <td> Latitude: </td>
+                        <td > <input type="text" name="DestLatitude" v-model="DestLatitude" required > </td>
                     </tr>
                     <tr>
                         <td></td>
-                        <td><button class="btn btn-primary" v-on:click="addNewDestination()">Add destination</button> </td>      
+                        <td><button class="btn btn-primary">Add Airport</button> </td>      
                     </tr>
-                </table>
+                    </table>
+                </form>
+                <div class="col">
+                    <yandex-map
+                    :coords="[this.DestLatitude,this.DestLongitude]"
+                    zoom="14"
+                    style="width:350px;height:250px;"
+                    :controlss="['zoomControl']"
+                    map-type="hybrid"
+                    >
+                    <ymap-marker
+                    marker-id="1"
+                    marker-type="placemark"
+                    :coords="[this.DestLatitude,this.DestLongitude]"
+                    :marker-fill="{color: '#0E4779', opacity: 0.5}"
+                    :marker-stroke="{color: '#0E4779',width: 4}"
+                    ></ymap-marker>
+                </yandex-map>
+                </div>
+        </div>
+        <div>
                 <br><br>
-                <h2>All destinations: </h2>
+                <h2>All Airports: </h2>
                 <br>
 
                 <div class = "row">
@@ -31,8 +62,10 @@
                     <thead>
                     <tr>
                         <th scope="col">Name</th>
-                        <th scope="col">Coordinates</th>
+                        <th scope="col">Address</th>
                         <th scope="col">Description</th>
+                        <th scope="col">Longitude</th>
+                         <th scope="col">Latitude</th>
                         <th></th>
                         <th></th>
                     </tr>
@@ -40,16 +73,22 @@
                     <tr v-for="(destination,index ) in destinations" :key="index">  
                         <td v-if="editing == true"> <input type="text" name="DestName" v-model="destination.name" > </td>
                         <td v-else>{{destination.name}}</td>
-                        <td v-if="editing == true"> <input type="text" name="DestCoordinates" v-model="destination.coordinates" > </td>
-                        <td v-else> {{destination.coordinates}} </td>
+                        <td v-if="editing == true"> <textarea  rows="5" cols="22" name="DestAddress"  v-model="destination.address" style="overflow:scroll;"></textarea> </td> 
+                        <td v-else>{{destination.address}}</td>
                         <td v-if="editing == true"> <textarea  rows="5" cols="22" name="DestDescription"  v-model="destination.description" style="overflow:scroll;"></textarea> </td> 
                         <td v-else>{{destination.description}}</td>
+                        <td v-if="editing == true"> <input type="text" name="DestLongitude" v-model="destination.longitude" > </td>
+                        <td v-else> {{destination.longitude}}</td>
+                        <td v-if="editing == true"> <input type="text" name="DestLatitude" v-model="destination.latitude" > </td>
+                        <td v-else> {{destination.latitude}} </td>
                         <td  v-if="editing == false" > <button class="btn btn-outline-primary" @click="editDestination">Edit</button></td>
                         <td v-if="editing == true"><button @click="saveChanges(destination)" class="btn btn-outline-primary">Save</button></td>
                         <td><button @click="deleteDestination(index, destination)" class="btn btn-outline-primary">Delete</button></td>
                     </tr>
                 </table>
                 </div>
+        </div>
+
         </div>
           
     </div>
@@ -62,8 +101,10 @@ export default {
   data: function () {
   return {
     DestName: "",
-    DestCoordinates: "",
     DestDescription: "",
+    DestAddress: "",
+    DestLatitude: "",
+    DestLongitude: "",
     destinations:[],
     editing: false
   }
@@ -79,22 +120,19 @@ mounted(){
           });  
     },
     methods:{
-        addNewDestination: function(){
-            if ( this.DestName == "" ||  this.DestCoordinates == "" || this.DestDescription == ""){
-                alert("Fields can not be empty!");
-                return;
-            }
-            var newDestination = {name:this.DestName, description: this.DestDescription, coordinates: this.DestCoordinates}
+        addNewDestination: function(e){
+            e.preventDefault()
+            var newDestination = {name:this.DestName, description: this.DestDescription, longitude: this.DestLongitude,
+                                    latitude: this.DestLatitude, address: this.DestAddress};
             var getJwtToken = function() {
                 return localStorage.getItem('jwtToken');
             };
-            console.log(newDestination);
             axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
              axios.post("http://localhost:8080/api/addDestination",newDestination)
             .then(response => {
                 alert("New destination added!")
-                this.destinations.push(response.data);
-                this.DestName = this.DestCoordinates = this.DestDescription = "";
+                this.destinations.push(newDestination);
+                this.DestName = this.DestAddress = this.DestDescription = this.DestLongitude = this.DestLatitude = "";
             });
             
         },
