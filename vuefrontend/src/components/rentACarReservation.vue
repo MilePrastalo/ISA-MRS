@@ -1,7 +1,10 @@
 <template>
     <div id="rentACarReservation">
-        <searchRentACarCompany :ijustSearch="justSearch"  :ilocation = "location"  v-on:selected="showVehicles" :iflightDateArrive="flightDateArrive" :iflightDateLeaving="flightDateLeaving" />
-        <div class="row centered">
+        <div v-if="rentProfile">
+            <rentACarCompanyProfile v-on:back="back" :icompany="companyForDetails"/>
+        </div>
+        <searchRentACarCompany v-if="rentProfile==false" v-on:details="companyDetails" :ijustSearch="justSearch"  :ilocation = "location"  v-on:selected="showVehicles" :iflightDateArrive="flightDateArrive" :iflightDateLeaving="flightDateLeaving" />
+        <div class="row centered" v-if="rentProfile==false">
             <ul class="nav nav-tabs col-lg-10 fromTop">
                 <li class="nav-item centered bigTab">
                     <a id="normal" class="nav-link active " href="#" @click="normal">Vehicles</a>
@@ -12,10 +15,11 @@
                 </li>
             </ul>
         </div>
-        <div id="classic" v-if="tabselected==0">
+        <div id="classic" v-if="tabselected==0 && rentProfile==false">
             <searchVehicle :idateFrom="datefrom" :idateTo="dateto" v-if="selected" :iCompany="companySelected" v-on:searched="showFound"/>
             <table class="table"> 
                 <tr>
+                    <td></td>
                     <td>Name</td>
                     <td>Maker</td>
                     <td>Type</td>
@@ -25,6 +29,7 @@
                     <td>Rating</td>
                 </tr>
                 <tr v-for="car in cars" :key="car.id">
+                    <td><img src="../assets/kola.jpg" width="50px" height="50px"/></td>
                     <td>{{car.name}}</td>
                     <td>{{car.maker}}</td>
                     <td>{{car.type}}</td>
@@ -38,7 +43,7 @@
                 </tr>
             </table>
         </div>
-        <div id="quick" v-if="tabselected==1">
+        <div id="quick" v-if="tabselected==1 && rentProfile==false">
             <table border="1"  class = "table" v-if="justSearch == false">
                 <thead class="thead-dark">
                     <tr>
@@ -74,10 +79,11 @@
 <script>
 import searchRentACarCompany from './searchRentACarCompany.vue';
 import searchVehicle from './searchVehicle.vue';
+import rentACarCompanyProfile from './rentACarCompanyProfile.vue'
 export default {
     name: 'rentACarReservation',
     components: {
-      searchRentACarCompany,searchVehicle
+      searchRentACarCompany,searchVehicle,rentACarCompanyProfile
     },
     props:['ilocation','iflightDateArrive','iflightDateLeaving'],
     data: function(){
@@ -96,7 +102,9 @@ export default {
             tabselected :0,
             justSearch:false,
             companySelected:"",
-            selected:false
+            selected:false,
+            rentProfile:false,
+            companyForDetails:{}
         };
     },
     mounted(){
@@ -166,6 +174,13 @@ export default {
                         alert("Success");
                         this.$emit("vehicleReserved",response.data);
                     }); 
+            },
+            companyDetails(company){
+                this.companyForDetails = company;
+                this.rentProfile = true;
+            },
+            back(){
+                this.rentProfile = false;
             }
         }
 }
@@ -183,5 +198,12 @@ export default {
 }
 .bigTab{
     width: 45%;
+}
+td{
+    padding-top: 3px;
+    align-content: center;
+    text-align: center;
+    vertical-align: middle;
+    
 }
 </style>

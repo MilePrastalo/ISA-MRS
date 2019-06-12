@@ -766,4 +766,38 @@ public class RentACarController {
 	}
 	
 	
+	@RequestMapping(value = "/api/getRentACarCompanyInfo/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	// Renturns profile of admins rent a car company
+	public @ResponseBody RentACarProfileBean getRentACarCompanyInfo(@PathVariable("id") Long id) throws Exception {
+		System.out.println("Hello");
+		RentACarCompany rentACarService = companyService.findOne(id);
+		RentACarProfileBean bean = new RentACarProfileBean(rentACarService.getName(), rentACarService.getAddress(),
+				rentACarService.getDescription());
+		bean.setRating(rentACarService.getRating());
+		ArrayList<VehicleSearchReturnBean> vsarray= new ArrayList<>();
+		ArrayList<BranchOfficeBean> officearray = new ArrayList<>();
+		for (Vehicle vehicle : rentACarService.getVehicles()) {
+			VehicleSearchReturnBean vb = new VehicleSearchReturnBean(vehicle.getName(), vehicle.getMaker(), vehicle.getType(), vehicle.getYear(), vehicle.getPrice(), vehicle.getRating());
+			vb.setSeats(vehicle.getSeats());
+			vsarray.add(vb);
+		}
+		bean.setVehicles(vsarray);
+		for (BranchOffice office : rentACarService.getOffices()) {
+			BranchOfficeBean ob = new BranchOfficeBean();
+	    	ob.setId(office.getId());
+	    	ob.setName(office.getName());
+	    	ob.setAddress(office.getAddress());
+	    	ob.setDestination(office.getDestination().getName());
+	    	ob.setLatitude(office.getLatitude());
+	    	ob.setLongitude(office.getLongitude());
+	    	officearray.add(ob);
+		}
+		bean.setOffices(officearray);
+		return bean;
+		
+
+	}
+	
+	
 }
