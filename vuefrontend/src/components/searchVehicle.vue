@@ -19,6 +19,10 @@
                 <td><input v-model="older" type="number" id="older"></td>
             </tr>
             <tr>
+                <td>Number of seats</td>
+                <td><input v-model="seats" type="number" id="older"></td>
+            </tr>
+            <tr>
                 <td>Price from</td>
                 <td><input v-model="priceFrom" type="number" id="priceFrom"></td>
                 <td>Price to</td>
@@ -46,6 +50,7 @@ export default {
     newer:"",
     older:"",
     type:"",
+    seats:0,
     producers:["Mercedes","Audi","BMW"],
     types:["Sedan","Jeep"],
     company : this.iCompany,
@@ -73,7 +78,7 @@ mounted(){
           var data = {};
           var parent = this;
           console.log(this.company);
-            axios.post("http://localhost:8080/api/vehicleSearch",{dateFrom:this.dateFrom,dateTo:this.dateTo,company:this.company, producer : this.producer, priceFrom: this.priceFrom, priceTo:this.priceTo, newer:this.newer, older:this.older,type:this.type})
+            axios.post("http://localhost:8080/api/vehicleSearch",{seats:this.seats,dateFrom:this.dateFrom,dateTo:this.dateTo,company:this.company, producer : this.producer, priceFrom: this.priceFrom, priceTo:this.priceTo, newer:this.newer, older:this.older,type:this.type})
             .then(response => {
               console.log(response.data);
                 parent.$emit('searched',response.data);

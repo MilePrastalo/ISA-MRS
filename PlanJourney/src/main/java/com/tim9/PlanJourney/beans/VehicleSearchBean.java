@@ -11,6 +11,7 @@ public class VehicleSearchBean {
 	private String type;
 	private String dateFrom;
 	private String dateTo;
+	private int seats;
 	public VehicleSearchBean() {
 		super();
 	}
@@ -74,6 +75,13 @@ public class VehicleSearchBean {
 	public void setId(String id) {
 		this.id = id;
 	}
+	public int getSeats() {
+		return seats;
+	}
+	public void setSeats(int seats) {
+		this.seats = seats;
+	}
+	
 	
 	
 	

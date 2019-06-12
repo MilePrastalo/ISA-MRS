@@ -10,6 +10,7 @@ public class VehicleSearchReturnBean {
 	private int year;
 	private Double price;
 	private double rating;
+	private int seats;
 	public VehicleSearchReturnBean(String name, String maker, String type, int year, Double price,double rating) {
 		super();
 		this.name = name;
@@ -74,6 +75,13 @@ public class VehicleSearchReturnBean {
 	public void setRating(double rating) {
 		this.rating = rating;
 	}
+	public int getSeats() {
+		return seats;
+	}
+	public void setSeats(int seats) {
+		this.seats = seats;
+	}
+	
 	
 	
 }

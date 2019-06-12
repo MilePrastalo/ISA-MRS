@@ -30,6 +30,9 @@ public class Vehicle {
 
 	@Column(name = "year", nullable = false)
 	private int year;
+	
+	@Column(name = "seats", nullable = false)
+	private int seats;
 
 	@Column(name = "price", nullable = false)
 	private Double price;
@@ -193,5 +196,14 @@ public class Vehicle {
 	public void setVersion(Long version) {
 		this.version = version;
 	}
+
+	public int getSeats() {
+		return seats;
+	}
+
+	public void setSeats(int seats) {
+		this.seats = seats;
+	}
+	
 
 }

@@ -101,10 +101,12 @@ public class RentACarController {
 					&& (vehicle.getPrice() < search.getPriceTo() || search.getPriceTo() == 0)
 					&& (vehicle.getYear() > search.getNewer() || search.getNewer() == 0)
 					&& (vehicle.getYear() < search.getOlder() || search.getOlder() == 0)
-					&& (vehicle.getType().equals(search.getType()) || search.getType().equals(""))) {
+					&& (vehicle.getType().equals(search.getType()) || search.getType().equals(""))
+					&& (vehicle.getSeats()==search.getSeats()) || (search.getSeats()==0)) {
 				VehicleSearchReturnBean bean =	new VehicleSearchReturnBean(vehicle.getName(), vehicle.getMaker(), vehicle.getType(),
 						vehicle.getYear(), vehicle.getPrice(),vehicle.getRating());
 				bean.setId(Long.toString(vehicle.getId()));
+				bean.setSeats(vehicle.getSeats());
 				foundVehicles.add(bean);
 			}
 		}
@@ -289,26 +291,8 @@ public class RentACarController {
 	@CrossOrigin()
 	//Returns vehicles that are avaiable for reservation in selected company
 	public @ResponseBody Long reserveVehicle(@RequestBody VehicleReservationSearchBean search) throws Exception { 
-		Vehicle vehicle = vehicleService.findOne(Long.parseLong(search.getId()));
 		RegisteredUser user = getRegisteredUser();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date dateFrom = sdf.parse(search.getDateFrom());
-		Date dateTo = sdf.parse(search.getDateTo());
-		BranchOffice pick = bs.findOne(Long.parseLong(search.getOfficePick()));
-		BranchOffice ret = bs.findOne(Long.parseLong(search.getOfficeReturn()));
-		VehicleReservation reservation = new VehicleReservation(vehicle, user,new Date(), dateFrom, dateTo, (double)( (dateTo.getTime() - dateFrom.getTime()) / (1000 * 60 * 60 * 24)) * vehicle.getPrice() );
-		reservation.setOfficePick(pick);
-		reservation.setOfficeReturn(ret);
-		RentACarCompany company = vehicle.getCompany();
-		reservation.setCompany(company);
-		reservationService.save(reservation);
-		user.getVehicleReservations().add(reservation);
-		vehicle.getReservations().add(reservation);
-		company.getReservations().add(reservation);
-		companyService.save(company);
-		userService.save(user);
-		vehicleService.save(vehicle);
-		VehicleReservation reser=  reservationService.save(reservation);
+		VehicleReservation reser=  vehicleService.reserve(search, user);
 		return reser.getId();
 		 
 	}
@@ -725,27 +709,9 @@ public class RentACarController {
 	//Makes quick reservation
 	//Creates new reservation and changes bool taken for quick reservation
 	public @ResponseBody Long quickReserveVehicle(@RequestBody QuickVehicleReserveBean bean) throws Exception { 
-		QuickVehicleReservation quick = quickService.findOne(bean.getId());
-		Vehicle vehicle = quick.getVehicle();
+
 		RegisteredUser user = getRegisteredUser();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date dateFrom = quick.getDateFrom();
-		Date dateTo = quick.getDateTo();
-		BranchOffice pick =quick.getOfficePick();
-		BranchOffice ret = quick.getOfficeReturn();
-		VehicleReservation reservation = new VehicleReservation(vehicle, user,new Date(), dateFrom, dateTo, quick.getOriginalPrice()*(100-quick.getDiscount()/100) );
-		reservation.setOfficePick(pick);
-		reservation.setOfficeReturn(ret);
-		reservationService.save(reservation);
-		quick.setTaken(true);
-		user.getVehicleReservations().add(reservation);
-		vehicle.getReservations().add(reservation);
-		RentACarCompany company = vehicle.getCompany();
-		company.getReservations().add(reservation);
-		companyService.save(company);
-		userService.save(user);
-		vehicleService.save(vehicle);
-		VehicleReservation vr = reservationService.save(reservation);
+		VehicleReservation vr = vehicleService.reserveQuick(bean, user);
 
 		return vr.getId();
 	}
