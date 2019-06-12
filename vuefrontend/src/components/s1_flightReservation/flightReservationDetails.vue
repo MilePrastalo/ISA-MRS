@@ -1,6 +1,6 @@
 <template>
     <div id = "flightReservationDetails">
-         <navbar/>
+         <navbar />
         <div class = "container">
             <div class = "row">
 
@@ -71,6 +71,12 @@
                         <td>Passport: </td>
                         <td >{{passanger.passport}}</td>
                     </tr>
+                    <tr>
+                        <td>Status: </td>
+                        <td v-if="passanger.status == 'Confirmed'" style="color: green;">{{passanger.status}}</td>
+                        <td v-if="passanger.status == 'Waiting'" style="color:blue;">{{passanger.status}}</td>
+                        <td v-if="passanger.status == 'Refused'" style="color: red;">{{passanger.status}}</td>
+                    </tr>
                 </table>
             </div>
             <br>
@@ -118,6 +124,7 @@
                         <td >{{rent.price}}</td>
                     </tr>
                 </table>
+                <br><br> <button @click="cancelFlightReservation" class="btn btn-outline-danger">Cancel Reservation</button>
             </div>
         </div>
     </div>
@@ -148,9 +155,25 @@ export default {
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/getFlightReservation/" + this.reservationId)
         .then(response => {
-            this.reservation = response.data
+            this.reservation = response.data;
         });
     },
+
+    methods: {
+        cancelFlightReservation: function(){
+        var getJwtToken = function() {
+                return localStorage.getItem('jwtToken');
+        };
+        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.get("http://localhost:8080/api/cancelFlightReservation/"+ this.reservationId)
+            .then(response => {
+                alert(response.data);
+                if (response.data == "success"){
+                    window.location = "/index"
+                }
+        });
+    },
+    }
 
 
 

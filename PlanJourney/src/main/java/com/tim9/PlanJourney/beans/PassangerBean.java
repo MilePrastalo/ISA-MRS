@@ -12,6 +12,7 @@ public class PassangerBean {
 	private int seatRow;
 	private int seatColumn;
 	private String travelClass;
+	private String status;
 	
 	public PassangerBean() {
 		// TODO Auto-generated constructor stub
@@ -43,6 +44,7 @@ public class PassangerBean {
 		this.seatRow = seatRow;
 		this.seatColumn = seatColumn;
 		this.travelClass = travelClass;
+		
 	}
 
 	public Long getSeatId() {
@@ -127,6 +129,18 @@ public class PassangerBean {
 
 	public void setTravelClass(String travelClass) {
 		this.travelClass = travelClass;
+	}
+
+
+
+	public String getStatus() {
+		return status;
+	}
+
+
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 	

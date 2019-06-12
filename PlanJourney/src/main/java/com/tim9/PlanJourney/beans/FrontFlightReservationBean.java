@@ -28,20 +28,16 @@ public class FrontFlightReservationBean {
 	}
 	
 	public FrontFlightReservationBean(Long id, String startDestination, String endDestination, String startDate,
-			String endDate, String travelClassa, double price, int passangers, int rating, int seatRow,
-			int seatColumn) {
+			String endDate, double price, int passangers, int rating) {
 		super();
 		this.id = id;
 		this.startDestination = startDestination;
 		this.endDestination = endDestination;
 		this.startDate = startDate;
 		this.endDate = endDate;
-		this.travelClassa = travelClassa;
 		this.price = price;
 		this.passangers = passangers;
 		this.rating = rating;
-		this.seatRow = seatRow;
-		this.seatColumn = seatColumn;
 	}
 	
 	
