@@ -33,6 +33,7 @@ import com.tim9.PlanJourney.beans.VehicleReservationBean;
 import com.tim9.PlanJourney.beans.VehicleReservationSearchBean;
 import com.tim9.PlanJourney.beans.VehicleSearchBean;
 import com.tim9.PlanJourney.beans.VehicleSearchReturnBean;
+import com.tim9.PlanJourney.models.City;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.Review;
 import com.tim9.PlanJourney.models.flight.Destination;
@@ -44,6 +45,7 @@ import com.tim9.PlanJourney.models.rentacar.Vehicle;
 import com.tim9.PlanJourney.models.rentacar.VehicleReservation;
 import com.tim9.PlanJourney.service.AuthorityService;
 import com.tim9.PlanJourney.service.BranchOfficeService;
+import com.tim9.PlanJourney.service.CityService;
 import com.tim9.PlanJourney.service.DestinationService;
 import com.tim9.PlanJourney.service.QuickVehicleReservationService;
 import com.tim9.PlanJourney.service.RegisteredUserService;
@@ -62,7 +64,7 @@ public class RentACarController {
 	@Autowired
 	private RentACarAdminService adminService;
 	@Autowired
-	private DestinationService ds;
+	private CityService ds;
 	@Autowired
 	private BranchOfficeService bs;
 	@Autowired
@@ -573,7 +575,7 @@ public class RentACarController {
 	public void addOffice(@RequestBody BranchOfficeBean bean) throws Exception {
 		    RentACarAdmin admin =getAdmin();
 		    RentACarCompany company = admin.getService();
-		    Destination destination = ds.findByName(bean.getDestination());
+		    City destination = ds.findByName(bean.getDestination());
 		    BranchOffice bo = new BranchOffice(bean.getName(), bean.getAddress(), company, destination);
 		    bo.setLatitude(bean.getLatitude());
 		    bo.setLongitude(bean.getLongitude());
