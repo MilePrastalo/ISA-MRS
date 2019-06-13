@@ -24,6 +24,7 @@ public class FrontFlightReservationBean {
 	private String creator;
 	private float latitude;
 	private float longitude;
+	private int status;
 	
 	public FrontFlightReservationBean() {
 		super();
@@ -188,6 +189,14 @@ public class FrontFlightReservationBean {
 
 	public void setLongitude(float longitude) {
 		this.longitude = longitude;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 	
 	

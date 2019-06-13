@@ -56,9 +56,11 @@
                             <td v-if="editing == false"> {{flight.firstClassPrice}} </td>
                             <td v-else> <input class = "edit" type = "text" v-model= "flight.firstClassPrice" required > </td>
                         </tr>
+                        <br>
                         <tr>
-                            <td v-if="editing == false"><button class="btn btn-primary" @click="enableEditing">Edit</button></td>
+                            <td v-if="editing == false"><button class="btn btn-outline-primary" @click="enableEditing">Edit</button></td>
                             <td v-else><input type="submit" value="Update"></td>
+                            <td v-if="editing == false"><button class="btn btn-outline-danger" @click="deleteFlight(flight.id)">Delete</button></td>
                         </tr>
                     </table>
                 </form>
@@ -157,6 +159,24 @@ export default {
                     alert(response.data);
                 }
             });    
+        },
+
+        deleteFlight: function(id){
+            var getJwtToken = function() {
+                return localStorage.getItem('jwtToken');
+            };
+            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.get("http://localhost:8080/api/removeFlight/" + id)
+            
+            .then(response => {
+                if (response.data == "success"){
+                    alert("Flight is removed.");
+                    window.location = "/flightAdmin"
+                }
+                else{
+                    alert(response.data);
+                }
+            });
         }
     }     
     
