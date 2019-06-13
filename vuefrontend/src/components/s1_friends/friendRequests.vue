@@ -4,7 +4,7 @@
         <div>
             <br><br>
             <table class="table">
-                <thead class="thead-dark">
+                <thead>
                     <tr>
                         <th scope="col">First Name</th>
                         <th scope="col">Last Name</th>

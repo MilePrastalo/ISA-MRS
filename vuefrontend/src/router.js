@@ -165,6 +165,11 @@ export default new Router({
       path: '/FirstLogin',
       name: 'FirstLogin',
       component: () => import('./components/FirstLogin.vue')
-    }
+    },
+    {
+      path: '/invites',
+      name: 'invites',
+      component: () => import('./components/s1_flightReservation/invites.vue')
+    },
   ]
 })

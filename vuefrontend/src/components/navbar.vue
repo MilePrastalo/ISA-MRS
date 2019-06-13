@@ -18,6 +18,9 @@
                     <li v-if="type!=0" class="nav-item">
                     <a class="nav-link" href="./userProfile">Profile</a>
                     </li>
+                     <li v-if="type!=0" class="nav-item">
+                    <a class="nav-link" href="/invites">Invites</a>
+                    </li>
                     <li v-if="type!=0" class="nav-item">
                     <a @click="logout" class="nav-link">Logout</a>
                     </li>
