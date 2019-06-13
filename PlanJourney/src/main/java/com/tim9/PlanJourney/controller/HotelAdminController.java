@@ -3,8 +3,6 @@ package com.tim9.PlanJourney.controller;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +24,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.beans.AdminBean;
-import com.tim9.PlanJourney.beans.DestinationBean;
 import com.tim9.PlanJourney.beans.HotelAdminBean;
 import com.tim9.PlanJourney.beans.HotelBean;
 import com.tim9.PlanJourney.beans.HotelDailyReportBean;
@@ -39,8 +36,6 @@ import com.tim9.PlanJourney.hotel.HotelAdmin;
 import com.tim9.PlanJourney.hotel.HotelReservation;
 import com.tim9.PlanJourney.hotel.HotelRoom;
 import com.tim9.PlanJourney.models.Authority;
-import com.tim9.PlanJourney.models.RegisteredUser;
-import com.tim9.PlanJourney.models.flight.FlightReservation;
 import com.tim9.PlanJourney.service.AuthorityService;
 import com.tim9.PlanJourney.service.EmailService;
 import com.tim9.PlanJourney.service.HotelAdminService;
@@ -92,9 +87,7 @@ public class HotelAdminController {
 			HotelBean hb = new HotelBean();
 			hb.setAddress(hotel.getAddress());
 			hb.setDescription(hotel.getDescription());
-			DestinationBean db = new DestinationBean(hotel.getDestination().getName(),
-					hotel.getDestination().getDescription(), hotel.getDestination().getCoordinates());
-			hb.setDestination(db);
+			hb.setCityName(hotel.getCity().getName());
 			hb.setName(hotel.getName());
 			hb.setRating(hotel.getRating());
 			ArrayList<HotelRoomBean> rb = new ArrayList<HotelRoomBean>();
@@ -166,14 +159,10 @@ public class HotelAdminController {
 			// Setting hotel
 			Hotel hotel = admin.getHotel();
 			HotelBean hb = new HotelBean();
-			DestinationBean db = new DestinationBean();
-			db.setName(hotel.getDestination().getName());
-			db.setCoordinates(hotel.getDestination().getCoordinates());
-			db.setDescription(hotel.getDestination().getDescription());
 
 			hb.setAddress(hotel.getAddress());
 			hb.setDescription(hotel.getDescription());
-			hb.setDestination(db);
+			hb.setCityName(hotel.getCity().getName());
 			hb.setName(hotel.getName());
 			hb.setRating(hotel.getRating());
 
