@@ -183,11 +183,11 @@ public class FlifgtController {
 		
 		Date endDate = flightInfo.getEndDate();;
 		Date startDate = flightInfo.getStartDate();
-		if (flightInfo.getEndDate_str().equals("")) {
+		if (!flightInfo.getEndDate_str().equals("")) {
 			endDate = sdf1.parse(flightInfo.getEndDate_str());
 		}
-		if (flightInfo.getEndDate_str().equals("")) {
-			endDate = sdf1.parse(flightInfo.getStartDate_str());
+		if (!flightInfo.getStartDate_str().equals("")) {
+			startDate = sdf1.parse(flightInfo.getStartDate_str());
 		}
 		if (endDate.before(startDate)) {
 			return "End date can not be before start date!";
