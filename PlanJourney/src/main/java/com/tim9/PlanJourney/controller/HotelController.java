@@ -32,9 +32,11 @@ import com.tim9.PlanJourney.hotel.Hotel;
 import com.tim9.PlanJourney.hotel.HotelAdmin;
 import com.tim9.PlanJourney.hotel.HotelReservation;
 import com.tim9.PlanJourney.hotel.HotelRoom;
+import com.tim9.PlanJourney.models.City;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.models.flight.FlightReservation;
+import com.tim9.PlanJourney.service.CityService;
 import com.tim9.PlanJourney.service.DestinationService;
 import com.tim9.PlanJourney.service.FlightReservationService;
 import com.tim9.PlanJourney.service.HotelAdminService;
@@ -61,6 +63,9 @@ public class HotelController {
 
 	@Autowired
 	private FlightReservationService flightReservationService;
+
+	@Autowired
+	private CityService cityService;
 
 	@RequestMapping(value = "/api/getAllHotels", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -111,11 +116,7 @@ public class HotelController {
 			}
 			hb.setReservations(reservationBeans);
 
-			DestinationBean db = new DestinationBean();
-			db.setName(h.getDestination().getName());
-			db.setDescription(h.getDestination().getDescription());
-			db.setCoordinates(h.getDestination().getCoordinates());
-			hb.setDestination(db);
+			hb.setCityName(h.getCity().getName());
 			hotelBeans.add(hb);
 		}
 		return hotelBeans;
@@ -132,6 +133,7 @@ public class HotelController {
 		hb.setAddress(h.getAddress());
 		hb.setDescription(h.getDescription());
 		hb.setRating(h.getRating());
+		hb.setCityName(h.getCity().getName());
 		hb.setLatitude(h.getLatitude());
 		hb.setLongitude(h.getLongitude());
 		ArrayList<HotelRoomBean> rb = new ArrayList<HotelRoomBean>();
@@ -171,12 +173,6 @@ public class HotelController {
 			reservationBeans.add(reservationBean);
 		}
 		hb.setReservations(reservationBeans);
-
-		DestinationBean db = new DestinationBean();
-		db.setName(h.getDestination().getName());
-		db.setDescription(h.getDestination().getDescription());
-		db.setCoordinates(h.getDestination().getCoordinates());
-		hb.setDestination(db);
 
 		return hb;
 	}
@@ -218,26 +214,57 @@ public class HotelController {
 	@RequestMapping(value = "/api/addHotel", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('SYS_ADMIN')")
-	public @ResponseBody ResponseEntity<Hotel> addHotel(@RequestBody Hotel hotel) {
+	public @ResponseBody boolean addHotel(@RequestBody HotelBean hb) {
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
-			// checks if hotel already exists on given address and same destination.
-			Hotel addressCheck = service.findByAddress(hotel.getAddress());
-			Destination dest = destinationService.findOne(hotel.getDestination().getId());
-			boolean alreadyExists = false;
-			if (addressCheck != null) {
-				if (addressCheck.getDestination().getId() == hotel.getDestination().getId()) {
-					alreadyExists = true;
+
+			if (hb.getName() == null || hb.getName().equals("".trim())) {
+				System.out.println("Puko 1");
+				return false;
+			}
+			if (hb.getAddress() == null || hb.getAddress().equals("".trim())) {
+				System.out.println("Puko 2");
+				return false;
+			}
+			if (hb.getCityName() == null || hb.getCityName().equals("".trim())) {
+				System.out.println("Puko 3");
+				return false;
+			}
+			// checks if hotel already exists on given address or name in same the city.
+			ArrayList<Hotel> hotels = (ArrayList<Hotel>) service.findAll();
+
+			for (Hotel h : hotels) {
+				if (h.getAddress().equals(hb.getAddress()) && h.getCity().getName().equals(hb.getCityName())) {
+					System.out.println("Puko 4");
+					return false;
+				} else if (h.getName().equals(hb.getName()) && h.getCity().getName().equals(hb.getCityName())) {
+					System.out.println("Puko 5");
+					return false;
 				}
 			}
-			if (!alreadyExists && service.findByName(hotel.getName()) == null) {
-				hotel.setDestination(dest);
-				Hotel h = (Hotel) service.save(hotel);
-				return new ResponseEntity<Hotel>(new Hotel(), HttpStatus.OK);
+			// Checks if city with given name exists.
+			City city = cityService.findByName(hb.getCityName());
+			if (city == null) {
+				System.out.println("Puko 6");
+				return false;
 			}
+
+			Hotel newHotel = new Hotel();
+			newHotel.setName(hb.getName());
+			newHotel.setAddress(hb.getAddress());
+			newHotel.setDescription(hb.getDescription());
+			newHotel.setLatitude(hb.getLatitude());
+			newHotel.setLongitude(hb.getLongitude());
+			newHotel.setCity(city);
+
+			service.save(newHotel);
+
+			return true;
+
 		}
-		return new ResponseEntity<Hotel>(hotel, HttpStatus.CONFLICT);
+		System.out.println("Puko 7");
+		return false;
 	}
 
 	@RequestMapping(value = "/api/removeHotel/{name}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -331,7 +358,7 @@ public class HotelController {
 			}
 		} else if (crit.equals("destination")) {
 			for (Hotel h : hotels) {
-				if (h.getDestination().getName().equals(val)) {
+				if (h.getCity().getName().equals(val)) {
 					foundHotels.add(h);
 				}
 			}
@@ -406,12 +433,11 @@ public class HotelController {
 			reservation.setUser(user);
 			hotel.getReservations().add(reservation);
 			user.getHotelReservations().add(reservation);
-			
-			
+
 			// Adds choosen additional charges to reservation.
-			for(String aCName : reservationBean.getAdditionalCharges()) {
-				for(AdditionalCharges ac : room.getAdditionalCharges()) {
-					if(ac.getName().equals(aCName)) {
+			for (String aCName : reservationBean.getAdditionalCharges()) {
+				for (AdditionalCharges ac : room.getAdditionalCharges()) {
+					if (ac.getName().equals(aCName)) {
 						reservation.getAdditionalCharges().add(ac);
 					}
 				}
