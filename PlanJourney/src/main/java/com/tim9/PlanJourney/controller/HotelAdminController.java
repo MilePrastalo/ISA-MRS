@@ -3,7 +3,6 @@ package com.tim9.PlanJourney.controller;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -373,57 +372,9 @@ public class HotelAdminController {
 	@PreAuthorize("hasAuthority('HOTEL_ADMIN')")
 	public @ResponseBody boolean addQuickHotelReservation(@RequestBody HotelReservationBean reservationBean) {
 
-		// Checks if hotel exists.
-		Hotel hotel = hotelService.findByName(reservationBean.getHotelName());
-		if (hotel == null) {
-			System.out.println("puko 1");
-			return false;
-		}
-		// Finds selected room and check if it exists.
-		HotelRoom room = null;
-		for (HotelRoom r : hotel.getRooms()) {
-			if (r.getRoomNumber() == reservationBean.getRoomNumber()) {
-				room = r;
-				break;
-			}
-		}
-		if (room == null) {
-			System.out.println("puko 2");
-			return false;
-		}
-		// Splits date and checks if reservation date is valid.
-		Date firstDay = new Date();
-		Calendar c = Calendar.getInstance();
-		c.set(reservationBean.getfYear(), reservationBean.getfMonth() - 1, reservationBean.getfDay(), 0, 0);
-		firstDay.setTime(c.getTimeInMillis());
+		boolean added = hotelService.addQuickHotelReservation(reservationBean);
 
-		Date lastDay = new Date();
-		c.set(reservationBean.getlYear(), reservationBean.getlMonth() - 1, reservationBean.getlDay(), 0, 0);
-		lastDay.setTime(c.getTimeInMillis());
-
-		if (!checkDate(firstDay, lastDay, hotel, reservationBean.getRoomNumber())) {
-			System.out.println("puko 3");
-			System.out.println(firstDay);
-			System.out.println(lastDay);
-			return false;
-		}
-
-		// Calculating number of days.
-		long time = lastDay.getTime() - firstDay.getTime();
-		long days = TimeUnit.MILLISECONDS.toDays(time);
-
-		// Adds new reservation
-		HotelReservation reservation = new HotelReservation();
-		reservation.setFirstDay(firstDay);
-		reservation.setLastDay(lastDay);
-		reservation.setHotel(hotel);
-		reservation.setRoom(room);
-		reservation.setPaidPrice(days * room.getPricePerDay());
-		reservation.setDiscount(reservationBean.getDiscount());
-		hotel.getReservations().add(reservation);
-		hotelService.save(hotel);
-
-		return true;
+		return added;
 	}
 
 	private boolean checkDate(Date firstDay, Date lastDay, Hotel hotel, int roomNumber) {

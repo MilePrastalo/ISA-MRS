@@ -31,19 +31,15 @@
             <table class="centered">
                 <tr>
                         <td><b> Name: </b></td>
-                        <td>  <input type="text" name="hotel.name" v-model="hotel.name"> </td>
+                        <td>  <input type="text" v-model="hotel.name"> </td>
                     </tr>
                     <tr>
-                        <td><b> Destination: </b></td>
-                        <td>  <input type="text" name="hotel.destination.name" v-model="hotel.destination.name" > </td>
-                    </tr>
-                    <tr>
-                        <td><b> Destination description: </b></td>
-                        <td> <input type="text" name="hotel.destination.description"  v-model="hotel.destination.description" > </td>        
+                        <td><b> City: </b></td>
+                        <td>  <input type="text" v-model="hotel.cityName" > </td>
                     </tr>
                     <tr>
                         <td><b> Hotel description: </b></td>
-                        <td> <input type="text" name="hotel.description"  v-model="hotel.description" > </td>        
+                        <td> <input type="text"  v-model="hotel.description" > </td>        
                     </tr>
                     <tr>
                         <td>  </td>

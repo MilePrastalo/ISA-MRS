@@ -15,18 +15,12 @@
                         
                     </li>
                     <li class="nav-item">
-                        <a  class="nav-link" href="#" @click="selectTab(3)">Remove Rent A Car</a>
-                    </li>
-                    <li class="nav-item">
-                        <a  class="nav-link" href="#" @click="selectTab(4)">Add Rent A Car Admin</a>
-                    </li>
-                    <li class="nav-item">
-                        <a  class="nav-link" href="#" @click="selectTab(5)">Remove Rent A Car Admin</a>
+                        <a  class="nav-link" href="#" @click="selectTab(3)">Remove Rent A Car Admin</a>
                     </li>
                 </ul>
             </div>
             
-            <div v-if="currentTab == 1">
+            <div v-if="currentTab == 1 && showRACs == true">
                 <br>
                 <br>
                 <table class="table">
@@ -37,6 +31,8 @@
                         <th>Adress</th>
                         <th>Description</th>
                         <th>Rating</th>
+                        <th>Options</th>
+                        <th> </th>
                     </tr>
                     </thead>
             <tr v-for="r in this.racs" :key="r.id">  
@@ -44,6 +40,8 @@
                 <td>{{r.address}}</td>
                 <td>{{r.description}}</td>
                 <td>{{r.rating}}</td>
+                <td><button v-on:click="addRACAdminDiv(r.name)" class="btn-primary" >Add Admin</button></td>
+                <td><button v-on:click="removeRAC(r.name)" class="btn-primary" style="background-color:red">Remove</button></td>
             </tr>
             </table>
             </div>
@@ -52,65 +50,57 @@
                  <table>
                 <tr>
                     <td><b> Name: </b></td>
-                    <td>  <input type="text" name="name" v-model="name" > </td>
+                    <td>  <input type="text" v-model="newRac.name" > </td>
                 </tr>
                 <tr>
                     <td><b> Address: </b></td>
-                    <td>  <input type="text" name="address" v-model="address" > </td>
+                    <td>  <input type="text" v-model="newRac.address" > </td>
                 </tr>
                 <tr>
                     <td><b> Description: </b></td>
-                    <td> <textarea  rows="5" cols="22" name="description"  v-model="description" style="overflow:scroll;"></textarea> </td>        
+                    <td> <textarea  rows="5" cols="22" v-model="newRac.description" style="overflow:scroll;"></textarea> </td>        
                 </tr>
                 <tr>
                     <td>  </td>
                     <td><button v-on:click="addRentACar()" class="btn-primary">Add Rent A Car</button> </td>      
+                       
                 </tr>
             </table>      
             </div> 
-
-            <div  v-if="currentTab == 3">
-                <table>
-                <tr>
-                    <td> Enter rent a car's name you want to remove: </td>
-                    <td>  <input type="text" name="name" v-model="name" > </td>
-                    <td><button v-on:click="removeRentACar()" class="btn-primary">Remove Rent A Car</button> </td> 
-                </tr>
-                </table>
-            </div>
-            <div  v-if="currentTab == 4">
+            <div  v-if="addingRACAdmin == true">
                  <table>
                 <tr>
+                    <td><b> Flight Company Name: </b></td>      
+                    <td>{{rentACarName}}</td>  
+                </tr>
+                <tr>
                     <td><b> Username: </b></td>
-                    <td>  <input type="text" name="admin.username" v-model="admin.username" > </td>
+                    <td>  <input type="text" v-model="admin.username" > </td>
                 </tr>
                 <tr>
                     <td><b> Password: </b></td>
-                    <td>  <input type="text" name="admin.password" v-model="admin.password" > </td>
+                    <td>  <input type="text" v-model="admin.password" > </td>
                 </tr>
                 <tr>
                     <td><b> First Name: </b></td>
-                    <td> <input type="text" name="admin.firstName" v-model="admin.firstName" > </td>        
+                    <td> <input type="text" v-model="admin.firstName" > </td>        
                 </tr>
                 <tr>
                     <td><b> Last Name: </b></td>
-                    <td> <input type="text" name="admin.lastName" v-model="admin.lastName" > </td>        
+                    <td> <input type="text" v-model="admin.lastName" > </td>        
                 </tr>
                 <tr>
                     <td><b> Email: </b></td>
-                    <td> <input type="text" name="admin.email" v-model="admin.email" > </td>        
-                </tr>
-                <tr>
-                    <td><b> Flight Company Name: </b></td>
-                    <td> <input type="text" name="rentACarName" v-model="rentACarName" > </td>        
+                    <td> <input type="text" v-model="admin.email" > </td>        
                 </tr>
                 <tr>
                     <td>  </td>
                     <td><button v-on:click="addRentACarAdmin()" class="btn-primary">Add Rent A Car Admin</button> </td>      
+                    <td><button v-on:click="cancelRACAdmin()" class="btn-primary">Cancel</button> </td> 
                 </tr>
             </table>     
             </div>
-            <div  v-if="currentTab == 5"> 
+            <div  v-if="currentTab == 3"> 
                 <table>
                 <tr>
                     <td> Enter rent a car admin's username you want to remove: </td>
@@ -131,7 +121,10 @@ export default {
   data: function () {
   return {
     racs: [],
-    admin: [],
+    newRac:{},
+    admin: {},
+    addingRACAdmin: false,
+    showRACs: true,
     name: "",
     address: "",
     description: "",
@@ -154,24 +147,45 @@ mounted(){
             this.currentTab = tabId;
         },
         addRentACar: function() {
-            axios.post("http://localhost:8080/api/addRentACarCompany",{name:this.name,address:this.address,description:this.description}).
+            axios.post("http://localhost:8080/api/addRentACarCompany",this.newRac).
             then(response =>{
                 alert(response.data.name + " has been successfully added.");
+                    this.racs.push(this.newRac);
+                    this.newRac = {};
             })
         },
-        removeRentACar: function() {
-            axios.delete("http://localhost:8080/api/removeRentACarCompany/"+ this.name)
+        removeRAC: function(name) {
+            axios.delete("http://localhost:8080/api/removeRentACarCompany/"+ name)
             .then(response => {
+                var index;
+                for(let r in this.racs) {
+                    if(this.racs[r].name == name) {
+                        index = r;
+                        break;
+                    }
+                }
+                this.racs.splice(index,1);
                 alert(response.data.name + " has been successfully removed.");
             })
+        },
+        addRACAdminDiv: function(name) {
+            this.showRACs = false;
+            this.rentACarName = name;
+            this.addingRACAdmin = true;
+        },
+        cancelRACAdmin: function() {
+          this.admin = {};
+          this.addingRACAdmin = false;
+          this.showRACs = true;  
         },
         addRentACarAdmin: function() {
             axios.post("http://localhost:8080/api/addRentACarAdmin",{username:this.admin.username,password:this.admin.password,firstName:this.admin.firstName,lastName:this.admin.lastName,email:this.admin.email,companyName:this.rentACarName}).
             then(response =>{
                 if(response.data === true) {
                     alert("Rent a car admin has been successfully added.");
+                    this.newRac = {};
                 } else {
-                    alert("Username is taken.");
+                    alert("There was a problem with adding new rent a car admin.");
                 }
             })
         },
