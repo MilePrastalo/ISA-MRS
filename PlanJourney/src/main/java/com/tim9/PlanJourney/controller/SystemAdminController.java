@@ -21,14 +21,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.beans.DestinationBean;
 import com.tim9.PlanJourney.beans.EditCityBean;
+import com.tim9.PlanJourney.beans.RemoveAdminBean;
 import com.tim9.PlanJourney.beans.SystemAdminBean;
+import com.tim9.PlanJourney.hotel.HotelAdmin;
 import com.tim9.PlanJourney.models.Authority;
 import com.tim9.PlanJourney.models.City;
 import com.tim9.PlanJourney.models.SystemAdmin;
 import com.tim9.PlanJourney.models.flight.Destination;
+import com.tim9.PlanJourney.models.flight.FlightAdmin;
+import com.tim9.PlanJourney.models.rentacar.RentACarAdmin;
 import com.tim9.PlanJourney.service.AuthorityService;
 import com.tim9.PlanJourney.service.CityService;
 import com.tim9.PlanJourney.service.DestinationService;
+import com.tim9.PlanJourney.service.FlightAdminSerice;
+import com.tim9.PlanJourney.service.HotelAdminService;
+import com.tim9.PlanJourney.service.RentACarAdminService;
 import com.tim9.PlanJourney.service.SystemAdminService;
 import com.tim9.PlanJourney.service.UserService;
 
@@ -49,6 +56,15 @@ public class SystemAdminController {
 
 	@Autowired
 	private CityService cityService;
+
+	@Autowired
+	private HotelAdminService hotelAdminService;
+
+	@Autowired
+	private FlightAdminSerice flightAdminService;
+
+	@Autowired
+	private RentACarAdminService racAdminService;
 
 	@RequestMapping(value = "/api/getSystemAdminProfile", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -124,6 +140,7 @@ public class SystemAdminController {
 
 	@RequestMapping(value = "/api/removeSystemAdmin/{username}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
+	@PreAuthorize("hasAuthority('SYS_ADMIN')")
 	public ResponseEntity<SystemAdmin> removeSystemAdmin(@PathVariable("username") String username) {
 
 		SystemAdmin admin = service.findByUsername(username);
@@ -243,6 +260,66 @@ public class SystemAdminController {
 			return true;
 		}
 		return false;
+	}
+
+	@RequestMapping(value = "/api/getAllHotelAdmins", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('SYS_ADMIN')")
+	public @ResponseBody ArrayList<RemoveAdminBean> getAllHotelAdmins() {
+		ArrayList<HotelAdmin> hotelAdmins = (ArrayList<HotelAdmin>) hotelAdminService.findAll();
+		ArrayList<RemoveAdminBean> rabs = new ArrayList<RemoveAdminBean>();
+
+		for (HotelAdmin a : hotelAdmins) {
+			RemoveAdminBean rab = new RemoveAdminBean();
+			rab.setUsername(a.getUsername());
+			rab.setFirstName(a.getFirstName());
+			rab.setLastName(a.getLastName());
+			rab.setHotelName(a.getHotel().getName());
+
+			rabs.add(rab);
+		}
+
+		return rabs;
+	}
+
+	@RequestMapping(value = "/api/getAllFlightAdmins", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('SYS_ADMIN')")
+	public @ResponseBody ArrayList<RemoveAdminBean> getAllFlightAdmins() {
+		ArrayList<FlightAdmin> flightAdmins = (ArrayList<FlightAdmin>) flightAdminService.findAll();
+		ArrayList<RemoveAdminBean> rabs = new ArrayList<RemoveAdminBean>();
+
+		for (FlightAdmin a : flightAdmins) {
+			RemoveAdminBean rab = new RemoveAdminBean();
+			rab.setUsername(a.getUsername());
+			rab.setFirstName(a.getFirstName());
+			rab.setLastName(a.getLastName());
+			rab.setHotelName(a.getFlightCompany().getName());
+
+			rabs.add(rab);
+		}
+
+		return rabs;
+	}
+
+	@RequestMapping(value = "/api/getAllRACAdmins", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('SYS_ADMIN')")
+	public @ResponseBody ArrayList<RemoveAdminBean> getAllRACAdmins() {
+		ArrayList<RentACarAdmin> racAdmins = (ArrayList<RentACarAdmin>) racAdminService.findAll();
+		ArrayList<RemoveAdminBean> rabs = new ArrayList<RemoveAdminBean>();
+
+		for (RentACarAdmin a : racAdmins) {
+			RemoveAdminBean rab = new RemoveAdminBean();
+			rab.setUsername(a.getUsername());
+			rab.setFirstName(a.getFirstName());
+			rab.setLastName(a.getLastName());
+			rab.setHotelName(a.getService().getName());
+
+			rabs.add(rab);
+		}
+
+		return rabs;
 	}
 
 }

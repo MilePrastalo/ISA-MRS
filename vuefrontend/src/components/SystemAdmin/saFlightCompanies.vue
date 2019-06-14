@@ -101,13 +101,26 @@
             </table>     
             </div>
             <div  v-if="currentTab == 3"> 
-                <table>
-                <tr>
-                    <td> Enter flight company admin's username you want to remove: </td>
-                    <td>  <input type="text" name="admin.username" v-model="admin.username" > </td>
-                    <td><button v-on:click="removeFlightCompanyAdmin()" class="btn-primary">Remove Flight Company Admin</button> </td> 
-                </tr>
-                </table>
+                <br>
+                <br>
+                <table class="table" >
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>Username</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Hotel Name</th>
+                        <th>Options</th>
+                    </tr>
+                    </thead>
+            <tr v-for="a in this.flightAdmins" :key="a.id">  
+                <td>{{a.username}}</td>
+                <td>{{a.firstName}}</td>
+                <td>{{a.lastName}}</td>
+                <td>{{a.hotelName}}</td>
+                <td><button v-on:click="removeAdmin(a.username)" class="btn-primary" style="background-color:red">Remove</button></td>
+            </tr>
+            </table>
             </div>
         </div>
 </template>
@@ -121,6 +134,7 @@ export default {
   data: function () {
   return {
     fcs: [],
+    flightAdmins: [],
     newFC: {},
     admin: {},
     addingFCAdmin: false,
@@ -140,7 +154,12 @@ mounted(){
         axios.get("http://localhost:8080/api/getAllFlightCompanies")
             .then(response => {
                 this.fcs = response.data;
-            })
+            });
+
+        axios.get("http://localhost:8080/api/getAllFlightAdmins")
+            .then(response => {
+                this.flightAdmins = response.data;
+            });
     },
     methods:{
         selectTab: function(tabId){
@@ -184,14 +203,23 @@ mounted(){
             then(response =>{
                 if(response.data === true) {
                     alert("Flight admin has been successfully added.");
+                    this.admin = {};
                 } else {
                     alert("Username is taken.");
                 }
             })
         },
-        removeFlightCompanyAdmin: function() {
-            axios.delete("http://localhost:8080/api/removeFlightAdmin/"+ this.admin.username)
+        removeAdmin: function(name) {
+            axios.delete("http://localhost:8080/api/removeFlightAdmin/"+ name)
             .then(response => {
+                var index;
+                for(let a in this.flightAdmins) {
+                    if(this.flightAdmins[a].name == name) {
+                        index = a;
+                        break;
+                    }
+                }
+                this.flightAdmins.splice(index,1);
                 alert(response.data.username + " has been successfully removed.");
             })
         }    

@@ -101,13 +101,26 @@
             </table>     
             </div>
             <div  v-if="currentTab == 3"> 
-                <table>
-                <tr>
-                    <td> Enter rent a car admin's username you want to remove: </td>
-                    <td>  <input type="text" name="admin.username" v-model="admin.username" > </td>
-                    <td><button v-on:click="removeRentACarAdmin()" class="btn-primary">Remove Rent A Car Admin</button> </td> 
-                </tr>
-                </table>
+                <br>
+                <br>
+                <table class="table" >
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>Username</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Hotel Name</th>
+                        <th>Options</th>
+                    </tr>
+                    </thead>
+            <tr v-for="a in this.racAdmins" :key="a.id">  
+                <td>{{a.username}}</td>
+                <td>{{a.firstName}}</td>
+                <td>{{a.lastName}}</td>
+                <td>{{a.hotelName}}</td>
+                <td><button v-on:click="removeAdmin(a.username)" class="btn-primary" style="background-color:red">Remove</button></td>
+            </tr>
+            </table>
             </div>
         </div>
 </template>
@@ -121,6 +134,7 @@ export default {
   data: function () {
   return {
     racs: [],
+    racAdmins: [],
     newRac:{},
     admin: {},
     addingRACAdmin: false,
@@ -140,7 +154,12 @@ mounted(){
         axios.get("http://localhost:8080/api/getAllRentACars")
             .then(response => {
                 this.racs = response.data;
-            })
+            });
+
+        axios.get("http://localhost:8080/api/getAllRACAdmins")
+            .then(response => {
+                this.racAdmins = response.data;
+            });
     },
     methods:{
         selectTab: function(tabId){
@@ -183,15 +202,23 @@ mounted(){
             then(response =>{
                 if(response.data === true) {
                     alert("Rent a car admin has been successfully added.");
-                    this.newRac = {};
+                    this.admin = {};
                 } else {
                     alert("There was a problem with adding new rent a car admin.");
                 }
             })
         },
-        removeRentACarAdmin: function() {
-            axios.delete("http://localhost:8080/api/removeRentACarAdmin/"+ this.admin.username)
+        removeAdmin: function(name) {
+            axios.delete("http://localhost:8080/api/removeRentACarAdmin/"+ name)
             .then(response => {
+                var index;
+                for(let a in this.racAdmins) {
+                    if(this.racAdmins[a].name == name) {
+                        index = a;
+                        break;
+                    }
+                }
+                this.racAdmins.splice(index,1);
                 alert(response.data.username + " has been successfully removed.");
             })
         }        

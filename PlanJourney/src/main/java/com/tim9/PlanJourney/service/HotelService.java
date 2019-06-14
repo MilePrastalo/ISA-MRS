@@ -133,6 +133,7 @@ public class HotelService {
 		return newReservation.getId();
 	}
 
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public boolean addQuickHotelReservation(HotelReservationBean reservationBean) {
 		// Checks if hotel exists.
 		Hotel hotel = this.findByName(reservationBean.getHotelName());
@@ -178,8 +179,19 @@ public class HotelService {
 		reservation.setRoom(room);
 		reservation.setPaidPrice(days * room.getPricePerDay());
 		reservation.setDiscount(reservationBean.getDiscount());
+
+		// Adds choosen additional charges to reservation.
+		for (String aCName : reservationBean.getAdditionalCharges()) {
+			for (AdditionalCharges ac : room.getAdditionalCharges()) {
+				if (ac.getName().equals(aCName)) {
+					reservation.getAdditionalCharges().add(ac);
+				}
+			}
+		}
 		hotel.getReservations().add(reservation);
+		System.out.println(reservation.getHotel().getName());
 		this.save(hotel);
+		// hotelReservationService.save(reservation);
 
 		return true;
 	}

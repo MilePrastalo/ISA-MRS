@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.beans.AdminBean;
+import com.tim9.PlanJourney.beans.EditHotelBean;
 import com.tim9.PlanJourney.beans.HotelAdminBean;
 import com.tim9.PlanJourney.beans.HotelBean;
 import com.tim9.PlanJourney.beans.HotelDailyReportBean;
@@ -377,27 +378,6 @@ public class HotelAdminController {
 		return added;
 	}
 
-	private boolean checkDate(Date firstDay, Date lastDay, Hotel hotel, int roomNumber) {
-
-		if (firstDay.after(lastDay)) {
-			return false;
-		}
-
-		for (HotelReservation hr : hotel.getReservations()) {
-			if (roomNumber == hr.getRoom().getRoomNumber()) {
-				if (lastDay.after(hr.getFirstDay()) && lastDay.before(hr.getLastDay())) {
-					return false;
-				}
-				if (firstDay.after(hr.getFirstDay()) && firstDay.before(hr.getLastDay())) {
-					return false;
-				}
-				if (firstDay.equals(hr.getFirstDay()) || lastDay.equals(hr.getLastDay())) {
-					return false;
-				}
-			}
-		}
-		return true;
-	}
 
 	@RequestMapping(value = "/api/cancelQuickHotelReservation", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -414,4 +394,37 @@ public class HotelAdminController {
 		return true;
 	}
 
+	@RequestMapping(value = "/api/updateHotelProfile", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('HOTEL_ADMIN')")
+	public @ResponseBody boolean updateHotelProfile(@RequestBody EditHotelBean editHotelBean) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			if(editHotelBean.getNewName().equals("".trim())) {
+				return false;
+			}
+			
+			ArrayList<Hotel> hotels = (ArrayList<Hotel>) hotelService.findAll();
+			
+			
+			
+			String username = authentication.getName();
+			HotelAdmin ha = adminService.findByUsername(username);
+			Hotel hotel = ha.getHotel();
+			for(Hotel h : hotels) {
+				if(h.getName().equals(editHotelBean.getNewName()) && h.getCity().getName().equals(editHotelBean.getCityName()) && h.getId() != hotel.getId()) {
+					return false;
+				}
+			}
+			if(editHotelBean.getOldName().equals(hotel.getName()) && editHotelBean.getCityName().equals(hotel.getCity().getName())) {
+				hotel.setName(editHotelBean.getNewName());
+				hotel.setDescription(editHotelBean.getNewDescription());
+				
+				hotelService.save(hotel);
+				
+				return true;
+			}
+		}
+		return false;
+	}
 }

@@ -62,6 +62,7 @@
                     <tr v-for="a in room.additionalCharges" :key="a.id">  
                         <td>{{a.name}}</td>
                         <td>{{a.pricePerDay}}</td>
+                        <td><input type="checkbox" @click="aCChanged(a.name)"></td>
                     </tr>
                 </table>
                 <table>
@@ -109,7 +110,8 @@ export default {
     lMonth: 0,
     lDay: 0,
     showReservation: 0,
-    available: 0
+    available: 0,
+    additionalCharges: []
 
   }
 },
@@ -206,19 +208,36 @@ export default {
           alert("Discount must be grater than zero.");
           return;
         }
-        axios.post("http://localhost:8080/api/addQuickHotelReservation",{hotelName: this.hotel.name,fYear: this.fYear,fMonth: this.fMonth,fDay: this.fDay,lYear: this.lYear,lMonth: this.lMonth,lDay: this.lDay, roomNumber: this.room.roomNumber,discount: this.discount})
+        axios.post("http://localhost:8080/api/addQuickHotelReservation",{hotelName: this.hotel.name,fYear: this.fYear,fMonth: this.fMonth,fDay: this.fDay,lYear: this.lYear,lMonth: this.lMonth,lDay: this.lDay, roomNumber: this.room.roomNumber,discount: this.discount,additionalCharges:this.additionalCharges})
         .then(response => {
             if(response.data === true) {
               alert("Your reservation is successful.");
               this.available = 0;
               
-              this.hotel.reservations.push({hotelName: this.hotel.name,fYear: this.fYear,fMonth: this.fMonth,fDay: this.fDay,lYear: this.lYear,lMonth: this.lMonth,lDay: this.lDay, roomNumber: this.room.roomNumber,discount: this.discount});
+              this.hotel.reservations.push({hotelName: this.hotel.name,fYear: this.fYear,fMonth: this.fMonth,fDay: this.fDay,lYear: this.lYear,lMonth: this.lMonth,lDay: this.lDay, roomNumber: this.room.roomNumber,discount: this.discount,additionalCharges:this.additionalCharges});
+              this.additionalCharges = [];
             } else {
               alert("Your reservation failed.");
               this.available = 0;
             }
           });
-      }     
+      },
+      // Checks if Additional Charge exists, than adds it or removes it.
+      aCChanged: function(aCName) {
+        var index = -1;
+        for(let a in this.additionalCharges) {
+          if(this.additionalCharges[a] == aCName) {
+            index = a;
+            break;
+          }
+        }
+        if(index != -1) {
+          this.additionalCharges.splice(index,1);
+        } else {
+          this.additionalCharges.push(aCName);     
+            }
+      }
+           
     }
 }
 </script>

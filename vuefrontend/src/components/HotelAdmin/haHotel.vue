@@ -1,5 +1,5 @@
 <template>
-   <div id = "haHotel">
+   <div id = "haHotel" v-if="hotel">
        <div class="container">
             <br>
              <div class="row">
@@ -26,27 +26,44 @@
                 </ul>
             </div>
             
-            <div v-if="currentTab == 1" class="centered">
+            <div v-if="currentTab == 1 && editing == false" class="centered">
             <br>
             <table class="centered">
-                <tr>
+                    <tr>
                         <td><b> Name: </b></td>
-                        <td>  <input type="text" v-model="hotel.name"> </td>
+                        <td>  {{hotel.name}} </td>
                     </tr>
                     <tr>
                         <td><b> City: </b></td>
-                        <td>  <input type="text" v-model="hotel.cityName" > </td>
+                        <td>  {{hotel.cityName}} </td>
                     </tr>
                     <tr>
-                        <td><b> Hotel description: </b></td>
-                        <td> <input type="text"  v-model="hotel.description" > </td>        
+                        <td><b> Description: </b></td>
+                        <td> {{hotel.description}}</td>        
                     </tr>
                     <tr>
                         <td>  </td>
-                        <td><button v-on:click="updateSystemAdminProfile()" class="btn-primary">Edit</button> </td>        
+                        <td><button v-on:click="updateHotelProfileDiv()" class="btn-primary">Edit</button> </td>        
                     </tr>
             </table>
             </div>
+            <div v-if="currentTab == 1 && editing == true" class="centered">
+            <table class="centered">
+                <tr>
+                        <td><b> Name: </b></td>
+                        <td><input type="text" v-model="hotel.name" ></td>
+                    </tr>
+                    <tr>
+                        <td><b> Description: </b></td>
+                        <td><input type="text" v-model="hotel.description" ></td>   
+                    </tr>
+                    <tr>
+                        <td>  </td>
+                        <td><button v-on:click="updateHotelProfile()" class="btn-primary">Save</button> </td> 
+                        <td><button v-on:click="cancel()" class="btn-primary">Cancel</button> </td>         
+                    </tr>
+            </table>
+            </div> 
 
             <div  v-if="currentTab == 2" class="centered"> 
                 <br>
@@ -163,7 +180,9 @@ export default {
     ac: [],
     acList: [],
     quickReservations: [],
-    currentTab: 1
+    currentTab: 1,
+    editing: false,
+    oldHotel: {}
   }
 },
 mounted(){
@@ -171,7 +190,6 @@ mounted(){
             return localStorage.getItem('jwtToken');
         };
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-        
     },
     methods:{
         selectTab: function(tabId){
@@ -221,6 +239,32 @@ mounted(){
                     });
                 } else {
                     alert("There was a problem with canceling quick reservation.");
+                }
+            });
+        },
+        updateHotelProfileDiv: function() {
+            this.oldHotel.name = this.hotel.name;
+            this.oldHotel.description = this.hotel.description;
+            this.editing = true;
+        },
+        cancel: function() {
+            this.hotel.name = this.oldHotel.name;
+            this.hotel.description = this.oldHotel.description;
+            this.editing = false;
+        },
+        updateHotelProfile: function() {
+            if(this.hotel.name == "") {
+                alert("Hotel name must not be empty.")
+            }
+            axios.post("http://localhost:8080/api/updateHotelProfile",{oldName:this.oldHotel.name,newName:this.hotel.name,cityName:this.hotel.cityName,newDescription:this.hotel.description})
+            .then(response => {
+                if(response.data == true) {
+                    alert("Hotel profile update was successful.");
+                    this.editing = false;
+                } else {
+                    this.hotel.name = this.oldHotel.name;
+                    this.hotel.description = this.oldHotel.description;
+                    alert("Hotel profile update failed.")
                 }
             });
         }

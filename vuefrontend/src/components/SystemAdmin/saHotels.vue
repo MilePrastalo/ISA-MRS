@@ -117,13 +117,26 @@
             </table>     
             </div>
             <div  v-if="currentTab == 3"> 
-                <table>
-                <tr>
-                    <td> Enter hotel admin's username you want to remove: </td>
-                    <td>  <input type="text" name="admin.username" v-model="admin.username" > </td>
-                    <td><button v-on:click="removeHotelAdmin()" class="btn-primary">Remove Hotel Admin</button> </td> 
-                </tr>
-                </table>
+                <br>
+                <br>
+                <table class="table" >
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>Username</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Hotel Name</th>
+                        <th>Options</th>
+                    </tr>
+                    </thead>
+            <tr v-for="a in this.hotelAdmins" :key="a.id">  
+                <td>{{a.username}}</td>
+                <td>{{a.firstName}}</td>
+                <td>{{a.lastName}}</td>
+                <td>{{a.hotelName}}</td>
+                <td><button v-on:click="removeAdmin(a.username)" class="btn-primary" style="background-color:red">Remove</button></td>
+            </tr>
+            </table>
         </div>
    </div>
 </template>
@@ -137,6 +150,7 @@ export default {
   data: function () {
   return {
     hotels: [],
+    hotelAdmins: [],
     admin: {},
     newHotel: {},
     name: "",
@@ -154,6 +168,11 @@ mounted(){
         axios.get("http://localhost:8080/api/getAllHotels")
             .then(response => {
                 this.hotels = response.data;
+            });
+
+        axios.get("http://localhost:8080/api/getAllHotelAdmins")
+            .then(response => {
+                this.hotelAdmins = response.data;
             });
     },
     methods:{
@@ -223,15 +242,25 @@ mounted(){
             then(response =>{
                 if(response.data === true) {
                     alert("Hotel admin has been successfully added.");
+                    this.admin = {};
                 } else {
                     alert("Username is taken.");
                 }
             })
         },
-        removeHotelAdmin: function() {
-            axios.delete("http://localhost:8080/api/removeHotelAdmin/"+ this.admin.username)
+        removeAdmin: function(name) {
+            axios.delete("http://localhost:8080/api/removeHotelAdmin/"+ name)
             .then(response => {
+                var index;
+                for(let a in this.hotelAdmins) {
+                    if(this.hotelAdmins[a].name == name) {
+                        index = a;
+                        break;
+                    }
+                }
+                this.hotelAdmins.splice(index,1);
                 alert(response.data.username + " has been successfully removed.");
+
             })
         }    
     }
