@@ -710,12 +710,23 @@ public class FlightCompanyController {
 	@RequestMapping(value = "/api/getAllFlightCompanies", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('SYS_ADMIN')")
-	public @ResponseBody ArrayList<FlightCompany> getAllFlightCompanies() throws Exception {
+	public @ResponseBody ArrayList<FlightCompanyBean> getAllFlightCompanies() throws Exception {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
 			ArrayList<FlightCompany> fcs = (ArrayList<FlightCompany>) flightCompanyService.findAll();
-
-			return fcs;
+			
+			ArrayList<FlightCompanyBean> fcBeans = new ArrayList<FlightCompanyBean>();
+			for(FlightCompany f : fcs) {
+				FlightCompanyBean fcb = new FlightCompanyBean();
+				fcb.setName(f.getName());
+				fcb.setAddress(f.getAddress());
+				fcb.setDescription(f.getDescription());
+				fcb.setRating(f.getRating());
+				
+				fcBeans.add(fcb);
+			}
+			
+			return fcBeans;
 		}
 		return null;
 	}

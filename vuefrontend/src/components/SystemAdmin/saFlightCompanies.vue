@@ -15,18 +15,12 @@
                         
                     </li>
                     <li class="nav-item">
-                        <a  class="nav-link" href="#" @click="selectTab(3)">Remove Flight Company</a>
-                    </li>
-                    <li class="nav-item">
-                        <a  class="nav-link" href="#" @click="selectTab(4)">Add Flight Company Admin</a>
-                    </li>
-                    <li class="nav-item">
-                        <a  class="nav-link" href="#" @click="selectTab(5)">Remove Flight Company Admin</a>
+                        <a  class="nav-link" href="#" @click="selectTab(3)">Remove Flight Company Admin</a>
                     </li>
                 </ul>
             </div>
             
-            <div v-if="currentTab == 1">
+            <div v-if="currentTab == 1 && showFCs == true">
                 <br>
                 <br>
                 <table class="table">
@@ -37,6 +31,8 @@
                         <th>Adress</th>
                         <th>Description</th>
                         <th>Rating</th>
+                        <th>Options</th>
+                        <th></th>
                     </tr>
                     </thead>
             <tr v-for="f in this.fcs" :key="f.id">  
@@ -44,6 +40,8 @@
                 <td>{{f.address}}</td>
                 <td>{{f.description}}</td>
                 <td>{{f.rating}}</td>
+                <td><button v-on:click="addFCAdminDiv(f.name)" class="btn-primary" >Add Admin</button></td>
+                <td><button v-on:click="removeFlightCompany(f.name)" class="btn-primary" style="background-color:red">Remove</button></td>
             </tr>
             </table>
             </div>
@@ -53,15 +51,15 @@
                      
                 <tr>
                     <td><b> Name: </b></td>
-                    <td>  <input type="text" name="name" v-model="name" > </td>
+                    <td>  <input type="text" v-model="newFC.name" > </td>
                 </tr>
                 <tr>
                     <td><b> Address: </b></td>
-                    <td>  <input type="text" name="address" v-model="address" > </td>
+                    <td>  <input type="text" v-model="newFC.address" > </td>
                 </tr>
                 <tr>
                     <td><b> Description: </b></td>
-                    <td> <textarea  rows="5" cols="22" name="description"  v-model="description" style="overflow:scroll;"></textarea> </td>        
+                    <td> <textarea  rows="5" cols="22"  v-model="newFC.description" style="overflow:scroll;"></textarea> </td>        
                 </tr>
                 <tr>
                     <td>  </td>
@@ -69,49 +67,40 @@
                 </tr>
             </table>      
             </div> 
-
-            <div  v-if="currentTab == 3">
-                <table>
-                <tr>
-                    <td> Enter flight company's name you want to remove: </td>
-                    <td>  <input type="text" name="name" v-model="name" > </td>
-                    <td><button v-on:click="removeFlightCompany()" class="btn-primary">Remove Flight Company</button> </td> 
-                </tr>
-                </table>
-            </div>
-            <div  v-if="currentTab == 4">
+            <div  v-if="addingFCAdmin == true">
                  <table>
+                      <tr>
+                    <td><b> Flight Company Name: </b></td>
+                    <td> {{flightCompanyName}}</td>        
+                </tr>
                 <tr>
                     <td><b> Username: </b></td>
-                    <td>  <input type="text" name="admin.username" v-model="admin.username" > </td>
+                    <td>  <input type="text" v-model="admin.username" > </td>
                 </tr>
                 <tr>
                     <td><b> Password: </b></td>
-                    <td>  <input type="text" name="admin.password" v-model="admin.password" > </td>
+                    <td>  <input type="text" v-model="admin.password" > </td>
                 </tr>
                 <tr>
                     <td><b> First Name: </b></td>
-                    <td> <input type="text" name="admin.firstName" v-model="admin.firstName" > </td>        
+                    <td> <input type="text" v-model="admin.firstName" > </td>        
                 </tr>
                 <tr>
                     <td><b> Last Name: </b></td>
-                    <td> <input type="text" name="admin.lastName" v-model="admin.lastName" > </td>        
+                    <td> <input type="text" v-model="admin.lastName" > </td>        
                 </tr>
                 <tr>
                     <td><b> Email: </b></td>
-                    <td> <input type="text" name="admin.email" v-model="admin.email" > </td>        
-                </tr>
-                <tr>
-                    <td><b> Flight Company Name: </b></td>
-                    <td> <input type="text" name="flightCompanyName" v-model="flightCompanyName" > </td>        
+                    <td> <input type="text" v-model="admin.email" > </td>        
                 </tr>
                 <tr>
                     <td>  </td>
-                    <td><button v-on:click="addFlightCompanyAdmin()" class="btn-primary">Add Flight Company Admin</button> </td>      
+                    <td><button v-on:click="addFlightCompanyAdmin()" class="btn-primary">Add Flight Company Admin</button> </td>
+                    <td><button v-on:click="cancelFCAdmin()" class="btn-primary">Cancel</button> </td>       
                 </tr>
             </table>     
             </div>
-            <div  v-if="currentTab == 5"> 
+            <div  v-if="currentTab == 3"> 
                 <table>
                 <tr>
                     <td> Enter flight company admin's username you want to remove: </td>
@@ -132,7 +121,10 @@ export default {
   data: function () {
   return {
     fcs: [],
-    admin: [],
+    newFC: {},
+    admin: {},
+    addingFCAdmin: false,
+    showFCs: true,
     flightCompanyName: "",
     name: "",
     address: "",
@@ -155,16 +147,37 @@ mounted(){
             this.currentTab = tabId;
         },
         addFlightCompany: function() {
-            axios.post("http://localhost:8080/api/addFlightCompany",{name:this.name,address:this.address,description:this.description}).
+            axios.post("http://localhost:8080/api/addFlightCompany",this.newFC).
             then(response =>{
+                 alert("Flight Company has been successfully added.");
+                    this.fcs.push(this.newFC);
+                    this.newFC = {};
                 alert(response.data.name + " has been successfully added.");
             })
         },
-        removeFlightCompany: function() {
-            axios.delete("http://localhost:8080/api/removeFlightCompany/"+ this.name)
+        removeFlightCompany: function(name) {
+            axios.delete("http://localhost:8080/api/removeFlightCompany/"+ name)
             .then(response => {
+                var index;
+                for(let f in this.fcs) {
+                    if(this.fcs[f].name == name) {
+                        index = f;
+                        break;
+                    }
+                }
+                this.fcs.splice(index,1);
                 alert(response.data.name + " has been successfully removed.");
             })
+        },
+        addFCAdminDiv: function(name) {
+            this.showFCs = false;
+            this.flightCompanyName = name;
+            this.addingFCAdmin = true;
+        },
+        cancelFCAdmin: function() {
+          this.admin = {};
+          this.addingFCAdmin = false;
+          this.showFCs = true;  
         },
         addFlightCompanyAdmin: function() {
             axios.post("http://localhost:8080/api/addFlightAdmin",{username:this.admin.username,password:this.admin.password,firstName:this.admin.firstName,lastName:this.admin.lastName,email:this.admin.email,companyName:this.flightCompanyName}).

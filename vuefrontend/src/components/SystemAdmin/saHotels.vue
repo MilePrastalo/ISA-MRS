@@ -138,11 +138,11 @@ export default {
   return {
     hotels: [],
     admin: {},
+    newHotel: {},
     name: "",
     hotelName: "",
     addingHotelAdmin: false,
     showHotels: true,
-    newHotel: {},
     currentTab: 1
   }
 },
