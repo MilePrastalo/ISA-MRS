@@ -6,7 +6,7 @@
        </div>
 
        <div v-if="currentDiv == 2" >
-          <navbar :itype="1"/>
+          <navbar/>
         <div class="container">
         <h1>Reservation Request</h1><br><br>
         

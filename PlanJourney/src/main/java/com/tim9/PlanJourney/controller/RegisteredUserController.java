@@ -273,7 +273,7 @@ public class RegisteredUserController {
 		ArrayList<DestinationBean> destinations = new ArrayList<>();
 		for (Destination d : fc.getDestinations()) {
 			destinations.add(new DestinationBean(d.getId(), d.getName(), d.getDescription(),
-					d.getAddress(), d.getLongitude(), d.getLatitude()));
+					d.getAddress(), d.getLongitude(), d.getLatitude(), d.getCity().getName()));
 		}
 		bean.setAirports(destinations);
 		return bean;

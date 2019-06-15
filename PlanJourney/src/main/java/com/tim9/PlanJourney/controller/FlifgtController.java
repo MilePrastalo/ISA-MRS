@@ -241,11 +241,18 @@ public class FlifgtController {
 		ArrayList<FlightBean> foundFlights = new ArrayList<>();
 		DateTimeComparator dateTimeComparator = DateTimeComparator.getDateOnlyInstance();
 		for (Flight f : flights) {
-			if ((f.getStartDestination().getName().equals(search.getStartDestination())
+			int transitionsCnt = 0;
+			if ( f.getTransitions() == null || f.getTransitions().equals("0") || f.getTransitions().equals("")) {
+				transitionsCnt = 0;
+			}
+			else {
+				transitionsCnt = f.getTransitions().split(",").length;
+			}
+			if ((f.getStartDestination().getName().contains(search.getStartDestination())
 					|| search.getStartDestination().equals(""))
-					&& (f.getEndDestination().getName().equals(search.getEndDestination())
+					&& (f.getEndDestination().getName().contains(search.getEndDestination())
 							|| search.getEndDestination().equals(""))
-					&& (f.getFlightCompany().getName().equals(search.getFlightCompany())
+					&& (f.getFlightCompany().getName().contains(search.getFlightCompany())
 							|| search.getFlightCompany().equals(""))
 					&& (f.getEconomicPrice() >= search.getMinEconomic() || (search.getMinEconomic() == 0))
 					&& (f.getBusinessPrice() >= search.getMinBusiness() || (search.getMinBusiness() == 0))
@@ -255,6 +262,7 @@ public class FlifgtController {
 					&& (f.getFirstClassPrice() <= search.getMaxFirstClass() || (search.getMaxFirstClass() == 0))
 					&& (f.getFlightDuration() == search.getFlightDuration() || search.getFlightDuration() == 0)
 					&& (f.getFlightLength() == search.getFlightLength() || search.getFlightLength() == 0)
+					&& (search.getTransitionsNum() <= transitionsCnt || search.getTransitionsNum() == 0)
 					&& (search.getStartDate() == null
 							|| dateTimeComparator.compare(f.getStartDate(), search.getStartDate()) == 0)
 					&& (search.getEndDate() == null

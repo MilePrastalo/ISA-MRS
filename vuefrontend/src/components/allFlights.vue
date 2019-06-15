@@ -5,6 +5,10 @@
        
         <div class = "centered">
             <table style="text-align: left;  margin-left: 30%" >
+                 <tr>
+                    <td>Transitions:</td>
+                    <td><input v-model="transitionsNum" type="number" placeholder="MaxNum of transitions"></td>
+                </tr>
                 <tr>
                     <td>Start destination:</td>
                     <td><input v-model="startDestination" type="text"></td>
@@ -111,7 +115,8 @@ export default {
     MinPrice: "",
     MaxPrice: "",
     check: 1,
-    flights: []
+    flights: [],
+    transitionsNum: ""
   }
 },
 created: function(){
@@ -167,7 +172,8 @@ mounted(){
             var flightForSearch = {startDestination: this.startDestination, endDestination: this.endDestination, startDate: this.startDate, endDate: this.endDate,
             minEconomic : MineconomicPrice, minBusiness: MinbuisinesssPrice, minFirstClass :MinfirstClassPrice,
             maxEconomic: MaxeconomicPrice, maxBusiness: MaxbuisinesssPrice, maxFirstClass:MaxfirstClassPrice,
-            flightDuration: this.flightDuration, flightLength:  this.flightLength, companyId: -1 }
+            flightDuration: this.flightDuration, flightLength:  this.flightLength, companyId: -1,
+            transitionsNum: this.transitionsNum }
             var getJwtToken = function() {
                 return localStorage.getItem('jwtToken');
             };

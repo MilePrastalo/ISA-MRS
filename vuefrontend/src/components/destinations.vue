@@ -9,11 +9,15 @@
                     <form @submit="addNewDestination">
                         <table class = "centered" style="text-align: left">
                     <tr>
-                        <td> Name: </td>
-                        <td> <select class="selectpicker" v-model="DestCity" @change="setCityId" data-live-search="true" >
-                                <option v-for="city in this.cities"  :key=city.id>{{city.name}}</option>
+                        <td> City: </td>
+                        <td> <select v-model="DestCity" required>
+                                <option v-for="city in this.cities"  v-bind:value= city  :key=city.id>{{city.name}}</option>
                             </select>
                          </td>
+                    </tr>
+                     <tr>
+                        <td> Name: </td>
+                        <td> <input type = "text"   name="DestName"  v-model="DestName" required/> </td> 
                     </tr>
                     <tr>
                         <td> Address: </td>
@@ -64,6 +68,7 @@
                 <table class = "centered table" border="1">
                     <thead>
                     <tr>
+                         <th scope="col">City</th>
                         <th scope="col">Name</th>
                         <th scope="col">Address</th>
                         <th scope="col">Description</th>
@@ -73,8 +78,9 @@
                         <th></th>
                     </tr>
                     </thead>
-                    <tr v-for="(destination,index ) in destinations" :key="index">  
-                        <td v-if="editing == true"> <input type="text" v-model="destination.name" @change="setCityIdII(destination)"> </td>
+                    <tr v-for="(destination,index ) in destinations" :key="index"> 
+                        <td >{{destination.cityName}}</td>
+                        <td v-if="editing == true"> <input type="text" v-model="destination.name"> </td>
                         <td v-else>{{destination.name}}</td>
                         <td v-if="editing == true"> <textarea  rows="5" cols="22" name="DestAddress"  v-model="destination.address" style="overflow:scroll;"></textarea> </td> 
                         <td v-else>{{destination.address}}</td>
@@ -104,7 +110,7 @@ export default {
   data: function () {
   return {
     DestCity: "",
-    cityId: "",
+    DestName: "",
     DestDescription: "",
     DestAddress: "",
     DestLatitude: "",
@@ -132,8 +138,8 @@ mounted(){
     methods:{
         addNewDestination: function(e){
             e.preventDefault()
-            alert(this.cityId);
-            var newDestination = {name: this.DestCity, cityId :this.cityId, description: this.DestDescription, longitude: this.DestLongitude,
+            alert(JSON.stringify(this.DestCity));
+            var newDestination = {name: this.DestName, cityId :this.DestCity.id, description: this.DestDescription, longitude: this.DestLongitude,
                                     latitude: this.DestLatitude, address: this.DestAddress};
             var getJwtToken = function() {
                 return localStorage.getItem('jwtToken');
@@ -182,29 +188,6 @@ mounted(){
             });
             
         },
-
-        setCityId: function(){
-          
-            var idx;
-            for (idx in this.cities){
-                if (this.DestCity == this.cities[idx].name){
-                    this.cityId = this.cities[idx].id;
-                    break;
-                }
-            }
-        },
-
-        setCityIdII: function(destination){
-          
-            var idx;
-            for (idx in this.cities){
-                if ( destination.name == this.cities[idx].name){
-                    destination.cityId= this.cities[idx].id;
-                    return
-                }
-            }
-            alert("Destination city doen't exist.")
-        }
     }
 }
 

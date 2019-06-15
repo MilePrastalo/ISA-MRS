@@ -42,6 +42,8 @@ public class FlightBean {
 	private float longitude;
 	private String additionalServices;
 	private String transitions;
+	private int transitionsNum;
+
 	
 	
 	public FlightBean() {
@@ -465,6 +467,16 @@ public class FlightBean {
 
 	public void setTransitions(String transitions) {
 		this.transitions = transitions;
+	}
+
+
+	public int getTransitionsNum() {
+		return transitionsNum;
+	}
+
+
+	public void setTransitionsNum(int transitionsNum) {
+		this.transitionsNum = transitionsNum;
 	}
 
 

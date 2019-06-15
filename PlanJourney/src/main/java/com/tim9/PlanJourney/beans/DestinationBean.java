@@ -12,6 +12,7 @@ public class DestinationBean {
 	private float latitude;
 	private Long id;
 	private Long cityId;
+	private String cityName;
 	
 	public DestinationBean() {
 		// TODO Auto-generated constructor stub
@@ -24,7 +25,7 @@ public class DestinationBean {
 		this.coordinates = coordinates;
 	}
 	
-	public DestinationBean(long id, String name, String description, String address, float longitude, float latitude ) {
+	public DestinationBean(long id, String name, String description, String address, float longitude, float latitude, String cityName ) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -32,6 +33,7 @@ public class DestinationBean {
 		this.address = address;
 		this.longitude = longitude;
 		this.latitude = latitude;
+		this.cityName = cityName;
 	}
 
 	public String getName() {
@@ -96,6 +98,14 @@ public class DestinationBean {
 
 	public void setCityId(Long cityId) {
 		this.cityId = cityId;
+	}
+
+	public String getCityName() {
+		return cityName;
+	}
+
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
 	}
 	
 	

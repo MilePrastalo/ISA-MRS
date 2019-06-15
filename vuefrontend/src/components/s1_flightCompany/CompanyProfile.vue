@@ -43,6 +43,7 @@
                     <table class = "table table-hover col" style="width: 1000px" border="1">
                         <thead>
                         <tr>
+                            <th scope="col">City</th>
                             <th scope="col">Name</th>
                             <th scope="col">Address</th>
                             <th scope="col">Description</th>
@@ -50,6 +51,7 @@
                         </tr>
                         </thead>
                         <tr v-for="destination in company.airports" :key="destination.id" @click="showOnMap(destination.longitude, destination.latitude)">  
+                            <td >{{destination.cityName}}</td>
                             <td >{{destination.name}}</td>
                             <td>{{destination.address}}</td>
                             <td >{{destination.description}}</td>
