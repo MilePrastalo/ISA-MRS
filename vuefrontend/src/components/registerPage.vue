@@ -23,6 +23,14 @@
                 <input type="email" id="inputEmail" v-model="email" class="form-control" placeholder="Email address" required>
                 <label for="inputEmail">Email address</label>
               </div>
+              <div class="form-label-group">
+                <input type="text" id="city" v-model="city" class="form-control" placeholder="City" required>
+                <label for="city">City</label>
+              </div>
+              <div class="form-label-group">
+                <input type="text" id="phone" v-model="phone" class="form-control" placeholder="phone" required>
+                <label for="phone">Phone</label>
+              </div>
               
               <hr>
 
@@ -60,7 +68,9 @@ export default {
       firstName:"",
       lastName:"",
       email:"",
-      confpassword:""
+      confpassword:"",
+      city :"",
+      phone:""
     }
   },
   methods:{
@@ -75,7 +85,7 @@ export default {
       }else{
       if(this.username != "" && this.password != "" && this.firstName != "" && this.lastName != ""&& this.email!=""){
           axios.post("http://localhost:8080/auth/register",{username : this.username, password: this.password,
-          firstName : this.firstName, lastName: this.lastName, email: this.email})
+          firstName : this.firstName, lastName: this.lastName, email: this.email,phone:this.phone,city:this.city})
                       .then(response => {
                         console.log(response);
                           if(response.data =="OK"){
