@@ -4,6 +4,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
+
+import com.tim9.PlanJourney.models.City;
 
 @Entity
 public class Destination {
@@ -30,21 +33,19 @@ public class Destination {
 	@Column(name="latitude", nullable = true)
 	private float latitude;
 	
+	@OneToOne
+	private City city;
+	
 	public Destination() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Destination( String naziv, String opis, String coordinates) {
-		super();
-		this.name = naziv;
-		this.description = opis;
-		this.coordinates = coordinates;
-	}
 	
 	
-	public Destination( String name, String description, String address, float longitude, float latitude ) {
+	public Destination( String description, String address, float longitude, float latitude, City city) {
 		super();
-		this.name = name;
+		this.city = city;
+		this.name = city.getName();
 		this.description = description;
 		this.address = address;
 		this.longitude = longitude;
@@ -121,6 +122,18 @@ public class Destination {
 
 	public void setLatitude(float latitude) {
 		this.latitude = latitude;
+	}
+
+
+
+	public City getCity() {
+		return city;
+	}
+
+
+
+	public void setCity(City city) {
+		this.city = city;
 	}
 	
 	

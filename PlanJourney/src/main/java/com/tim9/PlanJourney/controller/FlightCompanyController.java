@@ -35,6 +35,7 @@ import com.tim9.PlanJourney.beans.FlightReportRequestBean;
 import com.tim9.PlanJourney.beans.QuickFlightReservationBean;
 import com.tim9.PlanJourney.beans.FlightCompanyReportBean;
 import com.tim9.PlanJourney.models.Authority;
+import com.tim9.PlanJourney.models.City;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.Review;
 import com.tim9.PlanJourney.models.flight.Destination;
@@ -45,6 +46,7 @@ import com.tim9.PlanJourney.models.flight.FlightReservation;
 import com.tim9.PlanJourney.models.flight.QuickFlightReservation;
 import com.tim9.PlanJourney.models.flight.Seat;
 import com.tim9.PlanJourney.service.AuthorityService;
+import com.tim9.PlanJourney.service.CityService;
 import com.tim9.PlanJourney.service.DestinationService;
 import com.tim9.PlanJourney.service.FlightCompanyService;
 import com.tim9.PlanJourney.service.FlightService;
@@ -69,6 +71,8 @@ public class FlightCompanyController {
 	private SeatService seatService;
 	@Autowired
 	private QuickFlightReservationService quickReservationService;
+	@Autowired
+	private CityService cityService;
 
 	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 
@@ -141,11 +145,13 @@ public class FlightCompanyController {
 				return "Flight admin doesnt't have flight company.";
 			}
 			Destination newDestination = new Destination();
-			newDestination.setName(destInfo.getName());
 			newDestination.setAddress(destInfo.getAddress());
 			newDestination.setDescription(destInfo.getDescription());
 			newDestination.setLongitude(destInfo.getLongitude());
 			newDestination.setLatitude(destInfo.getLatitude());
+			City city = cityService.findOne(destInfo.getCityId());
+			newDestination.setName(city.getName());
+			newDestination.setCity(city);
 			destinationService.save(newDestination);
 			flightCompany.getDestinations().add(newDestination);
 			flightCompanyService.save(flightCompany);
@@ -230,9 +236,13 @@ public class FlightCompanyController {
 		Destination destination = destinationService.findOne(destInfo.getId());
 		destination.setLongitude(destInfo.getLongitude());
 		destination.setLatitude(destInfo.getLatitude());
-		destination.setAddress(destInfo.getAddress());;
-		destination.setName(destInfo.getName());
+		destination.setAddress(destInfo.getAddress());
 		destination.setDescription(destInfo.getDescription());
+		destination.setLongitude(destInfo.getLongitude());
+		destination.setLatitude(destInfo.getLatitude());
+		City city = cityService.findOne(destInfo.getCityId());
+		destination.setName(city.getName());
+		destination.setCity(city);
 		destinationService.save(destination);
 		return "success";
 	}
@@ -615,11 +625,12 @@ public class FlightCompanyController {
 	}
 
 	// Method puts some test data into database
+	/*
 	@RequestMapping(value = "/api/testFlightData", method = RequestMethod.GET)
 	@CrossOrigin()
 	public void testData() throws Exception {
 
-		Destination destinatinon1 = new Destination("Moscow", "description", "coords");
+		Destination destinatinon1 = new Destination("Moscow", "description", 55.7558, 37.6173);
 		Destination destinatinon2 = new Destination("Belgrade", "description", "coords");
 		Destination destinatinon3 = new Destination("Paris", "description", "coords");
 		Destination destinatinon4 = new Destination("New York", "description", "coords");
@@ -660,6 +671,7 @@ public class FlightCompanyController {
 		flightAdmin.setFlightCompany(fc);
 		userService.save(flightAdmin);
 	}
+	*/
 
 	private Set<Seat> makeSeats(Set<Seat> seats, String capacity, String flightClass) {
 		int rows = Integer.parseInt(capacity.split("|")[0]);

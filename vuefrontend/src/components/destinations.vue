@@ -10,7 +10,10 @@
                         <table class = "centered" style="text-align: left">
                     <tr>
                         <td> Name: </td>
-                        <td> <input type="text" name="DestName" v-model="DestName" required> </td>
+                        <td> <select class="selectpicker" v-model="DestCity" @change="setCityId" data-live-search="true" >
+                                <option v-for="city in this.cities"  :key=city.id>{{city.name}}</option>
+                            </select>
+                         </td>
                     </tr>
                     <tr>
                         <td> Address: </td>
@@ -71,7 +74,7 @@
                     </tr>
                     </thead>
                     <tr v-for="(destination,index ) in destinations" :key="index">  
-                        <td v-if="editing == true"> <input type="text" name="DestName" v-model="destination.name" > </td>
+                        <td v-if="editing == true"> <input type="text" v-model="destination.name" @change="setCityIdII(destination)"> </td>
                         <td v-else>{{destination.name}}</td>
                         <td v-if="editing == true"> <textarea  rows="5" cols="22" name="DestAddress"  v-model="destination.address" style="overflow:scroll;"></textarea> </td> 
                         <td v-else>{{destination.address}}</td>
@@ -100,12 +103,14 @@ export default {
   components: { },
   data: function () {
   return {
-    DestName: "",
+    DestCity: "",
+    cityId: "",
     DestDescription: "",
     DestAddress: "",
     DestLatitude: "",
     DestLongitude: "",
     destinations:[],
+    cities: [],
     editing: false
   }
 },
@@ -117,12 +122,18 @@ mounted(){
     axios.get("http://localhost:8080/api/getDestinations")
         .then(response => {
             this.destinations = response.data
+          }); 
+    axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+    axios.get("http://localhost:8080/api/getAllCities")
+        .then(response => {
+            this.cities = response.data
           });  
     },
     methods:{
         addNewDestination: function(e){
             e.preventDefault()
-            var newDestination = {name:this.DestName, description: this.DestDescription, longitude: this.DestLongitude,
+            alert(this.cityId);
+            var newDestination = {name: this.DestCity, cityId :this.cityId, description: this.DestDescription, longitude: this.DestLongitude,
                                     latitude: this.DestLatitude, address: this.DestAddress};
             var getJwtToken = function() {
                 return localStorage.getItem('jwtToken');
@@ -142,7 +153,7 @@ mounted(){
         
         saveChanges: function(destination){
 
-            if ( destination.name == "" ||  destination.coordinates == "" || destination.description == ""){
+            if ( destination.name == "" ||  destination.coordinates == "" || destination.description == "" || destination.longitude == "" || destination.latitude == ""){
                 alert("Fields can not be empty!");
                 return;
             }
@@ -167,6 +178,29 @@ mounted(){
                 alert(response.data)
             });
             this.destinations.splice(index,1);
+        },
+
+        setCityId: function(){
+          
+            var idx;
+            for (idx in this.cities){
+                if (this.DestCity == this.cities[idx].name){
+                    this.cityId = this.cities[idx].id;
+                    break;
+                }
+            }
+        },
+
+        setCityIdII: function(destination){
+          
+            var idx;
+            for (idx in this.cities){
+                if ( destination.name == this.cities[idx].name){
+                    destination.cityId= this.cities[idx].id;
+                    return
+                }
+            }
+            alert("Destination city doen't exist.")
         }
     }
 }
