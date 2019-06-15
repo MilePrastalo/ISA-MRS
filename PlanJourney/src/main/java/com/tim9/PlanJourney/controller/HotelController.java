@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tim9.PlanJourney.beans.HotelBean;
 import com.tim9.PlanJourney.beans.HotelReservationBean;
 import com.tim9.PlanJourney.beans.HotelRoomBean;
+import com.tim9.PlanJourney.beans.HotelSearchBean;
 import com.tim9.PlanJourney.hotel.AdditionalCharges;
 import com.tim9.PlanJourney.hotel.Hotel;
 import com.tim9.PlanJourney.hotel.HotelAdmin;
@@ -118,7 +119,7 @@ public class HotelController {
 	@RequestMapping(value = "/api/getHotel/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	public HotelBean getHotel(@PathVariable("name") String name) {
-
+		System.out.println(name);
 		Hotel h = service.findByName(name);
 
 		HotelBean hb = new HotelBean();
@@ -402,42 +403,87 @@ public class HotelController {
 		return false;
 	}
 
-	@RequestMapping(value = "/api/searchHotels/{values}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/api/searchHotels", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	public @ResponseBody ArrayList<Hotel> searchHotels(@PathVariable("values") String values) throws Exception {
+	public @ResponseBody ArrayList<HotelBean> searchHotels(@RequestBody HotelSearchBean searchBean) throws Exception {
 		ArrayList<Hotel> hotels = (ArrayList<Hotel>) service.findAll();
-		ArrayList<Hotel> foundHotels = new ArrayList<Hotel>();
-		String[] split = values.split("\\|");
-		System.out.println(values);
-		String crit = split[0];
-		// Returns all hotels if search input is empty.
-		if (values.endsWith("|")) {
-			return hotels;
-		}
-		String val = split[1];
-		if (crit.equals("name")) {
-			for (Hotel h : hotels) {
-				if (h.getName().equals(val)) {
-					foundHotels.add(h);
+		ArrayList<HotelBean> hbs = new ArrayList<HotelBean>();
+
+		for (Hotel h : hotels) {
+			boolean hotelNameCheck = false;
+			boolean bedCheck = false;
+			boolean cityNameCheck = false;
+			boolean firstDayCheck = false;
+			boolean lastDayCheck = false;
+			boolean minPriceCheck = false;
+			boolean maxPriceCheck = false;
+
+			// checks if hotel name equals searched hotel name.
+			if (searchBean.getHotelName().equals("".trim())) {
+				hotelNameCheck = true;
+			} else {
+				if (h.getName().contains(searchBean.getHotelName())) {
+					hotelNameCheck = true;
+				} else {
+					hotelNameCheck = false;
 				}
 			}
-		} else if (crit.equals("destination")) {
-			for (Hotel h : hotels) {
-				if (h.getCity().getName().equals(val)) {
-					foundHotels.add(h);
+
+			// checks if hotel city equals searched city name.
+			if (searchBean.getCityName().equals("".trim())) {
+				cityNameCheck = true;
+			} else {
+				if (h.getCity().getName().contains(searchBean.getCityName())) {
+					cityNameCheck = true;
+				} else {
+					cityNameCheck = false;
 				}
 			}
-		} else if (crit.equals("nob")) {
-			for (Hotel h : hotels) {
-				for (HotelRoom r : h.getRooms()) {
-					if (r.getNumberOfBeds() == Integer.parseInt(val)) {
-						if (!foundHotels.contains(h))
-							foundHotels.add(h);
+
+			// checks every room in hotel, if it has searched number of beds.
+			if (searchBean.getNumberOfBeds() == -1) {
+				bedCheck = true;
+			} else {
+				for (HotelRoom hr : h.getRooms()) {
+					if (hr.getNumberOfBeds() == searchBean.getNumberOfBeds()) {
+						bedCheck = true;
 					}
 				}
 			}
+
+			// checks every room in hotel, if it has price per day <= than searched.
+			if (searchBean.getMinPrice() == -1) {
+				minPriceCheck = true;
+			} else {
+				for (HotelRoom hr : h.getRooms()) {
+					if (hr.getPricePerDay() <= searchBean.getMinPrice()) {
+						minPriceCheck = true;
+					}
+				}
+			}
+
+			// checks every room in hotel, if it has price per day >= than searched.
+			if (searchBean.getMaxPrice() == -1) {
+				maxPriceCheck = true;
+			} else {
+				for (HotelRoom hr : h.getRooms()) {
+					if (hr.getPricePerDay() >= searchBean.getMaxPrice()) {
+						maxPriceCheck = true;
+					}
+				}
+			}
+
+			if (hotelNameCheck && cityNameCheck && bedCheck && minPriceCheck && maxPriceCheck) {
+				HotelBean hb = new HotelBean();
+				hb.setName(h.getName());
+				hb.setCityName(h.getCity().getName());
+				hb.setAddress(h.getAddress());
+				hb.setDescription(h.getDescription());
+
+				hbs.add(hb);
+			}
 		}
-		return foundHotels;
+		return hbs;
 	}
 
 	@RequestMapping(value = "/api/addHotelReservation", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

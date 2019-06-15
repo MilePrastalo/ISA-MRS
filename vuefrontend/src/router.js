@@ -60,6 +60,16 @@ export default new Router({
       component: () => import('./components/hotelProfile.vue')
     },
     {
+      path: '/unregisteredHotelProfile/:hotelName',
+      name: 'unregisteredHotelProfile',
+      component: () => import('./components/unregisteredHotelProfile.vue')
+    },
+    {
+      path: '/unregisteredHotelRoom/:hotelName/:roomNumber',
+      name: 'unregisteredHotelRoom',
+      component: () => import('./components/unregisteredHotelRoom.vue')
+    },
+    {
       path: '/hotelAdminProfile',
       name: 'hotelAdminProfile',
       component: () => import('./components/hotelAdminProfile.vue')

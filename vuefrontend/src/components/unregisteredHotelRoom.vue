@@ -1,22 +1,17 @@
 <template>
-   <div id = "hotelRoom">
-            <h1>{{hotel.name}}</h1>     
+   <div id = "unregisteredHotelRoom" v-if="hotel">   
             <div>
               <table class="table">
-                <th>
-                  <td>Hotel: </td>
-                  <td>{{this.hotel.name}}</td>
-                </th>
                 <tr>
-                  <td>Room Number: </td>
+                  <td><b>Room Number: </b></td>
                   <td>{{this.room.roomNumber}}</td>
                 </tr>
                 <tr>
-                  <td>Number Of Beds: </td>
+                  <td><b>Number Of Beds: </b></td>
                   <td>{{this.room.numberOfBeds}}</td>
                 </tr>
                 <tr>
-                  <td>Price Per Day: </td>
+                  <td><b>Price Per Day: </b></td>
                   <td>{{this.room.pricePerDay}}</td>
                 </tr>
               </table>
@@ -35,6 +30,8 @@
                         <td><input type="checkbox" @click="aCChanged(a.name)"></td>
                     </tr>
                 </table>
+                <br>
+                <br>
                 <table>
                     <tr>
                         <td><b>First Day:</b></td>
@@ -43,12 +40,17 @@
                         <td><input v-model="lastDay" type="date" @click="changedDate()"></td>
                     </tr>
                     <tr>
+                        <td> </td>
                         <td><b>Check if available: </b></td>
-                        <td><button @click="splitDate()" >Check</button></td>
+                        <td><button @click="splitDate()" class="btn-primary">Check</button></td>
                     </tr>
-                    <tr v-if="this.available == 1 && this.user.firstName != null">
-                      <td>Make reservation: </td>
-                      <td><button @click="reserve()">Reserve Room</button></td>
+                    <tr v-if="this.available == 1">
+                      <td> </td>
+                      <td><b>Room is available</b> </td>
+                    </tr>
+                    <tr v-if="this.available == 2">
+                      <td> </td>
+                      <td><b>Room is taken</b> </td>
                     </tr>
                 </table>
             </div>
@@ -58,7 +60,7 @@
 <script>
 import axios from 'axios'
 export default {
-  name: 'hotelRoom',
+  name: 'unregisteredHotelRoom',
   props:["hotelName","roomNumber"],
   components: {
   },
@@ -66,7 +68,6 @@ export default {
   return {
     hotel : [],
     room : [],
-    user: [],
     available : 0,
     firstDay: "",
     lastDay: "",
@@ -80,16 +81,7 @@ export default {
   }
 },
 mounted(){
-         var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
-        };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getLogUser")
-        .then(response => {
-            this.user = response.data;
-          });
-
-         axios.get("http://localhost:8080/api/getHotel/"+this.hotelName)
+         axios.get("http://localhost:8080/api/getHotel/" + this.$route.params.hotelName)
         .then(response => {
             this.hotel = response.data
             for(let r in response.data.rooms) {
@@ -108,32 +100,39 @@ mounted(){
 
                   // Date is before:
                   if(this.lYear < this.hotel.reservations[r].fYear) {
+                    alert("Room is available.");
                     this.available = 1;
                     return;
                   } else if (this.lYear === this.hotel.reservations[r].fYear && this.lMonth < this.hotel.reservations[r].fMonth) {
                     this.available = 1;
+                    alert("Room is available.");
                     return;
                   }else if (this.lYear === this.hotel.reservations[r].fYear && this.lMonth === this.hotel.reservations[r].fMonth && this.lDay < this.hotel.reservations[r].fDay) {
                     this.available = 1;
+                    alert("Room is available.");
                     return;
                   } // Date is after: 
                    else if (this.fYear > this.hotel.reservations[r].lYear) {
                      this.available = 1;
+                    alert("Room is available.");
                     return;
                    } else if (this.fYear === this.hotel.reservations[r].lYear && this.fMonth > this.hotel.reservations[r].lMonth) {
                      this.available = 1;
+                    alert("Room is available.");
                     return;
                    } else if(this.fYear === this.hotel.reservations[r].lYear && this.fMonth === this.hotel.reservations[r].lMonth && this.fDay > this.hotel.reservations[r].lDay) {
                      this.available = 1;
+                    alert("Room is available.");
                     return;
                    } else {
-                     alert("Room is taken.")
-                     this.available = 0;
+                     alert("Room is taken.");
+                     this.available = 2;
                     return;
                    }
               }
           }
           this.available = 1;
+          alert("Room is available.");
           return;
       },
       checkDate: function() {

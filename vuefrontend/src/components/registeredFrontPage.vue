@@ -190,6 +190,7 @@ export default {
           window.location = "./friends";
       },
       hotels:function(){
+          window.location = "./";
       },
       getRating:function(res,rating){
           if(res.rating>=rating){

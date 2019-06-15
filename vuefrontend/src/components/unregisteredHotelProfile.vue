@@ -1,6 +1,9 @@
 <template>
 <div>
-  <div v-if="currentPage === 1" class="DescDiv">
+    <navbar :itype="0"/>
+    <br>
+    <br>
+  <div  class="DescDiv">
     <div class="hpHotelDesc" v-if="hotel">
     <h2>{{hotel.name}}</h2>
     <br>
@@ -13,16 +16,24 @@
             <th> </th>
             </thead>
       <tr>
-        <td>City:</td>
+        <td><b>City:</b></td>
         <td>{{hotel.cityName}}</td>
       </tr>
       <tr>
-        <td>Hotel Description:</td>
+        <td><b>Address:</b></td>
+        <td>{{hotel.address}}</td>
+      </tr>
+      <tr>
+        <td><b>Hotel Description:</b></td>
         <td>{{hotel.description}}</td>
       </tr>
       <tr>
-        <td>Hotel Rating:</td>
+        <td><b>Hotel Rating:</b></td>
         <td>{{hotel.rating}}</td>
+      </tr>
+      <tr>
+        <td><b>Hotel Rating:</b></td>
+        <td><button @click="backToSearch()" class="btn-primary">Back to Search</button></td>
       </tr>
     </table >
         </td>
@@ -52,8 +63,9 @@
     <table class="SeperateTable">
       <tr>
         <td>
+        <div v-if="currentPage === 1">
           <h3>Rooms</h3>
-          <table class="table">
+        <table class="table">
             <thead class="thead-dark">
       <tr>
         <th>Room Number</th>
@@ -69,10 +81,17 @@
         <td>{{r.pricePerDay}}</td>
         <td>{{r.rating}}</td>
         <td>
-          <button @click="showDetails(r.roomNumber)">Details</button>
+          <button @click="showDetails(r.roomNumber)" class="btn-primary">Details</button>
         </td>
       </tr>
     </table>
+    </div>
+    <div v-if="currentPage === 2">
+     <unregistered-hotel-room :hotelName="hotelName" :roomNumber="roomNum" v-on:hr="reservedHotel"/>
+      <br>
+      <br>
+     <button @click="back()" class="btn-primary">Back</button>
+  </div>
         </td>
         <td>
           <h3>Quick Reservations</h3>
@@ -86,7 +105,6 @@
         <th>Original Price</th>
         <th>Discount</th>
         <th>Discounted Price</th>
-        <th>Options</th>
       </tr>
       </thead>
       <tr v-for="r in quickReservations" :key="r.id">
@@ -97,32 +115,27 @@
         <td>{{r.paidPrice}}</td>
         <td>{{r.discount}}</td>
         <td>{{parseFloat(r.paidPrice) - parseFloat(r.paidPrice) * (parseFloat(r.discount) / 100)}}</td>
-        <td>
-          <button @click="reserve(r)">Buy</button>
-        </td>
       </tr>
     </table>
         </td>
       </tr>
     </table>
     </div>
-   <div v-if="currentPage === 2">
-     <hotelRoom :hotelName="hotelName" :roomNumber="roomNum" v-on:hr="reservedHotel"/>
-      <br>
-     <button @click="back()">Back</button>
-  </div>
+   
 
 </div>
 </template>
 
 <script>
 import axios from 'axios';
-import hotelRoom from './hotelRoom.vue';
+import unregisteredHotelRoom from './unregisteredHotelRoom.vue';
+import navbar from "./navbar.vue";
 export default {
-  name: 'hotelProfile',
+  name: 'unregisteredHotelProfile',
   props:["hotelName"],
   components: {
-    hotelRoom:hotelRoom
+    unregisteredHotelRoom: unregisteredHotelRoom,
+    navbar
   },
   data: function () {
   return {
@@ -137,7 +150,7 @@ mounted(){
             return localStorage.getItem('jwtToken');
         };
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-         axios.get("http://localhost:8080/api/getHotel/" + this.hotelName)
+         axios.get("http://localhost:8080/api/getHotel/" + this.$route.params.hotelName)
         .then(response => {
             this.hotel = response.data;
 
@@ -176,6 +189,9 @@ mounted(){
         },
         reservedHotel: function(id) {
           this.$emit("rr",id);
+        },
+        backToSearch() {
+            window.location ="../";
         }
     }
 }
