@@ -128,6 +128,9 @@ public class flightReservationController {
 				count++;
 			}
 		}
+    ffrb.setPassangers(count);
+
+		ffrb.setCreator(flightReservation.getUser().getFirstName() + " " + flightReservation.getUser().getLastName());
 		int status = 0; //moze cancel, ne moze ocenjivanje
 		Date today = new Date();
 		long diffInMillies = flightReservation.getFlight().getStartDate().getTime() - today.getTime();
@@ -139,8 +142,7 @@ public class flightReservationController {
 			status = 2; //ne moze cancel, ne moze ocenjivanje
 		}
 		ffrb.setStatus(status);
-		ffrb.setPassangers(count);
-		return ffrb;
+    return ffrb;
 	}
 	
 
@@ -262,6 +264,41 @@ public class flightReservationController {
 				+ request.getUser().getUsername() + " )");
 		return bean;
 	}
+	
+	@RequestMapping(value = "/api/getMyReservationRequests", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('REGISTERED')")
+	public @ResponseBody ArrayList<FrontFlightReservationBean> getMyReservationRequests() {
+
+		RegisteredUser loggedUser = getLoggedRegisteredUser();
+		if (loggedUser == null) {
+			return null;
+		}
+		ArrayList<FrontFlightReservationBean> toReturn = new ArrayList<>();
+		ArrayList<FlightReservation> allReservations = (ArrayList<FlightReservation>) reservationService.findAll();
+		Date today = new Date();
+		for (FlightReservation flightReservation : allReservations) {
+			
+			long diffInMillies = flightReservation.getFlight().getStartDate().getTime() - today.getTime();
+			long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+			if (diff < 3) {
+				continue;
+			}
+			if (flightReservation.getUser().getId() == loggedUser.getId()) {
+				continue;
+			} 
+			else {
+				for (Passanger p : flightReservation.getPassangers()) {
+					if (p.getFriend() != null && p.getFriend().getId() == loggedUser.getId() && p.isConfirmed()== false && p.getSeat().isTaken()) {
+						toReturn.add(makeReservationBean(flightReservation, loggedUser, p.getSeat()));
+						break;
+					}
+				}
+			}
+		}
+		return toReturn;
+	}
+
 
 	@RequestMapping(value = "/api/makeFlightReservation", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()

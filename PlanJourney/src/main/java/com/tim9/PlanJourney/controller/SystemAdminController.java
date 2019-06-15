@@ -179,11 +179,10 @@ public class SystemAdminController {
 
 	@RequestMapping(value = "/api/getAllCities", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	@PreAuthorize("hasAuthority('SYS_ADMIN')")
+	@PreAuthorize("hasAnyAuthority('SYS_ADMIN','FLIGHT_ADMIN','RENT_ADMIN')")
 	public @ResponseBody ArrayList<City> getAllCities() throws Exception {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		ArrayList<City> cities = new ArrayList<City>();
-
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
 
 			cities = (ArrayList<City>) cityService.findAll();

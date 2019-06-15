@@ -1,7 +1,7 @@
 <template>
    <div id = "confirmationPage">
 
-       <div v-if="currentDiv == 1">
+       <div v-if="currentDiv == 1 && this.previous == false">
            <login :requestId="requestId" v-on:currentDiv="changeDiv"></login>   
        </div>
 
@@ -157,9 +157,24 @@ export default {
             requestId: this.$route.params.requestId,
             selected: false,
             currentDiv: 1,
+            previous: false,
         }
     },
     created: function(){
+        if (document.referrer == 'http://localhost:8081/invites'){
+            axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('jwtToken');
+                axios.get("http://localhost:8080/api/getReservationRequest/" + this.requestId)
+                .then(response => {
+                    if (response.data == ""){
+                        alert("You did'n sign in or it's not your invitation")
+                         this.currentDiv = 1;
+                        return;
+                    }
+                    this.request = response.data
+                    this.currentDiv = 2;
+                    this.previous = true;
+                });
+        }
     },
 
     mounted(){

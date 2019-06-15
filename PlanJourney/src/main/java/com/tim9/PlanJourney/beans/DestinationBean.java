@@ -11,6 +11,7 @@ public class DestinationBean {
 	private float longitude;
 	private float latitude;
 	private Long id;
+	private Long cityId;
 	
 	public DestinationBean() {
 		// TODO Auto-generated constructor stub
@@ -87,6 +88,14 @@ public class DestinationBean {
 
 	public void setLatitude(float latidude) {
 		this.latitude = latidude;
+	}
+
+	public Long getCityId() {
+		return cityId;
+	}
+
+	public void setCityId(Long cityId) {
+		this.cityId = cityId;
 	}
 	
 	

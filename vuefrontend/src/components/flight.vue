@@ -70,7 +70,7 @@
                         <ymap-marker
                         marker-id="1"
                         marker-type="placemark"
-                        :coords="[this.DestLatitude,this.DestLongitude]"
+                        :coords="[this.flight.latitude,this.flight.longitude]"
                         :marker-fill="{color: '#0E4779', opacity: 0.5}"
                         :marker-stroke="{color: '#0E4779',width: 4}"
                         ></ymap-marker>
