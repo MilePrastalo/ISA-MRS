@@ -39,6 +39,14 @@
                     <td> {{flight.flightLength}}</td>
                 </tr>
                 <tr>
+                    <td>Transitions: </td>
+                    <td> {{flight.transitions}}</td>
+                </tr>
+                <tr>
+                    <td>Additional Services: </td>
+                    <td> {{flight.additionalServices}}</td>
+                </tr>
+                <tr>
                     <td>Eco class price: </td>
                     <td> {{flight.economicPrice}}</td>
                 </tr>

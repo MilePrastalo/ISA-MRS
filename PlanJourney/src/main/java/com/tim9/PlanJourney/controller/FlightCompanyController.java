@@ -93,7 +93,7 @@ public class FlightCompanyController {
 				return null;
 			}
 			FlightCompanyBean fcb = new FlightCompanyBean(flightCompany.getId(),flightCompany.getName(),
-					flightCompany.getAddress(), flightCompany.getDescription(), flightCompany.getRating());
+					flightCompany.getAddress(), flightCompany.getDescription(), flightCompany.getRating(), flightCompany.getLaguageInfo(), flightCompany.getSeatsConfiguration());
 			return fcb;
 		}
 		return null;
@@ -128,6 +128,33 @@ public class FlightCompanyController {
 		}
 		return null;
 	}
+	
+	@RequestMapping(value = "/api/updateFlightCompanyInfo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
+	@CrossOrigin()
+	// Method for updating flight company profile, returns flight company object
+	public @ResponseBody FlightCompanyBean updateFlightCompanyInfo(@RequestBody FlightCompanyBean updatedFC)
+			throws Exception {
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+
+			String username = authentication.getName();
+			FlightAdmin user = (FlightAdmin) userService.findOneByUsername(username);
+			FlightCompany flightCompany = user.getFlightCompany();
+			if (flightCompany == null) {
+				System.out.println("Flight admin doesnt't have flight company.");
+				return null;
+			}
+			flightCompany.setSeatsConfiguration(updatedFC.getSeatsInfo());
+			flightCompany.setLaguageInfo(updatedFC.getLaguageInfo());
+			// save to database
+			flightCompanyService.save(flightCompany);
+			return new FlightCompanyBean(flightCompany.getId(), flightCompany.getName(), flightCompany.getAddress(), 
+					flightCompany.getDescription(), flightCompany.getRating(), flightCompany.getLaguageInfo(), flightCompany.getSeatsConfiguration());
+		}
+		return null;
+	}
 
 	@RequestMapping(value = "/api/addDestination", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -150,7 +177,7 @@ public class FlightCompanyController {
 			newDestination.setLongitude(destInfo.getLongitude());
 			newDestination.setLatitude(destInfo.getLatitude());
 			City city = cityService.findOne(destInfo.getCityId());
-			newDestination.setName(city.getName());
+			newDestination.setName(destInfo.getName());
 			newDestination.setCity(city);
 			destinationService.save(newDestination);
 			flightCompany.getDestinations().add(newDestination);
@@ -219,7 +246,7 @@ public class FlightCompanyController {
 		}
 		ArrayList<DestinationBean> destinations = new ArrayList<>();
 		for (Destination d : flightCompany.getDestinations()) {
-			destinations.add(new DestinationBean(d.getId(), d.getName(), d.getDescription(), d.getAddress(), d.getLongitude(), d.getLatitude()));
+			destinations.add(new DestinationBean(d.getId(), d.getName(), d.getDescription(), d.getAddress(), d.getLongitude(), d.getLatitude(), d.getCity().getName()));
 		}
 		return destinations;
 	}
@@ -241,7 +268,7 @@ public class FlightCompanyController {
 		destination.setLongitude(destInfo.getLongitude());
 		destination.setLatitude(destInfo.getLatitude());
 		City city = cityService.findOne(destInfo.getCityId());
-		destination.setName(city.getName());
+		destination.setName(destInfo.getName());
 		destination.setCity(city);
 		destinationService.save(destination);
 		return "success";
@@ -255,6 +282,11 @@ public class FlightCompanyController {
 		FlightAdmin logged = getLoggedFlightAdmin();
 		if (logged == null) {
 			return null;
+		}
+		for (Flight flight : logged.getFlightCompany().getFlights()) {
+			if (flight.getEndDestination().getId() == id || flight.getEndDestination().getId() == id) {
+				return "You can not remove this destionation becouse there is flight who uses it";
+			}
 		}
 		destinationService.remove(id);
 		return "success";
@@ -279,9 +311,16 @@ public class FlightCompanyController {
 		ArrayList<FlightBean> foundFlights = new ArrayList<>();
 		DateTimeComparator dateTimeComparator = DateTimeComparator.getDateOnlyInstance();
 		for (Flight f : flightCompany.getFlights()) {
-			if ((f.getStartDestination().getName().equals(search.getStartDestination())
+			int transitionsCnt = 0;
+			if ( f.getTransitions() == null || f.getTransitions().equals("0") || f.getTransitions().equals("")) {
+				transitionsCnt = 0;
+			}
+			else {
+				transitionsCnt = f.getTransitions().split(",").length;
+			}
+			if ((f.getStartDestination().getName().contains(search.getStartDestination())
 					|| search.getStartDestination().equals(""))
-					&& (f.getEndDestination().getName().equals(search.getEndDestination())
+					&& (f.getEndDestination().getName().contains(search.getEndDestination())
 							|| search.getEndDestination().equals(""))
 					&& (f.getEconomicPrice() >= search.getMinEconomic() || (search.getMinEconomic() == 0))
 					&& (f.getBusinessPrice() >= search.getMinBusiness() || (search.getMinBusiness() == 0))
@@ -291,6 +330,7 @@ public class FlightCompanyController {
 					&& (f.getFirstClassPrice() <= search.getMaxFirstClass() || (search.getMaxFirstClass() == 0))
 					&& (f.getFlightDuration() == search.getFlightDuration() || search.getFlightDuration() == 0)
 					&& (f.getFlightLength() == search.getFlightLength() || search.getFlightLength() == 0)
+					&& (search.getTransitionsNum() <= transitionsCnt || search.getTransitionsNum() == 0)
 					&& (search.getStartDate() == null
 							|| dateTimeComparator.compare(f.getStartDate(), search.getStartDate()) == 0)
 					&& (search.getEndDate() == null

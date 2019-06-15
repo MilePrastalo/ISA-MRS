@@ -10,6 +10,10 @@
                 <td>Flight company:</td>
                 <td><input v-model="flightCompany" type="text"></td>
             </tr>
+            <tr>
+                <td>Transitions:</td>
+                <td><input v-model="transitionsNum" type="number" placeholder="MaxNum of transitions"></td>
+            </tr>
            <tr>
                 <td>Start destination:</td>
                 <td><input v-model="startDestination" type="text"></td>
@@ -110,6 +114,7 @@ export default {
      MaxPrice: "",
      flightCompany: "",
      check: 1,
+     transitionsNum: "",
      flights:[]
   }
 },
@@ -141,7 +146,8 @@ mounted(){
             var flightForSearch = {startDestination: this.startDestination, endDestination: this.endDestination, startDate: this.startDate, endDate: this.endDate,
             minEconomic : MineconomicPrice, minBusiness: MinbuisinesssPrice, minFirstClass :MinfirstClassPrice,
             maxEconomic: MaxeconomicPrice, maxBusiness: MaxbuisinesssPrice, maxFirstClass:MaxfirstClassPrice,
-            flightDuration: this.flightDuration, flightLength:  this.flightLength, flightCompany: this.flightCompany }
+            flightDuration: this.flightDuration, flightLength:  this.flightLength, flightCompany: this.flightCompany,
+            transitionsNum: this.transitionsNum }
             axios.post("http://localhost:8080/api/flightSearch",flightForSearch)
             .then(response => {
                 this.flights = response.data

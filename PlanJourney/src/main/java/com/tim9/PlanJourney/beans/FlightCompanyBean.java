@@ -8,6 +8,8 @@ public class FlightCompanyBean {
 	private String name;
 	private String address;
 	private String description;
+	private String seatsInfo;
+	private String laguageInfo;
 	private ArrayList<DestinationBean> airports;
 	private double rating;
 	
@@ -63,6 +65,17 @@ public class FlightCompanyBean {
 		this.description = description;
 		this.rating = rating;
 	}
+	
+	public FlightCompanyBean(Long id, String name, String address, String description, double rating, String laguageInfo, String seatsConfiguration) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.address = address;
+		this.description = description;
+		this.rating = rating;
+		this.laguageInfo = laguageInfo;
+		this.seatsInfo = seatsConfiguration;
+	}
 
 	public ArrayList<DestinationBean> getAirports() {
 		return airports;
@@ -70,6 +83,22 @@ public class FlightCompanyBean {
 
 	public void setAirports(ArrayList<DestinationBean> airports) {
 		this.airports = airports;
+	}
+
+	public String getSeatsInfo() {
+		return seatsInfo;
+	}
+
+	public void setSeatsInfo(String seatsInfo) {
+		this.seatsInfo = seatsInfo;
+	}
+
+	public String getLaguageInfo() {
+		return laguageInfo;
+	}
+
+	public void setLaguageInfo(String laguageInfo) {
+		this.laguageInfo = laguageInfo;
 	}
 	
 

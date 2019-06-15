@@ -20,6 +20,10 @@
                             <td >{{flight.endDestination}}</td>
                         </tr>
                         <tr>
+                            <td>Transitions: </td>
+                            <td >{{flight.transitions}}</td>
+                        </tr>
+                        <tr>
                             <td>Start date: </td>
                             <td > {{flight.startDate_str}} </td>
                             <td v-if="editing == true"> <input class = "edit" type = "date" v-model= "startDate" > </td>
@@ -40,6 +44,11 @@
                             <td>Flight length: </td>
                             <td v-if="editing == false"> {{flight.flightLength}} </td>
                             <td v-else> <input class = "edit" type = "text" v-model= "flight.flightLength" required> </td>
+                        </tr>
+                         <tr>
+                            <td>Additional services: </td>
+                            <td v-if="editing == false"> {{flight.additionalServices}} </td>
+                            <td v-else> <input class = "edit" type = "text" v-model= "flight.additionalServices" > </td>
                         </tr>
                         <tr>
                             <td>Eco class price: </td>

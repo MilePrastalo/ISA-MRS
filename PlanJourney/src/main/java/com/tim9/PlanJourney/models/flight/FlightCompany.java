@@ -4,15 +4,21 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-import javax.persistence.Version;
 
 import com.tim9.PlanJourney.models.Company;
 
 @Entity
 public class FlightCompany extends Company {
+	
+	@Column(name="laguageInfo", unique=false)
+	private String laguageInfo = "";
+	
+	@Column(name="seatsConfiguration", unique=false)
+	private String seatsConfiguration = "";
 
 	@OneToMany(mappedBy = "flightCompany", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<FlightAdmin> flightAdmins = new HashSet<FlightAdmin>();
@@ -92,6 +98,22 @@ public class FlightCompany extends Company {
 
 	public void setQuickFlightReservations(Set<QuickFlightReservation> quickFlightReservations) {
 		this.quickFlightReservations = quickFlightReservations;
+	}
+
+	public String getLaguageInfo() {
+		return laguageInfo;
+	}
+
+	public void setLaguageInfo(String laguageInfo) {
+		this.laguageInfo = laguageInfo;
+	}
+
+	public String getSeatsConfiguration() {
+		return seatsConfiguration;
+	}
+
+	public void setSeatsConfiguration(String seatsConfiguration) {
+		this.seatsConfiguration = seatsConfiguration;
 	}
 
 }

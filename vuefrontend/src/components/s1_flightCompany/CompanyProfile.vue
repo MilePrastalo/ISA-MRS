@@ -33,6 +33,8 @@
                         <div class="content-heading"><h1>Rating: {{company.rating}}</h1></div>
                         <p>Address: {{company.address}}</p><br>
                         <p style="text-align: justify; padding-left: 2%; padding-right: 40%;">{{company.description}}</p>
+                        <p style="text-align: justify; padding-left: 2%; padding-right: 40%;">{{company.laguageInfo}}</p>
+                        <p style="text-align: justify; padding-left: 2%; padding-right: 40%;">{{company.seatsInfo}}</p>
                     </div>
                 </div>
                 <br>
@@ -41,6 +43,7 @@
                     <table class = "table table-hover col" style="width: 1000px" border="1">
                         <thead>
                         <tr>
+                            <th scope="col">City</th>
                             <th scope="col">Name</th>
                             <th scope="col">Address</th>
                             <th scope="col">Description</th>
@@ -48,6 +51,7 @@
                         </tr>
                         </thead>
                         <tr v-for="destination in company.airports" :key="destination.id" @click="showOnMap(destination.longitude, destination.latitude)">  
+                            <td >{{destination.cityName}}</td>
                             <td >{{destination.name}}</td>
                             <td>{{destination.address}}</td>
                             <td >{{destination.description}}</td>
@@ -65,7 +69,7 @@
                         <ymap-marker
                         marker-id="1"
                         marker-type="placemark"
-                        :coords="[this.DestLatitude,this.DestLongitude]"
+                        :coords="[this.latitude,this.longitude]"
                         :marker-fill="{color: '#0E4779', opacity: 0.5}"
                         :marker-stroke="{color: '#0E4779',width: 4}"
                         ></ymap-marker>

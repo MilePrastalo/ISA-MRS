@@ -2,6 +2,8 @@ package com.tim9.PlanJourney.beans;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+
 import com.tim9.PlanJourney.models.flight.Flight;
 
 public class FlightBean {
@@ -38,6 +40,10 @@ public class FlightBean {
 	
 	private float latitude;
 	private float longitude;
+	private String additionalServices;
+	private String transitions;
+	private int transitionsNum;
+
 	
 	
 	public FlightBean() {
@@ -101,6 +107,8 @@ public class FlightBean {
 		this.endDate_str = endDate;
 		this.latitude = flight.getEndDestination().getLatitude();
 		this.longitude = flight.getEndDestination().getLongitude();
+		this.additionalServices = flight.getAdditionalServices();
+		this.transitions = flight.getTransitions();
 	}
 
 
@@ -439,6 +447,36 @@ public class FlightBean {
 
 	public void setLongitude(float longitude) {
 		this.longitude = longitude;
+	}
+
+
+	public String getAdditionalServices() {
+		return additionalServices;
+	}
+
+
+	public void setAdditionalServices(String additionalServices) {
+		this.additionalServices = additionalServices;
+	}
+
+
+	public String getTransitions() {
+		return transitions;
+	}
+
+
+	public void setTransitions(String transitions) {
+		this.transitions = transitions;
+	}
+
+
+	public int getTransitionsNum() {
+		return transitionsNum;
+	}
+
+
+	public void setTransitionsNum(int transitionsNum) {
+		this.transitionsNum = transitionsNum;
 	}
 
 
