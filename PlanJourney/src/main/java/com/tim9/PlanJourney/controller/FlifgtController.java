@@ -144,8 +144,8 @@ public class FlifgtController {
 		if (newFlightInfo.getStartDestination().equals(newFlightInfo.getEndDestination())) {
 			return "Start and end destinations must be different!";
 		}
-		Destination startDestination = destinationService.findByName(newFlightInfo.getStartDestination());
-		Destination endDestination = destinationService.findByName(newFlightInfo.getEndDestination());
+		Destination startDestination = destinationService.findOne(Long.parseLong(newFlightInfo.getStartDestination()));
+		Destination endDestination = destinationService.findOne(Long.parseLong(newFlightInfo.getEndDestination()));
 		if (startDestination == null || endDestination == null) {
 			return null;
 		}
@@ -158,7 +158,8 @@ public class FlifgtController {
 				newFlightInfo.getFlightLength(), startDestination, endDestination, new HashSet<FlightReservation>(),
 				seats, newFlightInfo.getBusinessPrice(), newFlightInfo.getEconomicPrice(),
 				newFlightInfo.getFirstClassPrice());
-
+		newFlight.setAdditionalServices(newFlightInfo.getAdditionalServices());
+		newFlight.setTransitions(newFlightInfo.getTransitions());
 		flightService.save(newFlight);
 		flightCompany.getFlights().add(newFlight);
 		flightCompanyService.save(flightCompany);
@@ -183,10 +184,10 @@ public class FlifgtController {
 		
 		Date endDate = flightInfo.getEndDate();;
 		Date startDate = flightInfo.getStartDate();
-		if (!flightInfo.getEndDate_str().equals("")) {
+		if (flightInfo.getEndDate_str().equals("")) {
 			endDate = sdf1.parse(flightInfo.getEndDate_str());
 		}
-		if (!flightInfo.getStartDate_str().equals("")) {
+		if (flightInfo.getStartDate_str().equals("")) {
 			startDate = sdf1.parse(flightInfo.getStartDate_str());
 		}
 		if (endDate.before(startDate)) {
@@ -204,6 +205,8 @@ public class FlifgtController {
 		flight.setEconomicPrice(flightInfo.getEconomicPrice());
 		flight.setBusinessPrice(flightInfo.getBusinessPrice());
 		flight.setFirstClassPrice(flightInfo.getFirstClassPrice());
+		flight.setAdditionalServices(flightInfo.getAdditionalServices());
+		flight.setTransitions(flightInfo.getTransitions());
 		flightService.save(flight);
 		return "success";
 	}

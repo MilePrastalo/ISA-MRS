@@ -283,6 +283,11 @@ public class FlightCompanyController {
 		if (logged == null) {
 			return null;
 		}
+		for (Flight flight : logged.getFlightCompany().getFlights()) {
+			if (flight.getEndDestination().getId() == id || flight.getEndDestination().getId() == id) {
+				return "You can not remove this destionation becouse there is flight who uses it";
+			}
+		}
 		destinationService.remove(id);
 		return "success";
 	}

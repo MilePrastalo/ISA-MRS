@@ -38,6 +38,7 @@
                 <td>End date: </td>
                 <td>{{request.endDate}}</td>
             </tr>
+            
         </table>
         <br><h2>Your Seat</h2><br>
         <table style="text-align: left; margin-left: auto; margin-right: auto">

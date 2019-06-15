@@ -176,8 +176,11 @@ mounted(){
             axios.get("http://localhost:8080/api/removeDestination" + "/" + destination.id)
             .then(response => {
                 alert(response.data)
+                if (response.data == 'success'){
+                    this.destinations.splice(index,1);
+                }
             });
-            this.destinations.splice(index,1);
+            
         },
 
         setCityId: function(){

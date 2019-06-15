@@ -39,6 +39,23 @@
                         <td> Flight length: </td>
                         <td> <input type="text" name="flightLength" v-model="flightLength" required >  </td>        
                     </tr>
+                     <tr>
+                        <td> Transitions: </td>
+                        <td>  
+                            <select   v-model="oneTransition"  data-live-search="true" >
+                                <option v-for="dest in this.destinations" :key=dest.id >{{dest.name}}</option>
+                            </select> 
+                        </td> 
+                        <td><button @click="addTransition">Add</button></td>      
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td> <input  type="text" name="transitions"  v-model="transitions"> </td>   
+                    </tr>
+                    <tr>
+                        <td> Additional services: </td>
+                        <td> <input type="text"  v-model="additionalServices" > </td>        
+                    </tr>
                     <th colspan="2" style="text-align: center">Price</th>                
                     <tr>
                         <td> Economic class: </td>
@@ -106,7 +123,10 @@ export default {
      buisinesssCapacity_columns: "",
      firstClassCapacity_rows: "",
     firstClassCapacity_columns: "",
-     destinations:[]
+    destinations:[],
+    transitions: "",
+    oneTransition: "",
+    additionalServices: "",
   }
 },
 mounted(){
@@ -123,6 +143,9 @@ mounted(){
         addFlight: function(e){
             
             e.preventDefault()
+            if (this.checkTransitions() == false){
+                return
+            }
             if (this.startDestination == this.endDestination){
                 alert("Start and end destinations can not be the same!");
                 return
@@ -145,13 +168,14 @@ mounted(){
 
             var startDateTime = this.startDate + " " + this.startDate_time;
             var endDateTime = this.endDate +  " " + this.endDate_time;
-            var newFlight = {startDestination: this.startDestination.name, endDestination: this.endDestination.name,
+            var newFlight = {startDestination: this.startDestination.id, endDestination: this.endDestination.id,
                 startDate_str: startDateTime, endDate_str: endDateTime, 
                 flightDuration: this.flightDuration, flightLength: this.flightLength, 
                 businessPrice: this.buisinesssPrice, economicPrice: this.economicPrice, firstClassPrice: this.firstClassPrice,
                 economicRows: this.economicCapacity_rows, economicColumns: this.economicCapacity_columns, 
                 businessRows:this.buisinesssCapacity_rows, businessColumns: this.buisinesssCapacity_columns,
-                firstClassRows: this.firstClassCapacity_rows, firstClassColumns: this.firstClassCapacity_columns }
+                firstClassRows: this.firstClassCapacity_rows, firstClassColumns: this.firstClassCapacity_columns,
+                additionalServices: this.additionalServices, transitions: this.transitions }
             var getJwtToken = function() {
                 return localStorage.getItem('jwtToken');
             };
@@ -160,7 +184,51 @@ mounted(){
             .then(response => {
                 alert(response.data);
             });; 
-        }     
+        },
+        
+        addTransition: function(e){
+            e.preventDefault();
+            if (this.transitions == "0" || this.transitions == ""){
+                this.transitions = this.oneTransition;
+                this.oneTransition = "";
+                return;
+            }
+            this.transitions = this.transitions + ","+ this.oneTransition;
+            this.oneTransition = "";
+        },
+        checkTransitions: function(){
+            if (this.transitions == "0" || this.transitions == ""){
+                this.transitions = "0"
+                return true;
+            }addFlight
+            var list;
+            try{
+                
+                list = this.transitions.split(",");
+            }
+            catch{
+                alert("Transitions are not valid!");
+                return false;
+            }
+            var idx1, idx2;
+                var found = false;
+                for (idx1 in list){
+                    found = false;
+                    for (idx2 in this.destinations){
+                        if (this.destinations[idx2].name == list[idx1] && this.startDestination.name != list[idx1] && this.endDestination.name != list[idx1]){
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found == false){
+                        alert("Transitions are not valid!");
+                        return false;
+                    }
+                }
+                return true;
+            
+            
+        }
     }
 }
 

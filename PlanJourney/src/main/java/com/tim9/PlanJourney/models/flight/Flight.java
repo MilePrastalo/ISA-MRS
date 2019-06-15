@@ -71,6 +71,12 @@ public class Flight {
 	@Column(name = "firstClassPrice", unique = false, nullable = true)
 	private double firstClassPrice;
 	
+	@Column(name="additionalServices", unique=false)
+	private String additionalServices = "";
+	
+	@Column(name="transitions", unique=false)
+	private String transitions = "0";
+	
 	@Version
 	private Long version;
 	
@@ -251,6 +257,26 @@ public class Flight {
 
 	public void setVersion(Long version) {
 		this.version = version;
+	}
+
+
+	public String getAdditionalServices() {
+		return additionalServices;
+	}
+
+
+	public void setAdditionalServices(String additionalServices) {
+		this.additionalServices = additionalServices;
+	}
+
+
+	public String getTransitions() {
+		return transitions;
+	}
+
+
+	public void setTransitions(String transitions) {
+		this.transitions = transitions;
 	}
 
 	
