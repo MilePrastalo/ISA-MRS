@@ -47,6 +47,14 @@ public class UserController {
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
 			String username = authentication.getName();
 			User user = (User) userService.findOneByUsername(username);
+			if(user instanceof RegisteredUser) {
+				System.out.println("Jeste registrovan");
+				RegisteredUser reguser = (RegisteredUser) user;
+				UserBean ub = new UserBean(user.getUsername(), "", user.getFirstName(), user.getLastName(), user.getEmail());
+				ub.setCity(reguser.getCity());
+				ub.setPhone(reguser.getPhone());
+				return ub;
+			}
 			UserBean ub = new UserBean(user.getUsername(), "", user.getFirstName(), user.getLastName(), user.getEmail());
 
 			return ub;
@@ -58,7 +66,7 @@ public class UserController {
 	@CrossOrigin()
 	@PreAuthorize("hasAnyAuthority('FLIGHT_ADMIN','SYS_ADMIN','FLIGHT_ADMIN','REGISTERED','RENT_ADMIN')")
 	// Method for changing user profile information
-	public @ResponseBody User updateUserProfile(@RequestBody UserBean updatedUser) throws Exception {
+	public @ResponseBody UserBean updateUserProfile(@RequestBody UserBean updatedUser) throws Exception {
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
@@ -76,9 +84,27 @@ public class UserController {
 			if (! updatedUser.getPassword().equals("")) {
 				user.setPassword(bc.encode(updatedUser.getPassword()));
 			}
+			if(!updatedUser.getCity().equals("") && !updatedUser.getPhone().equals("") && user instanceof RegisteredUser) {
+				try {
+					RegisteredUser reg = (RegisteredUser) user;
+					reg.setCity(updatedUser.getCity());
+					reg.setPhone(updatedUser.getPhone());
+					userService.save(reg);
+					UserBean ub = new UserBean(user.getUsername(), "", user.getFirstName(), user.getLastName(), user.getEmail());
+					ub.setCity(reg.getCity());
+					ub.setPhone(reg.getPhone());
+					return ub;
+
+				}
+				catch (Exception e) {
+					// TODO: handle exception
+					System.out.println("Nije reg");
+				}
+			}
 			
 			userService.save(user);
-			return user;
+			UserBean ub = new UserBean(user.getUsername(), "", user.getFirstName(), user.getLastName(), user.getEmail());
+			return ub;
 		}
 		return null;
 	}
