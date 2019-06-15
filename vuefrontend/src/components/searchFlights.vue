@@ -1,5 +1,5 @@
 <template>
-   <div id = "flightForAdmin">
+   <div id = "searchFlights">
 
             <h2>Flight Search </h2>
         <br>
@@ -95,7 +95,7 @@
 
 <script>
 export default {
-  name: 'flightForAdmin',
+  name: 'searchFlights',
   components: {
   },
   data: function () {

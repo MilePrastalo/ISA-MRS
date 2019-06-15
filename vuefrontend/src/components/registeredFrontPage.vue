@@ -11,6 +11,7 @@
                 <button style="border-radius: 20px;" class="col-sm btn btn-info btn-lg" @click="rentACar">Rent a car</button>
                 <button style="border-radius: 20px;" class="col-sm btn btn-info btn-lg" @click="friends">Friends</button>
             </div>
+            <SearchFlights/>
             <div class="row" id="title"> 
                 <h2>Reservations</h2>
             </div>
@@ -139,6 +140,7 @@
 import { setTimeout } from 'timers';
 import navbar from "./navbar.vue";
 import { hostname } from 'os';
+import SearchFlights from './searchFlights';
 
 
 export default {
@@ -151,7 +153,7 @@ export default {
       }
   },
   components: {
-      navbar
+      navbar,SearchFlights
     },
   created(){
       var getJwtToken = function() {
