@@ -301,13 +301,29 @@ public class HotelController {
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('HOTEL_ADMIN')")
 	public @ResponseBody boolean addHotelRoom(@RequestBody HotelRoomBean hrb) {
-		System.out.println(hrb);
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
 			String username = authentication.getName();
 			HotelAdmin admin = (HotelAdmin) hotelAdminService.findByUsername(username);
 			Hotel hotel = admin.getHotel();
+
+			// checks if there is a room with same number;
+			for (HotelRoom hr : hotel.getRooms()) {
+				if (hr.getRoomNumber() == hrb.getRoomNumber()) {
+					return false;
+				}
+			}
+
+			// checks if number of beds is less than 1.
+			if (hrb.getNumberOfBeds() < 1) {
+				return false;
+			}
+
+			// checks if price per day is negative
+			if (hrb.getPricePerDay() < 0) {
+				return false;
+			}
 
 			HotelRoom hr = new HotelRoom();
 			hr.setNumberOfBeds(hrb.getNumberOfBeds());
@@ -317,6 +333,68 @@ public class HotelController {
 			Set<AdditionalCharges> ac = new HashSet<AdditionalCharges>(hrb.getAdditionalCharges());
 			hr.setAdditionalCharges(ac);
 			hotel.getRooms().add(hr);
+
+			service.save(hotel);
+			return true;
+		}
+		return false;
+	}
+
+	@RequestMapping(value = "/api/updateHotelRoom", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('HOTEL_ADMIN')")
+	public @ResponseBody boolean updateHotelRoom(@RequestBody HotelRoomBean hrb) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String username = authentication.getName();
+			HotelAdmin admin = (HotelAdmin) hotelAdminService.findByUsername(username);
+			Hotel hotel = admin.getHotel();
+			// checks if there is a room with same number;
+			for (HotelRoom hr : hotel.getRooms()) {
+				if (hr.getRoomNumber() == hrb.getRoomNumber()) {
+					hr.setPricePerDay(hrb.getPricePerDay());
+					;
+				}
+			}
+
+			service.save(hotel);
+			return true;
+		}
+		return false;
+	}
+
+	@RequestMapping(value = "/api/removeHotelRoom/{roomNumber}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('HOTEL_ADMIN')")
+	public @ResponseBody boolean removeHotelRoom(@PathVariable("roomNumber") int roomNumber) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String username = authentication.getName();
+			HotelAdmin admin = (HotelAdmin) hotelAdminService.findByUsername(username);
+			Hotel hotel = admin.getHotel();
+			HotelRoom foundRoom = null;
+
+			// checks if there is a room with same number;
+			for (HotelRoom hr : hotel.getRooms()) {
+				if (hr.getRoomNumber() == roomNumber) {
+					foundRoom = hr;
+				}
+			}
+
+			if (foundRoom == null) {
+				return false;
+			}
+
+			// checks if room is already reserved.
+			for (HotelReservation hr : hotel.getReservations()) {
+				if (hr.getRoom().getRoomNumber() == roomNumber) {
+					return false;
+				}
+			}
+
+			hotel.getRooms().remove(foundRoom);
 
 			service.save(hotel);
 			return true;

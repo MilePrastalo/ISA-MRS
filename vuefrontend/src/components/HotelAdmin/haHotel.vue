@@ -28,6 +28,7 @@
             
             <div v-if="currentTab == 1 && editing == false" class="centered">
             <br>
+            <br>
             <table class="centered">
                     <tr>
                         <td><b> Name: </b></td>
@@ -48,6 +49,8 @@
             </table>
             </div>
             <div v-if="currentTab == 1 && editing == true" class="centered">
+                <br>
+                <br>
             <table class="centered">
                 <tr>
                         <td><b> Name: </b></td>
@@ -65,7 +68,8 @@
             </table>
             </div> 
 
-            <div  v-if="currentTab == 2" class="centered"> 
+            <div  v-if="currentTab == 2 && editingRoom == false" class="centered"> 
+                <br>
                 <br>
                     <table  class="table centered">
                         <thead class="thead-dark">
@@ -73,6 +77,8 @@
                             <th>Room Number</th>
                             <th>Number Of Beds</th>
                             <th>Price Per Day</th>
+                            <th>Options</th>
+                            <th> </th>
                         </tr>
                         </thead>
                         
@@ -80,23 +86,42 @@
                         <td>{{r.roomNumber}}</td>
                         <td>{{r.numberOfBeds}}</td>
                         <td>{{r.pricePerDay}}</td>
+                        <td><button v-on:click="editRoomDiv(r)" class="btn-primary" >Edit</button></td>
+                        <td><button v-on:click="removeRoom(r.roomNumber)" class="btn-primary" style="background-color:red">Remove</button></td>
+                    </tr>
+                </table>
+                
+            </div>
+            <div v-if="currentTab == 2 && editingRoom == true">
+                <br>
+                <br>
+                <table class="centered">
+                    <tr>
+                        <td>Enter new price per day: </td>
+                        <td><input type="number" v-model="editRoom.pricePerDay" ></td>
+                    </tr>
+                    <tr>
+                        <td> </td>
+                        <td><button v-on:click="updateRoomPrice()" class="btn-primary">Save</button> </td> 
+                        <td><button v-on:click="cancelRoomPrice()" class="btn-primary">Cancel</button> </td>        
                     </tr>
                 </table>
             </div>
             <div  v-if="currentTab == 3" class="centered"> 
                 <br>
+                <br>
                    <table class="centered">
                 <tr>
                     <td> Input room number: </td>
-                    <td>  <input type="int" room.roomNumber="room.roomNumber" v-model="room.roomNumber" > </td>
+                    <td>  <input type="number" room.roomNumber="room.roomNumber" v-model="room.roomNumber" > </td>
                 </tr>
                 <tr>
                     <td> Input number of beds: </td>
-                    <td>  <input type="int" room.numberOfBeds="room.numberOfBeds" v-model="room.numberOfBeds" > </td>
+                    <td>  <input type="number" room.numberOfBeds="room.numberOfBeds" v-model="room.numberOfBeds" > </td>
                 </tr>
                 <tr>
                     <td> Input price per day: </td>
-                    <td>  <input type="float" room.pricePerDay="room.pricePerDay" v-model="room.pricePerDay" > </td>
+                    <td>  <input type="number" room.pricePerDay="room.pricePerDay" v-model="room.pricePerDay" > </td>
                 </tr>
                 <br>
                 <br>
@@ -106,7 +131,7 @@
                 </tr>
                 <tr>
                     <td> Input price of additional charge per day: </td>
-                    <td>  <input type="float" ac.pricePerDay="ac.pricePerDay" v-model="ac.pricePerDay" > </td>
+                    <td>  <input type="number" ac.pricePerDay="ac.pricePerDay" v-model="ac.pricePerDay" > </td>
                 </tr>
                 <tr>
                     <td>  </td>
@@ -120,6 +145,7 @@
             </table>      
             </div>
             <div v-if="currentTab == 4">
+                <br>
                  <br>
           <table class="table centered">
               <thead class="thead-dark">
@@ -182,7 +208,10 @@ export default {
     quickReservations: [],
     currentTab: 1,
     editing: false,
-    oldHotel: {}
+    oldHotel: {},
+    editingRoom: false,
+    oldPrice: 0,
+    editRoom: {}
   }
 },
 mounted(){
@@ -199,16 +228,48 @@ mounted(){
             }
         },
         addAC: function() {
+            if(this.ac.name == null || this.ac.name == "") {
+                alert("Please enter name of additional charge.");
+                return;
+            }
+            if(this.ac.pricePerDay == null || this.ac.pricePerDay < 0) {
+                alert("Price of additiona charge can't be less than 0.");
+                return;
+            }
             this.acList.push({name:this.ac.name, pricePerDay: this.ac.pricePerDay});
             this.ac.name = "";
             this.ac.pricePerDay = "";
         },
         addRoom: function() {
+            if(this.room.roomNumber == null) {
+                alert("Please enter room number.");
+                return;
+            }
+            if(this.room.numberOfBeds == null || this.room.numberOfBeds < 1) {
+                alert("Please enter number of beds.");
+                return;
+            }
+            if(this.room.pricePerDay == null || this.room.pricePerDay < 0) {
+                alert("Please enter price of room per day.");
+                return;
+            }
+            for(let i in this.hotel.rooms) {
+                if(this.hotel.rooms[i].roomNumber == this.room.roomNumber) {
+                    alert("Room with given number already exists.");
+                    return;
+                }
+            }
+
             this.room.additionalCharges = this.acList;
-            console.log(this.room)
+            
             axios.post("http://localhost:8080/api/addHotelRoom/",this.room)
             .then(response => {
-                alert(response.data);
+                if(response.data == true) {
+                    alert("Hotel room was successfully added.");
+                } else {
+                    alert("Add hotel room failed.");
+                    return;
+                }
             })
             this.hotel.rooms.push({roomNumber: this.room.roomNumber,numberOfBeds:this.room.numberOfBeds,pricePerDay:this.room.pricePerDay,additionalCharges:this.acList,rating:0});
             this.room = {};
@@ -265,6 +326,49 @@ mounted(){
                     this.hotel.name = this.oldHotel.name;
                     this.hotel.description = this.oldHotel.description;
                     alert("Hotel profile update failed.")
+                }
+            });
+        },
+        editRoomDiv: function(room) {
+            this.oldPriced = room.pricePerDay;
+            this.editingRoom = true;
+            this.editRoom = room;
+        },
+        updateRoomPrice: function() {
+            if(this.editRoom.pricePerDay == null || this.editRoom.pricePerDay < 0  || this.editRoom.pricePerDay == "") {
+                alert("Room price can't be less than 0.");
+                return;
+            }
+
+            axios.post("http://localhost:8080/api/updateHotelRoom/",this.editRoom)
+            .then(response => {
+                if(response.data == true) {
+                    alert("Room update was a success.");
+                    this.editingRoom = false;
+                } else {
+                    alert("Room update has failed.");
+                    this.editRoom.pricePerDay = this.oldPrice;
+                }
+            })
+        },
+        cancelRoomPrice: function() {
+            this.editRoom.pricePerDay = this.oldPrice;
+            this.editingRoom = false;
+        },
+        removeRoom: function(roomNumber) {
+            axios.delete("http://localhost:8080/api/removeHotelRoom/" + roomNumber)
+            .then(response => {
+                if(response.data == true) {
+                    var index;
+                    for(let i in this.hotel.rooms) {
+                        if(this.hotel.rooms[i] == roomNumber) {
+                            index = i;
+                        }
+                    }
+                    this.hotel.rooms.splice(index,1);
+                    alert("Room " + roomNumber + " was successfully removed.");
+                } else {
+                    alert("Remove failed.");
                 }
             });
         }

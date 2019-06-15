@@ -1,11 +1,8 @@
 <template>
   <div id="haQuickReservation">
-    <h1>Quick Reservations</h1>
+    <div v-if="reserving == false">
     <br>
     <br>
-    <table>
-      <tr>
-        <td>
           <h3>Choose Room</h3>
           <table class="table">
             <thead class="thead-dark">
@@ -28,8 +25,10 @@
         </td>
       </tr>
     </table>
-        </td>
-        <td v-if="showReservation == 1">
+    </div>
+    <div v-if="reserving == true">
+    <br>
+    <br>
           <h3>Make Quick Reservation</h3>
         <table>
                 <tr>
@@ -49,6 +48,7 @@
                   <td><input type="text" v-model="discount" ></td>
                 </tr>
               </table>
+              <br>
                <table class="table" >
                  <thead class="thead-dark">
                    <tr>
@@ -65,6 +65,7 @@
                         <td><input type="checkbox" @click="aCChanged(a.name)"></td>
                     </tr>
                 </table>
+                <br>
                 <table>
                     <tr>
                         <td>First Day:</td>
@@ -75,15 +76,14 @@
                     <tr>
                         <td>Check if available: </td>
                         <td><button @click="splitDate()" class="btn-primary">Check</button></td>
+                        <td><button @click="cancel()" class="btn-primary">Cancel</button></td>
                     </tr>
                     <tr v-if="this.available == 1">
                       <td>Make reservation: </td>
                       <td><button @click="reserve()" class="btn-primary">Reserve Room</button></td>
                     </tr>
                 </table>
-        </td>
-      </tr>
-    </table>
+  </div>
   </div>
 </template>
 
@@ -111,7 +111,8 @@ export default {
     lDay: 0,
     showReservation: 0,
     available: 0,
-    additionalCharges: []
+    additionalCharges: [],
+    reserving: false
 
   }
 },
@@ -119,6 +120,7 @@ export default {
       chooseRoom: function(chosenRoom) {
         this.room = chosenRoom;
         this.showReservation = 1;
+        this.reserving = true;
         },
         checkReservations: function() {
           for(let r in this.hotel.reservations) {
@@ -216,6 +218,7 @@ export default {
               
               this.hotel.reservations.push({hotelName: this.hotel.name,fYear: this.fYear,fMonth: this.fMonth,fDay: this.fDay,lYear: this.lYear,lMonth: this.lMonth,lDay: this.lDay, roomNumber: this.room.roomNumber,discount: this.discount,additionalCharges:this.additionalCharges});
               this.additionalCharges = [];
+              this.reserving = false;
             } else {
               alert("Your reservation failed.");
               this.available = 0;
@@ -236,6 +239,9 @@ export default {
         } else {
           this.additionalCharges.push(aCName);     
             }
+      },
+      cancel: function() {
+        this.reserving = false;
       }
            
     }
