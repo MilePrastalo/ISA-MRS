@@ -19,7 +19,28 @@
         </div>
          <div  class="tab-content py-3 px-3 px-sm-0 container" id="nav-tabContent" style="min-height: 450px;">
             <div  class="centered col-lg-10" v-if="currentTab == 2" >
-                <flightCompanyProfile></flightCompanyProfile>
+                <div class = "row" style="margin-right: 10%;" >
+                    <flightCompanyProfile style="margin-left: 36%;"></flightCompanyProfile>
+                    <div  style="margin-left: 36%;">  
+                        <form @submit="updateFlightCompanyInfo">   
+                        <table class = "centered"  style="text-align: left">
+                            <tr>
+                                <td> Seats Info: </td>
+                                <td> <textarea  rows="5" cols="22"   v-model="seatsInfo" style="overflow:scroll;"></textarea> </td>        
+                            </tr>
+                            <tr>
+                                <td> Laguage Info: </td>
+                                <td> <textarea  rows="5" cols="22" name="laguageInfo"  v-model="laguageInfo" style="overflow:scroll;"></textarea> </td>        
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td> <button class="btn btn-primary">Edit</button> </td>
+                            </tr>
+                        </table>
+                        </form> 
+                    </div>
+                </div>
+                
             </div>
             <div  v-if="currentTab == 3" >
                 <allFlights></allFlights>
@@ -72,8 +93,21 @@ export default {
   },
   data: function () {
     return {
+        laguageInfo: "",
+        seatsInfo: "",
         currentTab: 2,
     }
+},
+mounted: function(){
+    var getJwtToken = function() {
+            return localStorage.getItem('jwtToken');
+        };
+        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.get("http://localhost:8080/api/getFlightCompanyProfile")
+            .then(response => {
+                this.seatsInfo = response.data.seatsInfo
+                this.laguageInfo = response.data.laguageInfo
+            });
 },
 methods:{
         selectTab: function(tabId){
@@ -106,7 +140,24 @@ methods:{
                 document.getElementById("reports").className="nav-item nav-link active";
             }
             this.currentTab = tabId;
-        }, 
+        },
+
+         updateFlightCompanyInfo: function(e){
+            e.preventDefault()
+            var getJwtToken = function() {
+              return localStorage.getItem('jwtToken');
+            };
+            axios.defaults.headers.post['Authorization'] = "Bearer " + getJwtToken();
+            axios.post("http://localhost:8080/api/updateFlightCompanyInfo",{seatsInfo:this.seatsInfo, laguageInfo: this.laguageInfo})
+            .then(response => {
+                if (response.data != null){
+                    this.seatsInfo = response.data.seatsInfo
+                    this.laguageInfo = response.data.laguageInfo
+                    alert("success");
+                }
+            });
+           
+        }
     }
 }
 

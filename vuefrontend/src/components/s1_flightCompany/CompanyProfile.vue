@@ -33,6 +33,8 @@
                         <div class="content-heading"><h1>Rating: {{company.rating}}</h1></div>
                         <p>Address: {{company.address}}</p><br>
                         <p style="text-align: justify; padding-left: 2%; padding-right: 40%;">{{company.description}}</p>
+                        <p style="text-align: justify; padding-left: 2%; padding-right: 40%;">{{company.laguageInfo}}</p>
+                        <p style="text-align: justify; padding-left: 2%; padding-right: 40%;">{{company.seatsInfo}}</p>
                     </div>
                 </div>
                 <br>
@@ -65,7 +67,7 @@
                         <ymap-marker
                         marker-id="1"
                         marker-type="placemark"
-                        :coords="[this.DestLatitude,this.DestLongitude]"
+                        :coords="[this.latitude,this.longitude]"
                         :marker-fill="{color: '#0E4779', opacity: 0.5}"
                         :marker-stroke="{color: '#0E4779',width: 4}"
                         ></ymap-marker>

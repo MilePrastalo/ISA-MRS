@@ -269,7 +269,7 @@ public class RegisteredUserController {
 			return null;
 		}
 		FlightCompany fc = companyService.findOne(id);
-		FlightCompanyBean bean = new FlightCompanyBean(fc.getId(), fc.getName(), fc.getAddress(), fc.getDescription(), fc.getRating());
+		FlightCompanyBean bean = new FlightCompanyBean(fc.getId(), fc.getName(), fc.getAddress(), fc.getDescription(), fc.getRating(), fc.getLaguageInfo(), fc.getSeatsConfiguration());
 		ArrayList<DestinationBean> destinations = new ArrayList<>();
 		for (Destination d : fc.getDestinations()) {
 			destinations.add(new DestinationBean(d.getId(), d.getName(), d.getDescription(),

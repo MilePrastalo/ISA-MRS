@@ -93,7 +93,7 @@ public class FlightCompanyController {
 				return null;
 			}
 			FlightCompanyBean fcb = new FlightCompanyBean(flightCompany.getId(),flightCompany.getName(),
-					flightCompany.getAddress(), flightCompany.getDescription(), flightCompany.getRating());
+					flightCompany.getAddress(), flightCompany.getDescription(), flightCompany.getRating(), flightCompany.getLaguageInfo(), flightCompany.getSeatsConfiguration());
 			return fcb;
 		}
 		return null;
@@ -125,6 +125,33 @@ public class FlightCompanyController {
 			flightCompanyService.save(flightCompany);
 			return new FlightCompanyBean(flightCompany.getId(), flightCompany.getName(), flightCompany.getAddress(), 
 					flightCompany.getDescription(), flightCompany.getRating());
+		}
+		return null;
+	}
+	
+	@RequestMapping(value = "/api/updateFlightCompanyInfo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
+	@CrossOrigin()
+	// Method for updating flight company profile, returns flight company object
+	public @ResponseBody FlightCompanyBean updateFlightCompanyInfo(@RequestBody FlightCompanyBean updatedFC)
+			throws Exception {
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+
+			String username = authentication.getName();
+			FlightAdmin user = (FlightAdmin) userService.findOneByUsername(username);
+			FlightCompany flightCompany = user.getFlightCompany();
+			if (flightCompany == null) {
+				System.out.println("Flight admin doesnt't have flight company.");
+				return null;
+			}
+			flightCompany.setSeatsConfiguration(updatedFC.getSeatsInfo());
+			flightCompany.setLaguageInfo(updatedFC.getLaguageInfo());
+			// save to database
+			flightCompanyService.save(flightCompany);
+			return new FlightCompanyBean(flightCompany.getId(), flightCompany.getName(), flightCompany.getAddress(), 
+					flightCompany.getDescription(), flightCompany.getRating(), flightCompany.getLaguageInfo(), flightCompany.getSeatsConfiguration());
 		}
 		return null;
 	}
