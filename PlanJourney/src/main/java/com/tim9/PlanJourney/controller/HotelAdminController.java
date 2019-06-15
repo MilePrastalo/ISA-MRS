@@ -3,7 +3,6 @@ package com.tim9.PlanJourney.controller;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.beans.AdminBean;
+import com.tim9.PlanJourney.beans.EditHotelBean;
 import com.tim9.PlanJourney.beans.HotelAdminBean;
 import com.tim9.PlanJourney.beans.HotelBean;
 import com.tim9.PlanJourney.beans.HotelDailyReportBean;
@@ -373,80 +373,11 @@ public class HotelAdminController {
 	@PreAuthorize("hasAuthority('HOTEL_ADMIN')")
 	public @ResponseBody boolean addQuickHotelReservation(@RequestBody HotelReservationBean reservationBean) {
 
-		// Checks if hotel exists.
-		Hotel hotel = hotelService.findByName(reservationBean.getHotelName());
-		if (hotel == null) {
-			System.out.println("puko 1");
-			return false;
-		}
-		// Finds selected room and check if it exists.
-		HotelRoom room = null;
-		for (HotelRoom r : hotel.getRooms()) {
-			if (r.getRoomNumber() == reservationBean.getRoomNumber()) {
-				room = r;
-				break;
-			}
-		}
-		if (room == null) {
-			System.out.println("puko 2");
-			return false;
-		}
-		// Splits date and checks if reservation date is valid.
-		Date firstDay = new Date();
-		Calendar c = Calendar.getInstance();
-		c.set(reservationBean.getfYear(), reservationBean.getfMonth() - 1, reservationBean.getfDay(), 0, 0);
-		firstDay.setTime(c.getTimeInMillis());
+		boolean added = hotelService.addQuickHotelReservation(reservationBean);
 
-		Date lastDay = new Date();
-		c.set(reservationBean.getlYear(), reservationBean.getlMonth() - 1, reservationBean.getlDay(), 0, 0);
-		lastDay.setTime(c.getTimeInMillis());
-
-		if (!checkDate(firstDay, lastDay, hotel, reservationBean.getRoomNumber())) {
-			System.out.println("puko 3");
-			System.out.println(firstDay);
-			System.out.println(lastDay);
-			return false;
-		}
-
-		// Calculating number of days.
-		long time = lastDay.getTime() - firstDay.getTime();
-		long days = TimeUnit.MILLISECONDS.toDays(time);
-
-		// Adds new reservation
-		HotelReservation reservation = new HotelReservation();
-		reservation.setFirstDay(firstDay);
-		reservation.setLastDay(lastDay);
-		reservation.setHotel(hotel);
-		reservation.setRoom(room);
-		reservation.setPaidPrice(days * room.getPricePerDay());
-		reservation.setDiscount(reservationBean.getDiscount());
-		hotel.getReservations().add(reservation);
-		hotelService.save(hotel);
-
-		return true;
+		return added;
 	}
 
-	private boolean checkDate(Date firstDay, Date lastDay, Hotel hotel, int roomNumber) {
-
-		if (firstDay.after(lastDay)) {
-			return false;
-		}
-
-		for (HotelReservation hr : hotel.getReservations()) {
-			if (roomNumber == hr.getRoom().getRoomNumber()) {
-				if (lastDay.after(hr.getFirstDay()) && lastDay.before(hr.getLastDay())) {
-					return false;
-				}
-				if (firstDay.after(hr.getFirstDay()) && firstDay.before(hr.getLastDay())) {
-					return false;
-				}
-				if (firstDay.equals(hr.getFirstDay()) || lastDay.equals(hr.getLastDay())) {
-					return false;
-				}
-			}
-		}
-		return true;
-	}
 
 	@RequestMapping(value = "/api/cancelQuickHotelReservation", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -463,4 +394,37 @@ public class HotelAdminController {
 		return true;
 	}
 
+	@RequestMapping(value = "/api/updateHotelProfile", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('HOTEL_ADMIN')")
+	public @ResponseBody boolean updateHotelProfile(@RequestBody EditHotelBean editHotelBean) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			if(editHotelBean.getNewName().equals("".trim())) {
+				return false;
+			}
+			
+			ArrayList<Hotel> hotels = (ArrayList<Hotel>) hotelService.findAll();
+			
+			
+			
+			String username = authentication.getName();
+			HotelAdmin ha = adminService.findByUsername(username);
+			Hotel hotel = ha.getHotel();
+			for(Hotel h : hotels) {
+				if(h.getName().equals(editHotelBean.getNewName()) && h.getCity().getName().equals(editHotelBean.getCityName()) && h.getId() != hotel.getId()) {
+					return false;
+				}
+			}
+			if(editHotelBean.getOldName().equals(hotel.getName()) && editHotelBean.getCityName().equals(hotel.getCity().getName())) {
+				hotel.setName(editHotelBean.getNewName());
+				hotel.setDescription(editHotelBean.getNewDescription());
+				
+				hotelService.save(hotel);
+				
+				return true;
+			}
+		}
+		return false;
+	}
 }

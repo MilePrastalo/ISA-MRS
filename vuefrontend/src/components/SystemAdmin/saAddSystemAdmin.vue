@@ -25,7 +25,7 @@
                 </tr>
                 <tr>
                     <td>  </td>
-                    <td><button v-on:click="addSystemAdmin()" class="btn-primary">Add Hotel Admin</button> </td>      
+                    <td><button v-on:click="addSystemAdmin()" class="btn-primary">Add System Admin</button> </td>      
                 </tr>
         </table>
         </div>
@@ -79,6 +79,7 @@ mounted(){
                     return;
                 } else {
                     alert("System admin has been successfully added.");
+                    this.newSysAdmin = {};
                     return;
                 }
             })
