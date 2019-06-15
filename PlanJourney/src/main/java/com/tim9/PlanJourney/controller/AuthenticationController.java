@@ -118,6 +118,8 @@ public class AuthenticationController {
 		user.setAuthorities(authorities);
 		user.setConfirmed(false);
 		user.setLoggedBefore(true);
+		user.setCity(bean.getCity());
+		user.setPhone(bean.getPhone());
 		userService.save(user);
 		try {
 			emailService.sendRegistrationEmail(user); // sends email

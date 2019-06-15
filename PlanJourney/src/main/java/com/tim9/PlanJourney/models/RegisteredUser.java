@@ -40,6 +40,12 @@ public class RegisteredUser extends User {
 	@Column(name = "confirmed", nullable = true)
 	private boolean confirmed;
 
+	@Column(name = "city", nullable = true)
+	private String city;
+
+	@Column(name = "phone", nullable = true)
+	private String phone;
+
 	public RegisteredUser() {
 		// TODO Auto-generated constructor stub
 	}
@@ -129,6 +135,22 @@ public class RegisteredUser extends User {
 
 	public void setConfirmed(boolean confirmed) {
 		this.confirmed = confirmed;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 }

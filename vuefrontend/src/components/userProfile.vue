@@ -20,6 +20,14 @@
                     <td> Email: </td>
                     <td >  <input   type="text" name="email" v-model="email" > </td>
                 </tr>
+                <tr v-if="isRegistered">
+                    <td> City: </td>
+                    <td >  <input   type="text" name="city" v-model="city" > </td>
+                </tr>
+                <tr v-if="isRegistered">
+                    <td> Phone: </td>
+                    <td >  <input   type="text" name="phone" v-model="phone" > </td>
+                </tr>
                 <tr>
                     <td> Password: </td>
                     <td>  <input   type="password" name="password" v-model="password" > </td>
@@ -51,7 +59,10 @@ export default {
     lastName: "",
     email: "",
     password: "",
-    repeatedPassword: "" 
+    repeatedPassword: "" ,
+    city:"",
+    phone:"",
+    isRegistered:false
   }
 },
 mounted(){
@@ -64,11 +75,26 @@ mounted(){
             this.firstName = response.data.firstName
             this.lastName = response.data.lastName
             this.email = response.data.email
+            this.city = response.data.city;
+            this.phone = response.data.phone;
           }).catch(
     error =>{ if(error.response){
     console.log(error.response.data)
 }}
-);   
+); 
+    axios.get("http://localhost:8080/api/getUserRole")
+        .then(response => {
+            if(response.data=="REGISTERED"){
+                this.isRegistered = true;
+            }
+            else{
+                this.isRegistered = false;
+            }
+          }).catch(
+    error =>{ if(error.response){
+    console.log(error.response.data)
+}}
+);
     },
     methods:{
         updateUserProfile: function(pass, repeated_pass){
@@ -77,11 +103,13 @@ mounted(){
                     return localStorage.getItem('jwtToken');
                 };
             axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-                axios.post("http://localhost:8080/api/updateUserProfile",{firstName : this.firstName, lastName: this.lastName, email:this.email, password:this.password, repeatedPass: this.password})
+                axios.post("http://localhost:8080/api/updateUserProfile",{firstName : this.firstName, lastName: this.lastName, email:this.email, password:this.password, repeatedPass: this.password,city:this.city,phone:this.phone})
             .then(response => {
                 this.firstName = response.data.firstName
                 this.lastName = response.data.lastName
                 this.email = response.data.email
+                this.city = response.data.city;
+                this.phone = response.data.phone;
             }); 
             alert("Your profile has been successfuly updated!");  
             }
