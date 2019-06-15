@@ -46,8 +46,8 @@
                             <td v-if="flightReservation.passangers != 0">{{flightReservation.passangers-1}} + (1)</td>
                             <td v-else>1</td>
                             <td><button @click="flightReservationDetails(flightReservation.id)">Details</button></td>
-                            <td><button @click="cancelFlightReservation(flightReservation.id)">Cancel</button></td>
-                             <td class="ratingtd" width="100px">
+                            <td v-if="flightReservation.status == 0"><button @click="cancelFlightReservation(flightReservation.id)">Cancel</button></td>
+                             <td v-if="flightReservation.status == 1" class="ratingtd" width="100px">
                                 <span class="fa fa-star over clicked" v-if="getRating(flightReservation,5)" @click="reviewFlight(flightReservation,5)" :id="flightReservation.ratings[4]"></span>
                                     <span class="fa fa-star over" v-else @click="reviewFlight(flightReservation,5)" :id="flightReservation.ratings[4]"></span>
                                 <span class="fa fa-star over clicked" v-if="getRating(flightReservation,4)" @click="reviewFlight(flightReservation,4)" :id="flightReservation.ratings[3]"></span>

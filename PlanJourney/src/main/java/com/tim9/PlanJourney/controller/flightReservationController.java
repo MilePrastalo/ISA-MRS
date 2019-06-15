@@ -128,9 +128,21 @@ public class flightReservationController {
 				count++;
 			}
 		}
+    ffrb.setPassangers(count);
+
 		ffrb.setCreator(flightReservation.getUser().getFirstName() + " " + flightReservation.getUser().getLastName());
-		ffrb.setPassangers(count);
-		return ffrb;
+		int status = 0; //moze cancel, ne moze ocenjivanje
+		Date today = new Date();
+		long diffInMillies = flightReservation.getFlight().getStartDate().getTime() - today.getTime();
+		long diff = TimeUnit.HOURS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+		if (flightReservation.getFlight().getStartDate().before(today)) {
+			status = 1; //  moze ocenjivanje, ne moze cancel
+		}
+		else if (diff < 3) {
+			status = 2; //ne moze cancel, ne moze ocenjivanje
+		}
+		ffrb.setStatus(status);
+    return ffrb;
 	}
 	
 
@@ -182,9 +194,9 @@ public class flightReservationController {
 		}
 		Date today = new Date();
 		long diffInMillies = reservation.getFlight().getStartDate().getTime() - today.getTime();
-		long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+		long diff = TimeUnit.HOURS.convert(diffInMillies, TimeUnit.MILLISECONDS);
 		if (diff < 3) {
-			return "You can not cancel because it's less than 3 days before starting!";
+			return "You can not cancel because it's less than 3 hours before starting!";
 		}
 		if (reservation.getUser().getId() != loggedUser.getId()) {
 			for (Passanger p : reservation.getPassangers()) {

@@ -44,10 +44,7 @@
                 <tr>
                     <td><b> City Name: </b></td>
                     <td>  <input type="text" v-model="newCity.name" > </td>
-                </tr>
-                <tr>
-                    <td>  </td>
-                    <td><button v-on:click="addCity()" class="btn-primary">Add City</button> </td>      
+                    <td><button v-on:click="addCity()" class="btn-primary">Add City</button> </td>     
                 </tr>
             </table>
             </div>   

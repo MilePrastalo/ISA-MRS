@@ -12,117 +12,83 @@
                     </li>
                     <li class="nav-item">
                         <a  class="nav-link" href="#" @click="selectTab(2)">Add Hotel</a>
-                        
                     </li>
                     <li class="nav-item">
-                        <a  class="nav-link" href="#" @click="selectTab(3)">Remove Hotel</a>
-                    </li>
-                    <li class="nav-item">
-                        <a  class="nav-link" href="#" @click="selectTab(4)">Add Hotel Admin</a>
-                    </li>
-                    <li class="nav-item">
-                        <a  class="nav-link" href="#" @click="selectTab(5)">Remove Hotel Admin</a>
+                        <a  class="nav-link" href="#" @click="selectTab(3)">Remove Hotel Admin</a>
                     </li>
                 </ul>
             </div>
             
-            <div v-if="currentTab == 1">
+            <div v-if="currentTab == 1 && showHotels == true">
                 <br>
                 <br>
                 <table class="table" >
                     <thead class="thead-dark">
                     <tr>
-                        <th>Hotel name</th>
-                        <th>Destination</th>
+                        <th>Hotel Name</th>
+                        <th>City Name</th>
                         <th>Adress</th>
                         <th>Description</th>
                         <th>Rating</th>
+                        <th>Options</th>
+                        <th> </th>
                     </tr>
                     </thead>
             <tr v-for="h in this.hotels" :key="h.id">  
                 <td>{{h.name}}</td>
-                <td>{{h.destination.name}}</td>
+                <td>{{h.cityName}}</td>
                 <td>{{h.address}}</td>
                 <td>{{h.description}}</td>
                 <td>{{h.rating}}</td>
+                <td><button v-on:click="addHotelAdminDiv(h.name)" class="btn-primary" >Add Admin</button></td>
+                <td><button v-on:click="removeHotel(h.name)" class="btn-primary" style="background-color:red">Remove</button></td>
             </tr>
             </table>
             </div>
-
-            <div  v-if="currentTab == 2"> 
-                <table class="SeperateTable">
-                    <tr>
-                        <td>
+            <div v-if="currentTab == 2">
                             <table class="table">
                                 <th>
                                     Hotel Info: 
                                 </th>
                 <tr>
                     <td><b> Name: </b></td>
-                    <td>  <input type="text" name="name" v-model="name" > </td>
+                    <td>  <input type="text" v-model="newHotel.name" > </td>
                 </tr>
                 <tr>
                     <td><b> Address: </b></td>
-                    <td>  <input type="text" name="address" v-model="address" > </td>
+                    <td>  <input type="text" v-model="newHotel.address" > </td>
                 </tr>
                 <tr>
-                    <td><b> Destination ID: </b></td>
-                    <td>  <input type="text" name="destinationID" v-model="destinationID" > </td>
+                    <td><b> City Name: </b></td>
+                    <td>  <input type="text" v-model="newHotel.cityName" > </td>
                 </tr>
                 <tr>
                     <td><b> Latitude: </b></td>
-                    <td>  <input type="number"  v-model="latitude" > </td>
+                    <td>  <input type="number"  v-model="newHotel.latitude" > </td>
                 </tr>
                 <tr>
                     <td><b> Longitude: </b></td>
-                    <td>  <input type="number"  v-model="longitude" > </td>
+                    <td>  <input type="number"  v-model="newHotel.longitude" > </td>
                 </tr>
                 <tr>
                     <td><b>Description: </b></td>
-                    <td> <textarea  rows="5" cols="22" name="description"  v-model="description" style="overflow:scroll;"></textarea> </td>        
+                    <td> <textarea  rows="5" cols="22" name="description"  v-model="newHotel.description" style="overflow:scroll;"></textarea> </td>        
                 </tr>
                 <tr>
                     <td>  </td>
                     <td><button v-on:click="addHotel()" class="btn-primary">Add Hotel</button> </td>      
                 </tr>
             </table>   
-                        </td>
-                        <td>
-                            <div>
-                <table class="table">
-                    <thead class="thead-dark">
-                        <tr>
-                        <th>ID</th>
-                        <th>Destination name</th>
-                        <th>Description</th>
-                    </tr>
-                    </thead>
-                    
-            <tr v-for="d in this.destinations" :key="d.id">  
-                <td>{{d.id}}</td>
-                <td>{{d.name}}</td>
-                <td>{{d.description}}</td>
-            </tr>
-            </table>
-            </div>   
-                        </td>
-                    </tr>
-                </table>
                  
             
             </div> 
 
-            <div  v-if="currentTab == 3">
-                <table>
-                <tr>
-                    <td> Enter hotel's name you want to remove: </td>
-                    <td>  <input type="text" name="name" v-model="name" > </td>
-                    <td><button v-on:click="removeHotel()" class="btn-primary">Remove Hotel</button> </td> 
-                </tr>
-                </table>
-            </div>
-            <div  v-if="currentTab == 4">
+            <div  v-if="addingHotelAdmin == true">
                  <table>
+                     <tr>
+                    <td><b> Hotel Name: {{hotelName}} </b></td>  
+                </tr>
+                <tr><td> </td></tr>
                 <tr>
                     <td><b> Username: </b></td>
                     <td>  <input type="text" v-model="admin.username" > </td>
@@ -144,23 +110,33 @@
                     <td> <input type="text" v-model="admin.email" > </td>        
                 </tr>
                 <tr>
-                    <td><b> Hotel Name: </b></td>
-                    <td> <input type="text" v-model="hotelName" > </td>        
-                </tr>
-                <tr>
                     <td>  </td>
-                    <td><button v-on:click="addHotelAdmin()" class="btn-primary">Add Hotel Admin</button> </td>      
+                    <td><button v-on:click="addHotelAdmin()" class="btn-primary">Add Hotel Admin</button> </td>
+                    <td><button v-on:click="cancelHotelAdmin()" class="btn-primary">Cancel</button> </td>           
                 </tr>
             </table>     
             </div>
-            <div  v-if="currentTab == 5"> 
-                <table>
-                <tr>
-                    <td> Enter hotel admin's username you want to remove: </td>
-                    <td>  <input type="text" name="admin.username" v-model="admin.username" > </td>
-                    <td><button v-on:click="removeHotelAdmin()" class="btn-primary">Remove Hotel Admin</button> </td> 
-                </tr>
-                </table>
+            <div  v-if="currentTab == 3"> 
+                <br>
+                <br>
+                <table class="table" >
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>Username</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Hotel Name</th>
+                        <th>Options</th>
+                    </tr>
+                    </thead>
+            <tr v-for="a in this.hotelAdmins" :key="a.id">  
+                <td>{{a.username}}</td>
+                <td>{{a.firstName}}</td>
+                <td>{{a.lastName}}</td>
+                <td>{{a.hotelName}}</td>
+                <td><button v-on:click="removeAdmin(a.username)" class="btn-primary" style="background-color:red">Remove</button></td>
+            </tr>
+            </table>
         </div>
    </div>
 </template>
@@ -174,16 +150,13 @@ export default {
   data: function () {
   return {
     hotels: [],
-    admin: [],
-    destinations: [],
-    destination: [],
-    hotelName: "",
+    hotelAdmins: [],
+    admin: {},
+    newHotel: {},
     name: "",
-    destinationID: 0,
-    address: "",
-    description: "",
-    latitude: 0,
-    longitude: 0,
+    hotelName: "",
+    addingHotelAdmin: false,
+    showHotels: true,
     currentTab: 1
   }
 },
@@ -196,9 +169,10 @@ mounted(){
             .then(response => {
                 this.hotels = response.data;
             });
-            axios.get("http://localhost:8080/api/getAllDestinations")
+
+        axios.get("http://localhost:8080/api/getAllHotelAdmins")
             .then(response => {
-                this.destinations = response.data;
+                this.hotelAdmins = response.data;
             });
     },
     methods:{
@@ -206,39 +180,87 @@ mounted(){
             this.currentTab = tabId;
         },
         addHotel: function() {
-            for(let d in this.destinations) {
-                console.log(d.id);
-                if(d.id == this.destinationID){
-                    this.destination = d;
-                }
+            if(this.newHotel.name == null || this.newHotel.name == "") {
+                alert("Please enter hotel name.");
+                return;
             }
-            console.log(this.destinations);
-            console.log(this.destinationID)
-            axios.post("http://localhost:8080/api/addHotel",{name:this.name,address:this.address,description:this.description,longitude:this.longitude,latitude:this.latitude,destination:{id:this.destinationID}}).
+            if(this.newHotel.address == null || this.newHotel.address == "") {
+                alert("Please enter hotel address.");
+                return;
+            }
+            if(this.newHotel.longitude == null) {
+                alert("Please enter hotel longitude.");
+                return;
+            }
+            if(this.newHotel.latitude == null) {
+                alert("Please enter hotel latitude.");
+                return;
+            }
+            if(this.newHotel.cityName == null || this.newHotel.cityName == "") {
+                alert("Please enter name of city.");
+                return;
+            }
+
+            axios.post("http://localhost:8080/api/addHotel",this.newHotel).
             then(response =>{
-                alert("Hotel has been successfully added.");
+                if(response.data == true) {
+                    alert("Hotel has been successfully added.");
+                    this.hotels.push(this.newHotel);
+                    this.newHotel = {};
+                } else {
+                    alert("Input data was not correct.")
+                }
+                
             })
         },
-        removeHotel: function() {
-            axios.delete("http://localhost:8080/api/removeHotel/"+ this.name)
+        removeHotel: function(name) {
+            axios.delete("http://localhost:8080/api/removeHotel/"+ name)
             .then(response => {
+                var index;
+                for(let h in this.hotels) {
+                    if(this.hotels[h].name == name) {
+                        index = h;
+                        break;
+                    }
+                }
+                this.hotels.splice(index,1);
                 alert(response.data.name + " has been successfully removed.");
             })
+        },
+        addHotelAdminDiv: function(name) {
+            this.showHotels = false;
+            this.hotelName = name;
+            this.addingHotelAdmin = true;
+        },
+        cancelHotelAdmin: function() {
+          this.admin = {};
+          this.addingHotelAdmin = false;
+          this.showHotels = true;  
         },
         addHotelAdmin: function() {
             axios.post("http://localhost:8080/api/addHotelAdmin",{username:this.admin.username,password:this.admin.password,firstName:this.admin.firstName,lastName:this.admin.lastName,email:this.admin.email,companyName:this.hotelName}).
             then(response =>{
                 if(response.data === true) {
                     alert("Hotel admin has been successfully added.");
+                    this.admin = {};
                 } else {
                     alert("Username is taken.");
                 }
             })
         },
-        removeHotelAdmin: function() {
-            axios.delete("http://localhost:8080/api/removeHotelAdmin/"+ this.admin.username)
+        removeAdmin: function(name) {
+            axios.delete("http://localhost:8080/api/removeHotelAdmin/"+ name)
             .then(response => {
+                var index;
+                for(let a in this.hotelAdmins) {
+                    if(this.hotelAdmins[a].name == name) {
+                        index = a;
+                        break;
+                    }
+                }
+                this.hotelAdmins.splice(index,1);
                 alert(response.data.username + " has been successfully removed.");
+
             })
         }    
     }

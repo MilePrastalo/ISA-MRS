@@ -21,7 +21,7 @@ export default {
   },
   data: function () {
   return {
-    hotelAdmin : [],
+    hotelAdmin : {},
     oldPassword: "",
     newPassword: "",
     repeatPassword: "",

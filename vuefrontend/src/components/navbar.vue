@@ -82,7 +82,7 @@ export default {
   methods:{
       logout:function(){
         localStorage.setItem('jwtToken',"");
-        window.location="./";
+        window.location="/";
     },
   }
 }

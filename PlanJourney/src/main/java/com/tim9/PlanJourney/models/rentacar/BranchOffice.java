@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 
+import com.tim9.PlanJourney.models.City;
 import com.tim9.PlanJourney.models.flight.Destination;
 
 @Entity
@@ -28,7 +29,7 @@ public class BranchOffice {
 	private RentACarCompany company;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	private Destination destination;
+	private City destination;
 	
 	@Column(name="longitude", nullable = true)
 	private float longitude;
@@ -43,7 +44,7 @@ public class BranchOffice {
 		super();
 	}
 
-	public BranchOffice(String name, String address, RentACarCompany company, Destination destination) {
+	public BranchOffice(String name, String address, RentACarCompany company, City destination) {
 		super();
 		this.name = name;
 		this.address = address;
@@ -75,11 +76,11 @@ public class BranchOffice {
 		this.name = name;
 	}
 
-	public Destination getDestination() {
+	public City getDestination() {
 		return destination;
 	}
 
-	public void setDestination(Destination destination) {
+	public void setDestination(City destination) {
 		this.destination = destination;
 	}
 

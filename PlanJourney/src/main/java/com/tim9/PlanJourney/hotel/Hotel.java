@@ -9,10 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Version;
 
+import com.tim9.PlanJourney.models.City;
 import com.tim9.PlanJourney.models.Company;
-import com.tim9.PlanJourney.models.flight.Destination;
 
 @Entity
 public class Hotel extends Company {
@@ -27,21 +26,20 @@ public class Hotel extends Company {
 	private Set<HotelReservation> reservations = new HashSet<HotelReservation>();
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	private Destination destination;
-	
-	@Column(name="longitude", nullable = true)
+	private City city;
+
+	@Column(name = "longitude", nullable = true)
 	private float longitude;
-	
-	@Column(name="latitude", nullable = true)
+
+	@Column(name = "latitude", nullable = true)
 	private float latitude;
 
-	
 	public Hotel() {
 		super();
 	}
 
-	public Hotel(Long id, String name, String adress, String description, double rating) {
-		super(id, name, adress, description, rating);
+	public Hotel(Long id, String name, String address, String description, double rating) {
+		super(id, name, address, description, rating);
 	}
 
 	public Set<HotelAdmin> getAdmins() {
@@ -68,14 +66,6 @@ public class Hotel extends Company {
 		this.reservations = reservations;
 	}
 
-	public Destination getDestination() {
-		return destination;
-	}
-
-	public void setDestination(Destination destination) {
-		this.destination = destination;
-	}
-
 	public float getLongitude() {
 		return longitude;
 	}
@@ -92,5 +82,12 @@ public class Hotel extends Company {
 		this.latitude = latitude;
 	}
 
+	public City getCity() {
+		return city;
+	}
+
+	public void setCity(City city) {
+		this.city = city;
+	}
 
 }
