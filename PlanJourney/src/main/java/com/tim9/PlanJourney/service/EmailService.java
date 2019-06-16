@@ -1,6 +1,7 @@
 package com.tim9.PlanJourney.service;
 
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.Base64;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,11 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.tim9.PlanJourney.hotel.HotelReservation;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.User;
 import com.tim9.PlanJourney.models.flight.FlightReservation;
+import com.tim9.PlanJourney.models.rentacar.VehicleReservation;
 
 @Service
 public class EmailService {
@@ -20,6 +23,7 @@ public class EmailService {
 	
 	@Autowired
 	private JavaMailSender javaMailSender;
+	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 	
 	
 	@Async
@@ -64,9 +68,23 @@ public class EmailService {
 		mail.setTo(reservation.getUser().getEmail());
 		mail.setFrom("plan.journey.isa@gmail.com");
 		mail.setSubject("PlanJourney: Flight Reservation");
-		mail.setText("Flight is successfuly reserved!");
+		String emailText = "Flight is successfuly reserved!";
+		emailText += "\nFrom: " + reservation.getFlight().getStartDestination().getName();
+		emailText += "\nTo: " + reservation.getFlight().getEndDestination().getName();
+		emailText += "\nStart date: " + sdf.format(reservation.getFlight().getStartDate());
+		emailText += "\nEnd date: " + sdf.format(reservation.getFlight().getEndDate());
+		emailText += "\nPrice: " + reservation.getPrice();
+		emailText += "\nPassangers: " + reservation.getPassangers().size();
+		emailText += "\nHotel reservations: ";
+		for (HotelReservation hotel : reservation.getHoteReservations()) {
+			emailText += "\n\t" +   hotel.getHotel().getName()  + " (" + sdf.format(hotel.getFirstDay())  + " : " + sdf.format(hotel.getLastDay()) + " )" + " => " +  hotel.getPaidPrice();
+		}
+		emailText += "\nRentACar reservations: ";
+		for (VehicleReservation vehicle : reservation.getVehicleReservations()) {
+			emailText += "\n\t" +   vehicle.getVehicle().getName() + " (" + sdf.format(vehicle.getDateFrom())  + " : " + sdf.format(vehicle.getDateTo()) + " )"+ " => " + vehicle.getCena();
+		}
+		mail.setText(emailText);
 		javaMailSender.send(mail);
-
 		System.out.println("E-mail sent!");
 	}
 	

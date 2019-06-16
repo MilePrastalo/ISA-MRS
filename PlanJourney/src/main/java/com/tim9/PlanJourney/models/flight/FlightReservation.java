@@ -35,8 +35,8 @@ public class FlightReservation extends Reservation {
 	@Column(name = "date")
 	private Date date;
 	
-	@Column(name = "confirmed")
-	private boolean confirmed;
+	@Column(name = "quickId")
+	private Long quickId;
 	
 	@OneToMany
 	private Set<HotelReservation> hoteReservations = new HashSet<>();
@@ -49,7 +49,7 @@ public class FlightReservation extends Reservation {
 	}
 
 	public FlightReservation(RegisteredUser user, Seat seat, Set<Passanger> passangers, Flight flight,
-			double price, Date date, boolean confirmed,Set<HotelReservation> hotelReservations, Set<VehicleReservation> vehicleReservations  ) {
+			double price, Date date, Long quickId,Set<HotelReservation> hotelReservations, Set<VehicleReservation> vehicleReservations  ) {
 		super();
 		setUser(user);
 		this.seat = seat;
@@ -57,8 +57,8 @@ public class FlightReservation extends Reservation {
 		this.flight = flight;
 		this.price = price;
 		this.date = date;
-		this.confirmed = confirmed;
 		this.hoteReservations = hotelReservations;
+		this.quickId = quickId;
 		this.vehicleReservations = vehicleReservations;
 	}
 
@@ -101,15 +101,7 @@ public class FlightReservation extends Reservation {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-
-	public boolean isConfirmed() {
-		return confirmed;
-	}
-
-	public void setConfirmed(boolean confirmed) {
-		this.confirmed = confirmed;
-	}
-
+	
 	public Set<HotelReservation> getHoteReservations() {
 		return hoteReservations;
 	}
@@ -124,6 +116,14 @@ public class FlightReservation extends Reservation {
 
 	public void setVehicleReservations(Set<VehicleReservation> vehicleReservations) {
 		this.vehicleReservations = vehicleReservations;
+	}
+
+	public Long getQuickId() {
+		return quickId;
+	}
+
+	public void setQuickId(Long quickId) {
+		this.quickId = quickId;
 	}
 
 	

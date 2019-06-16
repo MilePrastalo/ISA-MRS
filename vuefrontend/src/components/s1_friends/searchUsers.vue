@@ -94,7 +94,7 @@ methods: {
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/addFriend/" + friendId)
         .then(response => {
-            if (response.data == null){
+            if (response.data == false){
                     alert("Something went wrong!");
                 }
             else{
