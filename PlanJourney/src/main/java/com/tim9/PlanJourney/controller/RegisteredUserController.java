@@ -1,7 +1,6 @@
 package com.tim9.PlanJourney.controller;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,11 +27,9 @@ import com.tim9.PlanJourney.beans.UserBean;
 import com.tim9.PlanJourney.models.FriendRequest;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.flight.Destination;
-import com.tim9.PlanJourney.models.flight.FlightAdmin;
 import com.tim9.PlanJourney.models.flight.FlightCompany;
 import com.tim9.PlanJourney.models.flight.FlightReservation;
 import com.tim9.PlanJourney.service.FlightCompanyService;
-import com.tim9.PlanJourney.service.FriendRequestService;
 import com.tim9.PlanJourney.service.RegisteredUserService;
 
 @RestController
@@ -40,8 +37,6 @@ public class RegisteredUserController {
 
 	@Autowired
 	private RegisteredUserService service;
-	@Autowired
-	private FriendRequestService friendReqestsService;
 	@Autowired
 	private FlightCompanyService companyService;
 	
@@ -139,15 +134,7 @@ public class RegisteredUserController {
 		if (sender == null) {
 			return null;
 		}
-		RegisteredUser reciever = service.findOne(recieverId);
-		// creating request
-		FriendRequest request = new FriendRequest(sender, reciever, false);
-		sender.getSendRequests().add(request);
-		reciever.getReceivedRequests().add(request);
-		friendReqestsService.save(request);
-		service.save(sender);
-		service.save(reciever);
-		return reciever;
+		return service.addFriend(sender, recieverId);
 	}
 
 	// Method for accepting friend request
@@ -160,10 +147,7 @@ public class RegisteredUserController {
 		if (loggedReciever == null) {
 			return false;
 		}
-		FriendRequest request = friendReqestsService.findOne(requestId);
-		request.setAccepted(true);
-		friendReqestsService.save(request);
-		return true;
+		return service.acceptRequest(requestId);
 	}
 
 	// Method for accepting friend request, entry parameter is sender's id
@@ -176,17 +160,7 @@ public class RegisteredUserController {
 		if (loggedReciever == null) {
 			return false;
 		}
-		RegisteredUser sender = service.findOne(userId);
-		FriendRequest request = null;
-		for (FriendRequest req : sender.getSendRequests()) {
-			if (req.getReciever().getId() == loggedReciever.getId()) {
-				request = req;
-				break;
-			}
-		}
-		request.setAccepted(true);
-		friendReqestsService.save(request);
-		return true;
+		return service.acceptRequestFromSearch(loggedReciever, userId);
 	}
 
 	// Method which removes friendShip between logged user and user with given id
@@ -199,21 +173,7 @@ public class RegisteredUserController {
 		if (loggedUser == null) {
 			return false;
 		}
-		ArrayList<FriendRequest> requests = (ArrayList<FriendRequest>) friendReqestsService.findAll();
-		FriendRequest request = null;
-		for (FriendRequest req : requests) {
-			if (req.getSender().getId() == loggedUser.getId() && req.getReciever().getId() == friendId) {
-				loggedUser.getSendRequests().remove(req);
-				request = req;
-				break;
-			} else if (req.getReciever().getId() == loggedUser.getId() && req.getSender().getId() == friendId) {
-				loggedUser.getReceivedRequests().remove(req);
-				request = req;
-				break;
-			}
-		}
-		friendReqestsService.remove(request.getId());
-		return true;
+		return service.removeFriend(loggedUser, friendId);
 	}
 
 	// Returns currently logged user
