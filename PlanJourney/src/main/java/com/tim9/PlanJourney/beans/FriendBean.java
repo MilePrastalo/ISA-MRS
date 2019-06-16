@@ -1,6 +1,5 @@
 package com.tim9.PlanJourney.beans;
 
-import com.tim9.PlanJourney.models.RegisteredUser;
 
 public class FriendBean {
 	

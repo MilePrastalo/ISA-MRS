@@ -128,11 +128,11 @@ public class RegisteredUserController {
 	@RequestMapping(value = "/api/addFriend/{recieverId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('REGISTERED')")
-	public @ResponseBody RegisteredUser addFriend(@PathVariable("recieverId") Long recieverId) {
+	public @ResponseBody boolean addFriend(@PathVariable("recieverId") Long recieverId) {
 
 		RegisteredUser sender = getLoggedRegisteredUser();
 		if (sender == null) {
-			return null;
+			return false;
 		}
 		return service.addFriend(sender, recieverId);
 	}
@@ -203,19 +203,6 @@ public class RegisteredUserController {
 			}
 		}
 		return friends;
-	}
-	
-	
-	@RequestMapping(value = "/api/getMyFlightReservations", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	@CrossOrigin()
-	@PreAuthorize("hasAuthority('REGISTERED')")
-	public @ResponseBody Set<FlightReservation> getMyFlightReservations() throws ParseException {
-		
-		RegisteredUser loggedUser = getLoggedRegisteredUser();
-		if (loggedUser == null) {
-			return null;
-		}
-		return loggedUser.getFlightReservations();
 	}
 	
 	@RequestMapping(value = "/api/getFlightCompanyProfileRegitered/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

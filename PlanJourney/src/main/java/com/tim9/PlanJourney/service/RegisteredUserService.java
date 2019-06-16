@@ -51,7 +51,7 @@ public class RegisteredUserService {
 	}
 	
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public RegisteredUser addFriend(RegisteredUser sender, Long recieverId) {
+	public boolean addFriend(RegisteredUser sender, Long recieverId) {
 
 		RegisteredUser reciever = findOne(recieverId);
 		// creating request
@@ -61,7 +61,7 @@ public class RegisteredUserService {
 		friendReqestsService.save(request);
 		save(sender);
 		save(reciever);
-		return reciever;
+		return true;
 	}
 	
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
@@ -93,19 +93,18 @@ public class RegisteredUserService {
 	public boolean removeFriend(RegisteredUser loggedUser, Long friendId) {
 
 		ArrayList<FriendRequest> requests = (ArrayList<FriendRequest>) friendReqestsService.findAll();
-		FriendRequest request = null;
 		for (FriendRequest req : requests) {
 			if (req.getSender().getId() == loggedUser.getId() && req.getReciever().getId() == friendId) {
 				loggedUser.getSendRequests().remove(req);
-				request = req;
-				break;
-			} else if (req.getReciever().getId() == loggedUser.getId() && req.getSender().getId() == friendId) {
+				friendReqestsService.remove(req.getId());
+				return true;
+			}
+			if (req.getReciever().getId() == loggedUser.getId() && req.getSender().getId() == friendId) {
 				loggedUser.getReceivedRequests().remove(req);
-				request = req;
-				break;
+				friendReqestsService.remove(req.getId());
+				return true;
 			}
 		}
-		friendReqestsService.remove(request.getId());
-		return true;
+		return false;
 	}
 }
