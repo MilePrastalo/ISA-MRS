@@ -64,8 +64,6 @@ public class FlightCompanyController {
 	@Autowired
 	private UserService userService;
 	@Autowired
-	private AuthorityService authorityService;
-	@Autowired
 	private FlightService flightService;
 	@Autowired
 	private SeatService seatService;
@@ -92,8 +90,9 @@ public class FlightCompanyController {
 				System.out.println("Flight admin doesnt't have flight company.");
 				return null;
 			}
-			FlightCompanyBean fcb = new FlightCompanyBean(flightCompany.getId(),flightCompany.getName(),
-					flightCompany.getAddress(), flightCompany.getDescription(), flightCompany.getRating(), flightCompany.getLaguageInfo(), flightCompany.getSeatsConfiguration());
+			FlightCompanyBean fcb = new FlightCompanyBean(flightCompany.getId(), flightCompany.getName(),
+					flightCompany.getAddress(), flightCompany.getDescription(), flightCompany.getRating(),
+					flightCompany.getLaguageInfo(), flightCompany.getSeatsConfiguration());
 			return fcb;
 		}
 		return null;
@@ -123,12 +122,12 @@ public class FlightCompanyController {
 			flightCompany.setDescription(updatedFC.getDescription());
 			// save to database
 			flightCompanyService.save(flightCompany);
-			return new FlightCompanyBean(flightCompany.getId(), flightCompany.getName(), flightCompany.getAddress(), 
+			return new FlightCompanyBean(flightCompany.getId(), flightCompany.getName(), flightCompany.getAddress(),
 					flightCompany.getDescription(), flightCompany.getRating());
 		}
 		return null;
 	}
-	
+
 	@RequestMapping(value = "/api/updateFlightCompanyInfo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
 	@CrossOrigin()
@@ -150,8 +149,9 @@ public class FlightCompanyController {
 			flightCompany.setLaguageInfo(updatedFC.getLaguageInfo());
 			// save to database
 			flightCompanyService.save(flightCompany);
-			return new FlightCompanyBean(flightCompany.getId(), flightCompany.getName(), flightCompany.getAddress(), 
-					flightCompany.getDescription(), flightCompany.getRating(), flightCompany.getLaguageInfo(), flightCompany.getSeatsConfiguration());
+			return new FlightCompanyBean(flightCompany.getId(), flightCompany.getName(), flightCompany.getAddress(),
+					flightCompany.getDescription(), flightCompany.getRating(), flightCompany.getLaguageInfo(),
+					flightCompany.getSeatsConfiguration());
 		}
 		return null;
 	}
@@ -246,16 +246,17 @@ public class FlightCompanyController {
 		}
 		ArrayList<DestinationBean> destinations = new ArrayList<>();
 		for (Destination d : flightCompany.getDestinations()) {
-			destinations.add(new DestinationBean(d.getId(), d.getName(), d.getDescription(), d.getAddress(), d.getLongitude(), d.getLatitude(), d.getCity().getName()));
+			destinations.add(new DestinationBean(d.getId(), d.getName(), d.getDescription(), d.getAddress(),
+					d.getLongitude(), d.getLatitude(), d.getCity().getName()));
 		}
 		return destinations;
 	}
-	
+
 	@RequestMapping(value = "/api/editDestination", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
 	public @ResponseBody String editDestination(@RequestBody DestinationBean destInfo) {
-		
+
 		FlightAdmin logged = getLoggedFlightAdmin();
 		if (logged == null) {
 			return null;
@@ -273,12 +274,12 @@ public class FlightCompanyController {
 		destinationService.save(destination);
 		return "success";
 	}
-	
+
 	@RequestMapping(value = "/api/removeDestination/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
-	public @ResponseBody String removeDestination(@PathVariable("id") Long  id) throws Exception {
-		
+	public @ResponseBody String removeDestination(@PathVariable("id") Long id) throws Exception {
+
 		FlightAdmin logged = getLoggedFlightAdmin();
 		if (logged == null) {
 			return null;
@@ -312,10 +313,9 @@ public class FlightCompanyController {
 		DateTimeComparator dateTimeComparator = DateTimeComparator.getDateOnlyInstance();
 		for (Flight f : flightCompany.getFlights()) {
 			int transitionsCnt = 0;
-			if ( f.getTransitions() == null || f.getTransitions().equals("0") || f.getTransitions().equals("")) {
+			if (f.getTransitions() == null || f.getTransitions().equals("0") || f.getTransitions().equals("")) {
 				transitionsCnt = 0;
-			}
-			else {
+			} else {
 				transitionsCnt = f.getTransitions().split(",").length;
 			}
 			if ((f.getStartDestination().getName().contains(search.getStartDestination())
@@ -344,14 +344,14 @@ public class FlightCompanyController {
 	@RequestMapping(value = "/api/searchFlightCompanies/{companyName}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	// Method for searching flight companies
-	public @ResponseBody ArrayList<FlightCompanyBean> searchFlightCompanies(@PathVariable("companyName") String companyName)
-			throws Exception {
-		
+	public @ResponseBody ArrayList<FlightCompanyBean> searchFlightCompanies(
+			@PathVariable("companyName") String companyName) throws Exception {
+
 		ArrayList<FlightCompanyBean> source = new ArrayList<>();
 		ArrayList<FlightCompany> companies = (ArrayList<FlightCompany>) flightCompanyService.findAll();
 		for (FlightCompany c : companies) {
-			FlightCompanyBean fcb = new FlightCompanyBean(c.getId(),c.getName(),
-					c.getAddress(), c.getDescription(), c.getRating());
+			FlightCompanyBean fcb = new FlightCompanyBean(c.getId(), c.getName(), c.getAddress(), c.getDescription(),
+					c.getRating());
 			source.add(fcb);
 		}
 		ArrayList<FlightCompanyBean> found = new ArrayList<FlightCompanyBean>();
@@ -401,18 +401,18 @@ public class FlightCompanyController {
 		}
 		ArrayList<QuickFlightReservationBean> returnValue = new ArrayList<>();
 		String startDate, endDate;
-		for (QuickFlightReservation quick :  loggedAdmin.getFlightCompany().getQuickFlightReservations()) {
+		for (QuickFlightReservation quick : loggedAdmin.getFlightCompany().getQuickFlightReservations()) {
 			startDate = sdf.format(quick.getFlight().getStartDate());
 			endDate = sdf.format(quick.getFlight().getEndDate());
-			returnValue.add(new QuickFlightReservationBean(quick.getId(),  quick.getFlight().getId(), quick.getSeat().getId(),
-					quick.getOriginPrice(), quick.getDiscount(),
-					startDate, endDate,
-					quick.getFlight().getStartDestination().getNaziv(), quick.getFlight().getEndDestination().getNaziv(),
-					quick.getSeat().getSeatRow(), quick.getSeat().getSeatColumn(), quick.getSeat().getTravelClassa(), quick.isTaken()));
+			returnValue.add(new QuickFlightReservationBean(quick.getId(), quick.getFlight().getId(),
+					quick.getSeat().getId(), quick.getOriginPrice(), quick.getDiscount(), startDate, endDate,
+					quick.getFlight().getStartDestination().getNaziv(),
+					quick.getFlight().getEndDestination().getNaziv(), quick.getSeat().getSeatRow(),
+					quick.getSeat().getSeatColumn(), quick.getSeat().getTravelClassa(), quick.isTaken()));
 		}
 		return returnValue;
 	}
-	
+
 	@RequestMapping(value = "/api/removeQuickFlightReservation/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
@@ -438,18 +438,25 @@ public class FlightCompanyController {
 	@PreAuthorize("hasAuthority('REGISTERED')")
 	public @ResponseBody ArrayList<QuickFlightReservationBean> getQuickReservationsCompany(
 			@PathVariable("idCompany") Long idCompany) {
-		
+
 		FlightCompany company = flightCompanyService.findOne(idCompany);
 		ArrayList<QuickFlightReservationBean> returnValue = new ArrayList<>();
 		String startDate, endDate;
-		for (QuickFlightReservation quick :  company.getQuickFlightReservations()) {
-			startDate = sdf.format(quick.getFlight().getStartDate());
-			endDate = sdf.format(quick.getFlight().getEndDate());
-			returnValue.add(new QuickFlightReservationBean(quick.getId(), quick.getFlight().getId(), quick.getSeat().getId(),
-					quick.getOriginPrice(), quick.getDiscount(),
-					startDate, endDate,
-					quick.getFlight().getStartDestination().getNaziv(), quick.getFlight().getEndDestination().getNaziv(),
-					quick.getSeat().getSeatRow(), quick.getSeat().getSeatColumn(), quick.getSeat().getTravelClassa(), quick.isTaken()));
+		Date today = new Date();
+		for (QuickFlightReservation quick : company.getQuickFlightReservations()) {
+
+			long diffInMillies = quick.getFlight().getStartDate().getTime() - today.getTime();
+			long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+			if (quick.isTaken() == false && diff >= 1) {
+
+				startDate = sdf.format(quick.getFlight().getStartDate());
+				endDate = sdf.format(quick.getFlight().getEndDate());
+				returnValue.add(new QuickFlightReservationBean(quick.getId(), quick.getFlight().getId(),
+						quick.getSeat().getId(), quick.getOriginPrice(), quick.getDiscount(), startDate, endDate,
+						quick.getFlight().getStartDestination().getNaziv(),
+						quick.getFlight().getEndDestination().getNaziv(), quick.getSeat().getSeatRow(),
+						quick.getSeat().getSeatColumn(), quick.getSeat().getTravelClassa(), quick.isTaken()));
+			}
 		}
 		return returnValue;
 
@@ -568,19 +575,19 @@ public class FlightCompanyController {
 		}
 		return Double.toString(total);
 	}
-	
-	
+
 	@RequestMapping(value = "/api/getSoldTicketReport", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('FLIGHT_ADMIN')")
-	public @ResponseBody FlightCompanyReportBean getSoldTicket(@RequestBody FlightReportRequestBean reqestData) throws Exception {
+	public @ResponseBody FlightCompanyReportBean getSoldTicket(@RequestBody FlightReportRequestBean reqestData)
+			throws Exception {
 
 		FlightAdmin loggedAdmin = getLoggedFlightAdmin();
 		if (loggedAdmin == null) {
 			return null;
 		}
 		FlightCompany flightCompany = loggedAdmin.getFlightCompany();
-		
+
 		Date startDate = reqestData.getDateFrom();
 		Date endDate = reqestData.getDateTo();
 		Calendar calStart = Calendar.getInstance();
@@ -590,60 +597,56 @@ public class FlightCompanyController {
 
 		ArrayList<String> labels = new ArrayList<>();
 		ArrayList<Integer> cntTickets = new ArrayList<>();
-		
+
 		System.out.println("KIND = " + reqestData.getKind());
 		long span = endDate.getTime() - startDate.getTime();
 		long cols;
 		if (reqestData.getKind().equals("daily")) {
 			cols = TimeUnit.DAYS.convert(span, TimeUnit.MILLISECONDS);
-			for(int i = 0; i<=cols;i++) {
+			for (int i = 0; i <= cols; i++) {
 				labels.add(sdf.format(calStart.getTime()));
 				cntTickets.add(0);
 				calStart.add(calStart.DATE, 1);
 			}
-		}
-		else if (reqestData.getKind().equals("weekly")) {
+		} else if (reqestData.getKind().equals("weekly")) {
 			cols = TimeUnit.DAYS.convert(span, TimeUnit.MILLISECONDS);
 			int weekStart = calStart.get(Calendar.WEEK_OF_YEAR);
 			int weekEnd = calEnd.get(Calendar.WEEK_OF_YEAR);
 			boolean ajusted = false;
-			for(int i = 0; i<=weekEnd-weekStart;i++) {
+			for (int i = 0; i <= weekEnd - weekStart; i++) {
 				labels.add(sdf.format(calStart.getTime()));
 				cntTickets.add(0);
-				if(!ajusted) {
-					calStart.add(calStart.DATE, 9-calStart.get(Calendar.DAY_OF_WEEK));
+				if (!ajusted) {
+					calStart.add(calStart.DATE, 9 - calStart.get(Calendar.DAY_OF_WEEK));
 					ajusted = true;
-				}
-				else {
+				} else {
 					calStart.add(calStart.DATE, 7);
 				}
 			}
-		}
-		else if (reqestData.getKind().equals("monthly")) {
+		} else if (reqestData.getKind().equals("monthly")) {
 			boolean ajusted = false;
 			int monthStart = calStart.get(Calendar.MONTH);
 			int montEnd = calEnd.get(Calendar.MONTH);
 
-			for(int i = 0; i<=montEnd-monthStart;i++) {
+			for (int i = 0; i <= montEnd - monthStart; i++) {
 				labels.add(sdf.format(calStart.getTime()));
 				cntTickets.add(0);
 				int sub = calStart.get(Calendar.DAY_OF_MONTH);
-				if(!ajusted) {
-					calStart.add(calStart.DATE,-sub+1);
+				if (!ajusted) {
+					calStart.add(calStart.DATE, -sub + 1);
 					calStart.add(calStart.MONTH, 1);
-					ajusted= true;
-				}
-				else {
+					ajusted = true;
+				} else {
 					calStart.add(calStart.MONTH, 1);
 				}
 			}
 		}
 		for (Flight flight : flightCompany.getFlights()) {
 			for (FlightReservation reservation : flight.getFlightReservations()) {
-				for(int i = cntTickets.size()-1; i>=0; i--) {
+				for (int i = cntTickets.size() - 1; i >= 0; i--) {
 					Date d = sdf.parse(labels.get(i));
 					if (reservation.getFlight().getStartDate().after(d)) {
-						cntTickets.set(i, cntTickets.get(i)+1);
+						cntTickets.set(i, cntTickets.get(i) + 1);
 						break;
 					}
 				}
@@ -651,7 +654,6 @@ public class FlightCompanyController {
 		}
 		return new FlightCompanyReportBean(labels, cntTickets);
 	}
-	
 
 	private double findPrice(Flight f, Seat s) {
 
@@ -666,52 +668,45 @@ public class FlightCompanyController {
 
 	// Method puts some test data into database
 	/*
-	@RequestMapping(value = "/api/testFlightData", method = RequestMethod.GET)
-	@CrossOrigin()
-	public void testData() throws Exception {
-
-		Destination destinatinon1 = new Destination("Moscow", "description", 55.7558, 37.6173);
-		Destination destinatinon2 = new Destination("Belgrade", "description", "coords");
-		Destination destinatinon3 = new Destination("Paris", "description", "coords");
-		Destination destinatinon4 = new Destination("New York", "description", "coords");
-		Set<Destination> destinations = new HashSet<Destination>();
-		destinations.add(destinatinon1);
-		destinations.add(destinatinon2);
-		destinations.add(destinatinon3);
-		destinations.add(destinatinon4);
-
-		Set<Seat> seats1 = new HashSet<Seat>();
-		makeSeats(seats1, "6|4", "economic");
-		makeSeats(seats1, "5|4", "business");
-		makeSeats(seats1, "3|4", "first class");
-
-		Set<Seat> seats2 = new HashSet<Seat>();
-		makeSeats(seats2, "7|4", "economic");
-		makeSeats(seats2, "5|4", "business");
-		makeSeats(seats2, "3|3", "first class");
-
-		FlightCompany fc = new FlightCompany("Avio", "address", "description", 0, new HashSet<FlightAdmin>(),
-				destinations, new HashSet<Flight>(), new HashSet<FlightReservation>(),
-				new HashSet<QuickFlightReservation>());
-
-		Flight flight1 = new Flight(fc, new Date(), new Date(), 3, 6000, destinatinon1, destinatinon2,
-				new HashSet<FlightReservation>(), seats1, 100, 120, 140);
-		Flight flight2 = new Flight(fc, new Date(), new Date(), 5, 3000, destinatinon3, destinatinon4,
-				new HashSet<FlightReservation>(), seats2, 546, 151, 84);
-		fc.getFlights().add(flight1);
-		fc.getFlights().add(flight2);
-
-		flightCompanyService.save(fc);
-		BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
-		FlightAdmin flightAdmin = new FlightAdmin("mira", bc.encode("miric"), "Mira", "Miric", "mira@gmail.com");
-		Authority authority = (Authority) authorityService.findOne(2l);
-		ArrayList<Authority> authorities = new ArrayList<>();
-		authorities.add(authority);
-		flightAdmin.setAuthorities(authorities);
-		flightAdmin.setFlightCompany(fc);
-		userService.save(flightAdmin);
-	}
-	*/
+	 * @RequestMapping(value = "/api/testFlightData", method = RequestMethod.GET)
+	 * 
+	 * @CrossOrigin() public void testData() throws Exception {
+	 * 
+	 * Destination destinatinon1 = new Destination("Moscow", "description", 55.7558,
+	 * 37.6173); Destination destinatinon2 = new Destination("Belgrade",
+	 * "description", "coords"); Destination destinatinon3 = new
+	 * Destination("Paris", "description", "coords"); Destination destinatinon4 =
+	 * new Destination("New York", "description", "coords"); Set<Destination>
+	 * destinations = new HashSet<Destination>(); destinations.add(destinatinon1);
+	 * destinations.add(destinatinon2); destinations.add(destinatinon3);
+	 * destinations.add(destinatinon4);
+	 * 
+	 * Set<Seat> seats1 = new HashSet<Seat>(); makeSeats(seats1, "6|4", "economic");
+	 * makeSeats(seats1, "5|4", "business"); makeSeats(seats1, "3|4",
+	 * "first class");
+	 * 
+	 * Set<Seat> seats2 = new HashSet<Seat>(); makeSeats(seats2, "7|4", "economic");
+	 * makeSeats(seats2, "5|4", "business"); makeSeats(seats2, "3|3",
+	 * "first class");
+	 * 
+	 * FlightCompany fc = new FlightCompany("Avio", "address", "description", 0, new
+	 * HashSet<FlightAdmin>(), destinations, new HashSet<Flight>(), new
+	 * HashSet<FlightReservation>(), new HashSet<QuickFlightReservation>());
+	 * 
+	 * Flight flight1 = new Flight(fc, new Date(), new Date(), 3, 6000,
+	 * destinatinon1, destinatinon2, new HashSet<FlightReservation>(), seats1, 100,
+	 * 120, 140); Flight flight2 = new Flight(fc, new Date(), new Date(), 5, 3000,
+	 * destinatinon3, destinatinon4, new HashSet<FlightReservation>(), seats2, 546,
+	 * 151, 84); fc.getFlights().add(flight1); fc.getFlights().add(flight2);
+	 * 
+	 * flightCompanyService.save(fc); BCryptPasswordEncoder bc = new
+	 * BCryptPasswordEncoder(); FlightAdmin flightAdmin = new FlightAdmin("mira",
+	 * bc.encode("miric"), "Mira", "Miric", "mira@gmail.com"); Authority authority =
+	 * (Authority) authorityService.findOne(2l); ArrayList<Authority> authorities =
+	 * new ArrayList<>(); authorities.add(authority);
+	 * flightAdmin.setAuthorities(authorities); flightAdmin.setFlightCompany(fc);
+	 * userService.save(flightAdmin); }
+	 */
 
 	private Set<Seat> makeSeats(Set<Seat> seats, String capacity, String flightClass) {
 		int rows = Integer.parseInt(capacity.split("|")[0]);
@@ -766,18 +761,18 @@ public class FlightCompanyController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
 			ArrayList<FlightCompany> fcs = (ArrayList<FlightCompany>) flightCompanyService.findAll();
-			
+
 			ArrayList<FlightCompanyBean> fcBeans = new ArrayList<FlightCompanyBean>();
-			for(FlightCompany f : fcs) {
+			for (FlightCompany f : fcs) {
 				FlightCompanyBean fcb = new FlightCompanyBean();
 				fcb.setName(f.getName());
 				fcb.setAddress(f.getAddress());
 				fcb.setDescription(f.getDescription());
 				fcb.setRating(f.getRating());
-				
+
 				fcBeans.add(fcb);
 			}
-			
+
 			return fcBeans;
 		}
 		return null;
