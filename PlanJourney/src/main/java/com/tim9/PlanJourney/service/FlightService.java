@@ -117,7 +117,7 @@ public class FlightService {
 		passangerService.saveAll(passangersList);
 
 		FlightReservation reservation = new FlightReservation(loggedUser, main_seat, passangers, flight, total,
-				new Date(), false, hotelReservations, vehicleReservations);
+				new Date(), -1l, hotelReservations, vehicleReservations);
 		flight.getFlightCompany().getFlightReservation().add(reservation);
 		reservation.setCompany(flight.getFlightCompany());
 		reservationService.save(reservation);
@@ -153,7 +153,8 @@ public class FlightService {
 		seatService.save(main_seat);
 		double total = originPrice * discount / 100;
 		FlightReservation reservation = new FlightReservation(loggedUser, main_seat, new HashSet<Passanger>(), flight,
-				total, new Date(), true, new HashSet<>(), new HashSet<>());
+				total, new Date(), reservationBean.getId(), new HashSet<>(), new HashSet<>());
+		
 		QuickFlightReservation quick = quickReservationService.findOne(reservationBean.getId());
 		quick.setTaken(true);
 		quickReservationService.save(quick);
@@ -220,6 +221,7 @@ public class FlightService {
 			for (Passanger p : reservation.getPassangers()) {
 				if (p.getFriend() != null && p.getFriend().getId() == loggedUser.getId()) {
 					p.getSeat().setTaken(false);
+					seatService.save(p.getSeat());
 					reservation.setPrice(reservation.getPrice() - p.getPrice());
 					reservation.getPassangers().remove(p);
 					reservationService.save(reservation);
@@ -228,6 +230,17 @@ public class FlightService {
 				}
 			}
 		} else {
+			
+			if (reservation.getQuickId() != -1l) {
+				QuickFlightReservation quick = quickReservationService.findOne(reservation.getQuickId());
+				quick.setTaken(false);
+				reservation.getSeat().setTaken(false);
+				reservation.getSeat().setQuick(true);
+				seatService.save(reservation.getSeat());
+				reservationService.remove(id);
+				return "success";
+			}
+			
 			for (HotelReservation h : reservation.getHoteReservations()) {
 
 				hotelReservationService.remove(h.getId());
@@ -237,6 +250,7 @@ public class FlightService {
 			}
 			for (Passanger p : reservation.getPassangers()) {
 				p.getSeat().setTaken(false);
+				seatService.save(p.getSeat());
 			}
 			reservationService.remove(id);
 			return "success";
