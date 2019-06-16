@@ -12,9 +12,10 @@ public class HotelSearchBean {
 	private int lDay;
 	private int minPrice;
 	private int maxPrice;
+	private int search;
 
 	public HotelSearchBean(String hotelName, int numberOfBeds, String cityName, int fYear, int fMonth, int fDay,
-			int lYear, int lMonth, int lDay, int minPrice, int maxPrice) {
+			int lYear, int lMonth, int lDay, int minPrice, int maxPrice, int search) {
 		this.hotelName = hotelName;
 		this.numberOfBeds = numberOfBeds;
 		this.cityName = cityName;
@@ -26,6 +27,7 @@ public class HotelSearchBean {
 		this.lDay = lDay;
 		this.minPrice = minPrice;
 		this.maxPrice = maxPrice;
+		this.search = search;
 	}
 
 	public HotelSearchBean() {
@@ -117,6 +119,14 @@ public class HotelSearchBean {
 
 	public void setMaxPrice(int maxPrice) {
 		this.maxPrice = maxPrice;
+	}
+
+	public int getSearch() {
+		return search;
+	}
+
+	public void setSearch(int search) {
+		this.search = search;
 	}
 
 }

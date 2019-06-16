@@ -69,7 +69,7 @@
         <td>{{r.pricePerDay}}</td>
         <td>{{r.rating}}</td>
         <td>
-          <button @click="showDetails(r.roomNumber)">Details</button>
+          <button @click="showDetails(r.roomNumber)" class="btn-primary">Details</button>
         </td>
       </tr>
     </table>
@@ -98,7 +98,7 @@
         <td>{{r.discount}}</td>
         <td>{{parseFloat(r.paidPrice) - parseFloat(r.paidPrice) * (parseFloat(r.discount) / 100)}}</td>
         <td>
-          <button @click="reserve(r)">Buy</button>
+          <button @click="reserve(r)" class="btn-primary">Buy</button>
         </td>
       </tr>
     </table>
@@ -107,9 +107,9 @@
     </table>
     </div>
    <div v-if="currentPage === 2">
-     <hotelRoom :hotelName="hotelName" :roomNumber="roomNum" v-on:hr="reservedHotel"/>
+     <hotelRoom :hotelName="hotelName" :roomNumber="roomNum" :firstDay="firstDay" v-on:hr="reservedHotel"/>
       <br>
-     <button @click="back()">Back</button>
+     <button @click="back()" class="btn-primary">Back</button>
   </div>
 
 </div>
@@ -120,7 +120,7 @@ import axios from 'axios';
 import hotelRoom from './hotelRoom.vue';
 export default {
   name: 'hotelProfile',
-  props:["hotelName"],
+  props:["hotelName","firstDay"],
   components: {
     hotelRoom:hotelRoom
   },

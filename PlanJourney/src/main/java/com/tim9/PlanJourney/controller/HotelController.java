@@ -33,8 +33,10 @@ import com.tim9.PlanJourney.hotel.HotelReservation;
 import com.tim9.PlanJourney.hotel.HotelRoom;
 import com.tim9.PlanJourney.models.City;
 import com.tim9.PlanJourney.models.RegisteredUser;
+import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.models.flight.FlightReservation;
 import com.tim9.PlanJourney.service.CityService;
+import com.tim9.PlanJourney.service.DestinationService;
 import com.tim9.PlanJourney.service.FlightReservationService;
 import com.tim9.PlanJourney.service.HotelAdminService;
 import com.tim9.PlanJourney.service.HotelReservationService;
@@ -60,6 +62,9 @@ public class HotelController {
 
 	@Autowired
 	private CityService cityService;
+
+	@Autowired
+	private DestinationService destinationService;
 
 	@RequestMapping(value = "/api/getAllHotels", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -413,10 +418,29 @@ public class HotelController {
 			boolean hotelNameCheck = false;
 			boolean bedCheck = false;
 			boolean cityNameCheck = false;
-			boolean firstDayCheck = false;
-			boolean lastDayCheck = false;
 			boolean minPriceCheck = false;
 			boolean maxPriceCheck = false;
+
+			// checks if hotel city equals searched city name.
+			if (searchBean.getSearch() == 0) {
+				if (searchBean.getCityName().equals("".trim())) {
+					cityNameCheck = true;
+				} else {
+					if (h.getCity().getName().contains(searchBean.getCityName())) {
+						cityNameCheck = true;
+					} else {
+						cityNameCheck = false;
+					}
+				}
+			} else if (searchBean.getSearch() == 1) {
+				Destination endDestination = destinationService.findByName(searchBean.getCityName());
+				if (h.getCity() == endDestination.getCity()) {
+					cityNameCheck = true;
+				} else {
+					cityNameCheck = false;
+				}
+
+			}
 
 			// checks if hotel name equals searched hotel name.
 			if (searchBean.getHotelName().equals("".trim())) {
@@ -426,17 +450,6 @@ public class HotelController {
 					hotelNameCheck = true;
 				} else {
 					hotelNameCheck = false;
-				}
-			}
-
-			// checks if hotel city equals searched city name.
-			if (searchBean.getCityName().equals("".trim())) {
-				cityNameCheck = true;
-			} else {
-				if (h.getCity().getName().contains(searchBean.getCityName())) {
-					cityNameCheck = true;
-				} else {
-					cityNameCheck = false;
 				}
 			}
 
@@ -482,8 +495,11 @@ public class HotelController {
 
 				hbs.add(hb);
 			}
+
 		}
+
 		return hbs;
+
 	}
 
 	@RequestMapping(value = "/api/addHotelReservation", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

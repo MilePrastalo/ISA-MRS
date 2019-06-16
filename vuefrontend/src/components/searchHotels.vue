@@ -93,6 +93,7 @@ mounted(){
             if(this.searchHotel.maxPrice == null || this.searchHotel.maxPrice <= 0) {
                 this.searchHotel.maxPrice = -1;
             }
+            this.searchHotel.search = 0;
 
             axios.post("http://localhost:8080/api/searchHotels",this.searchHotel)
             .then(response => {
@@ -103,6 +104,7 @@ mounted(){
             window.location ="./unregisteredHotelProfile/"+ chosenHotel;
         },
         clearSearch: function() {
+            this.searchHotel = {};
             this.hotels = [];
         }     
     }

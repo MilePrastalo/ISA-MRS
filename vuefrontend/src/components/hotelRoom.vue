@@ -38,17 +38,17 @@
                 <table>
                     <tr>
                         <td><b>First Day:</b></td>
-                        <td><input v-model="firstDay" type="date" @click="changedDate()"></td>
+                        <td>{{firstDay}}></td>
                         <td><b>Last Day:</b></td>
                         <td><input v-model="lastDay" type="date" @click="changedDate()"></td>
                     </tr>
                     <tr>
                         <td><b>Check if available: </b></td>
-                        <td><button @click="splitDate()" >Check</button></td>
+                        <td><button @click="splitDate()" class="btn-primary">Check</button></td>
                     </tr>
                     <tr v-if="this.available == 1 && this.user.firstName != null">
                       <td>Make reservation: </td>
-                      <td><button @click="reserve()">Reserve Room</button></td>
+                      <td><button @click="reserve()" class="btn-primary">Reserve Room</button></td>
                     </tr>
                 </table>
             </div>
@@ -59,7 +59,7 @@
 import axios from 'axios'
 export default {
   name: 'hotelRoom',
-  props:["hotelName","roomNumber"],
+  props:["hotelName","roomNumber","firstDay"],
   components: {
   },
   data: function () {
@@ -68,7 +68,7 @@ export default {
     room : [],
     user: [],
     available : 0,
-    firstDay: "",
+    //firstDay: "",
     lastDay: "",
     fYear: 0,
     fMonth: 0,
@@ -173,10 +173,13 @@ mounted(){
          if(this.firstDay == "" || this.lastDay == "") {
               alert("Please eneter both dates.");
          }
-        var splitFirstDay = this.firstDay.split("-");
-        this.fYear = parseInt(splitFirstDay[0]);
+        var splitFirstDay = this.firstDay.split(".");
+        this.fYear = parseInt(splitFirstDay[2]);
         this.fMonth = parseInt(splitFirstDay[1]);
-        this.fDay = parseInt(splitFirstDay[2]);
+        this.fDay = parseInt(splitFirstDay[0]);
+        console.log(this.fDay);
+        console.log(this.fMonth);
+        console.log(this.fYear);
 
         var splitLastDay = this.lastDay.split("-");
         this.lYear = parseInt(splitLastDay[0]);

@@ -16,7 +16,7 @@
         <div v-if="currentStep == 3">
 
             <button @click="goToNextStep(4)"> Next >> </button>
-            <hotelReservation v-on:roomReserved="hotelReserved" :location="destination" :passengers="passangers.length"/>
+            <hotelReservation v-on:roomReserved="hotelReserved" :location="destination" :passengers="passangers.length" :firstDay="flight.endDate_str"/>
         </div>
         <div v-if="currentStep == 4">
             <button @click="goToNextStep(5)"> Finish >> </button>
