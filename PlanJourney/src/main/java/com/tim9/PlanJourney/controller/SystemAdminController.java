@@ -26,6 +26,7 @@ import com.tim9.PlanJourney.beans.SystemAdminBean;
 import com.tim9.PlanJourney.hotel.HotelAdmin;
 import com.tim9.PlanJourney.models.Authority;
 import com.tim9.PlanJourney.models.City;
+import com.tim9.PlanJourney.models.Discounts;
 import com.tim9.PlanJourney.models.SystemAdmin;
 import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.models.flight.FlightAdmin;
@@ -33,6 +34,7 @@ import com.tim9.PlanJourney.models.rentacar.RentACarAdmin;
 import com.tim9.PlanJourney.service.AuthorityService;
 import com.tim9.PlanJourney.service.CityService;
 import com.tim9.PlanJourney.service.DestinationService;
+import com.tim9.PlanJourney.service.DiscountsService;
 import com.tim9.PlanJourney.service.FlightAdminSerice;
 import com.tim9.PlanJourney.service.HotelAdminService;
 import com.tim9.PlanJourney.service.RentACarAdminService;
@@ -65,6 +67,9 @@ public class SystemAdminController {
 
 	@Autowired
 	private RentACarAdminService racAdminService;
+
+	@Autowired
+	private DiscountsService discountsService;
 
 	@RequestMapping(value = "/api/getSystemAdminProfile", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -321,4 +326,49 @@ public class SystemAdminController {
 		return rabs;
 	}
 
+	@RequestMapping(value = "/api/getDiscounts", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	public @ResponseBody Discounts getDiscounts() {
+		Discounts discounts = discountsService.findOne(1L);
+
+		// if discounts does not exist initiate them.
+		if (discounts == null) {
+			Discounts newDiscounts = new Discounts(0, 0, 0, 0, 0, 0);
+			newDiscounts.setId(1L);
+			discountsService.save(newDiscounts);
+
+			return newDiscounts;
+		}
+
+		return discounts;
+	}
+
+	@RequestMapping(value = "/api/editDiscounts", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('SYS_ADMIN')")
+	public @ResponseBody boolean editDiscounts(@RequestBody Discounts discounts) throws Exception {
+		if (discounts.getNumberOfFlightReservations() < 0) {
+			return false;
+		}
+		if (discounts.getNumberOfHotelReservations() < 0) {
+			return false;
+		}
+		if (discounts.getNumberOfRACReservations() < 0) {
+			return false;
+		}
+		if (discounts.getFlightDiscount() < 0) {
+			return false;
+		}
+		if (discounts.getHotelDiscount() < 0) {
+			return false;
+		}
+		if (discounts.getRentACarDiscount() < 0) {
+			return false;
+		}
+
+		discounts.setId(1L);
+		discountsService.save(discounts);
+
+		return true;
+	}
 }

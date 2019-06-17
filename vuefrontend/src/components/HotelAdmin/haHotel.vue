@@ -113,25 +113,25 @@
                    <table class="centered">
                 <tr>
                     <td> Input room number: </td>
-                    <td>  <input type="number" room.roomNumber="room.roomNumber" v-model="room.roomNumber" > </td>
+                    <td>  <input type="number" v-model="room.roomNumber" > </td>
                 </tr>
                 <tr>
                     <td> Input number of beds: </td>
-                    <td>  <input type="number" room.numberOfBeds="room.numberOfBeds" v-model="room.numberOfBeds" > </td>
+                    <td>  <input type="number" v-model="room.numberOfBeds" > </td>
                 </tr>
                 <tr>
                     <td> Input price per day: </td>
-                    <td>  <input type="number" room.pricePerDay="room.pricePerDay" v-model="room.pricePerDay" > </td>
+                    <td>  <input type="number" v-model="room.pricePerDay" > </td>
                 </tr>
                 <br>
                 <br>
                 <tr>
                     <td> Input name of additional charge: </td>
-                    <td>  <input type="text" ac.name="ac.name" v-model="ac.name" > </td>
+                    <td>  <input type="text" v-model="ac.name" > </td>
                 </tr>
                 <tr>
                     <td> Input price of additional charge per day: </td>
-                    <td>  <input type="number" ac.pricePerDay="ac.pricePerDay" v-model="ac.pricePerDay" > </td>
+                    <td>  <input type="number" v-model="ac.pricePerDay" > </td>
                 </tr>
                 <tr>
                     <td>  </td>
