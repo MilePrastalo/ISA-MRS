@@ -36,17 +36,14 @@ import com.tim9.PlanJourney.beans.VehicleSearchReturnBean;
 import com.tim9.PlanJourney.models.City;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.Review;
-import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.models.rentacar.BranchOffice;
 import com.tim9.PlanJourney.models.rentacar.QuickVehicleReservation;
 import com.tim9.PlanJourney.models.rentacar.RentACarAdmin;
 import com.tim9.PlanJourney.models.rentacar.RentACarCompany;
 import com.tim9.PlanJourney.models.rentacar.Vehicle;
 import com.tim9.PlanJourney.models.rentacar.VehicleReservation;
-import com.tim9.PlanJourney.service.AuthorityService;
 import com.tim9.PlanJourney.service.BranchOfficeService;
 import com.tim9.PlanJourney.service.CityService;
-import com.tim9.PlanJourney.service.DestinationService;
 import com.tim9.PlanJourney.service.QuickVehicleReservationService;
 import com.tim9.PlanJourney.service.RegisteredUserService;
 import com.tim9.PlanJourney.service.RentACarAdminService;
@@ -67,8 +64,6 @@ public class RentACarController {
 	private CityService ds;
 	@Autowired
 	private BranchOfficeService bs;
-	@Autowired
-	private AuthorityService as;
 
 	@Autowired
 	private VehicleReservationService reservationService;
@@ -472,7 +467,6 @@ public class RentACarController {
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('RENT_ADMIN')")
 	public void editCar(@RequestBody EditVehicleBean vehicleBean) throws Exception {
-		RentACarAdmin admin = getAdmin();
 	    System.out.println(vehicleBean.getId());
 	    Vehicle v = vehicleService.findOne(vehicleBean.getId());
 	    v.setName(vehicleBean.getName());
@@ -490,12 +484,7 @@ public class RentACarController {
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('RENT_ADMIN')")
 	public boolean removeCar(@PathVariable Long id) throws Exception {
-		Vehicle v = vehicleService.findOne(id);
-		if(v.getReservations().size()>0) {
-			return false;
-		}
-		vehicleService.remove(id);
-		return true;
+		return vehicleService.removeVehicle(id);
 	}
 	@RequestMapping(value = "/api/getCarsByAdmin", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -557,7 +546,6 @@ public class RentACarController {
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('RENT_ADMIN')")
 	public void editOffice(@RequestBody BranchOfficeBean officeBean) throws Exception {
-		RentACarAdmin admin = getAdmin();
 	    System.out.println(officeBean.getId());
 	    BranchOffice o = bs.findOne(officeBean.getId());
 	    o.setName(officeBean.getName());
@@ -586,16 +574,7 @@ public class RentACarController {
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('RENT_ADMIN')")
 	public boolean removeOffice(@PathVariable Long id) throws Exception {
-		BranchOffice office = bs.findOne(id);
-		ArrayList<VehicleReservation> reservations =(ArrayList<VehicleReservation>) reservationService.findAll();
-		for (VehicleReservation vehicleReservation : reservations) {
-			if(vehicleReservation.getOfficePick()==office || vehicleReservation.getOfficeReturn() == office) {
-				return false;
-			}
-		}
-
-		bs.remove(id);
-		return true;
+		return bs.removeOffice(id);
 	}
 	
 	@RequestMapping(value = "/api/addQuickVehicleReservation", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -655,11 +634,6 @@ public class RentACarController {
 			Date fromDate = sdf.parse(from);
 			Date toDate = sdf.parse(to);
 			for (QuickVehicleReservation reservation : reservations) {
-				boolean isAvaiable = false;
-				System.out.println(fromDate);
-				System.out.println(reservation.getDateFrom());
-				System.out.println(toDate);
-				System.out.println(reservation.getDateTo());
 				if (!reservation.isTaken()) {
 					if (fromDate.before(reservation.getDateFrom()) && toDate.after(reservation.getDateTo())) {
 						VehicleReservationBean bean = new VehicleReservationBean();
@@ -723,13 +697,7 @@ public class RentACarController {
 	//Makes quick reservation
 	//Creates new reservation and changes bool taken for quick reservation
 	public String removeQuickReservation(@RequestBody QuickVehicleReserveBean bean) throws Exception { 
-		QuickVehicleReservation quick = quickService.findOne(bean.getId());
-		if(!quick.isTaken()) {
-			quickService.remove(bean.getId());
-			return "OK";
-		}else {
-			return "TAKEN";
-		}
+		return vehicleService.removeQuickReservation(bean);
 	}
 	
 	@RequestMapping(value = "/api/editQuickVehicleReservation", method = RequestMethod.POST, produces= MediaType.TEXT_PLAIN_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)

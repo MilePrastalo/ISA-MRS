@@ -1,7 +1,7 @@
 package com.tim9.PlanJourney.service;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -65,7 +65,7 @@ public class VehicleService {
 	}
 	
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public VehicleReservation reserve(VehicleReservationSearchBean search, RegisteredUser user) throws ParseException {
+	public VehicleReservation reserve(VehicleReservationSearchBean search, RegisteredUser user) throws Exception {
 		
 		Vehicle vehicle = findOne(Long.parseLong(search.getId()));
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -73,6 +73,10 @@ public class VehicleService {
 		Date dateTo = sdf.parse(search.getDateTo());
 		BranchOffice pick = bs.findOne(Long.parseLong(search.getOfficePick()));
 		BranchOffice ret = bs.findOne(Long.parseLong(search.getOfficeReturn()));
+		
+		if(!checkIfAvaiable(vehicle,dateFrom,dateTo)) {
+			throw new Exception();
+		}
 		VehicleReservation reservation = new VehicleReservation(vehicle, user,new Date(), dateFrom, dateTo, (double)( (dateTo.getTime() - dateFrom.getTime()) / (1000 * 60 * 60 * 24)) * vehicle.getPrice() );
 		reservation.setOfficePick(pick);
 		reservation.setOfficeReturn(ret);
@@ -90,11 +94,13 @@ public class VehicleService {
 	}
 	
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public VehicleReservation reserveQuick(@RequestBody QuickVehicleReserveBean bean, RegisteredUser user) throws ParseException {
+	public VehicleReservation reserveQuick(@RequestBody QuickVehicleReserveBean bean, RegisteredUser user) throws Exception {
 		
 		QuickVehicleReservation quick = quickService.findOne(bean.getId());
+		if(quick.isTaken()) {
+			throw new Exception();
+		}
 		Vehicle vehicle = quick.getVehicle();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Date dateFrom = quick.getDateFrom();
 		Date dateTo = quick.getDateTo();
 		BranchOffice pick =quick.getOfficePick();
@@ -113,6 +119,46 @@ public class VehicleService {
 		save(vehicle);
 		VehicleReservation vr = reservationService.save(reservation);
 		return vr;
+	}
+	
+	private boolean checkIfAvaiable(Vehicle vehicle, Date dateFrom, Date dateTo) {
+		ArrayList<VehicleReservation> reservations = new ArrayList<>();
+		reservations.addAll(vehicle.getReservations());
+		
+		ArrayList<QuickVehicleReservation> quickReservations = new ArrayList<>();
+		quickReservations.addAll(vehicle.getQuickReservations());
+		for (VehicleReservation vehicleReservation : reservations) {
+			if (!(vehicleReservation.getDateFrom().after(dateTo) || vehicleReservation.getDateTo().after(dateFrom))) {
+				return false;
+			}
+		}
+		for (QuickVehicleReservation vehicleReservation : quickReservations) {
+			if (!(vehicleReservation.getDateFrom().after(dateTo) || vehicleReservation.getDateTo().after(dateFrom))) {
+				return false;
+			}
+		}
+		return true;
+		
+	}
+	
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public boolean removeVehicle(Long id) {
+		Vehicle v = findOne(id);
+		if(v.getReservations().size()>0) {
+			return false;
+		}
+		remove(id);
+		return true;
+	}
+	
+	public String removeQuickReservation(QuickVehicleReserveBean bean) {
+		QuickVehicleReservation quick = quickService.findOne(bean.getId());
+		if(!quick.isTaken()) {
+			quickService.remove(bean.getId());
+			return "OK";
+		}else {
+			return "TAKEN";
+		}
 	}
 	
 	
