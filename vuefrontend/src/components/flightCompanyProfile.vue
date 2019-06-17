@@ -32,7 +32,7 @@
 
 <script>
 export default {
-  name: 'flightCompanyProfile',
+  name: "flightCompanyProfile",
   components: {},
   data: function () {
   return {
@@ -43,9 +43,9 @@ export default {
 },
 mounted(){
         var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/getFlightCompanyProfile")
             .then(response => {
                 this.name = response.data.name
@@ -56,9 +56,9 @@ mounted(){
     methods:{
         updateFlightCompanyProfile: function(){
             var getJwtToken = function() {
-              return localStorage.getItem('jwtToken');
+              return localStorage.getItem("jwtToken");
             };
-            axios.defaults.headers.post['Authorization'] = "Bearer " + getJwtToken();
+            axios.defaults.headers.post["Authorization"] = "Bearer " + getJwtToken();
             axios.post("http://localhost:8080/api/updateFlightCompanyProfile",{name:this.name, address: this.address, description: this.description})
             .then(response => {
                 this.name = response.data.name
@@ -74,7 +74,7 @@ mounted(){
 
 <style scopped>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

@@ -101,7 +101,7 @@
 <script>
 
 export default {
-  name: 'addFlight',
+  name: "addFlight",
   components: {
   },
   data: function () {
@@ -131,9 +131,9 @@ export default {
 },
 mounted(){
      var getJwtToken = function() {
-        return localStorage.getItem('jwtToken');
+        return localStorage.getItem("jwtToken");
     };
-    axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+    axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
     axios.get("http://localhost:8080/api/getDestinations")
         .then(response => {
             this.destinations = response.data
@@ -177,9 +177,9 @@ mounted(){
                 firstClassRows: this.firstClassCapacity_rows, firstClassColumns: this.firstClassCapacity_columns,
                 additionalServices: this.additionalServices, transitions: this.transitions }
             var getJwtToken = function() {
-                return localStorage.getItem('jwtToken');
+                return localStorage.getItem("jwtToken");
             };
-            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
             axios.post("http://localhost:8080/api/addFlight", newFlight)
             .then(response => {
                 alert(response.data);

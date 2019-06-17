@@ -59,7 +59,7 @@
             <br><br>
             <h2>All Flights: </h2>
             <br>
-            <table border="1" class = 'table table-hover'>
+            <table border="1" class = "table table-hover">
                 <thead>
                     <tr>
                     <th scope="col">Start destination</th>
@@ -99,7 +99,7 @@
 
 <script>
 export default {
-  name: 'allFlights',
+  name: "allFlights",
   components: {},
   props: ["idCompany"],
   data: function () {
@@ -121,19 +121,19 @@ export default {
 },
 created: function(){
     var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/getUserRole")
         .then(response => {
             this.role = response.data
-            if (response.data == 'FLIGHT_ADMIN'){
+            if (response.data == "FLIGHT_ADMIN"){
                     axios.get("http://localhost:8080/api/getFlights")
                     .then(response2 => {
                         this.flights = response2.data
                     });  
                 }
-                else if (response.data == 'REGISTERED') {
+                else if (response.data == "REGISTERED") {
                     axios.get("http://localhost:8080/api/getFlightsCompany/" + this.idCompany)
                     .then(response3 => {
                         this.flights = response3.data
@@ -175,13 +175,13 @@ mounted(){
             flightDuration: this.flightDuration, flightLength:  this.flightLength, companyId: -1,
             transitionsNum: this.transitionsNum }
             var getJwtToken = function() {
-                return localStorage.getItem('jwtToken');
+                return localStorage.getItem("jwtToken");
             };
-            if (this.role == 'REGISTERED') {
+            if (this.role == "REGISTERED") {
 
                 flightForSearch.companyId = this.idCompany;
             }
-            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
             axios.post("http://localhost:8080/api/flightsInCompany",flightForSearch)
             .then(response => {
                 this.flights = response.data
@@ -201,9 +201,9 @@ mounted(){
         
         removeFlight: function(flight, index){
             var getJwtToken = function() {
-                return localStorage.getItem('jwtToken');
+                return localStorage.getItem("jwtToken");
             };
-            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
             axios.get("http://localhost:8080/api/removeFlight/" + flight.id)
             
             .then(response => {
@@ -225,7 +225,7 @@ mounted(){
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

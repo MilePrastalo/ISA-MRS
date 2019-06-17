@@ -116,10 +116,10 @@
 </template>
 
 <script>
-import axios from 'axios';
-import hotelRoom from './hotelRoom.vue';
+import axios from "axios";
+import hotelRoom from "./hotelRoom.vue";
 export default {
-  name: 'hotelProfile',
+  name: "hotelProfile",
   props:["hotelName","firstDay"],
   components: {
     hotelRoom:hotelRoom
@@ -134,9 +134,9 @@ export default {
 },
 mounted(){
          var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
          axios.get("http://localhost:8080/api/getHotel/" + this.hotelName)
         .then(response => {
             this.hotel = response.data;

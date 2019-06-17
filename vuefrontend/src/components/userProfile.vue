@@ -49,7 +49,7 @@
 <script>
 import navbar from "./navbar.vue";
 export default {
-  name: 'userProfile',
+  name: "userProfile",
   components: {
        navbar: navbar
   },
@@ -67,9 +67,9 @@ export default {
 },
 mounted(){
     var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-    axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+    axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
     axios.get("http://localhost:8080/api/getLogUser")
         .then(response => {
             this.firstName = response.data.firstName
@@ -100,9 +100,9 @@ mounted(){
         updateUserProfile: function(pass, repeated_pass){
             if (pass == repeated_pass){
                 var getJwtToken = function() {
-                    return localStorage.getItem('jwtToken');
+                    return localStorage.getItem("jwtToken");
                 };
-            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
                 axios.post("http://localhost:8080/api/updateUserProfile",{firstName : this.firstName, lastName: this.lastName, email:this.email, password:this.password, repeatedPass: this.password,city:this.city,phone:this.phone})
             .then(response => {
                 this.firstName = response.data.firstName
@@ -125,7 +125,7 @@ mounted(){
 
 <style scopped>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

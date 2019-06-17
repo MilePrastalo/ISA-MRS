@@ -1,8 +1,6 @@
 package com.tim9.PlanJourney.beans;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 import com.tim9.PlanJourney.hotel.AdditionalCharges;
 

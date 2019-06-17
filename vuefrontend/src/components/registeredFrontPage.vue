@@ -140,7 +140,7 @@
 import { setTimeout } from 'timers';
 import navbar from "./navbar.vue";
 import { hostname } from 'os';
-import SearchFlights from './searchFlights';
+import SearchFlights from "./searchFlights";
 
 
 export default {
@@ -157,9 +157,9 @@ export default {
     },
   created(){
       var getJwtToken = function() {
-                    return localStorage.getItem('jwtToken');
+                    return localStorage.getItem("jwtToken");
                 };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/geteReservations")
             .then(response => {
                 this.vehiclereservations = response.data;
@@ -239,9 +239,9 @@ export default {
     },
     cancel:function(reservation, index){
         var getJwtToken = function() {
-                    return localStorage.getItem('jwtToken');
+                    return localStorage.getItem("jwtToken");
                 };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.post("http://localhost:8080/api/cancelVehicleReservation",reservation)
             .then(response => {
                 alert("success");
@@ -249,9 +249,9 @@ export default {
     },
     review:function(reservation,num){
         var getJwtToken = function() {
-                    return localStorage.getItem('jwtToken');
+                    return localStorage.getItem("jwtToken");
                 };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.post("http://localhost:8080/api/reviewVehicle",{reservationId:reservation.id,rating:num})
             .then(response => {
                 alert("success");
@@ -261,9 +261,9 @@ export default {
     },
     reviewHotel:function(reservation,num){
         var getJwtToken = function() {
-                    return localStorage.getItem('jwtToken');
+                    return localStorage.getItem("jwtToken");
                 };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.post("http://localhost:8080/api/reviewHotel",{reservationId:reservation.id,rating:num})
             .then(response => {
                 alert("success");
@@ -273,9 +273,9 @@ export default {
     },
     reviewFlight:function(reservation,num){
         var getJwtToken = function() {
-                    return localStorage.getItem('jwtToken');
+                    return localStorage.getItem("jwtToken");
                 };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.post("http://localhost:8080/api/reviewFlight",{reservationId:reservation.id,rating:num})
             .then(response => {
                 alert("success");
@@ -285,9 +285,9 @@ export default {
     },
     cancelFlightReservation: function(reservationId, index){
         var getJwtToken = function() {
-                    return localStorage.getItem('jwtToken');
+                    return localStorage.getItem("jwtToken");
                 };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/cancelFlightReservation/"+ reservationId)
             .then(response => {
                 alert(response.data);
@@ -346,7 +346,7 @@ export default {
 </script>
 <style scoped>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

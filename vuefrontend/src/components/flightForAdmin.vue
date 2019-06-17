@@ -87,7 +87,7 @@
 import EditSeats from "./editSeatsOnFlight.vue";
 import navbar from "./navbar.vue";
 export default {
-    name: 'flightForAdmin',
+    name: "flightForAdmin",
     components: {
         editSeats:  EditSeats,
         navbar: navbar
@@ -113,7 +113,7 @@ export default {
     mounted(){
         
             var getJwtToken = function() {
-                return localStorage.getItem('jwtToken');
+                return localStorage.getItem("jwtToken");
             };
             axios.get("http://localhost:8080/api/getFlight/" + this.id)
             .then(response => {
@@ -125,9 +125,9 @@ export default {
         modify: function(seat){
             
             var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
             };
-            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
             axios.get("http://localhost:8080/api/editSeat/" + seat.id)
             .then(response => {
                 if (response.data != null){
@@ -149,7 +149,7 @@ export default {
 
             e.preventDefault();
             var getJwtToken = function() {
-                return localStorage.getItem('jwtToken');
+                return localStorage.getItem("jwtToken");
             };
             if (this.startDate != ""){
                  this.flight.startDate_str = this.startDate + " " + this.startTime;
@@ -157,7 +157,7 @@ export default {
             if (this.endDate != ""){
                  this.flight.endDate_str = this.endDate +  " " + this.endTime;
             }
-            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
             axios.post("http://localhost:8080/api/editFlight", this.flight)
             .then(response => {
                 if (response.data == "success"){
@@ -172,9 +172,9 @@ export default {
 
         deleteFlight: function(id){
             var getJwtToken = function() {
-                return localStorage.getItem('jwtToken');
+                return localStorage.getItem("jwtToken");
             };
-            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
             axios.get("http://localhost:8080/api/removeFlight/" + id)
             
             .then(response => {
@@ -195,7 +195,7 @@ export default {
 
 <style scopped>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

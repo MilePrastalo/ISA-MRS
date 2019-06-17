@@ -28,15 +28,15 @@
 </template>
 
 <script>
-import SeatSelection from './seatsSelection.vue';
-import Passangers from './passangers.vue';
-import rentACarReservation from '.././rentACarReservation.vue';
+import SeatSelection from "./seatsSelection.vue";
+import Passangers from "./passangers.vue";
+import rentACarReservation from ".././rentACarReservation.vue";
 import navbar from ".././navbar.vue";
-import hotelReservation from '.././hotelReservation';
+import hotelReservation from ".././hotelReservation";
 
 export default {
 
-    name: 'flightReservation',
+    name: "flightReservation",
     components: {
 
         seat_selection: SeatSelection,
@@ -114,21 +114,21 @@ export default {
                 passangerSeat.push(obj);
             }
             var getJwtToken = function() {
-                return localStorage.getItem('jwtToken');
+                return localStorage.getItem("jwtToken");
             };
-            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
             axios.post("http://localhost:8080/api/makeFlightReservation", {flightId: this.id, passangers: passangerSeat,
                         hotelReservations: this.hotelReservations, rentReservations: this.vehicleReservations})
             .then(response => {
                  alert(response.data);
             });
-            window.location = '/flight'
+            window.location = "/flight"
         },
 
         goToNextStep: function(option){
             
-            this.selected_seats = JSON.parse(localStorage.getItem('selected_seats'));
-            this.passangers = JSON.parse(localStorage.getItem('passangers'));
+            this.selected_seats = JSON.parse(localStorage.getItem("selected_seats"));
+            this.passangers = JSON.parse(localStorage.getItem("passangers"));
 
             if (option == 2){
 
@@ -163,7 +163,7 @@ export default {
 
         goBack: function(current){
             if (current == 1){
-                window.location = '/flight'
+                window.location = "/flight"
             }
             else if (current == 2){
                 this.currentStep = 1;
@@ -180,7 +180,7 @@ export default {
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

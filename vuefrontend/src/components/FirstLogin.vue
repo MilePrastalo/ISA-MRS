@@ -29,7 +29,7 @@
 <script>
 
 export default {
-  name: 'FirstLogin',
+  name: "FirstLogin",
   data:function(){
     return {
       password:"",
@@ -40,9 +40,9 @@ export default {
     ChangePassword:function(e){
         e.preventDefault();
         var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
             };
-      axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+      axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
 
       axios.post("http://localhost:8080/api/firstLogin",{password:this.password,confirmed:this.confirmedPassword})
         .then(response => {
@@ -81,7 +81,7 @@ export default {
 
 <style scoped>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

@@ -37,8 +37,8 @@
 <script>
 
 export default {
-  name: 'searchVehicle',
-  props:['iCompany','idateFrom','idateTo'],
+  name: "searchVehicle",
+  props:["iCompany","idateFrom","idateTo"],
   components: {
   },
   data: function () {
@@ -61,9 +61,9 @@ export default {
 mounted(){
     var responseData;
       var getJwtToken = function() {
-    return localStorage.getItem('jwtToken');
+    return localStorage.getItem("jwtToken");
   };
-    axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+    axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
     axios.get("http://localhost:8080/api/getProducers",)
         .then(response => {
             this.producers = response.data
@@ -81,7 +81,7 @@ mounted(){
             axios.post("http://localhost:8080/api/vehicleSearch",{seats:this.seats,dateFrom:this.dateFrom,dateTo:this.dateTo,company:this.company, producer : this.producer, priceFrom: this.priceFrom, priceTo:this.priceTo, newer:this.newer, older:this.older,type:this.type})
             .then(response => {
               console.log(response.data);
-                parent.$emit('searched',response.data);
+                parent.$emit("searched",response.data);
             }); 
         }     
     }
@@ -91,7 +91,7 @@ mounted(){
 
 <style scoped>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

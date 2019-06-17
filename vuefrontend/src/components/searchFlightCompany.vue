@@ -18,7 +18,7 @@
         <br>
         <div class = "companyTable">
             <br>
-            <table border="1" class = 'table centered'>
+            <table border="1" class = "table centered">
                 <thead class="thead-dark">
                     <tr>
                     <th scope="col">Name</th>
@@ -44,7 +44,7 @@
 import navbar from "./navbar.vue";
 
 export default {
-  name: 'searchFlightCompany',
+  name: "searchFlightCompany",
   components: {
       navbar
     },
@@ -86,7 +86,7 @@ methods:{
     },
     goToDetails: function(id){
         localStorage.setItem("idCompany", id);
-        window.location = './CompanyProfile'
+        window.location = "./CompanyProfile";
     }
 }
 }
@@ -95,7 +95,7 @@ methods:{
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

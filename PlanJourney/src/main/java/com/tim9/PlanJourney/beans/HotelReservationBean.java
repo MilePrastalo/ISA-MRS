@@ -2,8 +2,6 @@ package com.tim9.PlanJourney.beans;
 
 import java.util.ArrayList;
 
-import com.tim9.PlanJourney.hotel.AdditionalCharges;
-
 public class HotelReservationBean {
 	private Long id;
 	private String hotelName;

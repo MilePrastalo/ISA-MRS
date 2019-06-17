@@ -3,14 +3,14 @@
 
             <br>
                 <h2>Choose seat(s) </h2>
-            <div class='my-legend' style="margin-left: 5%;">
-                <div class='legend-title'></div>
-                <div class='legend-scale'>
-                    <ul class='legend-labels'>
-                        <li><span style='background:mediumspringgreen;'></span>Active</li>
-                        <li><span style='background:salmon;'></span>Booked</li>
-                        <li><span style='background:yellow;'></span>Quick reservation</li>
-                        <li><span style='background:orange;'></span>Unavailable</li>
+            <div class="my-legend" style="margin-left: 5%;">
+                <div class="legend-title"></div>
+                <div class="legend-scale">
+                    <ul class="legend-labels">
+                        <li><span style="background:mediumspringgreen;"></span>Active</li>
+                        <li><span style="background:salmon;"></span>Booked</li>
+                        <li><span style="background:yellow;"></span>Quick reservation</li>
+                        <li><span style="background:orange;"></span>Unavailable</li>
                     </ul>
                 </div>
                 <br><br>
@@ -65,7 +65,7 @@
 
 export default {
 
-    name: 'seatSelection',
+    name: "seatSelection",
     components: {},
     props: ["iid"],
     data: function () {
@@ -84,28 +84,25 @@ export default {
         
         var flightID = this.iid;
         var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/getFlight/" + flightID)
         .then(response => {
             this.flight = response.data
         });
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/getSeatsOnFlight/" + flightID + "/economic")
         .then(response => {
             this.seatsE = response.data;
-        });;
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        });
         axios.get("http://localhost:8080/api/getSeatsOnFlight/" + flightID + "/business")
         .then(response => {
             this.seatsB = response.data;
-        });;
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        });
         axios.get("http://localhost:8080/api/getSeatsOnFlight/" + flightID + "/first class")
         .then(response => {
             this.seatsF = response.data;
-        });;       
+        });    
     }, 
 
     methods: {
@@ -239,7 +236,7 @@ export default {
 
 
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

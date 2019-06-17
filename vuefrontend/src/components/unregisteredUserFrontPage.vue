@@ -25,7 +25,7 @@ import searchHotels from './searchHotels.vue';
 import navbar from "./navbar.vue";
 import rentACarReservation from "./rentACarReservation.vue";
 export default {
-  name: 'unregisteredUserFrontPage',
+  name: "unregisteredUserFrontPage",
   components: {
       SearchFlights,searchHotels,searchRentACarCompany,navbar,rentACarReservation
   },
@@ -36,10 +36,10 @@ export default {
   },
   methods: {
         logIn: function() {
-            this.$router.push('/loginPage');
+            this.$router.push("/loginPage");
         },
         register: function() {
-            this.$router.push('/registerPage');
+            this.$router.push("/registerPage");
         },
         showFlight : function(){
             this.tabSelected = 1;
@@ -66,7 +66,7 @@ export default {
 
 <style scoped>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

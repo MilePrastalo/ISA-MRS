@@ -3,7 +3,6 @@ package com.tim9.PlanJourney.models.rentacar;
 import java.util.Date;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,7 +29,7 @@ public class Vehicle {
 
 	@Column(name = "year", nullable = false)
 	private int year;
-	
+
 	@Column(name = "seats", nullable = false)
 	private int seats;
 
@@ -204,6 +203,5 @@ public class Vehicle {
 	public void setSeats(int seats) {
 		this.seats = seats;
 	}
-	
 
 }

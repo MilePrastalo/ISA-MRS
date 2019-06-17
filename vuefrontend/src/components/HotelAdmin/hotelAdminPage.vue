@@ -14,7 +14,7 @@ import haHotel from "./haHotel.vue"
 import navbar from ".././navbar.vue";
 
 export default {
-  name: 'hotelAdminProfile',
+  name: "hotelAdminProfile",
   components: {
       haHotel: haHotel,
       navbar
@@ -30,9 +30,9 @@ export default {
 },
 mounted(){
         var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/getHotelAdminProfile")
             .then(response => {
                 this.hotelAdmin = response.data;
@@ -43,7 +43,7 @@ mounted(){
             this.currentTab = tabId;
         },
         logOut: function() {
-            this.$router.push('/');
+            this.$router.push("/");
         },
         changePassword: function() {
             if(this.hotelAdmin.password == this.oldPassword && this.newPassword == this.repeatPassword) {
@@ -68,7 +68,7 @@ mounted(){
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

@@ -1,6 +1,5 @@
 package com.tim9.PlanJourney.controller;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,7 +27,6 @@ import com.tim9.PlanJourney.models.FriendRequest;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.models.flight.FlightCompany;
-import com.tim9.PlanJourney.models.flight.FlightReservation;
 import com.tim9.PlanJourney.service.FlightCompanyService;
 import com.tim9.PlanJourney.service.RegisteredUserService;
 

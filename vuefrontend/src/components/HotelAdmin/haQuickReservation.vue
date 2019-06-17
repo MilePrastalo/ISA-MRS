@@ -90,7 +90,7 @@
 <script>
 
 export default {
-  name: 'haQuickReservation',
+  name: "haQuickReservation",
   props: {
       hotel: Object
   },

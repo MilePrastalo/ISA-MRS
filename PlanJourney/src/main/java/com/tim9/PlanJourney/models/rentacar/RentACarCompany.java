@@ -7,7 +7,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-import javax.persistence.Version;
 
 import com.tim9.PlanJourney.models.Company;
 
@@ -85,7 +84,5 @@ public class RentACarCompany extends Company {
 	public void setQuickReservations(Set<QuickVehicleReservation> quickReservations) {
 		this.quickReservations = quickReservations;
 	}
-
-	
 
 }

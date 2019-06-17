@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.beans.AdminBean;
 import com.tim9.PlanJourney.models.Authority;
-import com.tim9.PlanJourney.models.User;
 import com.tim9.PlanJourney.models.flight.FlightAdmin;
 import com.tim9.PlanJourney.models.flight.FlightCompany;
 import com.tim9.PlanJourney.service.AuthorityService;

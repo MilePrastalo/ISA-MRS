@@ -40,18 +40,18 @@
 <script>
 
 export default {
-  name: 'editVehicle',
+  name: "editVehicle",
   components: {
   },
   props: [
-  'iid' ,
-  'iname',
-  'imaker',
-  'itype',
-  'iyear',
-  'iprice',
-  'idateto',
-  'idatefrom'],
+  "iid" ,
+  "iname",
+  "imaker",
+  "itype",
+  "iyear",
+  "iprice",
+  "idateto",
+  "idatefrom"],
   created:function(){
   },
     data: function () {
@@ -71,9 +71,9 @@ export default {
     mounted(){
         console.log(this.maker);
         var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         var responseData;
         axios.get("http://localhost:8080/api/getProducers")
             .then(response => {
@@ -88,18 +88,17 @@ export default {
         edit: function(){
             var a = this;
             var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
             };
-            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
             axios.post("http://localhost:8080/api/editCar",{id:this.id,name:this.name,maker:this.maker,type:this.type,year:this.year,price:this.price,dateFrom:this.datefrom,dateTo:this.dateto})
             .then(function(){
               alert("Vehicle has been edited");
-              a.$emit('vedited');
+              a.$emit("vedited");
             });
-            ///this.$emit('vedited'); 
         },
         back:function(){
-            this.$emit('back');
+            this.$emit("back");
         } 
     },
     
@@ -109,7 +108,7 @@ export default {
 
 <style scoped>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

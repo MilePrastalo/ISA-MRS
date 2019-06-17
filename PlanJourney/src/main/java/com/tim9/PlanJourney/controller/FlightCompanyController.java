@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -19,7 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,9 +32,7 @@ import com.tim9.PlanJourney.beans.FlightCompanyBean;
 import com.tim9.PlanJourney.beans.FlightReportRequestBean;
 import com.tim9.PlanJourney.beans.QuickFlightReservationBean;
 import com.tim9.PlanJourney.beans.FlightCompanyReportBean;
-import com.tim9.PlanJourney.models.Authority;
 import com.tim9.PlanJourney.models.City;
-import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.Review;
 import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.models.flight.Flight;
@@ -45,7 +41,6 @@ import com.tim9.PlanJourney.models.flight.FlightCompany;
 import com.tim9.PlanJourney.models.flight.FlightReservation;
 import com.tim9.PlanJourney.models.flight.QuickFlightReservation;
 import com.tim9.PlanJourney.models.flight.Seat;
-import com.tim9.PlanJourney.service.AuthorityService;
 import com.tim9.PlanJourney.service.CityService;
 import com.tim9.PlanJourney.service.DestinationService;
 import com.tim9.PlanJourney.service.FlightCompanyService;
@@ -657,9 +652,9 @@ public class FlightCompanyController {
 
 	private double findPrice(Flight f, Seat s) {
 
-		if (s.getTravelClassa() == "economic") {
+		if (s.getTravelClassa().equals("economic")) {
 			return f.getEconomicPrice();
-		} else if (s.getTravelClassa() == "business") {
+		} else if (s.getTravelClassa().equals("business")) {
 			return f.getBusinessPrice();
 		} else {
 			return f.getFirstClassPrice();

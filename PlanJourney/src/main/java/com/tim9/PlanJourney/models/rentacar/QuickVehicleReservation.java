@@ -7,42 +7,38 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Version;
-
-import com.tim9.PlanJourney.models.flight.Flight;
-import com.tim9.PlanJourney.models.flight.Seat;
 
 @Entity
 public class QuickVehicleReservation {
 	@Id
 	@GeneratedValue
 	private Long id;
-		
+
 	@ManyToOne
 	private Vehicle vehicle;
-	
+
 	@Column(name = "originalPrice")
 	private double originalPrice;
-	
+
 	@Column(name = "discount")
 	private int discount;
-	
+
 	@Column(name = "dateFrom", nullable = false)
 	private Date dateFrom;
-	
+
 	@Column(name = "dateTo", nullable = false)
 	private Date dateTo;
-	
+
 	@ManyToOne
 	private BranchOffice officePick;
-	
+
 	@ManyToOne
 	private BranchOffice officeReturn;
-	
+
 	@Column(name = "taken")
 	private boolean taken;
-	
+
 	@Version
 	private Long version;
 
@@ -142,8 +138,5 @@ public class QuickVehicleReservation {
 	public void setVersion(Long version) {
 		this.version = version;
 	}
-	
-	
-	
 
 }

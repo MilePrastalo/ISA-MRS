@@ -146,10 +146,10 @@
 
 
 <script>
-import axios from 'axios'
+import axios from "axios"
 import navbar from ".././navbar.vue";
 export default {
-    name: 'flightReservationDetails',
+    name: "flightReservationDetails",
     components: {
         navbar: navbar
     },
@@ -164,9 +164,9 @@ export default {
     created(){
         
         var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/getFlightReservation/" + this.reservationId)
         .then(response => {
             this.reservation = response.data;
@@ -176,9 +176,9 @@ export default {
     methods: {
         cancelFlightReservation: function(){
         var getJwtToken = function() {
-                return localStorage.getItem('jwtToken');
+                return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/cancelFlightReservation/"+ this.reservationId)
             .then(response => {
                 alert(response.data);
@@ -196,7 +196,7 @@ export default {
 </script>
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

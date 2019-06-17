@@ -189,10 +189,10 @@
 
 import haQuickReservation from "./haQuickReservation.vue"
 import haReportsRedesigned from "./haReportsRedesigned.vue"
-import { constants } from 'crypto';
+import { constants } from "crypto";
 
 export default {
-  name: 'haHotel',
+  name: "haHotel",
   props: {
       hotel: Object
   },
@@ -216,9 +216,9 @@ export default {
 },
 mounted(){
         var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
     },
     methods:{
         selectTab: function(tabId){

@@ -78,7 +78,7 @@
 <script>
 export default {
 
-    name: 'infoPassangers',
+    name: "infoPassangers",
     components: {},
     props: ["iid"],
     data: function () {
@@ -96,7 +96,7 @@ export default {
 
     created:  function(){
 
-        var selected_seats = JSON.parse(localStorage.getItem('selected_seats'));
+        var selected_seats = JSON.parse(localStorage.getItem("selected_seats"));
         this.seats_count = selected_seats.length;
 
         var idx;
@@ -110,9 +110,9 @@ export default {
     mounted() {
 
          var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.post("http://localhost:8080/api/getMyFriends",{firstName : this.firstName, lastName: this.lastName})
         .then(response => {
             this.friends = response.data;
@@ -124,7 +124,7 @@ export default {
         submitPassangers: function(e) { 
 
             e.preventDefault();
-            localStorage.setItem('passangers' ,JSON.stringify(this.passangers) );
+            localStorage.setItem("passangers" ,JSON.stringify(this.passangers) );
         },
 
 
@@ -168,9 +168,9 @@ export default {
         search: function() {
 
             var getJwtToken = function() {
-                return localStorage.getItem('jwtToken');
+                return localStorage.getItem("jwtToken");
             };
-            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
             axios.post("http://localhost:8080/api/getMyFriends", {firstName : this.firstName, lastName: this.lastName})
             .then(response => {
                 this.friends = response.data
@@ -201,7 +201,7 @@ export default {
 }
 
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

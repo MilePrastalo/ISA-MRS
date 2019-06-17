@@ -127,11 +127,11 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 import unregisteredHotelRoom from './unregisteredHotelRoom.vue';
 import navbar from "./navbar.vue";
 export default {
-  name: 'unregisteredHotelProfile',
+  name: "unregisteredHotelProfile",
   props:["hotelName"],
   components: {
     unregisteredHotelRoom: unregisteredHotelRoom,

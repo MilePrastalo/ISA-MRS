@@ -112,7 +112,7 @@
 
 <script>
 export default {
-  name: 'addQuickReservation',
+  name: "addQuickReservation",
   components: {},
   data: function () {
   return {
@@ -133,9 +133,9 @@ export default {
 },
 mounted(){
         var getJwtToken = function() {
-                return localStorage.getItem('jwtToken');
+                return localStorage.getItem("jwtToken");
             };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/getFlights")
         .then(response => {
             this.flights = response.data
@@ -152,9 +152,9 @@ mounted(){
             maxEconomic: 0, maxBusiness: 0, maxFirstClass:0,
             flightDuration: 0, flightLength: 0 }
             var getJwtToken = function() {
-                return localStorage.getItem('jwtToken');
+                return localStorage.getItem("jwtToken");
             };
-            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
             axios.post("http://localhost:8080/api/flightsInCompany",flightForSearch)
             .then(response => {
                 this.flights = response.data
@@ -164,8 +164,9 @@ mounted(){
         choseFlight : function(flightID){
             this.flightId = flightID;
              var getJwtToken = function() {
-                return localStorage.getItem('jwtToken');
+                return localStorage.getItem("jwtToken");
             };
+            axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
             axios.get("http://localhost:8080/api/getSeatsOnFlight/" +  flightID + "/economic")
             .then(response => {
                 this.seatsE = response.data;
@@ -193,9 +194,9 @@ mounted(){
             e.preventDefault();
             var bean = {flightId: this.flightId, seatId: this.seat.id, discount: this.discount}
             var getJwtToken = function() {
-                return localStorage.getItem('jwtToken');
+                return localStorage.getItem("jwtToken");
             };
-            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
             axios.post("http://localhost:8080/api/addQuickFlightReservation", bean)
             .then(response => {
                 if (response.data != null){
@@ -259,7 +260,7 @@ mounted(){
 }
 
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

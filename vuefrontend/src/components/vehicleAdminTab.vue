@@ -36,7 +36,7 @@ import addvehicle from "./addvehicle.vue";
 import editVehicle from "./editVehicle.vue";
 
 export default {
-  name: 'vehicleAdmin',
+  name: "vehicleAdmin",
   components: {
     addvehicle,
     editVehicle
@@ -57,9 +57,9 @@ export default {
   },
   mounted(){
       var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/getCarsByAdmin")
             .then(response => {
                 this.cars = response.data;
@@ -81,9 +81,9 @@ export default {
       veditedDraw : function(){
           console.log("Called redraw");
           var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/getCarsByAdmin")
             .then(response => {
                 this.cars = response.data;
@@ -102,9 +102,9 @@ export default {
       },
       removeVehicle:function(id){
           var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.delete("http://localhost:8080/api/removeCar/"+id)
             .then(response => {
                 alert("Success");
@@ -118,7 +118,7 @@ export default {
 
 <style scoped>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

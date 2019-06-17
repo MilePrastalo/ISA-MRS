@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.tim9.PlanJourney.models.City;
-import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.repository.CityRepository;
 
 @Service

@@ -111,7 +111,7 @@
 </template>
 <script>
 export default {
-  name: 'quickVehicle',
+  name: "quickVehicle",
   components: {},
   props: ["idCompany",],
   data: function () {
@@ -134,9 +134,9 @@ export default {
 
 mounted(){
         var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken(); 
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken(); 
         axios.get("http://localhost:8080/api/getCarsByAdmin")
             .then(response => {
                 this.cars = response.data;
@@ -157,9 +157,9 @@ mounted(){
         addQuickReservation:function(e){
             e.preventDefault();
             var getJwtToken = function() {
-                return localStorage.getItem('jwtToken');
+                return localStorage.getItem("jwtToken");
             };
-            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken(); 
+            axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken(); 
             axios.post("http://localhost:8080/api/addQuickVehicleReservation",
             {vehicleId:this.vehicleID,dateFrom:this.dateFrom,dateTo:this.dateTo,locationPick:this.pickoffice.id,
             locationReturn:this.returnoffice.id,vehicleName:this.vehicleName,discount:this.discount})
@@ -213,9 +213,9 @@ mounted(){
         editQuickReservation:function(){
           console.log("Called");
           var getJwtToken = function() {
-                return localStorage.getItem('jwtToken');
+                return localStorage.getItem("jwtToken");
             };
-            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken(); 
+            axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken(); 
             axios.post("http://localhost:8080/api/editQuickVehicleReservation",{id:this.quickId,dateFrom:this.dateFrom,dateTo:this.dateTo,vehicleName:this.vehicleName,discount:this.discount})
             .then(response=>{
                 if(response.data == "OK"){
@@ -242,9 +242,9 @@ mounted(){
         },
         remove:function(reservation){
           var getJwtToken = function() {
-                return localStorage.getItem('jwtToken');
+                return localStorage.getItem("jwtToken");
             };
-            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken(); 
+            axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken(); 
             axios.post("http://localhost:8080/api/removeQuickReservation",
             {id:reservation.id})
             .then(response=>{
