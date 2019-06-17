@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,18 +35,16 @@ import com.tim9.PlanJourney.models.Authority;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.User;
 import com.tim9.PlanJourney.models.UserTokenState;
-import com.tim9.PlanJourney.repository.UserRepository;
 import com.tim9.PlanJourney.security.TokenUtils;
 import com.tim9.PlanJourney.service.AuthorityService;
 import com.tim9.PlanJourney.service.EmailService;
-import com.tim9.PlanJourney.service.RegisteredUserService;
 import com.tim9.PlanJourney.service.UserService;
 import com.tim9.PlanJourney.service.impl.CustomUserDetailsService;
 
 @RestController
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthenticationController {
-	
+
 	@Autowired
 	TokenUtils tokenUtils;
 
@@ -56,27 +53,23 @@ public class AuthenticationController {
 
 	@Autowired
 	private CustomUserDetailsService userDetailsService;
-	
+
 	@Autowired
-	private  UserService userService;
-	
-	@Autowired
-	private  RegisteredUserService regUserService;
-	
+	private UserService userService;
+
 	@Autowired
 	private AuthorityService autService;
-	
+
 	@Autowired
 	private EmailService emailService;
-	
+
 	@CrossOrigin()
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody LoginBean authenticationRequest,
 			HttpServletResponse response) throws AuthenticationException, IOException {
 		System.out.println(authenticationRequest.getUsername() + "    " + authenticationRequest.getPassword());
 		final Authentication authentication = authenticationManager
-				.authenticate(new UsernamePasswordAuthenticationToken(
-						authenticationRequest.getUsername(),
+				.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
 						authenticationRequest.getPassword()));
 		// Ubaci username + password u kontext
 		SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -91,27 +84,29 @@ public class AuthenticationController {
 		boolean notConfrirmed = false;
 		if (user instanceof RegisteredUser) {
 			RegisteredUser regUser = (RegisteredUser) user;
-			if(!regUser.isConfirmed()) {
+			if (!regUser.isConfirmed()) {
 				notConfrirmed = true;
 			}
 		}
-		if(notConfrirmed) {
+		if (notConfrirmed) {
 			return ResponseEntity.ok("NOT CONFIRMED");
 		}
-		
+
 		return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
 	}
+
 	@CrossOrigin()
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public HttpStatus Register(@RequestBody RegisterBean bean,
-			HttpServletResponse response) throws AuthenticationException, IOException {
+	public HttpStatus Register(@RequestBody RegisterBean bean, HttpServletResponse response)
+			throws AuthenticationException, IOException {
 		System.out.println(bean.getUsername() + "    " + bean.getPassword());
 		User u = userService.findOneByUsername(bean.getUsername());
-		if(u != null) {
+		if (u != null) {
 			return HttpStatus.CONFLICT;
 		}
 		BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
-		RegisteredUser user = new RegisteredUser(bean.getUsername(), bc.encode(bean.getPassword()), bean.getFirstName(), bean.getLastName(), bean.getEmail());
+		RegisteredUser user = new RegisteredUser(bean.getUsername(), bc.encode(bean.getPassword()), bean.getFirstName(),
+				bean.getLastName(), bean.getEmail());
 		Authority aut = autService.findOne(5l);
 		ArrayList<Authority> authorities = new ArrayList<>();
 		authorities.add(aut);
@@ -134,8 +129,7 @@ public class AuthenticationController {
 
 		String token = tokenUtils.getToken(request);
 		String username = this.tokenUtils.getUsernameFromToken(token);
-	    User user = (User) this.userDetailsService.loadUserByUsername(username);
-
+		User user = (User) this.userDetailsService.loadUserByUsername(username);
 
 		if (this.tokenUtils.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
 			String refreshedToken = tokenUtils.refreshToken(token);
@@ -152,18 +146,19 @@ public class AuthenticationController {
 	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> changePassword(@RequestBody PasswordChanger passwordChanger) {
 		userDetailsService.changePassword(passwordChanger.oldPassword, passwordChanger.newPassword);
-		
+
 		Map<String, String> result = new HashMap<>();
 		result.put("result", "success");
 		return ResponseEntity.accepted().body(result);
 	}
-	
+
 	@CrossOrigin()
 	@RequestMapping(value = "/registrationConfirmation/{encoded}", method = RequestMethod.GET)
-	//Recieves enoceded username and switches variable confirmed to true so user can log in
+	// Recieves enoceded username and switches variable confirmed to true so user
+	// can log in
 	public RedirectView Conform(@PathVariable("encoded") String encoded) throws AuthenticationException, IOException {
 		byte[] decoded = Base64.getDecoder().decode(encoded);
-		String username = new String(decoded,"UTF-8");
+		String username = new String(decoded, "UTF-8");
 		System.out.println(username);
 		User user = userService.findOneByUsername(username);
 		user.setConfirmed(true);

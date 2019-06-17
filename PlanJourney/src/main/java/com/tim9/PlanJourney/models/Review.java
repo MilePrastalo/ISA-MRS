@@ -6,26 +6,24 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import com.tim9.PlanJourney.models.rentacar.VehicleReservation;
 @Entity
 public class Review {
 	@Id
 	@GeneratedValue
 	private Long id;
-	
+
 	@ManyToOne
 	private RegisteredUser user;
-	
+
 	@ManyToOne
 	private Reservation reservation;
-	
+
 	@Column(name = "rating")
 	private int rating;
 
 	public Review() {
 		super();
 	}
-	
 
 	public Review(RegisteredUser user, Reservation reservation, int rating) {
 		super();
@@ -33,7 +31,6 @@ public class Review {
 		this.reservation = reservation;
 		this.rating = rating;
 	}
-
 
 	public Long getId() {
 		return id;
@@ -59,16 +56,12 @@ public class Review {
 		this.reservation = reservation;
 	}
 
-
 	public int getRating() {
 		return rating;
 	}
 
-
 	public void setRating(int rating) {
 		this.rating = rating;
 	}
-	
-	
 
 }

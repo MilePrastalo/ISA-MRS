@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 
 import com.tim9.PlanJourney.models.User;
 
@@ -107,7 +106,6 @@ public class TokenUtils {
 	}
 
 	private Boolean ignoreTokenExpiration(String token) {
-		String audience = this.getAudienceFromToken(token);
 		return false;
 	}
 

@@ -1,17 +1,14 @@
 package com.tim9.PlanJourney.models.rentacar;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 
 import com.tim9.PlanJourney.models.City;
-import com.tim9.PlanJourney.models.flight.Destination;
 
 @Entity
 
@@ -30,11 +27,11 @@ public class BranchOffice {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	private City destination;
-	
-	@Column(name="longitude", nullable = true)
+
+	@Column(name = "longitude", nullable = true)
 	private float longitude;
-	
-	@Column(name="latitude", nullable = true)
+
+	@Column(name = "latitude", nullable = true)
 	private float latitude;
 
 	@Version
@@ -115,6 +112,5 @@ public class BranchOffice {
 	public void setLatitude(float latitude) {
 		this.latitude = latitude;
 	}
-	
 
 }

@@ -1,6 +1,5 @@
 package com.tim9.PlanJourney.models.flight;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
