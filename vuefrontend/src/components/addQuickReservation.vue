@@ -136,7 +136,7 @@ mounted(){
                 return localStorage.getItem("jwtToken");
             };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getFlights")
+        axios.get("/api/getFlights")
         .then(response => {
             this.flights = response.data
           });
@@ -155,7 +155,7 @@ mounted(){
                 return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-            axios.post("http://localhost:8080/api/flightsInCompany",flightForSearch)
+            axios.post("/api/flightsInCompany",flightForSearch)
             .then(response => {
                 this.flights = response.data
             }); 
@@ -167,15 +167,15 @@ mounted(){
                 return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-            axios.get("http://localhost:8080/api/getSeatsOnFlight/" +  flightID + "/economic")
+            axios.get("/api/getSeatsOnFlight/" +  flightID + "/economic")
             .then(response => {
                 this.seatsE = response.data;
             });; 
-            axios.get("http://localhost:8080/api/getSeatsOnFlight/" +  flightID + "/business" )
+            axios.get("/api/getSeatsOnFlight/" +  flightID + "/business" )
             .then(response => {
                 this.seatsB = response.data;
             });
-            axios.get("http://localhost:8080/api/getSeatsOnFlight/" +  flightID + "/first class" )
+            axios.get("/api/getSeatsOnFlight/" +  flightID + "/first class" )
             .then(response => {
                 this.seatsF = response.data;
             }); 
@@ -197,7 +197,7 @@ mounted(){
                 return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-            axios.post("http://localhost:8080/api/addQuickFlightReservation", bean)
+            axios.post("/api/addQuickFlightReservation", bean)
             .then(response => {
                 if (response.data != null){
                     alert("Quick reservation added!");

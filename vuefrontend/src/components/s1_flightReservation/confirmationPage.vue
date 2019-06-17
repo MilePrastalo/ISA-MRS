@@ -219,7 +219,7 @@ export default {
             return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-            axios.get("http://localhost:8080/api/refuseReservationRequest/" + this.requestId )
+            axios.get("/api/refuseReservationRequest/" + this.requestId )
             .then(response => {
                 alert(response.data)
                 if (response.data == "success"){

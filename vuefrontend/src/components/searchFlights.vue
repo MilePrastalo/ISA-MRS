@@ -148,7 +148,7 @@ mounted(){
             maxEconomic: MaxeconomicPrice, maxBusiness: MaxbuisinesssPrice, maxFirstClass:MaxfirstClassPrice,
             flightDuration: this.flightDuration, flightLength:  this.flightLength, flightCompany: this.flightCompany,
             transitionsNum: this.transitionsNum }
-            axios.post("http://localhost:8080/api/flightSearch",flightForSearch)
+            axios.post("/api/flightSearch",flightForSearch)
             .then(response => {
                 this.flights = response.data
             }); 

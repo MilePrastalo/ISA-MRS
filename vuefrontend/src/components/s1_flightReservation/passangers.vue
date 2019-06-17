@@ -113,7 +113,7 @@ export default {
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.post("http://localhost:8080/api/getMyFriends",{firstName : this.firstName, lastName: this.lastName})
+        axios.post("/api/getMyFriends",{firstName : this.firstName, lastName: this.lastName})
         .then(response => {
             this.friends = response.data;
         });
@@ -171,7 +171,7 @@ export default {
                 return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-            axios.post("http://localhost:8080/api/getMyFriends", {firstName : this.firstName, lastName: this.lastName})
+            axios.post("/api/getMyFriends", {firstName : this.firstName, lastName: this.lastName})
             .then(response => {
                 this.friends = response.data
             });

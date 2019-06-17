@@ -134,7 +134,7 @@ mounted(){
         return localStorage.getItem("jwtToken");
     };
     axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-    axios.get("http://localhost:8080/api/getDestinations")
+    axios.get("/api/getDestinations")
         .then(response => {
             this.destinations = response.data
           }); 
@@ -180,7 +180,7 @@ mounted(){
                 return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-            axios.post("http://localhost:8080/api/addFlight", newFlight)
+            axios.post("/api/addFlight", newFlight)
             .then(response => {
                 alert(response.data);
             });; 

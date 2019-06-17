@@ -59,7 +59,7 @@ mounted(){
         return localStorage.getItem("jwtToken");
     };
     axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-    axios.post("http://localhost:8080/api/getMyFriends", {firstName : this.firstName, lastName: this.lastName})
+    axios.post("/api/getMyFriends", {firstName : this.firstName, lastName: this.lastName})
         .then(response => {
             this.friends = response.data
         });
@@ -73,14 +73,14 @@ methods: {
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/removeFriend/"+ friend.id)
+        axios.get("/api/removeFriend/"+ friend.id)
         .then(response => {
             if (response.data == false){
                     alert("Something went wrong!");
                 }
             else{
                 alert("Successfuly removed!");
-                axios.post("http://localhost:8080/api/getMyFriends", {firstName : this.firstName, lastName: this.lastName})
+                axios.post("/api/getMyFriends", {firstName : this.firstName, lastName: this.lastName})
                 .then(response => {
                     this.friends = response.data
                 });
@@ -94,7 +94,7 @@ methods: {
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.post("http://localhost:8080/api/getMyFriends", {firstName : this.firstName, lastName: this.lastName})
+        axios.post("/api/getMyFriends", {firstName : this.firstName, lastName: this.lastName})
         .then(response => {
             this.friends = response.data
         });

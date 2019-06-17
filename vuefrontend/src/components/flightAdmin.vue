@@ -103,7 +103,7 @@ mounted: function(){
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getFlightCompanyProfile")
+        axios.get("/api/getFlightCompanyProfile")
             .then(response => {
                 this.seatsInfo = response.data.seatsInfo
                 this.laguageInfo = response.data.laguageInfo
@@ -148,7 +148,7 @@ methods:{
               return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.post["Authorization"] = "Bearer " + getJwtToken();
-            axios.post("http://localhost:8080/api/updateFlightCompanyInfo",{seatsInfo:this.seatsInfo, laguageInfo: this.laguageInfo})
+            axios.post("/api/updateFlightCompanyInfo",{seatsInfo:this.seatsInfo, laguageInfo: this.laguageInfo})
             .then(response => {
                 if (response.data != null){
                     this.seatsInfo = response.data.seatsInfo

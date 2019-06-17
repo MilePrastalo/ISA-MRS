@@ -68,7 +68,7 @@ export default {
     mounted(){
 
         var flightID = localStorage.getItem("flightID");
-        axios.get("http://localhost:8080/api/getFlight/" + flightID)
+        axios.get("/api/getFlight/" + flightID)
         .then(response => {
             this.flight = response.data
             console.log(this.flight);
@@ -117,7 +117,7 @@ export default {
                 return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-            axios.post("http://localhost:8080/api/makeFlightReservation", {flightId: this.id, passangers: passangerSeat,
+            axios.post("/api/makeFlightReservation", {flightId: this.id, passangers: passangerSeat,
                         hotelReservations: this.hotelReservations, rentReservations: this.vehicleReservations})
             .then(response => {
                  alert(response.data);

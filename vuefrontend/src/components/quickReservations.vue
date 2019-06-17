@@ -56,18 +56,18 @@ mounted(){
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getUserRole")
+        axios.get("/api/getUserRole")
         .then(response => {
 
             this.role = response.data;
             if (response.data == "FLIGHT_ADMIN"){
-                axios.get("http://localhost:8080/api/getQuickReservations")
+                axios.get("/api/getQuickReservations")
                 .then(response2 => {
                     this.quickReservations = response2.data
                 });
             }
             else if (response.data == "REGISTERED") {
-                axios.get("http://localhost:8080/api/getQuickReservationsCompany/" + this.idCompany)
+                axios.get("/api/getQuickReservationsCompany/" + this.idCompany)
                 .then(response3 => {
                     this.quickReservations = response3.data
                 });
@@ -82,7 +82,7 @@ mounted(){
                 return;
             }
              var obj = {id: res.id, flightId: res.flightId, seatId: res.seatId, originPrice: res.originPrice, discount: res.discount};
-            axios.post("http://localhost:8080/api/makeQuickReservation", obj)
+            axios.post("/api/makeQuickReservation", obj)
             .then(response => {
                 if (response.data == "success"){
                     alert("Reservation was successful! You will get e-mail about it.");
@@ -100,7 +100,7 @@ mounted(){
                 return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-            axios.get("http://localhost:8080/api/removeQuickFlightReservation/" + id)
+            axios.get("/api/removeQuickFlightReservation/" + id)
             .then(response => {
                 alert(response.data);
                 this.quickReservations.splice(index,1);

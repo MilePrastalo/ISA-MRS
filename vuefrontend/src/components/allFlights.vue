@@ -124,17 +124,17 @@ created: function(){
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getUserRole")
+        axios.get("/api/getUserRole")
         .then(response => {
             this.role = response.data
             if (response.data == "FLIGHT_ADMIN"){
-                    axios.get("http://localhost:8080/api/getFlights")
+                    axios.get("/api/getFlights")
                     .then(response2 => {
                         this.flights = response2.data
                     });  
                 }
                 else if (response.data == "REGISTERED") {
-                    axios.get("http://localhost:8080/api/getFlightsCompany/" + this.idCompany)
+                    axios.get("/api/getFlightsCompany/" + this.idCompany)
                     .then(response3 => {
                         this.flights = response3.data
                     }); 
@@ -182,7 +182,7 @@ mounted(){
                 flightForSearch.companyId = this.idCompany;
             }
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-            axios.post("http://localhost:8080/api/flightsInCompany",flightForSearch)
+            axios.post("/api/flightsInCompany",flightForSearch)
             .then(response => {
                 this.flights = response.data
             });
@@ -204,7 +204,7 @@ mounted(){
                 return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-            axios.get("http://localhost:8080/api/removeFlight/" + flight.id)
+            axios.get("/api/removeFlight/" + flight.id)
             
             .then(response => {
                 if (response.data == "success"){
