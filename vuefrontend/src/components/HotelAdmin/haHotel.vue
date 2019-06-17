@@ -179,7 +179,7 @@
                 <ha-quick-reservation :hotel="hotel"></ha-quick-reservation>
             </div>
              <div v-if="currentTab == 6">
-                <ha-reports :hotel="hotel"></ha-reports>
+                <ha-reports-redesigned :hotel="hotel"></ha-reports-redesigned>
             </div>
    </div>
    </div>
@@ -188,7 +188,7 @@
 <script>
 
 import haQuickReservation from "./haQuickReservation.vue"
-import haReports from "./haReports.vue"
+import haReportsRedesigned from "./haReportsRedesigned.vue"
 import { constants } from "crypto";
 
 export default {
@@ -198,7 +198,7 @@ export default {
   },
   components: {
       haQuickReservation: haQuickReservation,
-      haReports: haReports
+      haReportsRedesigned: haReportsRedesigned
   },
   data: function () {
   return {
