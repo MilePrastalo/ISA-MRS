@@ -652,9 +652,9 @@ public class FlightCompanyController {
 
 	private double findPrice(Flight f, Seat s) {
 
-		if (s.getTravelClassa() == "economic") {
+		if (s.getTravelClassa().equals("economic")) {
 			return f.getEconomicPrice();
-		} else if (s.getTravelClassa() == "business") {
+		} else if (s.getTravelClassa().equals("business")) {
 			return f.getBusinessPrice();
 		} else {
 			return f.getFirstClassPrice();
