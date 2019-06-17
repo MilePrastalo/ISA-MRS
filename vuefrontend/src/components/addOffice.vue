@@ -70,7 +70,7 @@ mounted(){
             return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-             axios.post("http://localhost:8080/api/addOffice",{name:this.name, destination: this.destination,address:this.address,longitude:this.longitude,latitude:this.latitude})
+             axios.post("/api/addOffice",{name:this.name, destination: this.destination,address:this.address,longitude:this.longitude,latitude:this.latitude})
             .then(response => {
                 alert("Office added");
             });  

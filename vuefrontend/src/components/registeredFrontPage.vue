@@ -160,14 +160,14 @@ export default {
                     return localStorage.getItem("jwtToken");
                 };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/geteReservations")
+        axios.get("/api/geteReservations")
             .then(response => {
                 this.vehiclereservations = response.data;
                 this.vehiclereservations.forEach(element => {
                     element.ratings = [element.id + "1",element.id + "2",element.id + "3",element.id + "4",element.id + "5"];
                 });
             }); 
-        axios.get("http://localhost:8080/api/getUserHotelReservations")
+        axios.get("/api/getUserHotelReservations")
             .then(response => {
                 this.hotelReservations = response.data;
                 this.hotelReservations.forEach(element => {
@@ -175,7 +175,7 @@ export default {
                 });
             });  
 
-        axios.get("http://localhost:8080/api/getMyReservations")
+        axios.get("/api/getMyReservations")
             .then(response => {
                 this.flightReservations = response.data;
                 this.flightReservations.forEach(element => {
@@ -242,7 +242,7 @@ export default {
                     return localStorage.getItem("jwtToken");
                 };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.post("http://localhost:8080/api/cancelVehicleReservation",reservation)
+        axios.post("/api/cancelVehicleReservation",reservation)
             .then(response => {
                 alert("success");
             });
@@ -252,7 +252,7 @@ export default {
                     return localStorage.getItem("jwtToken");
                 };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.post("http://localhost:8080/api/reviewVehicle",{reservationId:reservation.id,rating:num})
+        axios.post("/api/reviewVehicle",{reservationId:reservation.id,rating:num})
             .then(response => {
                 alert("success");
             });
@@ -264,7 +264,7 @@ export default {
                     return localStorage.getItem("jwtToken");
                 };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.post("http://localhost:8080/api/reviewHotel",{reservationId:reservation.id,rating:num})
+        axios.post("/api/reviewHotel",{reservationId:reservation.id,rating:num})
             .then(response => {
                 alert("success");
             });
@@ -276,7 +276,7 @@ export default {
                     return localStorage.getItem("jwtToken");
                 };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.post("http://localhost:8080/api/reviewFlight",{reservationId:reservation.id,rating:num})
+        axios.post("/api/reviewFlight",{reservationId:reservation.id,rating:num})
             .then(response => {
                 alert("success");
             });
@@ -288,7 +288,7 @@ export default {
                     return localStorage.getItem("jwtToken");
                 };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/cancelFlightReservation/"+ reservationId)
+        axios.get("/api/cancelFlightReservation/"+ reservationId)
             .then(response => {
                 alert(response.data);
                  this.flightReservations.splice(index,1) 
@@ -326,7 +326,7 @@ export default {
                 }
         });
         console.log(r)
-        axios.post("http://localhost:8080/api/cancelHotelReservation",r)
+        axios.post("/api/cancelHotelReservation",r)
             .then(response => {
                 if(response.data == true) {
                     alert("Hotel reservation has been successfully canceled.");

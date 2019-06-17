@@ -47,7 +47,7 @@ export default {
     login:function(e){
       e.preventDefault();
       if(this.username != "" && this.password != ""){
-        axios.post("http://localhost:8080/auth/login",{username : this.username, password: this.password})
+        axios.post("/auth/login",{username : this.username, password: this.password})
                     .then(response => {
                       console.log(response);
                         if(response.status == 200){
@@ -76,7 +76,7 @@ export default {
             return localStorage.getItem("jwtToken");
             };
       axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-      axios.get("http://localhost:8080/api/getFirstLogged")
+      axios.get("/api/getFirstLogged")
             .then(response => {
                 console.log(response);
                 if(response.data == "NOT"){
@@ -92,7 +92,7 @@ export default {
             return localStorage.getItem("jwtToken");
             };
       axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-      axios.get("http://localhost:8080/api/getUserRole")
+      axios.get("/api/getUserRole")
             .then(response => {
                 console.log(response);
                 if(response.data == "RENT_ADMIN"){

@@ -84,7 +84,7 @@ export default {
         alert("Passwords don't match");
       }else{
       if(this.username != "" && this.password != "" && this.firstName != "" && this.lastName != ""&& this.email!=""){
-          axios.post("http://localhost:8080/auth/register",{username : this.username, password: this.password,
+          axios.post("/auth/register",{username : this.username, password: this.password,
           firstName : this.firstName, lastName: this.lastName, email: this.email,phone:this.phone,city:this.city})
                       .then(response => {
                         console.log(response);
