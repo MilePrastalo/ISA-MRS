@@ -17,6 +17,7 @@ import com.tim9.PlanJourney.hotel.AdditionalCharges;
 import com.tim9.PlanJourney.hotel.Hotel;
 import com.tim9.PlanJourney.hotel.HotelReservation;
 import com.tim9.PlanJourney.hotel.HotelRoom;
+import com.tim9.PlanJourney.models.Discounts;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.repository.HotelRepository;
 
@@ -32,6 +33,9 @@ public class HotelService {
 
 	@Autowired
 	private HotelRepository hotelRepository;
+
+	@Autowired
+	DiscountsService discountService;
 
 	public Hotel findOne(Long id) {
 		return hotelRepository.getOne(id);// repository.findOne();
@@ -112,19 +116,32 @@ public class HotelService {
 		reservation.setHotel(hotel);
 		reservation.setRoom(room);
 		reservation.setDiscount(0);
-		reservation.setPaidPrice(days * room.getPricePerDay());
 		reservation.setUser(user);
 		hotel.getReservations().add(reservation);
 		user.getHotelReservations().add(reservation);
 
+		// Calculates total price.
+		float price = 0;
+		price = days * room.getPricePerDay();
+
 		// Adds choosen additional charges to reservation.
 		for (String aCName : reservationBean.getAdditionalCharges()) {
 			for (AdditionalCharges ac : room.getAdditionalCharges()) {
-				if (ac.getName().equals(aCName)) {
+				if (ac.getName().equals(aCName) || ac.getPricePerDay() == 0) {
 					reservation.getAdditionalCharges().add(ac);
+					// Adds to price.
+					price += days * ac.getPricePerDay();
 				}
 			}
 		}
+
+		// Checks discount.
+		Discounts discounts = discountService.findOne(1L);
+		if (user.getHotelReservations().size() >= discounts.getNumberOfHotelReservations()) {
+			price = price - price / 100 * discounts.getHotelDiscount();
+		}
+		reservation.setPaidPrice(price);
+
 		// service.save(hotel);
 		HotelReservation newReservation = hotelReservationService.save(reservation);
 		System.out.println(newReservation.getId());
@@ -177,17 +194,26 @@ public class HotelService {
 		reservation.setLastDay(lastDay);
 		reservation.setHotel(hotel);
 		reservation.setRoom(room);
-		reservation.setPaidPrice(days * room.getPricePerDay());
 		reservation.setDiscount(reservationBean.getDiscount());
+
+		// Calculates total price.
+		float price = 0;
+		price = days * room.getPricePerDay();
 
 		// Adds choosen additional charges to reservation.
 		for (String aCName : reservationBean.getAdditionalCharges()) {
 			for (AdditionalCharges ac : room.getAdditionalCharges()) {
-				if (ac.getName().equals(aCName)) {
+				if (ac.getName().equals(aCName) || ac.getPricePerDay() == 0) {
 					reservation.getAdditionalCharges().add(ac);
+					// Adds to price.
+					price += days * ac.getPricePerDay();
 				}
 			}
 		}
+
+		price = price - price / 100 * reservationBean.getDiscount();
+
+		reservation.setPaidPrice(price);
 		hotel.getReservations().add(reservation);
 		System.out.println(reservation.getHotel().getName());
 		this.save(hotel);
