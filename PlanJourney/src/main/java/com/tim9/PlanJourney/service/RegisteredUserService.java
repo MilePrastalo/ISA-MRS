@@ -94,12 +94,12 @@ public class RegisteredUserService {
 
 		ArrayList<FriendRequest> requests = (ArrayList<FriendRequest>) friendReqestsService.findAll();
 		for (FriendRequest req : requests) {
-			if (req.getSender().getId() == loggedUser.getId() && req.getReciever().getId() == friendId) {
+			if (req.getSender().getId() == loggedUser.getId() && req.getReciever().getId().equals(friendId)) {
 				loggedUser.getSendRequests().remove(req);
 				friendReqestsService.remove(req.getId());
 				return true;
 			}
-			if (req.getReciever().getId() == loggedUser.getId() && req.getSender().getId() == friendId) {
+			if (req.getReciever().getId() == loggedUser.getId() && req.getSender().getId().equals(friendId)) {
 				loggedUser.getReceivedRequests().remove(req);
 				friendReqestsService.remove(req.getId());
 				return true;
