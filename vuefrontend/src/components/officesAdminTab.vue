@@ -51,7 +51,7 @@ export default {
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getOfficessByAdmin")
+        axios.get("/api/getOfficessByAdmin")
             .then(response => {
                 this.officess = response.data;
             }); 
@@ -71,7 +71,7 @@ export default {
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getOfficessByAdmin")
+        axios.get("/api/getOfficessByAdmin")
             .then(response => {
                 this.officess = response.data;
             }); 
@@ -85,7 +85,7 @@ export default {
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.delete("http://localhost:8080/api/removeOffice/"+id)
+        axios.delete("/api/removeOffice/"+id)
             .then(response => {
                 alert("Success");
                 console.log(response);

@@ -39,7 +39,7 @@ mounted(){
     return localStorage.getItem("jwtToken");
   };
   axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-    axios.get("http://localhost:8080/api/getRentACarCompany")
+    axios.get("/api/getRentACarCompany")
             .then(response => {
                 this.name = response.data.name;
                 this.address = response.data.address;
@@ -53,7 +53,7 @@ mounted(){
     return localStorage.getItem("jwtToken");
   };
             axios.defaults.headers.post['Authorization'] = "Bearer " + getJwtToken();
-            axios.post("http://localhost:8080/api/updateRentACarProfile",{name : this.name, address: this.address, description:this.description});
+            axios.post("/api/updateRentACarProfile",{name : this.name, address: this.address, description:this.description});
             ; 
         }   
     }

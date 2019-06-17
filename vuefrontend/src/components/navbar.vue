@@ -57,7 +57,7 @@ export default {
             return localStorage.getItem("jwtToken");
             };
       axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-      axios.get("http://localhost:8080/api/getUserRole")
+      axios.get("/api/getUserRole")
             .then(response => {
               console.log(response.data);
                 this.type = 1;

@@ -147,7 +147,7 @@ export default {
                         return localStorage.getItem("jwtToken");
                     };
                     axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-                    axios.post("http://localhost:8080/api/getQuickReservations",{id:this.id,dateFrom:this.datefrom,dateTo:this.dateto})
+                    axios.post("/api/getQuickReservations",{id:this.id,dateFrom:this.datefrom,dateTo:this.dateto})
                         .then(response => {
                             console.log(response.data);
                             this.quickReservations = response.data;
@@ -160,7 +160,7 @@ export default {
                     return localStorage.getItem("jwtToken");
                 };
                 axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-                axios.post("http://localhost:8080/api/reserveVehicle",{id:carid,dateFrom:this.datefrom,dateTo:this.dateto,officePick:this.pickoffice,officeReturn:this.returnoffice})
+                axios.post("/api/reserveVehicle",{id:carid,dateFrom:this.datefrom,dateTo:this.dateto,officePick:this.pickoffice,officeReturn:this.returnoffice})
                     .then(response => {
                         console.log(response);
                         alert("Success");
@@ -168,7 +168,7 @@ export default {
                     }); 
             },
             reserveQuick : function(res){
-                axios.post("http://localhost:8080/api/quickReserveVehicle",{id:res.id})
+                axios.post("/api/quickReserveVehicle",{id:res.id})
                     .then(response => {
                         console.log(response);
                         alert("Success");

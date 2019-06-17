@@ -122,7 +122,7 @@ export default {
     }
   },
     mounted(){
-            axios.get("http://localhost:8080/api/getRentACarCompanyInfo/"+this.company.id)
+            axios.get("/api/getRentACarCompanyInfo/"+this.company.id)
                 .then(response => {
                     console.log(response.data);
                     this.name = response.data.name;

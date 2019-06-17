@@ -137,15 +137,15 @@ mounted(){
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken(); 
-        axios.get("http://localhost:8080/api/getCarsByAdmin")
+        axios.get("/api/getCarsByAdmin")
             .then(response => {
                 this.cars = response.data;
             }); 
-        axios.get("http://localhost:8080/api/getOfficessByAdmin")
+        axios.get("/api/getOfficessByAdmin")
             .then(response => {
                 this.offices = response.data;
             }); 
-        axios.get("http://localhost:8080/api/getQuickReservationsByAdmin")
+        axios.get("/api/getQuickReservationsByAdmin")
             .then(response => {
                 console.log(response.data);
                 this.quickReservations = response.data;
@@ -160,7 +160,7 @@ mounted(){
                 return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken(); 
-            axios.post("http://localhost:8080/api/addQuickVehicleReservation",
+            axios.post("/api/addQuickVehicleReservation",
             {vehicleId:this.vehicleID,dateFrom:this.dateFrom,dateTo:this.dateTo,locationPick:this.pickoffice.id,
             locationReturn:this.returnoffice.id,vehicleName:this.vehicleName,discount:this.discount})
             .then(response=>{
@@ -216,7 +216,7 @@ mounted(){
                 return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken(); 
-            axios.post("http://localhost:8080/api/editQuickVehicleReservation",{id:this.quickId,dateFrom:this.dateFrom,dateTo:this.dateTo,vehicleName:this.vehicleName,discount:this.discount})
+            axios.post("/api/editQuickVehicleReservation",{id:this.quickId,dateFrom:this.dateFrom,dateTo:this.dateTo,vehicleName:this.vehicleName,discount:this.discount})
             .then(response=>{
                 if(response.data == "OK"){
                   this.quickReservations.forEach(element => {
@@ -245,7 +245,7 @@ mounted(){
                 return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken(); 
-            axios.post("http://localhost:8080/api/removeQuickReservation",
+            axios.post("/api/removeQuickReservation",
             {id:reservation.id})
             .then(response=>{
                 if(response.data == "OK"){

@@ -61,11 +61,11 @@ export default {
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         var responseData;
-        axios.get("http://localhost:8080/api/getProducers")
+        axios.get("/api/getProducers")
             .then(response => {
                 this.makers = response.data
             }); 
-        axios.get("http://localhost:8080/api/getTypes")
+        axios.get("/api/getTypes")
             .then(response => {
                 this.types = response.data
             }); 
@@ -77,7 +77,7 @@ export default {
                 return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-            axios.post("http://localhost:8080/api/addCar",{name:this.name,maker:this.maker,type:this.type,year:this.year,price:this.price,dateFrom:this.datefrom,dateTo:this.dateto})
+            axios.post("/api/addCar",{name:this.name,maker:this.maker,type:this.type,year:this.year,price:this.price,dateFrom:this.datefrom,dateTo:this.dateto})
             .then(function(){
               alert("Vehicle has been added");
             }); 
