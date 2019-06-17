@@ -122,7 +122,7 @@ export default {
             .then(response => {
                  alert(response.data);
             });
-            window.location = "/flight"
+            window.location = "/front/flight"
         },
 
         goToNextStep: function(option){
@@ -163,7 +163,7 @@ export default {
 
         goBack: function(current){
             if (current == 1){
-                window.location = "/flight"
+                window.location = "/front/flight"
             }
             else if (current == 2){
                 this.currentStep = 1;

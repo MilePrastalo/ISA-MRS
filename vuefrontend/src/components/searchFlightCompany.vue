@@ -86,7 +86,7 @@ methods:{
     },
     goToDetails: function(id){
         localStorage.setItem("idCompany", id);
-        window.location = "./CompanyProfile";
+        window.location = "/front/CompanyProfile";
     }
 }
 }

@@ -121,12 +121,12 @@ mounted(){
 
         makeReservation: function(id){
             localStorage.setItem("flightID",id);
-            window.location = "/flightReservation";
+            window.location = "/front/flightReservation";
         },
 
         goBack: function(){
             if (this.role == "REGISTERED"){
-                window.location = "/index";
+                window.location = "/front/index";
                 return;
             }
              window.location = "/";

@@ -183,7 +183,7 @@ export default {
             .then(response => {
                 alert(response.data);
                 if (response.data == "success"){
-                    window.location = "/index"
+                    window.location = "/front/index"
                 }
         });
     },

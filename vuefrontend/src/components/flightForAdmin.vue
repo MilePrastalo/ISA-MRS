@@ -180,7 +180,7 @@ export default {
             .then(response => {
                 if (response.data == "success"){
                     alert("Flight is removed.");
-                    window.location = "/flightAdmin"
+                    window.location = "/front/flightAdmin"
                 }
                 else{
                     alert(response.data);

@@ -191,12 +191,12 @@ mounted(){
         
         goToDetails : function(flightID){
             localStorage.setItem("flightID",flightID)
-            window.location = "/flightForAdmin"
+            window.location = "/front/flightForAdmin"
         },
 
         goToDetailsForReservation: function(flightID){
             localStorage.setItem("flightID",flightID)
-            window.location = "/flight"
+            window.location = "/front/flight"
         },
         
         removeFlight: function(flight, index){
