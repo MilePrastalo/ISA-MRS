@@ -80,7 +80,7 @@ export default {
             .then(response => {
                 console.log(response);
                 if(response.data == "NOT"){
-                  window.location ="./FirstLogin";
+                  window.location ="./front/FirstLogin";
                 }else{
                   this.getRole(); 
                 }
@@ -96,20 +96,20 @@ export default {
             .then(response => {
                 console.log(response);
                 if(response.data == "RENT_ADMIN"){
-                  window.location ="./RAindex";
+                  window.location ="./front/RAindex";
                 }else if (response.data == "FLIGHT_ADMIN"){
-                  window.location ="./flightAdmin";
+                  window.location ="./front/flightAdmin";
                 }else if (response.data == "SYS_ADMIN"){
-                  window.location ="./systemAdminPage";
+                  window.location ="./front/systemAdminPage";
                 }else if (response.data == "REGISTERED"){
-                  if (window.location.pathname.startsWith("/confirmationPage")){
+                  if (window.location.pathname.startsWith("/front/confirmationPage")){
                     this.$emit("currentDiv",2);
                   }
                   else{
                     window.location ="./index";
                   }
                 }else if (response.data == "HOTEL_ADMIN"){
-                  window.location ="./hotelAdminPage";
+                  window.location ="./front/hotelAdminPage";
                 }else{
                   window.location ="./";
                 }

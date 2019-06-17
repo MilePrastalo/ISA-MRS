@@ -36,10 +36,10 @@ export default {
   },
   methods: {
         logIn: function() {
-            this.$router.push("/loginPage");
+            this.$router.push("front/loginPage");
         },
         register: function() {
-            this.$router.push("/registerPage");
+            this.$router.push("front/registerPage");
         },
         showFlight : function(){
             this.tabSelected = 1;

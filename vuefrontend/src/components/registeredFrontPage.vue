@@ -187,7 +187,7 @@ export default {
   },
   methods : {
       friends:function(){
-          window.location = "./friends";
+          window.location = "./front/friends";
       },
       hotels:function(){
           window.location = "./";
@@ -229,13 +229,13 @@ export default {
       window.location="./";
     },
     profile:function(){
-        window.location="./userProfile";
+        window.location="./front/userProfile";
     },
     rentACar:function(){
-        window.location="./rentacar";
+        window.location="./front/rentacar";
     },
     airlines:function(){
-        window.location="./searchFlightCompany";
+        window.location="./front/searchFlightCompany";
     },
     cancel:function(reservation, index){
         var getJwtToken = function() {

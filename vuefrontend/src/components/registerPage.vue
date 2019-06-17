@@ -45,7 +45,7 @@
               </div>
 
               <button @click="register" class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Register</button>
-              <a class="d-block text-center mt-2 btn btn-lg btn-primary btn-block text-uppercase" href="./loginPage">Login</a>
+              <a class="d-block text-center mt-2 btn btn-lg btn-primary btn-block text-uppercase" href="./front/loginPage">Login</a>
               <button @click="goBack" class="btn btn-lg btn-warning btn-block text-uppercase">Back</button>
               </form>
           </div>

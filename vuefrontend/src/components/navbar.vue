@@ -16,22 +16,22 @@
                         </a>
                     </li>
                     <li v-if="type!=0" class="nav-item">
-                    <a class="nav-link" href="./userProfile">Profile</a>
+                    <a class="nav-link" href="./front/userProfile">Profile</a>
                     </li>
                      <li v-if="type!=0" class="nav-item">
-                    <a class="nav-link" href="/invites">Invites</a>
+                    <a class="nav-link" href="/front/invites">Invites</a>
                     </li>
                     <li v-if="type!=0" class="nav-item">
                     <a @click="logout" class="nav-link">Logout</a>
                     </li>
 
                     <li v-if="type==0" class="nav-item active">
-                        <a class="nav-link" href="./loginPage">Login
+                        <a class="nav-link" href="./front/loginPage">Login
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
                     <li v-if="type==0" class="nav-item">
-                    <a  class="nav-link" href="./registerPage" >Register</a>
+                    <a  class="nav-link" href="./front/registerPage" >Register</a>
                     </li>
 
 

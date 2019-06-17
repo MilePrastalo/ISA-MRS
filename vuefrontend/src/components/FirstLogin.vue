@@ -55,15 +55,15 @@ export default {
                     .then(response => {
                 console.log(response);
                 if(response.data == "RENT_ADMIN"){
-                  window.location ="./RAindex";
+                  window.location ="./front/RAindex";
                 }else if (response.data == "FLIGHT_ADMIN"){
-                  window.location ="./flightAdmin";
+                  window.location ="./front/flightAdmin";
                 }else if (response.data == "SYS_ADMIN"){
-                  window.location ="./systemAdminPage";
+                  window.location ="./front/systemAdminPage";
                 }else if (response.data == "REGISTERED"){
-                  window.location ="./index";
+                  window.location ="./front/index";
                 }else if (response.data == "HOTEL_ADMIN"){
-                  window.location ="./hotelAdminPage";
+                  window.location ="./front/hotelAdminPage";
                 }else{
                   window.location ="./";
                 }
