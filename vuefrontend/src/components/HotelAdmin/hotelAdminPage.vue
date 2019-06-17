@@ -33,7 +33,7 @@ mounted(){
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getHotelAdminProfile")
+        axios.get("/api/getHotelAdminProfile")
             .then(response => {
                 this.hotelAdmin = response.data;
             });
@@ -48,14 +48,14 @@ mounted(){
         changePassword: function() {
             if(this.hotelAdmin.password == this.oldPassword && this.newPassword == this.repeatPassword) {
                 this.hotelAdmin.password = this.newPassword;
-                axios.post("http://localhost:8080/api/updateHotelAdmin",this.hotelAdmin)
+                axios.post("/api/updateHotelAdmin",this.hotelAdmin)
                 .then(response => {
                 alert(response.data)
             });
             }
         },
         updateHotelAdminProfile: function() {
-            axios.post("http://localhost:8080/api/updateHotelAdmin",this.hotelAdmin)
+            axios.post("/api/updateHotelAdmin",this.hotelAdmin)
                 .then(response => {
                 alert(response.data)
             });

@@ -62,9 +62,9 @@
 </template>
 
 <script>
-import hotelProfile from './hotelProfile.vue';
+import hotelProfile from "./hotelProfile.vue";
 export default {
-  name: 'hotelReservation',
+  name: "hotelReservation",
   props: ["location","passangers","firstDay"],
   components: {
       hotelProfile
@@ -129,7 +129,7 @@ mounted(){
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

@@ -94,7 +94,7 @@ export default {
         };
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
 
-        axios.post("http://localhost:8080/api/getHotelReport/",{reportName:this.reportName,fYear:this.fYear,fMonth:this.fMonth,fDay:this.fDay})
+        axios.post("/api/getHotelReport/",{reportName:this.reportName,fYear:this.fYear,fMonth:this.fMonth,fDay:this.fDay})
             .then(response => {
                 this.report = response.data;
                 this.loaded = 1;

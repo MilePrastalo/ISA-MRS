@@ -114,7 +114,7 @@ created: function(){
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getFlightCompanyProfileRegitered/"+ this.companyId)
+        axios.get("/api/getFlightCompanyProfileRegitered/"+ this.companyId)
         .then(response => {
             this.company = response.data
         });    

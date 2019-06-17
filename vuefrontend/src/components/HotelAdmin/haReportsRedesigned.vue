@@ -158,7 +158,7 @@ export default {
     };
 
     axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-    axios.get("http://localhost:8080/api/getHotelAverageRate")
+    axios.get("/api/getHotelAverageRate")
     .then(response => {
             this.dataForCompanyRates = response.data;
     });
@@ -247,7 +247,7 @@ export default {
         e.preventDefault();
         console.log(localStorage.getItem('jwtToken'));
         axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('jwtToken');
-        axios.post("http://localhost:8080/api/getReservedRooms",{dateFrom: this.dateFrom, dateTo: this.dateTo, kind: this.reportKindTickets})
+        axios.post("/api/getReservedRooms",{dateFrom: this.dateFrom, dateTo: this.dateTo, kind: this.reportKindTickets})
         .then(response => {
                 this.dataSoldTickets = response.data;
                 this.soldTicketReport();
@@ -302,7 +302,7 @@ export default {
             return localStorage.getItem('jwtToken');
         };
         axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-        axios.post("http://localhost:8080/api/getHotelEarningsReport",{dateFrom: this.dateFrom, dateTo: this.dateTo})
+        axios.post("/api/getHotelEarningsReport",{dateFrom: this.dateFrom, dateTo: this.dateTo})
         .then(response => {
                 this.earnings = response.data;
                 this.earningsVisible = true;

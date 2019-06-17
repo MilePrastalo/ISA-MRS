@@ -128,7 +128,7 @@
 
 <script>
 import axios from "axios";
-import unregisteredHotelRoom from './unregisteredHotelRoom.vue';
+import unregisteredHotelRoom from "./unregisteredHotelRoom.vue";
 import navbar from "./navbar.vue";
 export default {
   name: "unregisteredHotelProfile",
@@ -147,9 +147,9 @@ export default {
 },
 mounted(){
          var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
          axios.get("http://localhost:8080/api/getHotel/" + this.$route.params.hotelName)
         .then(response => {
             this.hotel = response.data;

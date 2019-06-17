@@ -210,7 +210,7 @@ export default {
           alert("Discount must be grater than zero.");
           return;
         }
-        axios.post("http://localhost:8080/api/addQuickHotelReservation",{hotelName: this.hotel.name,fYear: this.fYear,fMonth: this.fMonth,fDay: this.fDay,lYear: this.lYear,lMonth: this.lMonth,lDay: this.lDay, roomNumber: this.room.roomNumber,discount: this.discount,additionalCharges:this.additionalCharges})
+        axios.post("/api/addQuickHotelReservation",{hotelName: this.hotel.name,fYear: this.fYear,fMonth: this.fMonth,fDay: this.fDay,lYear: this.lYear,lMonth: this.lMonth,lDay: this.lDay, roomNumber: this.room.roomNumber,discount: this.discount,additionalCharges:this.additionalCharges})
         .then(response => {
             if(response.data === true) {
               alert("Your reservation is successful.");
