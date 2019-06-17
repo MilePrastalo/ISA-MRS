@@ -60,7 +60,7 @@ export default {
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getCarsByAdmin")
+        axios.get("/api/getCarsByAdmin")
             .then(response => {
                 this.cars = response.data;
             }); 
@@ -84,7 +84,7 @@ export default {
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getCarsByAdmin")
+        axios.get("/api/getCarsByAdmin")
             .then(response => {
                 this.cars = response.data;
             }); 
@@ -105,7 +105,7 @@ export default {
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.delete("http://localhost:8080/api/removeCar/"+id)
+        axios.delete("/api/removeCar/"+id)
             .then(response => {
                 alert("Success");
                 console.log(response);

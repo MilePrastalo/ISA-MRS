@@ -151,12 +151,12 @@ mounted(){
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getAllFlightCompanies")
+        axios.get("/api/getAllFlightCompanies")
             .then(response => {
                 this.fcs = response.data;
             });
 
-        axios.get("http://localhost:8080/api/getAllFlightAdmins")
+        axios.get("/api/getAllFlightAdmins")
             .then(response => {
                 this.flightAdmins = response.data;
             });
@@ -166,7 +166,7 @@ mounted(){
             this.currentTab = tabId;
         },
         addFlightCompany: function() {
-            axios.post("http://localhost:8080/api/addFlightCompany",this.newFC).
+            axios.post("/api/addFlightCompany",this.newFC).
             then(response =>{
                  alert("Flight Company has been successfully added.");
                     this.fcs.push(this.newFC);
@@ -175,7 +175,7 @@ mounted(){
             })
         },
         removeFlightCompany: function(name) {
-            axios.delete("http://localhost:8080/api/removeFlightCompany/"+ name)
+            axios.delete("/api/removeFlightCompany/"+ name)
             .then(response => {
                 var index;
                 for(let f in this.fcs) {
@@ -199,7 +199,7 @@ mounted(){
           this.showFCs = true;  
         },
         addFlightCompanyAdmin: function() {
-            axios.post("http://localhost:8080/api/addFlightAdmin",{username:this.admin.username,password:this.admin.password,firstName:this.admin.firstName,lastName:this.admin.lastName,email:this.admin.email,companyName:this.flightCompanyName}).
+            axios.post("/api/addFlightAdmin",{username:this.admin.username,password:this.admin.password,firstName:this.admin.firstName,lastName:this.admin.lastName,email:this.admin.email,companyName:this.flightCompanyName}).
             then(response =>{
                 if(response.data === true) {
                     alert("Flight admin has been successfully added.");
@@ -210,7 +210,7 @@ mounted(){
             })
         },
         removeAdmin: function(name) {
-            axios.delete("http://localhost:8080/api/removeFlightAdmin/"+ name)
+            axios.delete("/api/removeFlightAdmin/"+ name)
             .then(response => {
                 var index;
                 for(let a in this.flightAdmins) {

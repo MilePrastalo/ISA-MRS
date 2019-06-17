@@ -117,7 +117,7 @@ mounted(){
                     }
                }
                
-               axios.post("http://localhost:8080/api/getRentACarCompanies",{name : this.name, location: this.location, dateFrom:this.datefrom, dateTo:this.dateTo})
+               axios.post("/api/getRentACarCompanies",{name : this.name, location: this.location, dateFrom:this.datefrom, dateTo:this.dateTo})
                 .then(response => {
                     this.companies = response.data
                 }); 

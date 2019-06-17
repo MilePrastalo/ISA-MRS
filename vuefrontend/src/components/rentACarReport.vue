@@ -121,14 +121,14 @@ export default {
                     return localStorage.getItem("jwtToken");
                 };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getCompanyRatingReport",{})
+        axios.get("/api/getCompanyRatingReport",{})
                 .then(response => { 
                     console.log(response.data);
                     this.ratingData = response.data.ratings; 
                     this.avgRating = response.data.avgRating;
                 });
 
-        axios.get("http://localhost:8080/api/getCarsByAdmin")
+        axios.get("/api/getCarsByAdmin")
             .then(response => {
                 console.log(response);
                 this.cars = response.data;
@@ -146,7 +146,7 @@ export default {
                     return localStorage.getItem("jwtToken");
                 };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.post("http://localhost:8080/api/",{})
+        axios.post("/api/",{})
                 .then(response => { 
                     this.vehicles = response.data; 
                 }); 
@@ -156,7 +156,7 @@ export default {
                     return localStorage.getItem("jwtToken");
                 };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.post("http://localhost:8080/api/getCompanyEarningsReport",{dateFrom:this.dateFromEarnings,dateTo:this.dateToEarnings})
+        axios.post("/api/getCompanyEarningsReport",{dateFrom:this.dateFromEarnings,dateTo:this.dateToEarnings})
                 .then(response => { 
                     this.earnings = response.data; 
                 }); 
@@ -167,7 +167,7 @@ export default {
                     return localStorage.getItem('jwtToken');
                 };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.post("http://localhost:8080/api/getCompanyReservationsReport",{dateFrom:this.dateFromReservation,dateTo:this.dateToReservation,type:this.earningsType})
+        axios.post("/api/getCompanyReservationsReport",{dateFrom:this.dateFromReservation,dateTo:this.dateToReservation,type:this.earningsType})
                 .then(response => { 
                     console.log(response);
                     this.reservations = response.data;

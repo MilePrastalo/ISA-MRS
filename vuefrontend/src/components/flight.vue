@@ -62,9 +62,7 @@
                     <td><button v-if="role == 'REGISTERED'" class="btn btn-primary" @click="makeReservation(flight.id)">Make reservation</button> </td>
                 </tr>
                 <br><br>
-            <a  href = "searchHotels">Search for hotels</a>
-            <br>
-            <a href = "/searchVehicle">Search for rent a car services</a>
+                <button @click="goBack" class = "btn btn-outline-success">Back</button>
             </table>
             </div>
             <div class="col">
@@ -124,6 +122,14 @@ mounted(){
         makeReservation: function(id){
             localStorage.setItem("flightID",id);
             window.location = "/flightReservation";
+        },
+
+        goBack: function(){
+            if (this.role == "REGISTERED"){
+                window.location = "/index";
+                return;
+            }
+             window.location = "/";
         }
             
     }

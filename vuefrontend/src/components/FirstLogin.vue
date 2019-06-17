@@ -44,14 +44,14 @@ export default {
             };
       axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
 
-      axios.post("http://localhost:8080/api/firstLogin",{password:this.password,confirmed:this.confirmedPassword})
+      axios.post("/api/firstLogin",{password:this.password,confirmed:this.confirmedPassword})
         .then(response => {
             if(response.data !=="OK"){
                 alert("ERROR");
                 window.location="./";
             }
             else{
-                axios.get("http://localhost:8080/api/getUserRole")
+                axios.get("/api/getUserRole")
                     .then(response => {
                 console.log(response);
                 if(response.data == "RENT_ADMIN"){

@@ -64,11 +64,11 @@ mounted(){
     return localStorage.getItem("jwtToken");
   };
     axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-    axios.get("http://localhost:8080/api/getProducers",)
+    axios.get("/api/getProducers",)
         .then(response => {
             this.producers = response.data
           }); 
-    axios.get("http://localhost:8080/api/getTypes")
+    axios.get("api/getTypes")
         .then(response => {
             this.types = response.data
           });  
@@ -78,7 +78,7 @@ mounted(){
           var data = {};
           var parent = this;
           console.log(this.company);
-            axios.post("http://localhost:8080/api/vehicleSearch",{seats:this.seats,dateFrom:this.dateFrom,dateTo:this.dateTo,company:this.company, producer : this.producer, priceFrom: this.priceFrom, priceTo:this.priceTo, newer:this.newer, older:this.older,type:this.type})
+            axios.post("/api/vehicleSearch",{seats:this.seats,dateFrom:this.dateFrom,dateTo:this.dateTo,company:this.company, producer : this.producer, priceFrom: this.priceFrom, priceTo:this.priceTo, newer:this.newer, older:this.older,type:this.type})
             .then(response => {
               console.log(response.data);
                 parent.$emit("searched",response.data);

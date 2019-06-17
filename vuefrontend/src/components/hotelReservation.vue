@@ -105,7 +105,7 @@ mounted(){
             this.searchHotel.cityName = this.location;
             this.searchHotel.search = 1;
 
-            axios.post("http://localhost:8080/api/searchHotels",this.searchHotel)
+            axios.post("/api/searchHotels",this.searchHotel)
             .then(response => {
                 this.hotels = response.data;
             });

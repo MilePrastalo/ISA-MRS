@@ -151,12 +151,12 @@ mounted(){
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getAllRentACars")
+        axios.get("/api/getAllRentACars")
             .then(response => {
                 this.racs = response.data;
             });
 
-        axios.get("http://localhost:8080/api/getAllRACAdmins")
+        axios.get("/api/getAllRACAdmins")
             .then(response => {
                 this.racAdmins = response.data;
             });
@@ -166,7 +166,7 @@ mounted(){
             this.currentTab = tabId;
         },
         addRentACar: function() {
-            axios.post("http://localhost:8080/api/addRentACarCompany",this.newRac).
+            axios.post("/api/addRentACarCompany",this.newRac).
             then(response =>{
                 alert(response.data.name + " has been successfully added.");
                     this.racs.push(this.newRac);
@@ -174,7 +174,7 @@ mounted(){
             })
         },
         removeRAC: function(name) {
-            axios.delete("http://localhost:8080/api/removeRentACarCompany/"+ name)
+            axios.delete("/api/removeRentACarCompany/"+ name)
             .then(response => {
                 var index;
                 for(let r in this.racs) {
@@ -198,7 +198,7 @@ mounted(){
           this.showRACs = true;  
         },
         addRentACarAdmin: function() {
-            axios.post("http://localhost:8080/api/addRentACarAdmin",{username:this.admin.username,password:this.admin.password,firstName:this.admin.firstName,lastName:this.admin.lastName,email:this.admin.email,companyName:this.rentACarName}).
+            axios.post("/api/addRentACarAdmin",{username:this.admin.username,password:this.admin.password,firstName:this.admin.firstName,lastName:this.admin.lastName,email:this.admin.email,companyName:this.rentACarName}).
             then(response =>{
                 if(response.data === true) {
                     alert("Rent a car admin has been successfully added.");
@@ -209,7 +209,7 @@ mounted(){
             })
         },
         removeAdmin: function(name) {
-            axios.delete("http://localhost:8080/api/removeRentACarAdmin/"+ name)
+            axios.delete("/api/removeRentACarAdmin/"+ name)
             .then(response => {
                 var index;
                 for(let a in this.racAdmins) {
