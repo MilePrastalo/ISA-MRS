@@ -84,12 +84,12 @@ mounted(){
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getLogUser")
+        axios.get("/api/getLogUser")
         .then(response => {
             this.user = response.data;
           });
 
-         axios.get("http://localhost:8080/api/getHotel/"+this.hotelName)
+         axios.get("/api/getHotel/"+this.hotelName)
         .then(response => {
             this.hotel = response.data
             for(let r in response.data.rooms) {
@@ -188,7 +188,7 @@ mounted(){
         this.checkDate();
       },
       reserve: function() {
-        axios.post("http://localhost:8080/api/addHotelReservation",{username: this.user.username,hotelName: this.hotel.name,fYear: this.fYear,fMonth: this.fMonth,fDay: this.fDay,lYear: this.lYear,lMonth: this.lMonth,lDay: this.lDay, roomNumber: this.room.roomNumber,additionalCharges:this.additionalCharges})
+        axios.post("/api/addHotelReservation",{username: this.user.username,hotelName: this.hotel.name,fYear: this.fYear,fMonth: this.fMonth,fDay: this.fDay,lYear: this.lYear,lMonth: this.lMonth,lDay: this.lDay, roomNumber: this.room.roomNumber,additionalCharges:this.additionalCharges})
         .then(response => {
             if(response.data != null)  {
               alert("Your reservation is successful.");

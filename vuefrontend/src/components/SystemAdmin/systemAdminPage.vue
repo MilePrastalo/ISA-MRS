@@ -77,7 +77,7 @@ mounted(){
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getSystemAdminProfile")
+        axios.get("/api/getSystemAdminProfile")
             .then(response => {
                 this.systemAdmin = response.data;
             });
@@ -91,7 +91,7 @@ mounted(){
               return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.post["Authorization"] = "Bearer " + getJwtToken();
-            axios.post("http://localhost:8080/api/updateFlightCompanyProfile",{name:this.name, address: this.address, description: this.description})
+            axios.post("/api/updateFlightCompanyProfile",{name:this.name, address: this.address, description: this.description})
             .then(response => {
                 this.name = response.data.name
                 this.address = response.data.address
@@ -100,7 +100,7 @@ mounted(){
             alert("Successfuly updated!")
         },
         loadHotels: function() {
-            axios.get("http://localhost:8080/api/getAllHotels")
+            axios.get("/api/getAllHotels")
             .then(response => {
                 this.hotels = response.data;
             })
