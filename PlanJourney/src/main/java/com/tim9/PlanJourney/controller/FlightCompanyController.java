@@ -703,16 +703,13 @@ public class FlightCompanyController {
 	 * userService.save(flightAdmin); }
 	 */
 
-	private Set<Seat> makeSeats(Set<Seat> seats, String capacity, String flightClass) {
-		int rows = Integer.parseInt(capacity.split("|")[0]);
-		int columns = Integer.parseInt(capacity.split("|")[2]);
-		for (int row = 1; row <= rows; row++) {
-			for (int col = 1; col <= columns; col++) {
-				seats.add(new Seat(false, row, col, flightClass));
-			}
-		}
-		return seats;
-	}
+	/*
+	 * private Set<Seat> makeSeats(Set<Seat> seats, String capacity, String
+	 * flightClass) { int rows = Integer.parseInt(capacity.split("|")[0]); int
+	 * columns = Integer.parseInt(capacity.split("|")[2]); for (int row = 1; row <=
+	 * rows; row++) { for (int col = 1; col <= columns; col++) { seats.add(new
+	 * Seat(false, row, col, flightClass)); } } return seats; }
+	 */
 
 	@RequestMapping(value = "/api/addFlightCompany", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
