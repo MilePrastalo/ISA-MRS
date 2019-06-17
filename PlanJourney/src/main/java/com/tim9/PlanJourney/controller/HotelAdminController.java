@@ -1,8 +1,11 @@
 package com.tim9.PlanJourney.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tim9.PlanJourney.beans.AdminBean;
 import com.tim9.PlanJourney.beans.EditHotelBean;
+import com.tim9.PlanJourney.beans.FlightCompanyReportBean;
+import com.tim9.PlanJourney.beans.FlightReportRequestBean;
 import com.tim9.PlanJourney.beans.HotelAdminBean;
 import com.tim9.PlanJourney.beans.HotelBean;
 import com.tim9.PlanJourney.beans.HotelDailyReportBean;
@@ -36,6 +41,11 @@ import com.tim9.PlanJourney.hotel.HotelAdmin;
 import com.tim9.PlanJourney.hotel.HotelReservation;
 import com.tim9.PlanJourney.hotel.HotelRoom;
 import com.tim9.PlanJourney.models.Authority;
+import com.tim9.PlanJourney.models.Review;
+import com.tim9.PlanJourney.models.flight.Flight;
+import com.tim9.PlanJourney.models.flight.FlightAdmin;
+import com.tim9.PlanJourney.models.flight.FlightCompany;
+import com.tim9.PlanJourney.models.flight.FlightReservation;
 import com.tim9.PlanJourney.service.AuthorityService;
 import com.tim9.PlanJourney.service.EmailService;
 import com.tim9.PlanJourney.service.HotelAdminService;
@@ -63,6 +73,8 @@ public class HotelAdminController {
 
 	@Autowired
 	private HotelReservationService hotelReservationService;
+
+	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy. HH:mm");
 
 	@RequestMapping(value = "/api/getHotelAdmin/{username}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
@@ -378,7 +390,6 @@ public class HotelAdminController {
 		return added;
 	}
 
-
 	@RequestMapping(value = "/api/cancelQuickHotelReservation", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('HOTEL_ADMIN')")
@@ -400,31 +411,181 @@ public class HotelAdminController {
 	public @ResponseBody boolean updateHotelProfile(@RequestBody EditHotelBean editHotelBean) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
-			if(editHotelBean.getNewName().equals("".trim())) {
+			if (editHotelBean.getNewName().equals("".trim())) {
 				return false;
 			}
-			
+
 			ArrayList<Hotel> hotels = (ArrayList<Hotel>) hotelService.findAll();
-			
-			
-			
+
 			String username = authentication.getName();
 			HotelAdmin ha = adminService.findByUsername(username);
 			Hotel hotel = ha.getHotel();
-			for(Hotel h : hotels) {
-				if(h.getName().equals(editHotelBean.getNewName()) && h.getCity().getName().equals(editHotelBean.getCityName()) && h.getId() != hotel.getId()) {
+			for (Hotel h : hotels) {
+				if (h.getName().equals(editHotelBean.getNewName())
+						&& h.getCity().getName().equals(editHotelBean.getCityName()) && h.getId() != hotel.getId()) {
 					return false;
 				}
 			}
-			if(editHotelBean.getOldName().equals(hotel.getName()) && editHotelBean.getCityName().equals(hotel.getCity().getName())) {
+			if (editHotelBean.getOldName().equals(hotel.getName())
+					&& editHotelBean.getCityName().equals(hotel.getCity().getName())) {
 				hotel.setName(editHotelBean.getNewName());
 				hotel.setDescription(editHotelBean.getNewDescription());
-				
+
 				hotelService.save(hotel);
-				
+
 				return true;
 			}
 		}
 		return false;
+	}
+
+	// Returns average rate for hotel.
+	@RequestMapping(value = "/api/getHotelAverageRate", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('HOTEL_ADMIN')")
+	public ArrayList<Integer> getHotelAverageRate() {
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String username = authentication.getName();
+			HotelAdmin admin = adminService.findByUsername(username);
+
+			Hotel hotel = admin.getHotel();
+			HashMap<Integer, Integer> ratingMap = new HashMap<>();
+			ratingMap.put(1, 0);
+			ratingMap.put(2, 0);
+			ratingMap.put(3, 0);
+			ratingMap.put(4, 0);
+			ratingMap.put(5, 0);
+			for (HotelReservation reservation : hotel.getReservations()) {
+				for (Review review : reservation.getReservationReviews()) {
+					int newNum = ratingMap.get(review.getRating()) + 1;
+					ratingMap.put(review.getRating(), newNum);
+				}
+			}
+			ArrayList<Integer> rates = new ArrayList<>();
+			rates.add(ratingMap.get(1));
+			rates.add(ratingMap.get(2));
+			rates.add(ratingMap.get(3));
+			rates.add(ratingMap.get(4));
+			rates.add(ratingMap.get(5));
+			return rates;
+		}
+		return null;
+	}
+
+	@RequestMapping(value = "/api/getReservedRooms", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('HOTEL_ADMIN')")
+	public @ResponseBody FlightCompanyReportBean getReservedRooms(@RequestBody FlightReportRequestBean reqestData)
+			throws Exception {
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String username = authentication.getName();
+			HotelAdmin admin = adminService.findByUsername(username);
+
+			Hotel hotel = admin.getHotel();
+
+			Date startDate = reqestData.getDateFrom();
+			Date endDate = reqestData.getDateTo();
+			Calendar calStart = Calendar.getInstance();
+			calStart.setTime(startDate);
+			Calendar calEnd = Calendar.getInstance();
+			calEnd.setTime(endDate);
+
+			ArrayList<String> labels = new ArrayList<>();
+			ArrayList<Integer> cntTickets = new ArrayList<>();
+
+			System.out.println("KIND = " + reqestData.getKind());
+			long span = endDate.getTime() - startDate.getTime();
+			long cols;
+			if (reqestData.getKind().equals("daily")) {
+				cols = TimeUnit.DAYS.convert(span, TimeUnit.MILLISECONDS);
+				for (int i = 0; i <= cols; i++) {
+					labels.add(sdf.format(calStart.getTime()));
+					cntTickets.add(0);
+					calStart.add(calStart.DATE, 1);
+				}
+			} else if (reqestData.getKind().equals("weekly")) {
+				cols = TimeUnit.DAYS.convert(span, TimeUnit.MILLISECONDS);
+				int weekStart = calStart.get(Calendar.WEEK_OF_YEAR);
+				int weekEnd = calEnd.get(Calendar.WEEK_OF_YEAR);
+				boolean ajusted = false;
+				for (int i = 0; i <= weekEnd - weekStart; i++) {
+					labels.add(sdf.format(calStart.getTime()));
+					cntTickets.add(0);
+					if (!ajusted) {
+						calStart.add(calStart.DATE, 9 - calStart.get(Calendar.DAY_OF_WEEK));
+						ajusted = true;
+					} else {
+						calStart.add(calStart.DATE, 7);
+					}
+				}
+			} else if (reqestData.getKind().equals("monthly")) {
+				boolean ajusted = false;
+				int monthStart = calStart.get(Calendar.MONTH);
+				int montEnd = calEnd.get(Calendar.MONTH);
+
+				for (int i = 0; i <= montEnd - monthStart; i++) {
+					labels.add(sdf.format(calStart.getTime()));
+					cntTickets.add(0);
+					int sub = calStart.get(Calendar.DAY_OF_MONTH);
+					if (!ajusted) {
+						calStart.add(calStart.DATE, -sub + 1);
+						calStart.add(calStart.MONTH, 1);
+						ajusted = true;
+					} else {
+						calStart.add(calStart.MONTH, 1);
+					}
+				}
+			}
+			for (HotelReservation hr : hotel.getReservations()) {
+				for (int i = cntTickets.size() - 1; i >= 0; i--) {
+					Date d = sdf.parse(labels.get(i));
+					if (hr.getFirstDay().after(d) && hr.getUser() != null) {
+						cntTickets.set(i, cntTickets.get(i) + 1);
+						break;
+					}
+				}
+			}
+			return new FlightCompanyReportBean(labels, cntTickets);
+
+		}
+		return null;
+	}
+
+	@RequestMapping(value = "/api/getHotelEarningsReport", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@CrossOrigin()
+	@PreAuthorize("hasAuthority('HOTEL_ADMIN')")
+	public @ResponseBody String getHotelEarningsReport(@RequestBody FlightReportRequestBean reqestData) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			String username = authentication.getName();
+			HotelAdmin admin = adminService.findByUsername(username);
+
+			Hotel hotel = admin.getHotel();
+
+			Date dateFrom = reqestData.getDateFrom();
+			Date dateTo = reqestData.getDateTo();
+			Date today = new Date();
+
+			if (dateFrom.after(today)) {
+				return "Start date is in the future.";
+			}
+
+			double total = 0;
+
+			for (HotelReservation reservation : hotel.getReservations()) {
+
+				if (reservation.getFirstDay().after(dateFrom) && reservation.getFirstDay().before(dateTo)
+						&& reservation.getUser() != null) {
+					total += reservation.getPaidPrice();
+				}
+			}
+
+			return Double.toString(total);
+		}
+		return null;
 	}
 }
