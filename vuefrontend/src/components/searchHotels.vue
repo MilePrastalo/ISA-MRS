@@ -101,7 +101,7 @@ mounted(){
             })  
         },
         showDetails: function(chosenHotel) {
-            window.location ="./unregisteredHotelProfile/"+ chosenHotel;
+            window.location ="./front/unregisteredHotelProfile/"+ chosenHotel;
         },
         clearSearch: function() {
             this.searchHotel = {};
