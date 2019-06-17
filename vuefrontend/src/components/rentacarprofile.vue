@@ -24,7 +24,7 @@
 <script>
 
 export default {
-  name: 'rentacarprofile',
+  name: "rentacarprofile",
   components: {
   },
   data: function () {
@@ -36,9 +36,9 @@ export default {
 },
 mounted(){
   var getJwtToken = function() {
-    return localStorage.getItem('jwtToken');
+    return localStorage.getItem("jwtToken");
   };
-  axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+  axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
     axios.get("http://localhost:8080/api/getRentACarCompany")
             .then(response => {
                 this.name = response.data.name;
@@ -50,7 +50,7 @@ mounted(){
         update: function(e){
           e.preventDefault();
           var getJwtToken = function() {
-    return localStorage.getItem('jwtToken');
+    return localStorage.getItem("jwtToken");
   };
             axios.defaults.headers.post['Authorization'] = "Bearer " + getJwtToken();
             axios.post("http://localhost:8080/api/updateRentACarProfile",{name : this.name, address: this.address, description:this.description});

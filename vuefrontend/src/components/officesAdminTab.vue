@@ -28,7 +28,7 @@ import addOffice from "./addOffice.vue";
 import editOffice from "./editOffice.vue";
 
 export default {
-  name: 'officeAdmin',
+  name: "officeAdmin",
   components: {
     addOffice,
     editOffice
@@ -48,9 +48,9 @@ export default {
   },
   mounted(){
         var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/getOfficessByAdmin")
             .then(response => {
                 this.officess = response.data;
@@ -68,9 +68,9 @@ export default {
       },
       veditedDraw : function(){
          var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/getOfficessByAdmin")
             .then(response => {
                 this.officess = response.data;
@@ -82,9 +82,9 @@ export default {
       },
       removeOffice:function(id){
           var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.delete("http://localhost:8080/api/removeOffice/"+id)
             .then(response => {
                 alert("Success");
@@ -98,7 +98,7 @@ export default {
 
 <style scoped>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

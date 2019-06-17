@@ -53,20 +53,20 @@ export default {
 mounted(){
 
         var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/getUserRole")
         .then(response => {
 
             this.role = response.data;
-            if (response.data == 'FLIGHT_ADMIN'){
+            if (response.data == "FLIGHT_ADMIN"){
                 axios.get("http://localhost:8080/api/getQuickReservations")
                 .then(response2 => {
                     this.quickReservations = response2.data
                 });
             }
-            else if (response.data == 'REGISTERED') {
+            else if (response.data == "REGISTERED") {
                 axios.get("http://localhost:8080/api/getQuickReservationsCompany/" + this.idCompany)
                 .then(response3 => {
                     this.quickReservations = response3.data
@@ -84,7 +84,7 @@ mounted(){
              var obj = {id: res.id, flightId: res.flightId, seatId: res.seatId, originPrice: res.originPrice, discount: res.discount};
             axios.post("http://localhost:8080/api/makeQuickReservation", obj)
             .then(response => {
-                if (response.data == 'success'){
+                if (response.data == "success"){
                     alert("Reservation was successful! You will get e-mail about it.");
                 }
                 else{
@@ -97,9 +97,9 @@ mounted(){
         remove: function(id, index){
             alert(id);
             var getJwtToken = function() {
-                return localStorage.getItem('jwtToken');
+                return localStorage.getItem("jwtToken");
             };
-            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
             axios.get("http://localhost:8080/api/removeQuickFlightReservation/" + id)
             .then(response => {
                 alert(response.data);

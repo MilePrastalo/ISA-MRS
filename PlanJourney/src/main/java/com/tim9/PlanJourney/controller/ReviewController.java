@@ -121,7 +121,6 @@ public class ReviewController {
 		FlightCompany company = (FlightCompany) reservation.getFlight().getFlightCompany();
 		RegisteredUser user = getUser();
 		Review review = getReview(exist, reservation, user, bean);
-		;
 
 		reviewService.save(review);
 		flightReservationService.save(reservation);

@@ -45,7 +45,7 @@ import rentACarReport from "./rentACarReport.vue"
 import navbar from "./navbar.vue";
 
 export default {
-  name: 'registeredUserFrontPage',
+  name: "registeredUserFrontPage",
   components: {
     userProfile,
     rentacarprofile,
@@ -103,7 +103,7 @@ export default {
         document.getElementById("QuickReservations").className="nav-link";
       },
       logout :function(){
-            localStorage.setItem('jwtToken',"");
+            localStorage.setItem("jwtToken","");
             window.location="./";
       }
   }

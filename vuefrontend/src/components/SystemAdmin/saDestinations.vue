@@ -88,7 +88,7 @@
 <script>
 
 export default {
-  name: 'saDestinations',
+  name: "saDestinations",
   components: {
   },
   data: function () {
@@ -103,9 +103,9 @@ export default {
 },
 mounted(){
         var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/getAllDestinations")
             .then(response => {
                 this.destinations = response.data;
@@ -231,7 +231,7 @@ mounted(){
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

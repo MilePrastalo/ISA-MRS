@@ -43,7 +43,7 @@
 <script>
 export default {
 
-    name: 'myFriends',
+    name: "myFriends",
     components: {},
     data: function () {
     return {
@@ -56,9 +56,9 @@ export default {
 mounted(){
 
     var getJwtToken = function() {
-        return localStorage.getItem('jwtToken');
+        return localStorage.getItem("jwtToken");
     };
-    axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+    axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
     axios.post("http://localhost:8080/api/getMyFriends", {firstName : this.firstName, lastName: this.lastName})
         .then(response => {
             this.friends = response.data
@@ -70,9 +70,9 @@ methods: {
     removeFriend: function(friend) {
 
         var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/removeFriend/"+ friend.id)
         .then(response => {
             if (response.data == false){
@@ -91,9 +91,9 @@ methods: {
     search: function() {
 
         var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.post("http://localhost:8080/api/getMyFriends", {firstName : this.firstName, lastName: this.lastName})
         .then(response => {
             this.friends = response.data
@@ -107,7 +107,7 @@ methods: {
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

@@ -53,10 +53,10 @@
 <script>
 
 export default {
-  name: 'searchRentACarCompany',
+  name: "searchRentACarCompany",
   components: {
   },
-  props:['ilocation','iflightDateArrive','iflightDateLeaving','ijustSearch'],
+  props:["ilocation","iflightDateArrive","iflightDateLeaving","ijustSearch"],
   data: function () {
   return {
     companies:[],
@@ -100,10 +100,7 @@ mounted(){
     },
     methods:{
            search:function(){
-               console.log(this.datefrom);
-               console.log(this.dateTo);
                if(!this.justSearch){
-                   console.log(this.justSearch);
                     var d1 = new Date(this.datefrom);
                     d1.setHours(0);
                     var d2 = new Date(this.dateTo);
@@ -114,8 +111,6 @@ mounted(){
                     arrive = this.flightDateLeaving.split(" ");
                     date1 = arrive[0].split(".");
                     var fd2 = new Date(date1[2],date1[1]-1,date1[0]);
-                    console.log(fd1);
-                    console.log(fd2);
                     if (d1<fd1){
                         alert("Date must me after flight takes off");
                         return;
@@ -124,7 +119,6 @@ mounted(){
                
                axios.post("http://localhost:8080/api/getRentACarCompanies",{name : this.name, location: this.location, dateFrom:this.datefrom, dateTo:this.dateTo})
                 .then(response => {
-                    console.log(response.data);
                     this.companies = response.data
                 }); 
            },
@@ -134,11 +128,10 @@ mounted(){
                o.dateFrom = this.datefrom;
                o.dateTo = this.dateTo;
                o.offices = company.offices
-               this.$emit('selected',o);
+               this.$emit("selected",o);
            },
            details(company){
-               console.log("emituj");
-               this.$emit('details',company);
+               this.$emit("details",company);
            }
     }
 }
@@ -147,7 +140,7 @@ mounted(){
 
 <style scoped>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

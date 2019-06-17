@@ -77,15 +77,15 @@
     </div>
 </template>
 <script>
-import searchRentACarCompany from './searchRentACarCompany.vue';
-import searchVehicle from './searchVehicle.vue';
-import rentACarCompanyProfile from './rentACarCompanyProfile.vue'
+import searchRentACarCompany from "./searchRentACarCompany.vue";
+import searchVehicle from "./searchVehicle.vue";
+import rentACarCompanyProfile from "./rentACarCompanyProfile.vue";
 export default {
-    name: 'rentACarReservation',
+    name: "rentACarReservation",
     components: {
       searchRentACarCompany,searchVehicle,rentACarCompanyProfile
     },
-    props:['ilocation','iflightDateArrive','iflightDateLeaving'],
+    props:["ilocation","iflightDateArrive","iflightDateLeaving"],
     data: function(){
         return{
             location:this.ilocation,
@@ -144,9 +144,9 @@ export default {
                 this.dateto = dataPassed.dateTo;
                 if(!this.justSearch){
                     var getJwtToken = function() {
-                        return localStorage.getItem('jwtToken');
+                        return localStorage.getItem("jwtToken");
                     };
-                    axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+                    axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
                     axios.post("http://localhost:8080/api/getQuickReservations",{id:this.id,dateFrom:this.datefrom,dateTo:this.dateto})
                         .then(response => {
                             console.log(response.data);
@@ -157,9 +157,9 @@ export default {
             },
             reserve:function(carid){
                 var getJwtToken = function() {
-                    return localStorage.getItem('jwtToken');
+                    return localStorage.getItem("jwtToken");
                 };
-                axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+                axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
                 axios.post("http://localhost:8080/api/reserveVehicle",{id:carid,dateFrom:this.datefrom,dateTo:this.dateto,officePick:this.pickoffice,officeReturn:this.returnoffice})
                     .then(response => {
                         console.log(response);

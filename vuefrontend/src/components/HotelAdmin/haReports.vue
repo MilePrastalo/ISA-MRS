@@ -52,7 +52,7 @@
 import Chart from "chart.js";
 
 export default {
-  name: 'haReports',
+  name: "haReports",
   props: {
       hotel: Object
   },

@@ -68,18 +68,18 @@
 
 
 <script>
-import userProfile from  './userProfile.vue'
-import newFlight from  './newFlight.vue'
-import destinations from './destinations.vue'
-import allFlights from './allFlights.vue'
-import flightCompanyProfile from './flightCompanyProfile.vue'
-import AddQuickReservation from './addQuickReservation.vue'
-import QuickReservations from './quickReservations.vue'
-import FlightCompanyReport from './s1_flightCompany/flightCompanyReports.vue'
+import userProfile from  "./userProfile.vue";
+import newFlight from  "./newFlight.vue";
+import destinations from "./destinations.vue";
+import allFlights from "./allFlights.vue";
+import flightCompanyProfile from "./flightCompanyProfile.vue";
+import AddQuickReservation from "./addQuickReservation.vue";
+import QuickReservations from "./quickReservations.vue";
+import FlightCompanyReport from "./s1_flightCompany/flightCompanyReports.vue";
 import navbar from "./navbar.vue";
 
 export default {
-  name: 'flightAdmin',
+  name: "flightAdmin",
   components: {
       userProfile: userProfile,
       flightCompanyProfile: flightCompanyProfile,
@@ -100,9 +100,9 @@ export default {
 },
 mounted: function(){
     var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/getFlightCompanyProfile")
             .then(response => {
                 this.seatsInfo = response.data.seatsInfo
@@ -145,9 +145,9 @@ methods:{
          updateFlightCompanyInfo: function(e){
             e.preventDefault()
             var getJwtToken = function() {
-              return localStorage.getItem('jwtToken');
+              return localStorage.getItem("jwtToken");
             };
-            axios.defaults.headers.post['Authorization'] = "Bearer " + getJwtToken();
+            axios.defaults.headers.post["Authorization"] = "Bearer " + getJwtToken();
             axios.post("http://localhost:8080/api/updateFlightCompanyInfo",{seatsInfo:this.seatsInfo, laguageInfo: this.laguageInfo})
             .then(response => {
                 if (response.data != null){
@@ -164,7 +164,7 @@ methods:{
 </script>
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

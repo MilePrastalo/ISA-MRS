@@ -140,11 +140,11 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios"
 import loginPage from "../loginPage.vue";
 import navbar from "../navbar.vue";
 export default {
-    name: 'confirmationPage',
+    name: "confirmationPage",
     components: {
         login: loginPage,
         navbar: navbar
@@ -162,12 +162,12 @@ export default {
         }
     },
     created: function(){
-        if (document.referrer == 'http://localhost:8081/invites'){
-            axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('jwtToken');
+        if (document.referrer == "http://localhost:8081/invites"){
+            axios.defaults.headers.common["Authorization"] = "Bearer " + localStorage.getItem("jwtToken");
                 axios.get("http://localhost:8080/api/getReservationRequest/" + this.requestId)
                 .then(response => {
                     if (response.data == ""){
-                        alert("You did'n sign in or it's not your invitation")
+                        alert("You didn't sign in or it's not your invitation")
                          this.currentDiv = 1;
                         return;
                     }
@@ -185,11 +185,11 @@ export default {
         changeDiv: function(div){
             
             if (div == 2){
-                axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('jwtToken');
+                axios.defaults.headers.common["Authorization"] = "Bearer " + localStorage.getItem("jwtToken");
                 axios.get("http://localhost:8080/api/getReservationRequest/" + this.requestId)
                 .then(response => {
                     if (response.data == ""){
-                        alert("You did'n sign in or it's not your invitation")
+                        alert("You didn't sign in or it's not your invitation")
                         this.currentDiv = 1;
                         return;
                     }
@@ -202,13 +202,13 @@ export default {
 
         confirmRequest: function(){
             var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
             };
-            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
             axios.get("http://localhost:8080/api/confirmReservationRequest/" + this.requestId )
             .then(response => {
                 alert(response.data)
-                if (response.data == 'success'){
+                if (response.data == "success"){
                      this.selected = true;
                 }
             });
@@ -216,13 +216,13 @@ export default {
 
         refuseRequest: function(){
             var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
             };
-            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
             axios.get("http://localhost:8080/api/refuseReservationRequest/" + this.requestId )
             .then(response => {
                 alert(response.data)
-                if (response.data == 'success'){
+                if (response.data == "success"){
                      this.selected = true;
                 }
             });
@@ -238,7 +238,7 @@ export default {
 
 
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

@@ -58,9 +58,9 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 export default {
-  name: 'unregisteredHotelRoom',
+  name: "unregisteredHotelRoom",
   props:["hotelName","roomNumber"],
   components: {
   },
@@ -222,7 +222,7 @@ mounted(){
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

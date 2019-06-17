@@ -60,7 +60,7 @@
 <script>
 export default {
 
-    name: 'searchUsers',
+    name: "searchUsers",
     components: {},
     data: function () {
     return {
@@ -74,9 +74,9 @@ export default {
 mounted(){
 
     var getJwtToken = function() {
-        return localStorage.getItem('jwtToken');
+        return localStorage.getItem("jwtToken");
     };
-    axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+    axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
     var userBean = {firstName : this.firstName, lastName: this.lastName};
     axios.post("http://localhost:8080/api/getRegUsers", userBean)
         .then(response => {
@@ -89,9 +89,9 @@ methods: {
     addFriend: function(friendId) {
 
         var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/addFriend/" + friendId)
         .then(response => {
             if (response.data == false){
@@ -106,9 +106,9 @@ methods: {
     removeFriend: function(friendId) {
 
         var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/removeFriend/"+ friendId)
         .then(response => {
             if (response.data == false){
@@ -123,9 +123,9 @@ methods: {
     acceptRequest: function(userId){
 
         var getJwtToken = function() {
-        return localStorage.getItem('jwtToken');
+        return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/acceptRequestFromSearch/" + userId)
             .then(response => {
                 if (response.data == false){
@@ -147,19 +147,16 @@ methods: {
     search: function() {
 
         var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         if (this.check == 1){
-
-            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
             axios.post("http://localhost:8080/api/getRegUsers", {firstName : this.firstName, lastName: this.lastName})
             .then(response => {
                 this.users = response.data
             });
         }
         else{
-
-            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
             axios.post("http://localhost:8080/api/getMyFriends", {firstName : this.firstName, lastName: this.lastName})
             .then(response => {
                 this.users = response.data
@@ -174,7 +171,7 @@ methods: {
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

@@ -30,7 +30,7 @@
 <script>
 export default {
 
-    name: 'friendRequests',
+    name: "friendRequests",
     components: {},
     data: function () {
     return {
@@ -41,9 +41,9 @@ export default {
 mounted(){
 
     var getJwtToken = function() {
-        return localStorage.getItem('jwtToken');
+        return localStorage.getItem("jwtToken");
     };
-    axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+    axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
     axios.get("http://localhost:8080/api/getMyRequests")
         .then(response => {
             this.requests = response.data
@@ -56,9 +56,9 @@ methods: {
     acceptRequest: function(request){
 
         var getJwtToken = function() {
-        return localStorage.getItem('jwtToken');
+        return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/acceptRequest/" + request.id)
             .then(response => {
                 if (response.data == false){
@@ -82,7 +82,7 @@ methods: {
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

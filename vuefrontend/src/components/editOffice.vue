@@ -52,14 +52,14 @@
 <script>
 
 export default {
-  name: 'editOffice',
+  name: "editOffice",
   components: {
   },
   props: [
-  'iid' ,
-  'iname',
-  'idestination',
-  'iaddress', 'ilongitude','ilatitude'],
+  "iid" ,
+  "iname",
+  "idestination",
+  "iaddress", "ilongitude","ilatitude"],
   data: function () {
   return {
     id : this.iid,
@@ -74,18 +74,18 @@ export default {
         edit: function(){
             var a = this;
             var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
             };
-            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
             axios.post("http://localhost:8080/api/editOffice",{id:this.id,name:this.name,destination:this.destination,address:this.address,longitude:this.longitude, latitude:this.latitude})
             .then(function(){
               alert("Office has been edited");
-              a.$emit('vedited');
+              a.$emit("vedited");
             });
             ///this.$emit('vedited'); 
         },
         backAdd:function(){
-            this.$emit('backadd');
+            this.$emit("backadd");
         }     
     }
 }

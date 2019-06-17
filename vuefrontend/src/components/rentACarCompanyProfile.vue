@@ -103,10 +103,10 @@
 <script>
 
 export default {
-  name: 'rentACarCompanyProfile',
+  name: "rentACarCompanyProfile",
   components: {
   },
-  props:['icompany'],
+  props:["icompany"],
   data: function () {
     return {
         company:this.icompany,
@@ -156,7 +156,7 @@ export default {
 
       }, 
       back(){
-          this.$emit('back');
+          this.$emit("back");
       },
       officeMap(office){
           this.longitude = office.longitude;

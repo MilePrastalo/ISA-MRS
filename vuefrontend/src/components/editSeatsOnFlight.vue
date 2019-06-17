@@ -1,10 +1,10 @@
 <template>
    <div id = "flightForAdmin">
           
-        <div class='my-legend'>
-            <div class='legend-title'> You can make seat available or unavailable:</div>
-            <div class='legend-scale'>
-                <ul class='legend-labels'>
+        <div class="my-legend">
+            <div class="legend-title"> You can make seat available or unavailable:</div>
+            <div class="legend-scale">
+                <ul class="legend-labels">
                     <li><span style='background:orange;'></span>Unavailable</li>
                     <li><span style='background:salmon;'></span>Booked</li>
                      <li><span style='background:yellow;'></span>Quick reservation</li>
@@ -46,7 +46,7 @@
 <script>
 
 export default {
-  name: 'flightForAdmin',
+  name: "flightForAdmin",
   components: {},
   props: ["iid"],
   data: function () {
@@ -60,9 +60,9 @@ export default {
     mounted(){
     
         var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/getSeatsOnFlight/" +  this.iid + "/economic")
         .then(response => {
             this.seatsE = response.data;
@@ -83,9 +83,9 @@ export default {
             
             if (seat.taken == false && seat.quick == false){
                 var getJwtToken = function() {
-                    return localStorage.getItem('jwtToken');
+                    return localStorage.getItem("jwtToken");
                 };
-                axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+                axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
                 axios.get("http://localhost:8080/api/editSeat/" + seat.id)
                 .then(response => {
                     if (response.data != null){
@@ -181,7 +181,7 @@ export default {
 
     
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

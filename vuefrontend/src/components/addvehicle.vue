@@ -39,7 +39,7 @@
 <script>
 
 export default {
-  name: 'addvehicle',
+  name: "addvehicle",
   components: {
   },
     data: function () {
@@ -57,9 +57,9 @@ export default {
     },
     mounted(){
         var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         var responseData;
         axios.get("http://localhost:8080/api/getProducers")
             .then(response => {
@@ -74,9 +74,9 @@ export default {
         add: function(e){
             e.preventDefault();
             var getJwtToken = function() {
-                return localStorage.getItem('jwtToken');
+                return localStorage.getItem("jwtToken");
             };
-            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
             axios.post("http://localhost:8080/api/addCar",{name:this.name,maker:this.maker,type:this.type,year:this.year,price:this.price,dateFrom:this.datefrom,dateTo:this.dateto})
             .then(function(){
               alert("Vehicle has been added");
@@ -89,7 +89,7 @@ export default {
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

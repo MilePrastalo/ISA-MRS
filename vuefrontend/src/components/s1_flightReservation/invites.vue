@@ -56,10 +56,10 @@
 
 <script>
 import navbar from "../navbar.vue";
-import FriendRequests from '../s1_friends/friendRequests.vue';
+import FriendRequests from "../s1_friends/friendRequests.vue";
 
 export default {
-  name: 'invites',
+  name: "invites",
   components: {
       navbar,
       friendRequests: FriendRequests
@@ -75,9 +75,9 @@ export default {
 created(){ 
 
     var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-    axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+    axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
     axios.get("http://localhost:8080/api/getMyReservationRequests")
             .then(response => {
                 this.reservationRequests = response.data;
@@ -100,13 +100,13 @@ created(){
 
         confirm: function(id, idx){
             var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
             };
-            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
             axios.get("http://localhost:8080/api/confirmReservationRequest/" + id )
             .then(response => {
                 alert(response.data)
-                if (response.data == 'success'){
+                if (response.data == "success"){
                     this.reservationRequests.splice(idx,1)
                 }
             });
@@ -114,13 +114,13 @@ created(){
 
         refuse: function(id, idx){
             var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
             };
-            axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+            axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
             axios.get("http://localhost:8080/api/refuseReservationRequest/" + id )
             .then(response => {
                 alert(response.data)
-                if (response.data == 'success'){
+                if (response.data == "success"){
                     this.reservationRequests.splice(idx,1)
                 }
             });
@@ -134,7 +134,7 @@ created(){
 </script>
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

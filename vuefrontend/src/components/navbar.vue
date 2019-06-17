@@ -42,9 +42,9 @@
     </div>
 </template>
 <script>
-import axios from 'axios'
+import axios from "axios";
 export default {
-  name: 'navbar',
+  name: "navbar",
   data:function(){
       return{
           type:0,
@@ -54,9 +54,9 @@ export default {
   mounted(){
        console.log(this.type);
       var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
             };
-      axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+      axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
       axios.get("http://localhost:8080/api/getUserRole")
             .then(response => {
               console.log(response.data);
@@ -81,7 +81,7 @@ export default {
   },
   methods:{
       logout:function(){
-        localStorage.setItem('jwtToken',"");
+        localStorage.setItem("jwtToken","");
         window.location="/";
     },
   }
@@ -90,7 +90,7 @@ export default {
 
 <style scoped>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

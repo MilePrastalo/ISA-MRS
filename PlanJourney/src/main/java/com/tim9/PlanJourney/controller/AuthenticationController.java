@@ -97,7 +97,7 @@ public class AuthenticationController {
 
 	@CrossOrigin()
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public HttpStatus Register(@RequestBody RegisterBean bean, HttpServletResponse response)
+	public HttpStatus register(@RequestBody RegisterBean bean, HttpServletResponse response)
 			throws AuthenticationException, IOException {
 		System.out.println(bean.getUsername() + "    " + bean.getPassword());
 		User u = userService.findOneByUsername(bean.getUsername());

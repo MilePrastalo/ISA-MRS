@@ -33,14 +33,14 @@
 </template>
 
 <script>
-import SearchUsers from './searchUsers.vue';
-import FriendRequests from './friendRequests.vue';
-import MyFriends from './myFriends.vue';
+import SearchUsers from "./searchUsers.vue";
+import FriendRequests from "./friendRequests.vue";
+import MyFriends from "./myFriends.vue";
 import navbar from "../navbar.vue";
 
 export default {
 
-    name: 'friends',
+    name: "friends",
     components: {
         searchUsers: SearchUsers,
         friendRequests: FriendRequests,
@@ -83,7 +83,7 @@ export default {
 
 <style scoped>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

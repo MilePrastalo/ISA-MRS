@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import saHotels from  './saHotels.vue'
+import saHotels from  "./saHotels.vue"
 import saFlightCompanies from "./saFlightCompanies"
 import saRentACar from "./saRentACar"
 import saCities from "./saCities"
@@ -56,7 +56,7 @@ import saAddSystemAdmin from "./saAddSystemAdmin"
 import navbar from ".././navbar.vue";
 
 export default {
-  name: 'systemAdminProfile',
+  name: "systemAdminProfile",
   components: {
       saHotels: saHotels,
       saFlightCompanies: saFlightCompanies,
@@ -74,9 +74,9 @@ export default {
 },
 mounted(){
         var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/getSystemAdminProfile")
             .then(response => {
                 this.systemAdmin = response.data;
@@ -88,9 +88,9 @@ mounted(){
         },
         updateFlightCompanyProfile: function(){
             var getJwtToken = function() {
-              return localStorage.getItem('jwtToken');
+              return localStorage.getItem("jwtToken");
             };
-            axios.defaults.headers.post['Authorization'] = "Bearer " + getJwtToken();
+            axios.defaults.headers.post["Authorization"] = "Bearer " + getJwtToken();
             axios.post("http://localhost:8080/api/updateFlightCompanyProfile",{name:this.name, address: this.address, description: this.description})
             .then(response => {
                 this.name = response.data.name
@@ -106,7 +106,7 @@ mounted(){
             })
         },
         logOut: function() {
-            this.$router.push('/');
+            this.$router.push("/");
         }    
     }
 }
@@ -115,7 +115,7 @@ mounted(){
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

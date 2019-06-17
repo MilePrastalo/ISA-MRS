@@ -86,11 +86,11 @@
 
 <script>
 
-import allFlights from '../allFlights.vue'
-import QuickReservations from '../quickReservations.vue'
+import allFlights from "../allFlights.vue"
+import QuickReservations from "../quickReservations.vue"
 import navbar from "../navbar.vue";
 export default {
-  name: 'CompanyProfile',
+  name: "CompanyProfile",
   components: {
 
       allFlights: allFlights,
@@ -111,9 +111,9 @@ created: function(){
 
         this.companyId = localStorage.getItem("idCompany");
         var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/getFlightCompanyProfileRegitered/"+ this.companyId)
         .then(response => {
             this.company = response.data
@@ -150,7 +150,7 @@ methods:{
 </script>
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

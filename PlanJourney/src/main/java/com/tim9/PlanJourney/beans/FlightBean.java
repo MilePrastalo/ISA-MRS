@@ -84,7 +84,6 @@ public class FlightBean {
 	public FlightBean(Flight flight, String companyName, String startDate, String endDate) {
 		this.startDestination = flight.getStartDestination().getName();
 		this.endDestination = flight.getEndDestination().getName();
-		;
 		this.startDate = flight.getStartDate();
 		this.endDate = flight.getEndDate();
 		this.flightDuration = flight.getFlightDuration();

@@ -28,9 +28,9 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 export default {
-  name: 'loginPage',
+  name: "loginPage",
   props: ["requestId"],
   data:function(){
     return {
@@ -52,7 +52,7 @@ export default {
                       console.log(response);
                         if(response.status == 200){
                           console.log(response.data.accessToken);
-                          localStorage.setItem('jwtToken',response.data.accessToken);
+                          localStorage.setItem("jwtToken",response.data.accessToken);
                           if(response.data == "NOT CONFIRMED"){
                             alert("Account not confirmed");
                             window.location = "./";
@@ -73,9 +73,9 @@ export default {
     },
     checkFirstLogin:function(){
       var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
             };
-      axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+      axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
       axios.get("http://localhost:8080/api/getFirstLogged")
             .then(response => {
                 console.log(response);
@@ -89,9 +89,9 @@ export default {
     getRole : function(){
       console.log("GET ROLE");
       var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
             };
-      axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+      axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
       axios.get("http://localhost:8080/api/getUserRole")
             .then(response => {
                 console.log(response);
@@ -102,8 +102,8 @@ export default {
                 }else if (response.data == "SYS_ADMIN"){
                   window.location ="./systemAdminPage";
                 }else if (response.data == "REGISTERED"){
-                  if (window.location.pathname.startsWith('/confirmationPage')){
-                    this.$emit('currentDiv',2);
+                  if (window.location.pathname.startsWith("/confirmationPage")){
+                    this.$emit("currentDiv",2);
                   }
                   else{
                     window.location ="./index";
@@ -124,7 +124,7 @@ export default {
 
 <style scoped>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

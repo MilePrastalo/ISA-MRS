@@ -246,11 +246,11 @@ export default {
     },
 
     soldTicketReport: function(){
-        document.getElementById('soldTicketsChart').remove(); // this is my <canvas> element
-        document.getElementById('ticketCanvasArea').innerHTML = '<canvas ref="referencedElement" id="soldTicketsChart" style="responsive:true;"><canvas>';
-        var ctx = document.getElementById('soldTicketsChart').getContext('2d');
+        document.getElementById("soldTicketsChart").remove(); // this is my <canvas> element
+        document.getElementById("ticketCanvasArea").innerHTML = '<canvas ref="referencedElement" id="soldTicketsChart" style="responsive:true;"><canvas>';
+        var ctx = document.getElementById("soldTicketsChart").getContext('2d');
         var myChart = new Chart(ctx, {
-            type: 'bar',
+            type: "bar",
             data: {
                 labels: this.dataSoldTickets.labels,
                 datasets: [{
@@ -292,7 +292,7 @@ export default {
         var getJwtToken = function() {
             return localStorage.getItem('jwtToken');
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.post("http://localhost:8080/api/getEarningsReport",{dateFrom: this.dateFrom, dateTo: this.dateTo})
         .then(response => {
                 this.earnings = response.data;
@@ -313,7 +313,7 @@ export default {
 
 <style scopped>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

@@ -92,7 +92,7 @@ import Chart from "chart.js";
 
 
 export default {
-  name: 'rentACarReport',
+  name: "rentACarReport",
   data:function(){
     return {
       tabSelected:0, 
@@ -113,14 +113,14 @@ export default {
     }
   },
   mounted(){
-     document.getElementById('Ratings').hidden = true;
-     document.getElementById('Earnings').hidden = true;
-     document.getElementById('Vehicless').hidden = false;
-     document.getElementById('Reservations').hidden = true;
+     document.getElementById("Ratings").hidden = true;
+     document.getElementById("Earnings").hidden = true;
+     document.getElementById("Vehicless").hidden = false;
+     document.getElementById("Reservations").hidden = true;
      var getJwtToken = function() {
-                    return localStorage.getItem('jwtToken');
+                    return localStorage.getItem("jwtToken");
                 };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.get("http://localhost:8080/api/getCompanyRatingReport",{})
                 .then(response => { 
                     console.log(response.data);
@@ -143,9 +143,9 @@ export default {
   methods:{
     searchVehicles:function(){
         var getJwtToken = function() {
-                    return localStorage.getItem('jwtToken');
+                    return localStorage.getItem("jwtToken");
                 };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.post("http://localhost:8080/api/",{})
                 .then(response => { 
                     this.vehicles = response.data; 
@@ -153,9 +153,9 @@ export default {
     },
     searchEarnings:function(){
         var getJwtToken = function() {
-                    return localStorage.getItem('jwtToken');
+                    return localStorage.getItem("jwtToken");
                 };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.post("http://localhost:8080/api/getCompanyEarningsReport",{dateFrom:this.dateFromEarnings,dateTo:this.dateToEarnings})
                 .then(response => { 
                     this.earnings = response.data; 
@@ -166,12 +166,12 @@ export default {
         var getJwtToken = function() {
                     return localStorage.getItem('jwtToken');
                 };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.post("http://localhost:8080/api/getCompanyReservationsReport",{dateFrom:this.dateFromReservation,dateTo:this.dateToReservation,type:this.earningsType})
                 .then(response => { 
                     console.log(response);
                     this.reservations = response.data;
-                    document.getElementById('Reservations').hidden = true;
+                    document.getElementById("Reservations").hidden = true;
                     this.selected(3);
 
                 }); 
@@ -180,19 +180,19 @@ export default {
         console.log(val);
         this.tabSelected = val;
         if(this.tabSelected == 1){
-            document.getElementById('Ratings').hidden = false;
-            document.getElementById('Vehicless').hidden = true;
-            document.getElementById('Earnings').hidden = true;
-            document.getElementById('Reservations').hidden = true;
+            document.getElementById("Ratings").hidden = false;
+            document.getElementById("Vehicless").hidden = true;
+            document.getElementById("Earnings").hidden = true;
+            document.getElementById("Reservations").hidden = true;
             var vdata = this.ratingData;
             console.log(vdata);
-            document.getElementById('myChart').remove(); // this is my <canvas> element
-            document.getElementById('div2').innerHTML = '<canvas ref="referencedElement" id="myChart" style="responsive:true;"><canvas>';
-            var ctx = document.getElementById('myChart').getContext('2d');
+            document.getElementById("myChart").remove(); // this is my <canvas> element
+            document.getElementById("div2").innerHTML = '<canvas ref="referencedElement" id="myChart" style="responsive:true;"><canvas>';
+            var ctx = document.getElementById("myChart").getContext("2d");
             var myChart = new Chart(ctx, {
-            type: 'bar',
+            type: "bar",
             data: {
-            labels: ['1', '2', '3', '4', '5'],
+            labels: ["1", "2", "3", "4", "5"],
             datasets: [{
                 label: '# of Votes',
                 data: vdata,
@@ -225,34 +225,34 @@ export default {
         });
         }
         else if(this.tabSelected == 0){
-            document.getElementById('Ratings').hidden = true;
-            document.getElementById('Vehicless').hidden = false;
-            document.getElementById('Earnings').hidden = true;
-            document.getElementById('Reservations').hidden = true;
+            document.getElementById("Ratings").hidden = true;
+            document.getElementById("Vehicless").hidden = false;
+            document.getElementById("Earnings").hidden = true;
+            document.getElementById("Reservations").hidden = true;
 
         }
         else if (this.tabSelected == 2){
-            document.getElementById('Ratings').hidden = true;
-            document.getElementById('Vehicless').hidden = true;
-            document.getElementById('Earnings').hidden = false;
-            document.getElementById('Reservations').hidden = true;
+            document.getElementById("Ratings").hidden = true;
+            document.getElementById("Vehicless").hidden = true;
+            document.getElementById("Earnings").hidden = false;
+            document.getElementById("Reservations").hidden = true;
 
             
         }
     else{
-        document.getElementById('Ratings').hidden = true;
-        document.getElementById('Vehicless').hidden = true;
-        document.getElementById('Earnings').hidden = true;
-        document.getElementById('Reservations').hidden = false;
+        document.getElementById("Ratings").hidden = true;
+        document.getElementById("Vehicless").hidden = true;
+        document.getElementById("Earnings").hidden = true;
+        document.getElementById("Reservations").hidden = false;
         var vlabels = this.reservations.dates;
         var vcounts = this.reservations.counts;
         console.log(vlabels);
         console.log(vcounts);
-        document.getElementById('myChart3').remove(); // this is my <canvas> element
-        document.getElementById('div3').innerHTML = '<canvas ref="referencedElement" id="myChart3" style="responsive:true;"><canvas>';
-        var ctx = document.getElementById('myChart3').getContext('2d');
+        document.getElementById("myChart3").remove(); // this is my <canvas> element
+        document.getElementById("div3").innerHTML = '<canvas ref="referencedElement" id="myChart3" style="responsive:true;"><canvas>';
+        var ctx = document.getElementById("myChart3").getContext("2d");
             var myChart = new Chart(ctx, {
-            type: 'bar',
+            type: "bar",
             data: {
             labels: vlabels,
             datasets: [{
