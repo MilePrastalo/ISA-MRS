@@ -25,6 +25,7 @@ public class FrontFlightReservationBean {
 	private float latitude;
 	private float longitude;
 	private int status;
+	private int discount;
 	
 	public FrontFlightReservationBean() {
 		super();
@@ -197,6 +198,14 @@ public class FrontFlightReservationBean {
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public int getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(int discount) {
+		this.discount = discount;
 	}
 	
 	

@@ -35,6 +35,9 @@ public class FlightReservation extends Reservation {
 	@Column(name = "date")
 	private Date date;
 	
+	@Column(name = "discount", nullable = true)
+	private int discount = 0;
+	
 	@Column(name = "quickId")
 	private Long quickId;
 	
@@ -124,6 +127,14 @@ public class FlightReservation extends Reservation {
 
 	public void setQuickId(Long quickId) {
 		this.quickId = quickId;
+	}
+
+	public int getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(int discount) {
+		this.discount = discount;
 	}
 
 	

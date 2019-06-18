@@ -18,6 +18,7 @@ import com.tim9.PlanJourney.beans.FlightReservationBean;
 import com.tim9.PlanJourney.beans.PassangerBean;
 import com.tim9.PlanJourney.beans.QuickFlightReservationBean;
 import com.tim9.PlanJourney.hotel.HotelReservation;
+import com.tim9.PlanJourney.models.Discounts;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.flight.Flight;
 import com.tim9.PlanJourney.models.flight.FlightReservation;
@@ -49,6 +50,8 @@ public class FlightService {
 	private HotelReservationService hotelReservationService;
 	@Autowired
 	private FlightCompanyService flightCompanyService;
+	@Autowired
+	DiscountsService discountService;
 
 	@Autowired
 	FllightRepository repository;
@@ -120,6 +123,11 @@ public class FlightService {
 				new Date(), -1l, hotelReservations, vehicleReservations);
 		flight.getFlightCompany().getFlightReservation().add(reservation);
 		reservation.setCompany(flight.getFlightCompany());
+		reservation.setDiscount(0);
+		Discounts discounts = discountService.findOne(1L);
+		if (loggedUser.getFlightReservations().size() >= discounts.getNumberOfFlightReservations()) {
+			reservation.setDiscount(discounts.getRentACarDiscount());
+		}
 		reservationService.save(reservation);
 		flightCompanyService.save(flight.getFlightCompany());
 		for (RegisteredUser friend : friends) {
@@ -154,9 +162,10 @@ public class FlightService {
 		double total = originPrice * discount / 100;
 		FlightReservation reservation = new FlightReservation(loggedUser, main_seat, new HashSet<Passanger>(), flight,
 				total, new Date(), reservationBean.getId(), new HashSet<>(), new HashSet<>());
-		
+
 		QuickFlightReservation quick = quickReservationService.findOne(reservationBean.getId());
 		quick.setTaken(true);
+		reservation.setDiscount(quick.getDiscount());
 		quickReservationService.save(quick);
 		reservationService.save(reservation);
 		try {
@@ -230,7 +239,7 @@ public class FlightService {
 				}
 			}
 		} else {
-			
+
 			if (reservation.getQuickId() != -1l) {
 				QuickFlightReservation quick = quickReservationService.findOne(reservation.getQuickId());
 				quick.setTaken(false);
@@ -240,7 +249,7 @@ public class FlightService {
 				reservationService.remove(id);
 				return "success";
 			}
-			
+
 			for (HotelReservation h : reservation.getHoteReservations()) {
 
 				hotelReservationService.remove(h.getId());
