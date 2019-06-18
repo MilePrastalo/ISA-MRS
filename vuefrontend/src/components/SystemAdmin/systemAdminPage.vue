@@ -23,24 +23,30 @@
                         <a class="nav-link" href="#" @click="selectTab(4)">Cities</a>
                     </li>
                     <li class="nav-item centered">
-                        <a class="nav-link" href="#" @click="selectTab(5)">Add System Admin</a>
+                        <a class="nav-link" href="#" @click="selectTab(5)">Edit Discounts</a>
+                    </li>
+                    <li class="nav-item centered">
+                        <a class="nav-link" href="#" @click="selectTab(6)">Add System Admin</a>
                     </li>
                 </ul>
             </div>
 
-            <div  v-if="currentTab == 1" id = "hotels"> 
+            <div  v-if="currentTab == 1"> 
                 <sa-hotels class="container"></sa-hotels>
             </div> 
-            <div  v-if="currentTab == 2" id = "flight companies">
+            <div  v-if="currentTab == 2">
                 <sa-flight-companies class="container"></sa-flight-companies>
             </div>
-            <div  v-if="currentTab == 3" id = "rent a cars">
+            <div  v-if="currentTab == 3">
                 <sa-rent-a-car class="container"></sa-rent-a-car>
             </div>
-            <div  v-if="currentTab == 4" id = "destinations">
+            <div  v-if="currentTab == 4">
                 <sa-cities class="container"></sa-cities>
             </div>
-            <div  v-if="currentTab == 5" id = "destinations">
+            <div  v-if="currentTab == 5">
+                <sa-edit-discounts class="container"></sa-edit-discounts>
+            </div>
+            <div  v-if="currentTab == 6">
                 <sa-add-system-admin class="container"></sa-add-system-admin>
             </div>
         </div>
@@ -53,6 +59,7 @@ import saFlightCompanies from "./saFlightCompanies"
 import saRentACar from "./saRentACar"
 import saCities from "./saCities"
 import saAddSystemAdmin from "./saAddSystemAdmin"
+import saEditDiscounts from "./saEditDiscounts"
 import navbar from ".././navbar.vue";
 import axios from "axios";
 
@@ -64,6 +71,7 @@ export default {
       saRentACar: saRentACar,
       saCities: saCities,
       saAddSystemAdmin: saAddSystemAdmin,
+      saEditDiscounts: saEditDiscounts,
       navbar
   },
   data: function () {

@@ -35,7 +35,7 @@
                     <td>{{car.type}}</td>
                     <td>{{car.year}}</td>
                     <td>{{car.seats}}</td>
-                    <td>{{car.price}}</td>
+                    <td>{{getCarPrice(car)}}</td>
                     <td>{{car.rating}}</td>
                     <td><select v-if="justSearch == false" v-model="pickoffice" name="" id=""><option v-for="office in offices" v-bind:value=office.id :key="office.id">{{office.name}}</option></select></td>
                     <td><select v-if="justSearch == false" v-model="returnoffice" name="" id=""><option v-for="office in offices" v-bind:value=office.id :key="office.id">{{office.name}}</option></select></td>
@@ -122,6 +122,17 @@ export default {
                 this.tabselected = 0;
                 document.getElementById("normal").className="nav-link active ";
                 document.getElementById("quick").className="nav-link ";
+            },
+            getCarPrice(car){
+                if(this.datefrom!="" && this.dateto !=""){
+                    var df = Date.parse(this.datefrom);
+                    var dt = Date.parse(this.dateto);
+                    var d = Math.ceil((dt-df)/1000/3600/24);
+                    return d*car.price;
+                }
+                else{
+                    return car.price;
+                }
             },
             quick: function(){
                 this.tabselected = 1;

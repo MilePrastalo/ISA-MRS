@@ -1,6 +1,5 @@
 <template>
-   <div id = "hotelRoom">
-            <h1>{{hotel.name}}</h1>     
+   <div id = "hotelRoom"> 
             <div>
               <table class="table">
                 <th>

@@ -48,7 +48,7 @@
                             <td v-else>1</td>
                             <td><button @click="flightReservationDetails(flightReservation.id)">Details</button></td>
                             <td v-if="flightReservation.status == 0"><button @click="cancelFlightReservation(flightReservation.id)">Cancel</button></td>
-                             <td v-if="flightReservation.status == 1" class="ratingtd" width="100px">
+                             <td colspan="2" v-if="flightReservation.status == 1" class="ratingtd" width="100px">
                                 <span class="fa fa-star over clicked" v-if="getRating(flightReservation,5)" @click="reviewFlight(flightReservation,5)" :id="flightReservation.ratings[4]"></span>
                                     <span class="fa fa-star over" v-else @click="reviewFlight(flightReservation,5)" :id="flightReservation.ratings[4]"></span>
                                 <span class="fa fa-star over clicked" v-if="getRating(flightReservation,4)" @click="reviewFlight(flightReservation,4)" :id="flightReservation.ratings[3]"></span>
@@ -80,7 +80,7 @@
                         <td>{{r.lDay + "-" + r.lMonth + "-" + r.lYear}}</td>
                         <td><button @click="showDetails(r.hotelName,r.roomNumber)">Details</button></td>
                         <td><button @click="cancelHotelReservation(r.hotelName,r.roomNumber)">Cancel</button></td>
-                        <td class="ratingtd">
+                        <td colspan="2" class="ratingtd">
                                 <span class="fa fa-star over clicked" v-if="getRating(r,5)" @click="reviewHotel(r,5)" :id="r.ratings[4]"></span>
                                     <span class="fa fa-star over" v-else @click="reviewHotel(r,5)" :id="r.ratings[4]"></span>
                                 <span class="fa fa-star over clicked" v-if="getRating(r,4)" @click="reviewHotel(r,4)" :id="r.ratings[3]"></span>
@@ -105,6 +105,8 @@
                             <th>Date from</th>
                             <th>Date to</th>
                             <th>Price</th>
+                            <th>Discount</th>
+                            <th>Total</th>
                             <th>Cancel</th>
                         </tr>
                         <tr v-for="(reservation, index) in vehiclereservations" :key="index">
@@ -114,8 +116,10 @@
                             <td>{{reservation.dateFrom}}</td>
                             <td>{{reservation.dateTo}}</td>
                             <td>{{reservation.price}}</td>
+                            <td>{{reservation.discount}}</td>
+                            <td>{{reservation.price-reservation.price*reservation.discount/100}}</td>
                             <td><Button v-if="reservation.status == 0" @click="cancel(reservation, index)">Cancel</Button></td>
-                            <td class="ratingtd" v-if="reservation.status == 2" >
+                            <td width=100 colspan="2" class="ratingtd" v-if="reservation.status == 2" >
                                 <span class="fa fa-star over clicked" v-if="getRating(reservation,5)==true" @click="review(reservation,5)" :id="reservation.ratings[4]"></span>
                                     <span class="fa fa-star over" v-else @click="review(reservation,5)" :id="reservation.ratings[4]"></span>
                                 <span class="fa fa-star over clicked" v-if="getRating(reservation,4)" @click="review(reservation,4)" :id="reservation.ratings[3]"></span>
@@ -356,7 +360,7 @@ table{
     border: 1px solid darkgray;
     margin-left: auto;
     margin-right: auto;
-    min-width: 70%;
+    min-width: 80%;
 }
 th{
     border: 1px solid darkgray;

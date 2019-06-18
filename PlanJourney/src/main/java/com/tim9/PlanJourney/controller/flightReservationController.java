@@ -106,6 +106,7 @@ public class flightReservationController {
 		ArrayList<VehicleReservationBean> rentReservations = makeRentReservationBeans(
 				reservation.getVehicleReservations());
 		returnValue.setRentReservations(rentReservations);
+		returnValue.setDiscount(reservation.getDiscount());
 		return returnValue;
 	}
 
