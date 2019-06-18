@@ -347,6 +347,7 @@ public class RentACarController {
 			b.setVehicleName(rese.getVehicle().getName());
 			b.setLocationPick(rese.getOfficePick().getName());
 			b.setLocationReturn(rese.getOfficeReturn().getName());
+			b.setDiscount(rese.getDiscount());
 			Set<Review> reviews = rese.getReservationReviews();
 			for (Review r : reviews) {
 				if (r.getUser().getUsername().equals(user.getUsername())) {
