@@ -132,6 +132,12 @@ export default new Router({
 
     },
     {
+      path: '/registeredHotelSearch',
+      name: 'registeredHotelSearch',
+      component: () => import('./components/registeredHotelSearch.vue')
+
+    },
+    {
       path: '/hotelAdminPage',
       name: 'hotelAdminPage',
       component: () => import('./components/HotelAdmin/hotelAdminPage.vue')

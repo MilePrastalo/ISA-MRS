@@ -238,6 +238,31 @@ mounted(){
           this.showHotels = true;  
         },
         addHotelAdmin: function() {
+            if(this.admin.username == null || this.admin.username == "") {
+                alert("Please enter hotel admin username.");
+                return;
+            }
+            if(this.admin.password == null || this.admin.password == "") {
+                alert("Please enter hotel admin password.");
+                return;
+            }
+            if(this.admin.firstName == null || this.admin.firstName == "") {
+                alert("Please enter hotel admin first name.");
+                return;
+            }
+            if(this.admin.lastName == null || this.admin.lastName == "") {
+                alert("Please enter hotel admin last name.");
+                return;
+            }
+            if(this.admin.email == null || this.admin.email == "") {
+                alert("Please enter hotel admin email.");
+                return;
+            }
+            if(this.hotelName == null || this.hotelName == "") {
+                alert("Please enter hotel admin hotel name.");
+                return;
+            }
+
             axios.post("http://localhost:8080/api/addHotelAdmin",{username:this.admin.username,password:this.admin.password,firstName:this.admin.firstName,lastName:this.admin.lastName,email:this.admin.email,companyName:this.hotelName}).
             then(response =>{
                 if(response.data === true) {

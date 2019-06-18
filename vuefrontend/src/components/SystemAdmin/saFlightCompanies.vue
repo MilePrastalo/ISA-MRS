@@ -166,9 +166,21 @@ mounted(){
             this.currentTab = tabId;
         },
         addFlightCompany: function() {
+            if(this.newFC.name == null || this.newFC.name == "") {
+                alert("Please enter flight company name.");
+                return;
+            }
+            if(this.newFC.address == null || this.newFC.address == "") {
+                alert("Please enter flight company address");
+                return;
+            }
+            if(this.newFC.description == null || this.newFC.description == "") {
+                alert("Please enter flight company description.");
+                return;
+            }
+
             axios.post("http://localhost:8080/api/addFlightCompany",this.newFC).
             then(response =>{
-                 alert("Flight Company has been successfully added.");
                     this.fcs.push(this.newFC);
                     this.newFC = {};
                 alert(response.data.name + " has been successfully added.");
@@ -199,6 +211,30 @@ mounted(){
           this.showFCs = true;  
         },
         addFlightCompanyAdmin: function() {
+            if(this.admin.username == null || this.admin.username == "") {
+                alert("Please enter flight admin username.");
+                return;
+            }
+            if(this.admin.password == null || this.admin.password == "") {
+                alert("Please enter flight admin password.");
+                return;
+            }
+            if(this.admin.firstName == null || this.admin.firstName == "") {
+                alert("Please enter flight admin first name.");
+                return;
+            }
+            if(this.admin.lastName == null || this.admin.lastName == "") {
+                alert("Please enter flight admin last name.");
+                return;
+            }
+            if(this.admin.email == null || this.admin.email == "") {
+                alert("Please enter flight admin email.");
+                return;
+            }
+            if(this.flightCompanyName == null || this.flightCompanyName == "") {
+                alert("Please enter flight admin flight company name.");
+                return;
+            }
             axios.post("http://localhost:8080/api/addFlightAdmin",{username:this.admin.username,password:this.admin.password,firstName:this.admin.firstName,lastName:this.admin.lastName,email:this.admin.email,companyName:this.flightCompanyName}).
             then(response =>{
                 if(response.data === true) {

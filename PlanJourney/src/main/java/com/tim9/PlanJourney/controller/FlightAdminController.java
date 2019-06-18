@@ -64,6 +64,25 @@ public class FlightAdminController {
 		FlightCompany f = flightService.findByName(admin.getCompanyName());
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			if (admin.getUsername() == null || admin.getUsername().equals("".trim())) {
+				return false;
+			}
+			if (admin.getPassword() == null || admin.getPassword().equals("".trim())) {
+				return false;
+			}
+			if (admin.getFirstName() == null || admin.getFirstName().equals("".trim())) {
+				return false;
+			}
+			if (admin.getLastName() == null || admin.getLastName().equals("".trim())) {
+				return false;
+			}
+			if (admin.getEmail() == null || admin.getEmail().equals("".trim())) {
+				return false;
+			}
+			if (admin.getCompanyName() == null || admin.getCompanyName().equals("".trim())) {
+				return false;
+			}
+
 			if (adminService.findByUsername(admin.getUsername()) == null && f != null) {
 				Authority authority = authorityService.findByName("FLIGHT_ADMIN");
 				ArrayList<Authority> auth = new ArrayList<Authority>();

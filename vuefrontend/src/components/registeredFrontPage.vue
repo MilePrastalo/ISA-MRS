@@ -194,7 +194,7 @@ export default {
           window.location = "./friends";
       },
       hotels:function(){
-          window.location = "./";
+          this.$router.push("/registeredHotelSearch");
       },
       getRating:function(res,rating){
           if(res.rating>=rating){
