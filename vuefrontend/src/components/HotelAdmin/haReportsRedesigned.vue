@@ -123,6 +123,7 @@
 
 <script>
 import Chart from "chart.js";
+import axios from "axios";
 
 
 export default {

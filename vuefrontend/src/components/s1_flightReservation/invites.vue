@@ -57,6 +57,7 @@
 <script>
 import navbar from "../navbar.vue";
 import FriendRequests from "../s1_friends/friendRequests.vue";
+import axios from "axios";
 
 export default {
   name: "invites",

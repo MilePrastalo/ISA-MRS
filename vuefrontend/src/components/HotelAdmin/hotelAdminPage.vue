@@ -12,6 +12,7 @@
 
 import haHotel from "./haHotel.vue"
 import navbar from ".././navbar.vue";
+import axios from "axios";
 
 export default {
   name: "hotelAdminProfile",

@@ -42,6 +42,7 @@
 
 <script>
 import navbar from "./navbar.vue";
+import axios from "axios";
 
 export default {
   name: "searchFlightCompany",

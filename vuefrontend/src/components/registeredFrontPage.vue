@@ -141,6 +141,7 @@ import { setTimeout } from 'timers';
 import navbar from "./navbar.vue";
 import { hostname } from 'os';
 import SearchFlights from "./searchFlights";
+import axios from "axios";
 
 
 export default {
@@ -187,10 +188,9 @@ export default {
   },
   methods : {
       friends:function(){
-          window.location = "./front/friends";
+          this.$router.push("front/friends");
       },
       hotels:function(){
-          window.location = "./";
       },
       getRating:function(res,rating){
           if(res.rating>=rating){
@@ -226,16 +226,16 @@ export default {
                 
       },
     logout:function(){
-      window.location="./";
+      this.$router.push("/");
     },
     profile:function(){
-        window.location="./front/userProfile";
+        this.$router.push("/front/userProfile");
     },
     rentACar:function(){
-        window.location="./front/rentacar";
+        this.$router.push("/front/rentacar");
     },
     airlines:function(){
-        window.location="./front/searchFlightCompany";
+        this.$router.push("/front/searchFlightCompany");
     },
     cancel:function(reservation, index){
         var getJwtToken = function() {
@@ -295,16 +295,16 @@ export default {
         });
     },
     showDetails: function(hotelName,chosenRoom) {
-        this.$router.push("/hotelRoom/"+ hotelName + "/" + chosenRoom);
+        this.$router.push("/front/hotelRoom/"+ hotelName + "/" + chosenRoom);
     },
     showHotelSearch: function() {
-        this.$router.push("/searchHotels");
+        this.$router.push("/front/searchHotels");
     },
     flightReservationDetails(id){
-        this.$router.push("/flightReservationDetails/"+ id );
+        this.$router.push("/front/flightReservationDetails/"+ id );
     },
     friends(){
-        this.$router.push("/friends" );
+        this.$router.push("/front/friends" );
     },
     setStars:function(reservation,num){
         for(var i = 1;i<=5;i++){

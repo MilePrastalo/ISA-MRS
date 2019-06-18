@@ -33,6 +33,7 @@ import Passangers from "./passangers.vue";
 import rentACarReservation from ".././rentACarReservation.vue";
 import navbar from ".././navbar.vue";
 import hotelReservation from ".././hotelReservation";
+import axios from "axios";
 
 export default {
 

@@ -89,6 +89,8 @@
 import allFlights from "../allFlights.vue"
 import QuickReservations from "../quickReservations.vue"
 import navbar from "../navbar.vue";
+import axios from "axios";
+
 export default {
   name: "CompanyProfile",
   components: {

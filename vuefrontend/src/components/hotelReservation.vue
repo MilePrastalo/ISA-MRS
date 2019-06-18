@@ -63,6 +63,8 @@
 
 <script>
 import hotelProfile from "./hotelProfile.vue";
+import axios from "axios";
+
 export default {
   name: "hotelReservation",
   props: ["location","passangers","firstDay"],

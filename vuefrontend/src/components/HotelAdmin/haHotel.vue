@@ -190,6 +190,7 @@
 import haQuickReservation from "./haQuickReservation.vue"
 import haReportsRedesigned from "./haReportsRedesigned.vue"
 import { constants } from "crypto";
+import axios from "axios";
 
 export default {
   name: "haHotel",

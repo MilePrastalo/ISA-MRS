@@ -34,6 +34,7 @@
 
 import addvehicle from "./addvehicle.vue";
 import editVehicle from "./editVehicle.vue";
+import axios from "axios";
 
 export default {
   name: "vehicleAdmin",

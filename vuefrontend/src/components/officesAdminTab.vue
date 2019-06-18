@@ -26,6 +26,7 @@
 
 import addOffice from "./addOffice.vue";
 import editOffice from "./editOffice.vue";
+import axios from "axios";
 
 export default {
   name: "officeAdmin",

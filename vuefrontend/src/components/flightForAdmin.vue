@@ -86,6 +86,8 @@
 <script>
 import EditSeats from "./editSeatsOnFlight.vue";
 import navbar from "./navbar.vue";
+import axios from "axios";
+
 export default {
     name: "flightForAdmin",
     components: {

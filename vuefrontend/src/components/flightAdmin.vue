@@ -77,6 +77,7 @@ import AddQuickReservation from "./addQuickReservation.vue";
 import QuickReservations from "./quickReservations.vue";
 import FlightCompanyReport from "./s1_flightCompany/flightCompanyReports.vue";
 import navbar from "./navbar.vue";
+import axios from "axios";
 
 export default {
   name: "flightAdmin",

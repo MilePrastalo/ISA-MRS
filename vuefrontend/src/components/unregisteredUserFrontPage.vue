@@ -24,6 +24,8 @@ import searchRentACarCompany from './searchRentACarCompany.vue';
 import searchHotels from './searchHotels.vue';
 import navbar from "./navbar.vue";
 import rentACarReservation from "./rentACarReservation.vue";
+import axios from "axios";
+
 export default {
   name: "unregisteredUserFrontPage",
   components: {
