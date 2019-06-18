@@ -105,7 +105,7 @@ export default {
       },
       logout :function(){
             localStorage.setItem("jwtToken","");
-            window.location="./";
+            window.location="/";
       }
   }
 }
