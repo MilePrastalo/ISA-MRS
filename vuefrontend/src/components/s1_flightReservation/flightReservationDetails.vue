@@ -183,7 +183,7 @@ export default {
             .then(response => {
                 alert(response.data);
                 if (response.data == "success"){
-                    window.location = "/front/index"
+                    this.$router.push("/front/index");
                 }
         });
     },

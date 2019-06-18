@@ -34,6 +34,7 @@ import rentACarReservation from ".././rentACarReservation.vue";
 import navbar from ".././navbar.vue";
 import hotelReservation from ".././hotelReservation";
 import axios from "axios";
+import { equal } from 'assert';
 
 export default {
 
@@ -79,7 +80,7 @@ export default {
     methods: {
 
          getPrice: function( travelClass ){
-
+            
             if (travelClass == "economic"){
                 return this.flight.economicPrice;
             }
@@ -103,14 +104,14 @@ export default {
             var idx;
             var passangerSeat = [];
             for (idx in this.passangers){
-                var price = this.getPrice(this.passangers[idx].seat.travelClass);
+                var price = this.getPrice(this.passangers[idx].seat.travelClassa);
                 var obj = {price: price, seatId: this.passangers[idx].seat.id, 
                            firstName: this.passangers[idx].firstName, lastName: this.passangers[idx].lastName,
                            passport: this.passangers[idx].passport, friendId: this.passangers[idx].friendID};
                 passangerSeat.push(obj);     
             }
             if (passangerSeat.length == 0){
-                 var price = this.getPrice(this.selected_seats[0].travelClass);
+                 var price = this.getPrice(this.selected_seats[0].travelClassa);
                  var obj = {price: price, seatId: this.selected_seats[0].id, firstName: "", lastName: "", passport: "", friendId: -1};
                 passangerSeat.push(obj);
             }
@@ -123,7 +124,7 @@ export default {
             .then(response => {
                  alert(response.data);
             });
-            window.location = "/front/flight"
+            this.$router.push("/front/flight");
         },
 
         goToNextStep: function(option){

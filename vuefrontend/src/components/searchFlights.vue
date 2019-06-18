@@ -158,7 +158,7 @@ mounted(){
         },
         goToDetails : function(flightID){
             localStorage.setItem("flightID",flightID)
-            window.location = "/front/flight"
+            this.$router.push("/front/flight");
         }
     }
 }

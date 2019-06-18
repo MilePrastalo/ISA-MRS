@@ -123,15 +123,15 @@ mounted(){
 
         makeReservation: function(id){
             localStorage.setItem("flightID",id);
-            window.location = "/front/flightReservation";
+            this.$router.push("/front/flightReservation");
         },
 
         goBack: function(){
             if (this.role == "REGISTERED"){
-                window.location = "/front/index";
+                this.$router.push("/front/index")
                 return;
             }
-             window.location = "/";
+            this.$router.push("/");
         }
             
     }

@@ -162,7 +162,7 @@ export default {
         }
     },
     created: function(){
-        if (document.referrer == "/invites"){
+        if (document.referrer == "http://localhost:8080/front/index"){
             axios.defaults.headers.common["Authorization"] = "Bearer " + localStorage.getItem("jwtToken");
                 axios.get("/api/getReservationRequest/" + this.requestId)
                 .then(response => {

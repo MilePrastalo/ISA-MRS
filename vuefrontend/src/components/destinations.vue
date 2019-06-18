@@ -139,7 +139,6 @@ mounted(){
     methods:{
         addNewDestination: function(e){
             e.preventDefault()
-            alert(JSON.stringify(this.DestCity));
             var newDestination = {name: this.DestName, cityId :this.DestCity.id, description: this.DestDescription, longitude: this.DestLongitude,
                                     latitude: this.DestLatitude, address: this.DestAddress};
             var getJwtToken = function() {

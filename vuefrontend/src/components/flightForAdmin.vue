@@ -182,7 +182,7 @@ export default {
             .then(response => {
                 if (response.data == "success"){
                     alert("Flight is removed.");
-                    window.location = "/front/flightAdmin"
+                    this.$router.push("/front/flightAdmin");
                 }
                 else{
                     alert(response.data);

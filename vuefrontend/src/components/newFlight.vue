@@ -201,7 +201,7 @@ mounted(){
             if (this.transitions == "0" || this.transitions == ""){
                 this.transitions = "0"
                 return true;
-            }addFlight
+            }
             var list;
             try{
                 

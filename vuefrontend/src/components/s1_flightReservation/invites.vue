@@ -128,7 +128,7 @@ created(){
         },
 
          flightReservationDetails: function(id){
-            window.location = "/front/confirmationPage/" + id;
+            this.$router.push("/front/confirmationPage/" + id);
         }
     }
 }
