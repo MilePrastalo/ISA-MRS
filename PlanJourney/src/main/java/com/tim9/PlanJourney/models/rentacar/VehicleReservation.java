@@ -34,6 +34,9 @@ public class VehicleReservation extends Reservation {
 
 	@Column(name = "cena", nullable = false)
 	private double cena;
+	
+	@Column(name = "discount")
+	private int discount;
 
 	@ManyToOne
 	private FlightReservation flightReservation;
@@ -116,5 +119,14 @@ public class VehicleReservation extends Reservation {
 	public void setFlightReservation(FlightReservation flightReservation) {
 		this.flightReservation = flightReservation;
 	}
+
+	public int getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(int discount) {
+		this.discount = discount;
+	}
+	
 
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.tim9.PlanJourney.beans.QuickVehicleReserveBean;
 import com.tim9.PlanJourney.beans.VehicleReservationSearchBean;
+import com.tim9.PlanJourney.models.Discounts;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.rentacar.BranchOffice;
 import com.tim9.PlanJourney.models.rentacar.QuickVehicleReservation;
@@ -43,6 +44,9 @@ public class VehicleService {
 	
 	@Autowired
 	QuickVehicleReservationService quickService;
+	
+	@Autowired
+	DiscountsService discountService;
 	
 	public Vehicle findOne(Long id) {
 		return repository.getOne(id);//repository.findOne();
@@ -82,6 +86,10 @@ public class VehicleService {
 		reservation.setOfficeReturn(ret);
 		RentACarCompany company = vehicle.getCompany();
 		reservation.setCompany(company);
+		Discounts discounts = discountService.findOne(1L);
+		if (user.getVehicleReservations().size() >= discounts.getNumberOfRACReservations()) {
+			reservation.setDiscount(discounts.getRentACarDiscount());
+		}
 		reservationService.save(reservation);
 		user.getVehicleReservations().add(reservation);
 		vehicle.getReservations().add(reservation);
