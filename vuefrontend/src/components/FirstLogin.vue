@@ -49,24 +49,24 @@ export default {
         .then(response => {
             if(response.data !=="OK"){
                 alert("ERROR");
-                window.location="./";
+                this.$router.push("/");
             }
             else{
                 axios.get("/api/getUserRole")
                     .then(response => {
                 console.log(response);
                 if(response.data == "RENT_ADMIN"){
-                  window.location ="./front/RAindex";
+                  this.$router.push("front/RAindex");
                 }else if (response.data == "FLIGHT_ADMIN"){
-                  window.location ="./front/flightAdmin";
+                  this.$router.push("front/flightAdmin");
                 }else if (response.data == "SYS_ADMIN"){
-                  window.location ="./front/systemAdminPage";
+                  this.$router.push("front/systemAdminPage");
                 }else if (response.data == "REGISTERED"){
-                  window.location ="./front/index";
+                  this.$router.push("front/index");
                 }else if (response.data == "HOTEL_ADMIN"){
-                  window.location ="./front/hotelAdminPage";
+                 this.$router.push("front/hotelAdminPage");
                 }else{
-                  window.location ="./";
+                  this.$router.push("/");
                 }
                 
             });
