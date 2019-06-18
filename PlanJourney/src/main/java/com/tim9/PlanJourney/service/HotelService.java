@@ -261,6 +261,7 @@ public class HotelService {
 		// service.save(hotel);
 		// userService.save(user);
 		foundReservation.setUser(user);
+		//foundReservation.setFlightReservation(reservationBean.get);
 		hotelReservationService.save(foundReservation);
 
 		return foundReservation.getId();

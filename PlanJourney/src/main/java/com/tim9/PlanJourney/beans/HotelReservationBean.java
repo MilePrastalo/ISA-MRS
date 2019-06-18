@@ -19,9 +19,11 @@ public class HotelReservationBean {
 	private String firstDay;
 	private String lastDay;
 	private ArrayList<String> additionalCharges;
+	private Long flightId;
 
 	public HotelReservationBean(String hotelName, String username, int roomNumber, int fYear, int fMonth, int fDay,
-			int lYear, int lMonth, int lDay, int discount, float paidPrice, int numberOfBeds, ArrayList<String> ac) {
+			int lYear, int lMonth, int lDay, int discount, float paidPrice, int numberOfBeds, ArrayList<String> ac,
+			Long flightId) {
 		this.hotelName = hotelName;
 		this.username = username;
 		this.roomNumber = roomNumber;
@@ -35,6 +37,7 @@ public class HotelReservationBean {
 		this.paidPrice = paidPrice;
 		this.numberOfBeds = numberOfBeds;
 		this.additionalCharges = ac;
+		this.flightId = flightId;
 	}
 
 	public float getPaidPrice() {
@@ -166,6 +169,14 @@ public class HotelReservationBean {
 
 	public void setAdditionalCharges(ArrayList<String> additionalCharges) {
 		this.additionalCharges = additionalCharges;
+	}
+
+	public Long getFlightId() {
+		return flightId;
+	}
+
+	public void setFlightId(Long flightId) {
+		this.flightId = flightId;
 	}
 
 }

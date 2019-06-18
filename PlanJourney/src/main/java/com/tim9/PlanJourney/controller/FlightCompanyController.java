@@ -717,6 +717,13 @@ public class FlightCompanyController {
 	public @ResponseBody ResponseEntity<FlightCompany> addFlightCompany(@RequestBody FlightCompany flightCompany) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
+			if (flightCompany.getName() == null || flightCompany.getName().equals("".trim())) {
+				return new ResponseEntity<FlightCompany>(flightCompany, HttpStatus.CONFLICT);
+			}
+			if (flightCompany.getAddress() == null || flightCompany.getAddress().equals("".trim())) {
+				return new ResponseEntity<FlightCompany>(flightCompany, HttpStatus.CONFLICT);
+			}
+			
 			if (flightCompanyService.findByAddress(flightCompany.getAddress()) == null
 					&& flightCompanyService.findByName(flightCompany.getName()) == null) {
 				FlightCompany f = (FlightCompany) flightCompanyService.save(flightCompany);
