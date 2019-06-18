@@ -13,6 +13,10 @@
                         <td style="font-weight: bold">Price: </td>
                         <td>{{reservation.price}}</td>
                     </tr>
+                    <tr>
+                        <td style="font-weight: bold">Discount: </td>
+                        <td>{{reservation.discount}}%</td>
+                    </tr>
                 </table>
             </div>
             <br>
