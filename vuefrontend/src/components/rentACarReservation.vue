@@ -178,6 +178,8 @@ export default {
                         console.log(response);
                         alert("Success");
                         this.$emit("vehicleReserved",response.data);
+                    }).catch(function(){
+                        alert("Reservation failed");
                     }); 
             },
             reserveQuick : function(res){
@@ -186,7 +188,9 @@ export default {
                         console.log(response);
                         alert("Success");
                         this.$emit("vehicleReserved",response.data);
-                    }); 
+                    }).catch(function(){
+                        alert("Reservation failed");
+                    });; 
             },
             companyDetails(company){
                 this.companyForDetails = company;
