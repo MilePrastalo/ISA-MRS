@@ -101,7 +101,7 @@ methods: {
                 }
             else{
                 alert("Request is successfuly sent!");
-                window.location = "/friends";
+                window.location = "/front/friends";
             }
         });
     },
@@ -118,7 +118,7 @@ methods: {
                 }
             else{
                 alert("Successfuly removed!");
-                window.location = "/friends";
+                window.location = "/front/friends";
             }
         });
     },
@@ -135,7 +135,7 @@ methods: {
                 }
                 else{
                     alert("Successfuly accepted!");
-                    window.location = "/friends";
+                    window.location = "/front/friends";
                 }
             });
 

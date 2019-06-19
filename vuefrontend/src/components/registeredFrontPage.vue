@@ -220,10 +220,10 @@ export default {
   },
   methods : {
       friends:function(){
-          this.$router.push("front/friends");
+          this.$router.push("/front/friends");
       },
       hotels:function(){
-          this.$router.push("front/registeredHotelSearch");
+          this.$router.push("/front/registeredHotelSearch");
       },
       getRating:function(res,rating){
           if(res.rating>=rating){
