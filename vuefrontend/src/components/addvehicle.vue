@@ -74,14 +74,15 @@ export default {
     methods:{
         add: function(e){
             e.preventDefault();
+            var a = this;
             var getJwtToken = function() {
                 return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
             axios.post("/api/addCar",{name:this.name,maker:this.maker,type:this.type,year:this.year,price:this.price,dateFrom:this.datefrom,dateTo:this.dateto})
-            .then(function(){
+            .then(response => {
               alert("Vehicle has been added");
-              this.$emit("added");
+              a.$emit("added",response.data);
             }); 
         } 
     }

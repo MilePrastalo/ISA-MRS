@@ -1,7 +1,7 @@
 <template>
     <div id="officeAdmin">
         <h2>Branch Offices</h2>
-        <addOffice v-if="selected == 1"></addOffice>
+        <addOffice v-on:added="addedOffice" v-if="selected == 1"></addOffice>
         <editOffice v-on:backadd="backAdd" v-on:vedited="veditedDraw" v-if="selected == 2" :iid="id" v-bind:iname="name" v-bind:idestination="destination" v-bind:iaddress="address" :ilongitude="longitude" :ilatitude="latitude"></editOffice>
         <table class="table centered">
             <tr>
@@ -58,6 +58,9 @@ export default {
             }); 
   },
   methods : {
+      addedOffice(office){
+        this.officess.push(office);  
+      },
       editOfficeMethod : function(id_,name_,destination_,address_,latitude,longitude){
           this.selected=2;
           this.id = id_;
@@ -100,7 +103,6 @@ export default {
                 else{
                     alert("Not possible");
                 }
-                console.log(response);
             }); 
       }
   }

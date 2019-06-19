@@ -1,7 +1,7 @@
 <template>
     <div id="vehicleAdmin">
         <h2 class="centered">Vehicles</h2>
-        <addvehicle class="centered" v-if="selected == 1"></addvehicle>
+        <addvehicle v-on:added="addedCar" class="centered" v-if="selected == 1"></addvehicle>
         <editVehicle class="centered" v-on:back="back" v-on:vedited="veditedDraw" v-if="selected == 2" :iid="id" v-bind:iname="name" v-bind:imaker="maker" v-bind:itype="type" :iyear="year" v-bind:iprice="price" v-bind:idateto="dateTo" v-bind:idatefrom="dateFrom"></editVehicle>
         <table class="table centered">
             <tr>
@@ -67,6 +67,10 @@ export default {
             }); 
   },
   methods : {
+    addedCar:function(car){
+      console.log("added");
+      this.cars.push(car);
+    },
       editVehicleMethod : function(id_,name_,maker_,type_,year_,price_,dateFrom_,dateTo_){    
           this.selected=2;  
           this.id = id_;
