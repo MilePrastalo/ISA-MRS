@@ -79,8 +79,8 @@
                         <td>{{r.fDay + "-" + r.fMonth + "-" + r.fYear}}</td>
                         <td>{{r.lDay + "-" + r.lMonth + "-" + r.lYear}}</td>
                         <td><button @click="showHotelDetails(r)">Details</button></td>
-                        <td><button @click="cancelHotelReservation(r.hotelName,r.roomNumber)">Cancel</button></td>
-                        <td colspan="2" class="ratingtd">
+                        <td><button  v-if="r.status == 0" @click="cancelHotelReservation(r.hotelName,r.roomNumber)">Cancel</button></td>
+                        <td v-if="r.status == 2" colspan="2" class="ratingtd">
                                 <span class="fa fa-star over clicked" v-if="getRating(r,5)" @click="reviewHotel(r,5)" :id="r.ratings[4]"></span>
                                     <span class="fa fa-star over" v-else @click="reviewHotel(r,5)" :id="r.ratings[4]"></span>
                                 <span class="fa fa-star over clicked" v-if="getRating(r,4)" @click="reviewHotel(r,4)" :id="r.ratings[3]"></span>
@@ -220,10 +220,10 @@ export default {
   },
   methods : {
       friends:function(){
-          this.$router.push("front/friends");
+          this.$router.push("/front/friends");
       },
       hotels:function(){
-          this.$router.push("front/registeredHotelSearch");
+          this.$router.push("/front/registeredHotelSearch");
       },
       getRating:function(res,rating){
           if(res.rating>=rating){

@@ -90,6 +90,7 @@
       </tr>
       </thead>
       <tr v-for="r in quickReservations" :key="r.id">
+        <template v-if="checkToday(r)">
         <td>{{r.roomNumber}}</td>
         <td>{{r.numberOfBeds}}</td>
         <td>{{r.fDay +"."+r.fMonth +"."+r.fYear+"."}}</td>
@@ -100,6 +101,7 @@
         <td>
           <button @click="reserve(r)" class="btn-primary">Buy</button>
         </td>
+        <template>
       </tr>
     </table>
         </td>
@@ -176,6 +178,23 @@ mounted(){
         },
         reservedHotel: function(id) {
           this.$emit("rr",id);
+        },
+        checkToday: function(r) {
+          var today = new Date();
+          var tYear = today.getFullYear();
+          var tMonth = today.getMonth() + 1;
+          var tDay = today.getDate();
+
+          if(r.fYear < tYear) {
+            return false;
+          }
+          if(r.tMonth < tMonth) {
+            return false;
+          }
+          if(r.fDay < tDay) {
+            return false;
+          }
+          return true;
         }
     }
 }
