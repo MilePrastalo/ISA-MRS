@@ -64,7 +64,7 @@
                     </table>
                 </div>
                 <div id="HotelsReservations" class="centered col-lg-10" hidden="true" role="tabpanel" aria-labelledby="hotels">
-                    <table class="table">
+                    <table class="table" v-if="showingHotel == false">
                         <tr>
                             <th>Hotel Name</th>
                             <th>Room Number</th>
@@ -78,7 +78,7 @@
                         <td>{{r.roomNumber}}</td>
                         <td>{{r.fDay + "-" + r.fMonth + "-" + r.fYear}}</td>
                         <td>{{r.lDay + "-" + r.lMonth + "-" + r.lYear}}</td>
-                        <td><button @click="showDetails(r.hotelName,r.roomNumber)">Details</button></td>
+                        <td><button @click="showHotelDetails(r)">Details</button></td>
                         <td><button @click="cancelHotelReservation(r.hotelName,r.roomNumber)">Cancel</button></td>
                         <td colspan="2" class="ratingtd">
                                 <span class="fa fa-star over clicked" v-if="getRating(r,5)" @click="reviewHotel(r,5)" :id="r.ratings[4]"></span>
@@ -95,6 +95,32 @@
                             </td>
                     </tr>
                     </table>
+                    <table v-if="showingHotel == true">
+                        <tr>
+                            <td><b>Hotel Name</b></td>
+                            <td>{{hotelToShow.hotelName}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Room Number</b></td>
+                            <td>{{hotelToShow.roomNumber}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>First Day</b></td>
+                            <td>{{hotelToShow.fDay + "-" + hotelToShow.fMonth + "-" + hotelToShow.fYear}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Last Day</b></td>
+                            <td>{{hotelToShow.lDay + "-" + hotelToShow.lMonth + "-" + hotelToShow.lYear}}</td>
+                        </tr>      
+                        <tr>
+                            <td><b>Price Paid</b></td>
+                            <td>{{hotelToShow.paidPrice}}</td>
+                        </tr>  
+                        <tr>
+                            <td> </td>
+                            <td><button @click="cancelShowingHotel()">Cancel</button></td>
+                        </tr> 
+                </table>
                 </div>
                 <div id="CarsReservations" class="centered col-lg-10" hidden="true" role="tabpanel" aria-labelledby="nav-about-tab">
                     <table class="table">
@@ -154,7 +180,9 @@ export default {
       return{
           flightReservations: [],
           vehiclereservations:[],
-          hotelReservations:[]
+          hotelReservations:[],
+          showingHotel: false,
+          hotelToShow: {}
       }
   },
   components: {
@@ -195,6 +223,7 @@ export default {
           this.$router.push("front/friends");
       },
       hotels:function(){
+          this.$router.push("front/registeredHotelSearch");
       },
       getRating:function(res,rating){
           if(res.rating>=rating){
@@ -321,6 +350,14 @@ export default {
             }
         }
         
+    },
+    showHotelDetails: function(r) {
+        console.log(r);
+        this.hotelToShow = r;
+        this.showingHotel = true;
+    },
+    cancelShowingHotel: function() {
+        this.showingHotel = false;
     },
     cancelHotelReservation: function(hotelName,roomNumber) {
         var r;

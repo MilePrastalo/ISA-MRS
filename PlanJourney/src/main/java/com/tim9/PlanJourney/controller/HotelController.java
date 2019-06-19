@@ -204,6 +204,7 @@ public class HotelController {
 				reservationBean.setlMonth(c.get(Calendar.MONTH) + 1);
 				reservationBean.setlDay(c.get(Calendar.DAY_OF_MONTH));
 				reservationBean.setId(hr.getId());
+				reservationBean.setPaidPrice(hr.getPaidPrice());
 				hotelReservationBeans.add(reservationBean);
 			}
 		}
@@ -555,7 +556,7 @@ public class HotelController {
 			return false;
 		}
 		// Removing hotel reservation from flight reservation.
-		ArrayList<HotelReservation> flightsHotelReservations = new ArrayList<HotelReservation>();
+		/*ArrayList<HotelReservation> flightsHotelReservations = new ArrayList<HotelReservation>();
 		FlightReservation fr = flightReservationService.findOne(hr.getFlightReservation().getId());
 		System.out.println(fr.getId());
 		for (HotelReservation h : fr.getHoteReservations()) {
@@ -567,6 +568,7 @@ public class HotelController {
 		setFHR.addAll(flightsHotelReservations);
 		fr.setHoteReservations(setFHR);
 		flightReservationService.save(fr);
+		*/
 		hotelReservationService.remove(hr.getId());
 
 		return true;

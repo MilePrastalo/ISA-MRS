@@ -81,6 +81,7 @@ export default {
             axios.post("/api/addCar",{name:this.name,maker:this.maker,type:this.type,year:this.year,price:this.price,dateFrom:this.datefrom,dateTo:this.dateto})
             .then(function(){
               alert("Vehicle has been added");
+              this.$emit("added");
             }); 
         } 
     }

@@ -18,7 +18,7 @@
                     <li v-if="type!=0" class="nav-item">
                     <a class="nav-link" href="/front/userProfile">Profile</a>
                     </li>
-                     <li v-if="type!=0" class="nav-item">
+                     <li v-if="type!=0 && invites" class="nav-item">
                     <a class="nav-link" href="/front/invites">Invites</a>
                     </li>
                     <li v-if="type!=0" class="nav-item">
@@ -48,7 +48,8 @@ export default {
   data:function(){
       return{
           type:0,
-          homePage:""
+          homePage:"",
+          invites:false
       }
   },
   mounted(){
@@ -70,6 +71,7 @@ export default {
                   this.homePage ="/front/systemAdminPage";
                 }else if (response.data == "REGISTERED"){
                   this.homePage ="/front/index";
+                  this.invites = true;
                 }else if (response.data == "HOTEL_ADMIN"){
                   this.homePage ="/front/hotelAdminPage";
                 }else{

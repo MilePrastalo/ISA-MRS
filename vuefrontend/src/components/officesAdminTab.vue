@@ -85,10 +85,21 @@ export default {
           var getJwtToken = function() {
             return localStorage.getItem("jwtToken");
         };
+        var t = this;
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.delete("/api/removeOffice/"+id)
             .then(response => {
-                alert("Success");
+                if(response.data == true){
+                    for( var i = 0; i < t.officess.length; i++){ 
+                        if ( t.officess[i].id === id) {
+                            t.officess.splice(i, 1); 
+                            break;
+                        }
+                    }
+                }
+                else{
+                    alert("Not possible");
+                }
                 console.log(response);
             }); 
       }

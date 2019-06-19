@@ -155,7 +155,7 @@ public class VehicleService {
 		if(v.getReservations().size()>0) {
 			return false;
 		}
-		remove(id);
+		repository.deleteById(id);
 		return true;
 	}
 	

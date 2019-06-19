@@ -1,5 +1,6 @@
 <template>
     <div id="rentACarCompanyProfile">
+        <navbar/>
         <div class="row">
             <button @click="back">Back</button>
         </div>
@@ -102,10 +103,12 @@
 
 <script>
 import axios from "axios";
+import navbar from "./navbar.vue";
 
 export default {
   name: "rentACarCompanyProfile",
   components: {
+      navbar
   },
   props:["icompany"],
   data: function () {

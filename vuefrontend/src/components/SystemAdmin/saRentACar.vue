@@ -167,6 +167,15 @@ mounted(){
             this.currentTab = tabId;
         },
         addRentACar: function() {
+            if(this.newFC.name == null || this.newFC.name == "") {
+                alert("Please enter rent a car company name.");
+                return;
+            }
+            if(this.newFC.address == null || this.newFC.address == "") {
+                alert("Please enter rent a car company address");
+                return;
+            }
+
             axios.post("/api/addRentACarCompany",this.newRac).
             then(response =>{
                 alert(response.data.name + " has been successfully added.");
@@ -199,6 +208,32 @@ mounted(){
           this.showRACs = true;  
         },
         addRentACarAdmin: function() {
+            if(this.admin.username == null || this.admin.username == "") {
+                alert("Please enter rent a car admin username.");
+                return;
+            }
+            if(this.admin.password == null || this.admin.password == "") {
+                alert("Please enter rent a car  admin password.");
+                return;
+            }
+            if(this.admin.firstName == null || this.admin.firstName == "") {
+                alert("Please enter rent a car  admin first name.");
+                return;
+            }
+            if(this.admin.lastName == null || this.admin.lastName == "") {
+                alert("Please enter rent a car  admin last name.");
+                return;
+            }
+            if(this.admin.email == null || this.admin.email == "") {
+                alert("Please enter rent a car  admin email.");
+                return;
+            }
+            if(this.rentACarName == null || this.rentACarName == "") {
+                alert("Please enter rent a car admin's rent a car  name.");
+                return;
+            }
+
+
             axios.post("/api/addRentACarAdmin",{username:this.admin.username,password:this.admin.password,firstName:this.admin.firstName,lastName:this.admin.lastName,email:this.admin.email,companyName:this.rentACarName}).
             then(response =>{
                 if(response.data === true) {

@@ -105,11 +105,20 @@ export default {
           var getJwtToken = function() {
             return localStorage.getItem("jwtToken");
         };
+        var t = this;
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.delete("/api/removeCar/"+id)
             .then(response => {
-                alert("Success");
-                console.log(response);
+                if(response.data == true){
+                  for( var i = 0; i < t.cars.length; i++){ 
+                        if ( t.cars[i].id === id) {
+                            t.cars.splice(i, 1); 
+                            break;
+                        }
+                    }
+                }else{
+                  alert("Not possible");
+                }
             }); 
       }
   }
