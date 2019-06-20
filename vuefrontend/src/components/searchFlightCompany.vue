@@ -87,7 +87,7 @@ methods:{
     },
     goToDetails: function(id){
         localStorage.setItem("idCompany", id);
-        this.$router.push("front/CompanyProfile");
+        this.$router.push("/front/CompanyProfile");
     }
 }
 }

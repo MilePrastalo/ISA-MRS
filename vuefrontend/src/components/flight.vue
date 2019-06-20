@@ -122,6 +122,14 @@ mounted(){
     methods:{
 
         makeReservation: function(id){
+            var parts = this.flight.startDate_str.split(".");
+            var dataString = parts[2] + "-" + parts[1] + "-" + parts[0];
+            var start = new Date(dataString);
+            var today = new Date();
+            if (start < today){
+                alert("Start date is in the past!");
+                return;
+            }
             localStorage.setItem("flightID",id);
             this.$router.push("/front/flightReservation");
         },

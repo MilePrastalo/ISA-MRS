@@ -123,6 +123,9 @@ export default {
                         hotelReservations: this.hotelReservations, rentReservations: this.vehicleReservations})
             .then(response => {
                  alert(response.data);
+            }).catch({function () {
+                alert("Reservation failed!");
+            }
             });
             this.$router.push("/front/flight");
         },

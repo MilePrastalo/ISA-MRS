@@ -36,7 +36,7 @@
                     <td>{{flight.economicPrice}}</td>
                     <td>{{flight.businessPrice}}</td>
                     <td>{{flight.firstClassPrice}}</td>
-                    <td style="font-weight: bold">{{flight.rate}}</td>
+                    <td style="font-weight: bold"> {{flight.rate}}</td>
                 </tr>
                 </tbody>              
             </table>  
@@ -160,7 +160,7 @@ export default {
   },
 
   methods:{
-        
+      
     selected:function(val){
         
         this.tabSelected = val;

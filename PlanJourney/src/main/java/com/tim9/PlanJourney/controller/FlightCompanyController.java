@@ -280,7 +280,7 @@ public class FlightCompanyController {
 			return null;
 		}
 		for (Flight flight : logged.getFlightCompany().getFlights()) {
-			if (flight.getEndDestination().getId() == id || flight.getEndDestination().getId() == id) {
+			if (flight.getEndDestination().getId().equals(id) || flight.getEndDestination().getId().equals(id)) {
 				return "You can not remove this destionation becouse there is flight who uses it";
 			}
 		}
@@ -536,6 +536,9 @@ public class FlightCompanyController {
 		double total = 0;
 		for (Integer key : ratingMap.keySet()) {
 			total += key * ratingMap.get(key);
+		}
+		if (voteCnt == 0) {
+			return 0;
 		}
 		return total / voteCnt;
 	}
