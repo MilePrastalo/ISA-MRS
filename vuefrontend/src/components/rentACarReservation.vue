@@ -29,7 +29,7 @@
                     <td>Rating</td>
                 </tr>
                 <tr v-for="car in cars" :key="car.id">
-                    <td><img src="../assets/kola.jpg" width="50px" height="50px"/></td>
+                    <td><img :src="sourceImg" width="50px" height="50px"/></td>
                     <td>{{car.name}}</td>
                     <td>{{car.maker}}</td>
                     <td>{{car.type}}</td>
@@ -106,7 +106,8 @@ export default {
             companySelected:"",
             selected:false,
             rentProfile:false,
-            companyForDetails:{}
+            companyForDetails:{},
+            sourceImg:"../kola.jpg"
         };
     },
     mounted(){

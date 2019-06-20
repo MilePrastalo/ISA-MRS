@@ -93,13 +93,14 @@ public class RentACarController {
 		System.out.println("Poziv");
 		// Needs optimization
 		for (Vehicle vehicle : vehicles) {
-			if ((vehicle.getMaker().equals(search.getProducer()) || search.getProducer().equals(""))
-					&& (vehicle.getPrice() > search.getPriceFrom() || search.getPriceFrom() == 0)
-					&& (vehicle.getPrice() < search.getPriceTo() || search.getPriceTo() == 0)
-					&& (vehicle.getYear() > search.getNewer() || search.getNewer() == 0)
-					&& (vehicle.getYear() < search.getOlder() || search.getOlder() == 0)
-					&& (vehicle.getType().equals(search.getType()) || search.getType().equals(""))
-					&& (vehicle.getSeats() == search.getSeats()) || (search.getSeats() == 0)) {
+			boolean maker = (vehicle.getMaker().equals(search.getProducer()) || search.getProducer().equals(""));
+			boolean priceFrom = (vehicle.getPrice() >= search.getPriceFrom() || search.getPriceFrom() == 0);
+			boolean priceTo = (vehicle.getPrice() <= search.getPriceTo() || search.getPriceTo() == 0);
+			boolean yearNewer = (vehicle.getYear() >= search.getNewer() || search.getNewer() == 0);
+			boolean yearOlder = (vehicle.getYear() <= search.getOlder() || search.getOlder() == 0);
+			boolean type = (vehicle.getType().equals(search.getType()) || search.getType().equals(""));
+			boolean seats = (vehicle.getSeats() == search.getSeats()) || (search.getSeats() == 0);
+			if (maker && priceFrom && priceTo && yearNewer && yearOlder && type && seats) {
 				VehicleSearchReturnBean bean = new VehicleSearchReturnBean(vehicle.getName(), vehicle.getMaker(),
 						vehicle.getType(), vehicle.getYear(), vehicle.getPrice(), vehicle.getRating());
 				bean.setId(Long.toString(vehicle.getId()));

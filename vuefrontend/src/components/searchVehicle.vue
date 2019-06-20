@@ -68,10 +68,12 @@ mounted(){
     axios.get("/api/getProducers",)
         .then(response => {
             this.producers = response.data
+            this.producers.push("");
           }); 
-    axios.get("api/getTypes")
+    axios.get("/api/getTypes")
         .then(response => {
             this.types = response.data
+            this.types.push("");
           });  
     },
     methods:{

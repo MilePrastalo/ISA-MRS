@@ -32,7 +32,8 @@ export default {
   return {
     name:"",
     address:"",
-    description:""
+    description:"",
+
   }
 },
 mounted(){

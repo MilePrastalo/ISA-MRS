@@ -144,8 +144,8 @@ export default new Router({
     },
     {
       path:'/front/rentacar',
-      name: 'rentACarReservation',
-      component: () => import('./components/rentACarReservation.vue')
+      name: 'rentACarSearchPage',
+      component: () => import('./components/rentACarSearchPage.vue')
     },
     {
       path: '/front/friends',
