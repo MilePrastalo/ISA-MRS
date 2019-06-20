@@ -372,7 +372,7 @@ export default {
                 if(response.data == true) {
                     alert("Hotel reservation has been successfully canceled.");
                     this.hotelReservations.forEach(element=> {
-                        if(element.hotelName == hostname && element.roomNumber == roomNumber) {
+                        if(element.hotelName == hotelName && element.roomNumber == roomNumber) {
                             this.hotelReservations.splice(element,1);
                         }
                     })
