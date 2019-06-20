@@ -35,7 +35,9 @@ import com.tim9.PlanJourney.beans.VehicleSearchReturnBean;
 import com.tim9.PlanJourney.models.City;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.Review;
+import com.tim9.PlanJourney.models.flight.Flight;
 import com.tim9.PlanJourney.models.flight.FlightCompany;
+import com.tim9.PlanJourney.models.flight.FlightReservation;
 import com.tim9.PlanJourney.models.rentacar.BranchOffice;
 import com.tim9.PlanJourney.models.rentacar.QuickVehicleReservation;
 import com.tim9.PlanJourney.models.rentacar.RentACarAdmin;
@@ -44,6 +46,8 @@ import com.tim9.PlanJourney.models.rentacar.Vehicle;
 import com.tim9.PlanJourney.models.rentacar.VehicleReservation;
 import com.tim9.PlanJourney.service.BranchOfficeService;
 import com.tim9.PlanJourney.service.CityService;
+import com.tim9.PlanJourney.service.FlightReservationService;
+import com.tim9.PlanJourney.service.FlightService;
 import com.tim9.PlanJourney.service.QuickVehicleReservationService;
 import com.tim9.PlanJourney.service.RegisteredUserService;
 import com.tim9.PlanJourney.service.RentACarAdminService;
@@ -72,6 +76,9 @@ public class RentACarController {
 	private RentACarCompanyService companyService;
 	@Autowired
 	private RegisteredUserService userService;
+	
+	@Autowired
+	private FlightReservationService flightReservationService;
 
 	@Autowired
 	private QuickVehicleReservationService quickService;
@@ -315,6 +322,9 @@ public class RentACarController {
 		vehicle.getCompany().getReservations().remove(reservation);
 		companyService.save(vehicle.getCompany());
 		vehicle.getReservations().remove(reservation);
+		FlightReservation flight = reservation.getFlightReservation();
+		flight.getVehicleReservations().remove(reservation);
+		flightReservationService.save(flight);
 		vehicleService.save(vehicle);
 		reservationService.remove(bean.getId());
 

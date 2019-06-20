@@ -68,8 +68,10 @@ public class FlifgtController {
 	public @ResponseBody FlightBean getFlight(@PathVariable("id") Long id) throws Exception {
 
 		Flight flight = flightService.findOne(id);
-		return new FlightBean(flight, flight.getFlightCompany().getName(), sdf2.format(flight.getStartDate()),
+		FlightBean fb = new FlightBean(flight, flight.getFlightCompany().getName(), sdf2.format(flight.getStartDate()),
 				sdf2.format(flight.getEndDate()));
+		fb.setCityName(flight.getEndDestination().getCity().getName());
+		return  fb;
 	}
 
 	@RequestMapping(value = "/api/getSeatsOnFlight/{id}/{travelClass}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
