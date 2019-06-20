@@ -126,7 +126,6 @@
 </template>
 
 <script>
-import axios from "axios";
 
 export default {
   name: "saFlightCompanies",
@@ -152,12 +151,12 @@ mounted(){
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("/api/getAllFlightCompanies")
+        axios.get("http://localhost:8080/api/getAllFlightCompanies")
             .then(response => {
                 this.fcs = response.data;
             });
 
-        axios.get("/api/getAllFlightAdmins")
+        axios.get("http://localhost:8080/api/getAllFlightAdmins")
             .then(response => {
                 this.flightAdmins = response.data;
             });
@@ -175,10 +174,6 @@ mounted(){
                 alert("Please enter flight company address");
                 return;
             }
-            if(this.newFC.description == null || this.newFC.description == "") {
-                alert("Please enter flight company description.");
-                return;
-            }
 
             axios.post("http://localhost:8080/api/addFlightCompany",this.newFC).
             then(response =>{
@@ -188,8 +183,9 @@ mounted(){
             })
         },
         removeFlightCompany: function(name) {
-            axios.delete("/api/removeFlightCompany/"+ name)
+            axios.delete("http://localhost:8080/api/removeFlightCompany/"+ name)
             .then(response => {
+                if(response.data == true) {
                 var index;
                 for(let f in this.fcs) {
                     if(this.fcs[f].name == name) {
@@ -198,7 +194,10 @@ mounted(){
                     }
                 }
                 this.fcs.splice(index,1);
-                alert(response.data.name + " has been successfully removed.");
+                alert("Flight company has been successfully removed.");
+                } else {
+                    alert("You can't remove flight company with existing reservations.");
+                }
             })
         },
         addFCAdminDiv: function(name) {
@@ -236,7 +235,7 @@ mounted(){
                 alert("Please enter flight admin flight company name.");
                 return;
             }
-            axios.post("/api/addFlightAdmin",{username:this.admin.username,password:this.admin.password,firstName:this.admin.firstName,lastName:this.admin.lastName,email:this.admin.email,companyName:this.flightCompanyName}).
+            axios.post("http://localhost:8080/api/addFlightAdmin",{username:this.admin.username,password:this.admin.password,firstName:this.admin.firstName,lastName:this.admin.lastName,email:this.admin.email,companyName:this.flightCompanyName}).
             then(response =>{
                 if(response.data === true) {
                     alert("Flight admin has been successfully added.");
@@ -247,7 +246,7 @@ mounted(){
             })
         },
         removeAdmin: function(name) {
-            axios.delete("/api/removeFlightAdmin/"+ name)
+            axios.delete("http://localhost:8080/api/removeFlightAdmin/"+ name)
             .then(response => {
                 var index;
                 for(let a in this.flightAdmins) {

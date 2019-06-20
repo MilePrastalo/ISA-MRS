@@ -20,7 +20,7 @@
         </div>
         <div v-if="currentStep == 4">
             <button @click="goToNextStep(5)"> Finish >> </button>
-            <rentACarReservation :iflightDateArrive="flight.startDate_str" :iflightDateLeaving="flight.endDate_str" v-on:vehicleReserved="carReserved" :ilocation="destination"/>
+            <rentACarReservation :iflightDateArrive="flight.startDate_str" :iflightDateLeaving="flight.endDate_str" v-on:vehicleReserved="carReserved" :ilocation="cityName"/>
         </div>
         		
          
@@ -58,7 +58,8 @@ export default {
             flight: {},
             hotelReservations: [],
             vehicleReservations: [],
-            currentStep: 1
+            currentStep: 1,
+            cityName:""
         }
     },
     created:function(){
@@ -75,6 +76,7 @@ export default {
             this.flight = response.data
             console.log(this.flight);
             this.destination = this.flight.endDestination;
+            this.cityName = this.flight.cityName;
           }); 
     }, 
     methods: {

@@ -40,6 +40,8 @@ public class FlightBean {
 	private String additionalServices;
 	private String transitions;
 	private int transitionsNum;
+	
+	private String cityName;
 
 	public FlightBean() {
 		// TODO Auto-generated constructor stub
@@ -356,5 +358,14 @@ public class FlightBean {
 	public void setTransitionsNum(int transitionsNum) {
 		this.transitionsNum = transitionsNum;
 	}
+
+	public String getCityName() {
+		return cityName;
+	}
+
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+	
 
 }

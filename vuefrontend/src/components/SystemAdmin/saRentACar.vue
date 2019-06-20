@@ -187,7 +187,8 @@ mounted(){
         removeRAC: function(name) {
             axios.delete("/api/removeRentACarCompany/"+ name)
             .then(response => {
-                var index;
+                if(response.data == true) {
+                    var index;
                 for(let r in this.racs) {
                     if(this.racs[r].name == name) {
                         index = r;
@@ -195,7 +196,10 @@ mounted(){
                     }
                 }
                 this.racs.splice(index,1);
-                alert(response.data.name + " has been successfully removed.");
+                alert("Rent a car company has been successfully removed.");
+                } else {
+                     alert("You can't remove rent a car company with existing reservations.");
+                }             
             })
         },
         addRACAdminDiv: function(name) {

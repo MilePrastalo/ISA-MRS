@@ -277,7 +277,11 @@ export default {
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         axios.post("/api/cancelVehicleReservation",reservation)
             .then(response => {
-                alert("success");
+                for(var i = 0; i<this.vehiclereservations.length;i++){
+                    if(this.vehiclereservations[i].id == reservation.id){
+                        this.vehiclereservations.splice(i,1);
+                    }
+                }
             });
     },
     review:function(reservation,num){
