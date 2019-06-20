@@ -33,6 +33,7 @@ import com.tim9.PlanJourney.hotel.HotelReservation;
 import com.tim9.PlanJourney.hotel.HotelRoom;
 import com.tim9.PlanJourney.models.City;
 import com.tim9.PlanJourney.models.RegisteredUser;
+import com.tim9.PlanJourney.models.Review;
 import com.tim9.PlanJourney.models.flight.Destination;
 import com.tim9.PlanJourney.service.CityService;
 import com.tim9.PlanJourney.service.DestinationService;
@@ -200,7 +201,12 @@ public class HotelController {
 				reservationBean.setlDay(c.get(Calendar.DAY_OF_MONTH));
 				reservationBean.setId(hr.getId());
 				reservationBean.setPaidPrice(hr.getPaidPrice());
-
+				Set<Review> reviews = hr.getReservationReviews();
+				for (Review r : reviews) {
+					if (r.getUser().getUsername().equals(user.getUsername())) {
+						reservationBean.setRating(r.getRating());
+					}
+				}
 				Date today = new Date();
 				long daysPassed = hr.getFirstDay().getTime() - today.getTime();
 				int status;
@@ -212,6 +218,7 @@ public class HotelController {
 					status = 1;
 				}
 				reservationBean.setStatus(status);
+
 
 				hotelReservationBeans.add(reservationBean);
 			}
