@@ -193,7 +193,7 @@ mounted(){
           this.$emit("rr",id);
         },
         backToSearch() {
-            window.location ="/";
+            window.location ="/front/index";
         },
         checkToday: function(r) {
           var today = new Date();

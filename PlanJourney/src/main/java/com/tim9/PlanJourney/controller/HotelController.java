@@ -457,6 +457,8 @@ public class HotelController {
 				}
 
 			}
+			
+			System.out.println(cityNameCheck);
 
 			// checks if hotel name equals searched hotel name.
 			if (searchBean.getHotelName().equals("".trim())) {

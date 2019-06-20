@@ -97,7 +97,6 @@ mounted(){
         },
 
         remove: function(id, index){
-            alert(id);
             var getJwtToken = function() {
                 return localStorage.getItem("jwtToken");
             };

@@ -167,11 +167,11 @@ mounted(){
             this.currentTab = tabId;
         },
         addRentACar: function() {
-            if(this.newFC.name == null || this.newFC.name == "") {
+            if(this.newRac.name == null || this.newRac.name == "") {
                 alert("Please enter rent a car company name.");
                 return;
             }
-            if(this.newFC.address == null || this.newFC.address == "") {
+            if(this.newRac.address == null || this.newRac.address == "") {
                 alert("Please enter rent a car company address");
                 return;
             }
@@ -181,7 +181,8 @@ mounted(){
                 alert(response.data.name + " has been successfully added.");
                     this.racs.push(this.newRac);
                     this.newRac = {};
-            })
+            });
+
         },
         removeRAC: function(name) {
             axios.delete("/api/removeRentACarCompany/"+ name)
