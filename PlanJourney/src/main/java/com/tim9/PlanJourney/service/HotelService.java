@@ -211,8 +211,6 @@ public class HotelService {
 			}
 		}
 
-		price = price - price / 100 * reservationBean.getDiscount();
-
 		reservation.setPaidPrice(price);
 		hotel.getReservations().add(reservation);
 		System.out.println(reservation.getHotel().getName());

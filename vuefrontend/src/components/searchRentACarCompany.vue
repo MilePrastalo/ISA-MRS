@@ -29,7 +29,7 @@
                 <th></th>
             </tr>
             <tr v-for="company in companies" :key="company.name">  
-                <td><img src="../assets/rent.jpg" width="50px" height="50px" alt=""></td>
+                <td><img :src="'./assets/imgs/' +'rent'+ '.jpg'" width="50px" height="50px" alt=""></td>
                 <td>{{company.name}}</td>
                 <td><table class="table">
                     <tr><th>Office name</th>

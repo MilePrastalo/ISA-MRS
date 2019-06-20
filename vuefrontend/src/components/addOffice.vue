@@ -74,6 +74,7 @@ mounted(){
              axios.post("/api/addOffice",{name:this.name, destination: this.destination,address:this.address,longitude:this.longitude,latitude:this.latitude})
             .then(response => {
                 alert("Office added");
+                this.$emit("added",response.data);
             });  
         }     
     }

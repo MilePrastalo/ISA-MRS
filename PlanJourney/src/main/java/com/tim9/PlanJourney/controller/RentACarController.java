@@ -93,13 +93,14 @@ public class RentACarController {
 		System.out.println("Poziv");
 		// Needs optimization
 		for (Vehicle vehicle : vehicles) {
-			if ((vehicle.getMaker().equals(search.getProducer()) || search.getProducer().equals(""))
-					&& (vehicle.getPrice() > search.getPriceFrom() || search.getPriceFrom() == 0)
-					&& (vehicle.getPrice() < search.getPriceTo() || search.getPriceTo() == 0)
-					&& (vehicle.getYear() > search.getNewer() || search.getNewer() == 0)
-					&& (vehicle.getYear() < search.getOlder() || search.getOlder() == 0)
-					&& (vehicle.getType().equals(search.getType()) || search.getType().equals(""))
-					&& (vehicle.getSeats() == search.getSeats()) || (search.getSeats() == 0)) {
+			boolean maker = (vehicle.getMaker().equals(search.getProducer()) || search.getProducer().equals(""));
+			boolean priceFrom = (vehicle.getPrice() >= search.getPriceFrom() || search.getPriceFrom() == 0);
+			boolean priceTo = (vehicle.getPrice() <= search.getPriceTo() || search.getPriceTo() == 0);
+			boolean yearNewer = (vehicle.getYear() >= search.getNewer() || search.getNewer() == 0);
+			boolean yearOlder = (vehicle.getYear() <= search.getOlder() || search.getOlder() == 0);
+			boolean type = (vehicle.getType().equals(search.getType()) || search.getType().equals(""));
+			boolean seats = (vehicle.getSeats() == search.getSeats()) || (search.getSeats() == 0);
+			if (maker && priceFrom && priceTo && yearNewer && yearOlder && type && seats) {
 				VehicleSearchReturnBean bean = new VehicleSearchReturnBean(vehicle.getName(), vehicle.getMaker(),
 						vehicle.getType(), vehicle.getYear(), vehicle.getPrice(), vehicle.getRating());
 				bean.setId(Long.toString(vehicle.getId()));
@@ -462,7 +463,7 @@ public class RentACarController {
 	@RequestMapping(value = "/api/addCar", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('RENT_ADMIN')")
-	public void addCar(@RequestBody AddVehicleBean vehicleBean) throws Exception {
+	public @ResponseBody EditVehicleBean addCar(@RequestBody AddVehicleBean vehicleBean) throws Exception {
 		RentACarAdmin admin = getAdmin();
 		RentACarCompany company = admin.getService();
 		Vehicle v = new Vehicle(vehicleBean.getName(), vehicleBean.getMaker(), vehicleBean.getType(),
@@ -472,8 +473,26 @@ public class RentACarController {
 		v.setAvaiableTo(sdf.parse(vehicleBean.getDateTo()));
 		company.getVehicles().add(v);
 		v.setCompany(company);
-		vehicleService.save(v);
+		v = vehicleService.save(v);
 		companyService.save(company);
+		
+		sdf = new SimpleDateFormat("dd-MM-yyyy");
+		EditVehicleBean evb = new EditVehicleBean();
+		evb.setDateFrom(vehicleBean.getDateFrom());
+		String dateFrom = sdf.format(v.getAvaiableFrom());
+		String dateTo = sdf.format(v.getAvaiableTo());
+
+		evb.setDateFrom(dateFrom);
+		evb.setDateTo(dateTo);
+		evb.setId(v.getId());
+		evb.setMaker(v.getMaker());
+		evb.setName(v.getName());
+		evb.setPrice(Double.toString(v.getPrice()));
+		evb.setRating(v.getRating());
+		evb.setType(v.getType());
+		evb.setYear(Integer.toString(v.getYear()));
+		return evb;
+		
 	}
 
 	// Admin edits vehicle
@@ -575,15 +594,23 @@ public class RentACarController {
 	@RequestMapping(value = "/api/addOffice", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('RENT_ADMIN')")
-	public void addOffice(@RequestBody BranchOfficeBean bean) throws Exception {
+	public @ResponseBody BranchOfficeBean addOffice(@RequestBody BranchOfficeBean bean) throws Exception {
 		RentACarAdmin admin = getAdmin();
 		RentACarCompany company = admin.getService();
 		City destination = ds.findByName(bean.getDestination());
 		BranchOffice bo = new BranchOffice(bean.getName(), bean.getAddress(), company, destination);
 		bo.setLatitude(bean.getLatitude());
 		bo.setLongitude(bean.getLongitude());
-		bs.save(bo);
+		bo = bs.save(bo);
 		companyService.save(company);
+		BranchOfficeBean ob = new BranchOfficeBean();
+		ob.setId(bo.getId());
+		ob.setName(bo.getName());
+		ob.setAddress(bo.getAddress());
+		ob.setDestination(bo.getDestination().getName());
+		ob.setLatitude(bo.getLatitude());
+		ob.setLongitude(bo.getLongitude());
+		return ob;
 	}
 
 	@RequestMapping(value = "/api/removeOffice/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)

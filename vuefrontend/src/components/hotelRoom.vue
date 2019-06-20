@@ -176,9 +176,6 @@ mounted(){
         this.fYear = parseInt(splitFirstDay[2]);
         this.fMonth = parseInt(splitFirstDay[1]);
         this.fDay = parseInt(splitFirstDay[0]);
-        console.log(this.fDay);
-        console.log(this.fMonth);
-        console.log(this.fYear);
 
         var splitLastDay = this.lastDay.split("-");
         this.lYear = parseInt(splitLastDay[0]);

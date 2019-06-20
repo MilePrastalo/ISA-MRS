@@ -1,5 +1,6 @@
 package com.tim9.PlanJourney.controller;
 
+import java.io.ObjectInputStream.GetField;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,11 +34,10 @@ import com.tim9.PlanJourney.hotel.HotelReservation;
 import com.tim9.PlanJourney.hotel.HotelRoom;
 import com.tim9.PlanJourney.models.City;
 import com.tim9.PlanJourney.models.RegisteredUser;
+import com.tim9.PlanJourney.models.Review;
 import com.tim9.PlanJourney.models.flight.Destination;
-import com.tim9.PlanJourney.models.flight.FlightReservation;
 import com.tim9.PlanJourney.service.CityService;
 import com.tim9.PlanJourney.service.DestinationService;
-import com.tim9.PlanJourney.service.FlightReservationService;
 import com.tim9.PlanJourney.service.HotelAdminService;
 import com.tim9.PlanJourney.service.HotelReservationService;
 import com.tim9.PlanJourney.service.HotelService;
@@ -56,9 +56,6 @@ public class HotelController {
 
 	@Autowired
 	private HotelReservationService hotelReservationService;
-
-	@Autowired
-	private FlightReservationService flightReservationService;
 
 	@Autowired
 	private CityService cityService;
@@ -205,6 +202,24 @@ public class HotelController {
 				reservationBean.setlDay(c.get(Calendar.DAY_OF_MONTH));
 				reservationBean.setId(hr.getId());
 				reservationBean.setPaidPrice(hr.getPaidPrice());
+				Set<Review> reviews = hr.getReservationReviews();
+				for (Review r : reviews) {
+					if (r.getUser().getUsername().equals(user.getUsername())) {
+						reservationBean.setRating(r.getRating());
+					}
+				}
+				Date today = new Date();
+				long daysPassed = hr.getFirstDay().getTime() - today.getTime();
+				int status;
+				if (daysPassed > 24 * 2 * 3600 * 1000) {
+					status = 0;
+				} else if (today.getTime() - hr.getFirstDay().getTime() > 0) {
+					status = 2;
+				} else {
+					status = 1;
+				}
+				reservationBean.setStatus(status);
+
 				hotelReservationBeans.add(reservationBean);
 			}
 		}
@@ -550,25 +565,31 @@ public class HotelController {
 		// Checks if cancelation is less than 3 days before.
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(hr.getFirstDay());
-		cal.add(Calendar.DATE, -3);
+		cal.add(Calendar.DATE, -2);
 		Date dateBefore3Days = cal.getTime();
-		if (dateBefore3Days.after(new Date())) {
+		if (new Date().after(dateBefore3Days)) {
 			return false;
 		}
-		// Removing hotel reservation from flight reservation.
-		/*ArrayList<HotelReservation> flightsHotelReservations = new ArrayList<HotelReservation>();
-		FlightReservation fr = flightReservationService.findOne(hr.getFlightReservation().getId());
-		System.out.println(fr.getId());
-		for (HotelReservation h : fr.getHoteReservations()) {
-			if (!(h.getId() == hr.getId())) {
-				flightsHotelReservations.add(h);
-			}
+
+		// Canceling quick hotel reservation
+		if (hr.getDiscount() > 0 && hr.getUser() != null) {
+			hr.setUser(null);
+			hotelReservationService.save(hr);
+
+			return true;
 		}
-		HashSet<HotelReservation> setFHR = new HashSet<HotelReservation>();
-		setFHR.addAll(flightsHotelReservations);
-		fr.setHoteReservations(setFHR);
-		flightReservationService.save(fr);
-		*/
+
+		// Removing hotel reservation from flight reservation.
+		/*
+		 * ArrayList<HotelReservation> flightsHotelReservations = new
+		 * ArrayList<HotelReservation>(); FlightReservation fr =
+		 * flightReservationService.findOne(hr.getFlightReservation().getId());
+		 * System.out.println(fr.getId()); for (HotelReservation h :
+		 * fr.getHoteReservations()) { if (!(h.getId() == hr.getId())) {
+		 * flightsHotelReservations.add(h); } } HashSet<HotelReservation> setFHR = new
+		 * HashSet<HotelReservation>(); setFHR.addAll(flightsHotelReservations);
+		 * fr.setHoteReservations(setFHR); flightReservationService.save(fr);
+		 */
 		hotelReservationService.remove(hr.getId());
 
 		return true;

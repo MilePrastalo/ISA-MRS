@@ -37,6 +37,7 @@ public class BranchOfficeService {
 		repository.deleteById(id);
 	}
 	
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public boolean removeOffice(Long id) {
 		BranchOffice office = findOne(id);
 		ArrayList<VehicleReservation> reservations =(ArrayList<VehicleReservation>) reservationService.findAll();
@@ -45,8 +46,7 @@ public class BranchOfficeService {
 				return false;
 			}
 		}
-
-		remove(id);
+		repository.deleteById(id);
 		return true;
 	}
 
