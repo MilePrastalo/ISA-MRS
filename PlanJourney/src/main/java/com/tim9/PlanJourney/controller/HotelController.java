@@ -1,5 +1,6 @@
 package com.tim9.PlanJourney.controller;
 
+import java.io.ObjectInputStream.GetField;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -218,7 +219,6 @@ public class HotelController {
 					status = 1;
 				}
 				reservationBean.setStatus(status);
-
 
 				hotelReservationBeans.add(reservationBean);
 			}
@@ -567,13 +567,14 @@ public class HotelController {
 		cal.setTime(hr.getFirstDay());
 		cal.add(Calendar.DATE, -2);
 		Date dateBefore3Days = cal.getTime();
-		if (dateBefore3Days.after(new Date())) {
+		if (new Date().after(dateBefore3Days)) {
 			return false;
 		}
 
 		// Canceling quick hotel reservation
 		if (hr.getDiscount() > 0 && hr.getUser() != null) {
 			hr.setUser(null);
+			hotelReservationService.save(hr);
 
 			return true;
 		}

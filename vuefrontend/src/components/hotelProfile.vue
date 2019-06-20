@@ -180,21 +180,16 @@ mounted(){
           this.$emit("rr",id);
         },
         checkToday: function(r) {
-          var today = new Date();
-          var tYear = today.getFullYear();
-          var tMonth = today.getMonth() + 1;
-          var tDay = today.getDate();
+          var splitFirstDay = this.firstDay.split(".");
+          var tYear = parseInt(splitFirstDay[2]);
+          var tMonth = parseInt(splitFirstDay[1]);
+          var tDay = parseInt(splitFirstDay[0]);
 
-          if(r.fYear < tYear) {
+          if(r.fYear == tYear && r.fMonth == tMonth && r.fDay == tDay) {
+            return true;
+          } else {
             return false;
           }
-          if(r.tMonth < tMonth) {
-            return false;
-          }
-          if(r.fDay < tDay) {
-            return false;
-          }
-          return true;
         }
     }
 }
