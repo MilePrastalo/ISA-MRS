@@ -274,7 +274,7 @@ mounted(){
             })
             this.hotel.rooms.push({roomNumber: this.room.roomNumber,numberOfBeds:this.room.numberOfBeds,pricePerDay:this.room.pricePerDay,additionalCharges:this.acList,rating:0});
             this.room = {};
-            this.acLIST = [];
+            this.acList = [];
         },
         findQuickReservations: function() {
             this.quickReservations = [];

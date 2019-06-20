@@ -99,6 +99,7 @@ public class RentACarAdminController {
 				BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 				admin.setPassword(encoder.encode(admin.getPassword()));
 				rentAdmin.setPassword(encoder.encode(admin.getPassword()));
+				rentAdmin.setConfirmed(true);
 				rentAdmin.setLoggedBefore(false);
 				adminService.save(rentAdmin);
 

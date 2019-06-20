@@ -36,6 +36,11 @@ export default {
           tabSelected:1
       };
   },
+  mounted(){
+      axios.get("/auth/logintest").then(response=>{
+          console.log(response);
+      });
+  },
   methods: {
         logIn: function() {
             this.$router.push("front/loginPage");
@@ -60,6 +65,9 @@ export default {
             document.getElementById("rentsearch").className="nav-item nav-link active";
             document.getElementById("hotsearch").className="nav-item nav-link";
             document.getElementById("flsearch").className="nav-item nav-link";
+            axios.get("/auth/getA").then(response=>{
+                console.log(response);
+            });
         }
     }
 }

@@ -261,7 +261,7 @@ public class HotelAdminController {
 
 				BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 				hotelAdmin.setPassword(encoder.encode(admin.getPassword()));
-				hotelAdmin.setConfirmed(false);
+				hotelAdmin.setConfirmed(true);
 				hotelAdmin.setLoggedBefore(false);
 				adminService.save(hotelAdmin);
 

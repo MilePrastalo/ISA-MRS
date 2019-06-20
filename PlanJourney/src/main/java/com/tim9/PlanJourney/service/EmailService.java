@@ -34,7 +34,7 @@ public class EmailService {
 		mail.setTo(friend.getEmail());
 		mail.setFrom("plan.journey.isa@gmail.com");
 		mail.setSubject("PlanJourney: Flight Reservation Request");
-		mail.setText("Go to: " + "http://localhost:8081/confirmationPage"+"/" + id_ + " to se details.");
+		mail.setText("Go to: " + "https://planjourney.herokuapp.com/confirmationPage"+"/" + id_ + " to se details.");
 		javaMailSender.send(mail);
 
 		System.out.println("E-mail sent!");
@@ -46,7 +46,7 @@ public class EmailService {
 		SimpleMailMessage mail = new SimpleMailMessage();
 		mail.setTo(user.getEmail());
 		mail.setFrom("plan.journey.isa@gmail.com");
-		mail.setSubject("PlanJourney: Flight Reservation Request");
+		mail.setSubject("PlanJourney: Account conformation");
 		String url = "";
 		try {
 			url = Base64.getEncoder().encodeToString(user.getUsername().getBytes("UTF-8"));
@@ -54,7 +54,7 @@ public class EmailService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		mail.setText("Go to: " + "http://localhost:8080/auth/registrationConfirmation"+"/" + url + " to activate your account.");
+		mail.setText("Go to: " + "https://planjourney.herokuapp.com/auth/registrationConfirmation"+"/" + url + " to activate your account.");
 		javaMailSender.send(mail);
 
 		System.out.println("E-mail sent!");

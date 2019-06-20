@@ -33,6 +33,7 @@ import com.tim9.PlanJourney.beans.LoginBean;
 import com.tim9.PlanJourney.beans.RegisterBean;
 import com.tim9.PlanJourney.models.Authority;
 import com.tim9.PlanJourney.models.RegisteredUser;
+import com.tim9.PlanJourney.models.SystemAdmin;
 import com.tim9.PlanJourney.models.User;
 import com.tim9.PlanJourney.models.UserTokenState;
 import com.tim9.PlanJourney.security.TokenUtils;
@@ -62,6 +63,7 @@ public class AuthenticationController {
 
 	@Autowired
 	private EmailService emailService;
+	
 
 	@CrossOrigin()
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -115,6 +117,7 @@ public class AuthenticationController {
 		user.setLoggedBefore(true);
 		user.setCity(bean.getCity());
 		user.setPhone(bean.getPhone());
+		user.setConfirmed(true);
 		userService.save(user);
 		try {
 			emailService.sendRegistrationEmail(user); // sends email
@@ -163,13 +166,61 @@ public class AuthenticationController {
 		User user = userService.findOneByUsername(username);
 		user.setConfirmed(true);
 		userService.save(user);
-		RedirectView view = new RedirectView("http://localhost:8080");
+		RedirectView view = new RedirectView("https://planjourney.herokuapp.com/");
 		return view;
 	}
 
 	static class PasswordChanger {
 		public String oldPassword;
 		public String newPassword;
+	}
+	
+	
+	
+	
+	@CrossOrigin()
+	@RequestMapping(value = "/logintest", method = RequestMethod.GET)
+	public ArrayList<String> createAuthorityes() {
+		ArrayList<String> autoriteti = new ArrayList<>();
+		Authority a1 = new Authority();
+		a1.setName("SYS_ADMIN");
+		a1.setId(1l);
+		autoriteti.add(a1.getName());
+		autService.save(a1);
+		
+		
+		Authority a2 = new Authority();
+		a2.setName("FLIGHT_ADMIN");
+		a2.setId(2l);
+		autoriteti.add(a2.getName());
+		autService.save(a2);
+		
+		Authority a3 = new Authority();
+		a3.setName("HOTEL_ADMIN");
+		a3.setId(3l);
+		autoriteti.add(a3.getName());
+		autService.save(a3);
+		
+		
+		Authority a4 = new Authority();
+		a4.setName("RENT_ADMIN");
+		a4.setId(4l);
+		autoriteti.add(a4.getName());
+		autService.save(a4);
+		
+		Authority a5 = new Authority();
+		a5.setName("REGISTERED");
+		a5.setId(5l);
+		autoriteti.add(a5.getName());
+		autService.save(a5);
+		
+		return autoriteti;
+	}
+	@CrossOrigin()
+	@RequestMapping(value = "/getA", method = RequestMethod.GET)
+	public String displayAu() {
+		Authority a = autService.findOne(1l);
+		return a.getName();
 	}
 
 }
