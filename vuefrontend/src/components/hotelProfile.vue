@@ -90,6 +90,7 @@
       </tr>
       </thead>
       <tr v-for="r in quickReservations" :key="r.id">
+        <template v-if="checkToday(r)">
         <td>{{r.roomNumber}}</td>
         <td>{{r.numberOfBeds}}</td>
         <td>{{r.fDay +"."+r.fMonth +"."+r.fYear+"."}}</td>
@@ -100,6 +101,7 @@
         <td>
           <button @click="reserve(r)" class="btn-primary">Buy</button>
         </td>
+        <template>
       </tr>
     </table>
         </td>
@@ -137,7 +139,7 @@ mounted(){
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-         axios.get("http://localhost:8080/api/getHotel/" + this.hotelName)
+         axios.get("/api/getHotel/" + this.hotelName)
         .then(response => {
             this.hotel = response.data;
 
@@ -161,7 +163,7 @@ mounted(){
         this.currentPage = 1;
         },
         reserve: function(room) {
-          axios.post("http://localhost:8080/api/buyQuickHotelReservation",{hotelName: room.hotelName,fYear:room.fYear,fMonth: room.fMonth,fDay: room.fDay,lYear: room.lYear,lMonth: room.lMonth,lDay: room.lDay, roomNumber: room.roomNumber})
+          axios.post("/api/buyQuickHotelReservation",{hotelName: room.hotelName,fYear:room.fYear,fMonth: room.fMonth,fDay: room.fDay,lYear: room.lYear,lMonth: room.lMonth,lDay: room.lDay, roomNumber: room.roomNumber})
         .then(response => {
             if(response.data != null) {
               alert("Your reservation is successful.");
@@ -176,6 +178,18 @@ mounted(){
         },
         reservedHotel: function(id) {
           this.$emit("rr",id);
+        },
+        checkToday: function(r) {
+          var splitFirstDay = this.firstDay.split(".");
+          var tYear = parseInt(splitFirstDay[2]);
+          var tMonth = parseInt(splitFirstDay[1]);
+          var tDay = parseInt(splitFirstDay[0]);
+
+          if(r.fYear == tYear && r.fMonth == tMonth && r.fDay == tDay) {
+            return true;
+          } else {
+            return false;
+          }
         }
     }
 }

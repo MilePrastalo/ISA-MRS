@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
 
     name: "friendRequests",
@@ -44,7 +46,7 @@ mounted(){
         return localStorage.getItem("jwtToken");
     };
     axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-    axios.get("http://localhost:8080/api/getMyRequests")
+    axios.get("/api/getMyRequests")
         .then(response => {
             this.requests = response.data
         });
@@ -59,7 +61,7 @@ methods: {
         return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/acceptRequest/" + request.id)
+        axios.get("/api/acceptRequest/" + request.id)
             .then(response => {
                 if (response.data == false){
                     alert("Something went wrong!");
@@ -67,7 +69,7 @@ methods: {
                 else{
                     alert("Successfuly accepted!");
                     request.accepted = false;
-                     axios.get("http://localhost:8080/api/getMyRequests")
+                     axios.get("/api/getMyRequests")
                     .then(response => {
                         this.requests = response.data
                     });

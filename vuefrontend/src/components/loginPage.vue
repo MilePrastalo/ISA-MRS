@@ -47,7 +47,7 @@ export default {
     login:function(e){
       e.preventDefault();
       if(this.username != "" && this.password != ""){
-        axios.post("http://localhost:8080/auth/login",{username : this.username, password: this.password})
+        axios.post("/auth/login",{username : this.username, password: this.password})
                     .then(response => {
                       console.log(response);
                         if(response.status == 200){
@@ -65,6 +65,8 @@ export default {
                         else{
                           alert("Wrong username or password");
                         }
+                    }).catch(function(){
+                      alert("Something went wrong");
                     }); 
       }else{
         alert("All fields must be filled");
@@ -76,11 +78,11 @@ export default {
             return localStorage.getItem("jwtToken");
             };
       axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-      axios.get("http://localhost:8080/api/getFirstLogged")
+      axios.get("/api/getFirstLogged")
             .then(response => {
                 console.log(response);
                 if(response.data == "NOT"){
-                  window.location ="./FirstLogin";
+                  window.location ="/front/FirstLogin";
                 }else{
                   this.getRole(); 
                 }
@@ -92,26 +94,26 @@ export default {
             return localStorage.getItem("jwtToken");
             };
       axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-      axios.get("http://localhost:8080/api/getUserRole")
+      axios.get("/api/getUserRole")
             .then(response => {
                 console.log(response);
                 if(response.data == "RENT_ADMIN"){
-                  window.location ="./RAindex";
+                  this.$router.push("/front/RAindex");
                 }else if (response.data == "FLIGHT_ADMIN"){
-                  window.location ="./flightAdmin";
+                  this.$router.push("/front/flightAdmin");
                 }else if (response.data == "SYS_ADMIN"){
-                  window.location ="./systemAdminPage";
+                  this.$router.push("/front/systemAdminPage");
                 }else if (response.data == "REGISTERED"){
-                  if (window.location.pathname.startsWith("/confirmationPage")){
+                  if (window.location.pathname.startsWith("/front/confirmationPage")){
                     this.$emit("currentDiv",2);
                   }
                   else{
-                    window.location ="./index";
+                    this.$router.push("/front/index");
                   }
                 }else if (response.data == "HOTEL_ADMIN"){
-                  window.location ="./hotelAdminPage";
+                  this.$router.push("/front/hotelAdminPage");
                 }else{
-                  window.location ="./";
+                  this.$router.push("/");
                 }
                 
             });

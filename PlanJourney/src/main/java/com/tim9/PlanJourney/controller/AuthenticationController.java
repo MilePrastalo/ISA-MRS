@@ -163,7 +163,7 @@ public class AuthenticationController {
 		User user = userService.findOneByUsername(username);
 		user.setConfirmed(true);
 		userService.save(user);
-		RedirectView view = new RedirectView("http://localhost:8081");
+		RedirectView view = new RedirectView("http://localhost:8080");
 		return view;
 	}
 

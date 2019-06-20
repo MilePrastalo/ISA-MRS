@@ -16,22 +16,22 @@
                         </a>
                     </li>
                     <li v-if="type!=0" class="nav-item">
-                    <a class="nav-link" href="./userProfile">Profile</a>
+                    <a class="nav-link" href="/front/userProfile">Profile</a>
                     </li>
-                     <li v-if="type!=0" class="nav-item">
-                    <a class="nav-link" href="/invites">Invites</a>
+                     <li v-if="type!=0 && invites" class="nav-item">
+                    <a class="nav-link" href="/front/invites">Invites</a>
                     </li>
                     <li v-if="type!=0" class="nav-item">
                     <a @click="logout" class="nav-link">Logout</a>
                     </li>
 
                     <li v-if="type==0" class="nav-item active">
-                        <a class="nav-link" href="./loginPage">Login
+                        <a class="nav-link" @click="goToLogin" >Login
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
                     <li v-if="type==0" class="nav-item">
-                    <a  class="nav-link" href="./registerPage" >Register</a>
+                    <a  class="nav-link" href="/front/registerPage" >Register</a>
                     </li>
 
 
@@ -48,7 +48,8 @@ export default {
   data:function(){
       return{
           type:0,
-          homePage:""
+          homePage:"",
+          invites:false
       }
   },
   mounted(){
@@ -57,21 +58,22 @@ export default {
             return localStorage.getItem("jwtToken");
             };
       axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-      axios.get("http://localhost:8080/api/getUserRole")
+      axios.get("/api/getUserRole")
             .then(response => {
               console.log(response.data);
                 this.type = 1;
                 console.log(response);
                 if(response.data == "RENT_ADMIN"){
-                  this.homePage ="/RAindex";
+                  this.homePage ="/front/RAindex";
                 }else if (response.data == "FLIGHT_ADMIN"){
-                  this.homePage ="/flightAdmin";
+                  this.homePage ="/front/flightAdmin";
                 }else if (response.data == "SYS_ADMIN"){
-                  this.homePage ="/systemAdminPage";
+                  this.homePage ="/front/systemAdminPage";
                 }else if (response.data == "REGISTERED"){
-                  this.homePage ="/index";
+                  this.homePage ="/front/index";
+                  this.invites = true;
                 }else if (response.data == "HOTEL_ADMIN"){
-                  this.homePage ="/hotelAdminPage";
+                  this.homePage ="/front/hotelAdminPage";
                 }else{
                   this.homePage ="/";
                   this.type = 0;
@@ -84,6 +86,9 @@ export default {
         localStorage.setItem("jwtToken","");
         window.location="/";
     },
+    goToLogin(){
+      this.$router.push("/front/loginPage");
+    }
   }
 }
 </script>

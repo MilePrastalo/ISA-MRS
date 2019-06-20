@@ -62,6 +62,7 @@
 </template>
 
 <script>
+import axios from "axios";
 
 export default {
 
@@ -87,19 +88,19 @@ export default {
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getFlight/" + flightID)
+        axios.get("/api/getFlight/" + flightID)
         .then(response => {
             this.flight = response.data
         });
-        axios.get("http://localhost:8080/api/getSeatsOnFlight/" + flightID + "/economic")
+        axios.get("/api/getSeatsOnFlight/" + flightID + "/economic")
         .then(response => {
             this.seatsE = response.data;
         });
-        axios.get("http://localhost:8080/api/getSeatsOnFlight/" + flightID + "/business")
+        axios.get("/api/getSeatsOnFlight/" + flightID + "/business")
         .then(response => {
             this.seatsB = response.data;
         });
-        axios.get("http://localhost:8080/api/getSeatsOnFlight/" + flightID + "/first class")
+        axios.get("/api/getSeatsOnFlight/" + flightID + "/first class")
         .then(response => {
             this.seatsF = response.data;
         });    

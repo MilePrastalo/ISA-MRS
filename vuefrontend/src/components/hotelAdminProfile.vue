@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import axios from "axios";
 
 export default {
   name: "hotelAdminProfile",
@@ -47,7 +48,7 @@ export default {
   }
 },
 mounted(){
-    axios.get("http://localhost:8080/api/getHotelAdmin")
+    axios.get("/api/getHotelAdmin")
         .then(response => {
             this.firstName = response.data.firstName
             this.lastName = response.data.lastName
@@ -59,7 +60,7 @@ mounted(){
     methods:{
         updateHotelAdminProfile: function(pass, repeated_pass){
             if (pass == repeated_pass){
-                axios.post("http://localhost:8080/api/updateHotelAdminProfile",{firstName : this.firstName, lastName: this.lastName, email:this.email, password:this.password})
+                axios.post("/api/updateHotelAdminProfile",{firstName : this.firstName, lastName: this.lastName, email:this.email, password:this.password})
             .then(response => {
                 this.firstName = response.data.firstName
                 this.lastName = response.data.lastName

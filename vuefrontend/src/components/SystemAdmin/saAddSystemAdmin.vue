@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import axios from "axios";
 
 export default {
   name: "saAddSystemAdmin",
@@ -72,7 +73,7 @@ mounted(){
                 return;
             }
 
-            axios.post("http://localhost:8080/api/addSystemAdmin",this.newSysAdmin)
+            axios.post("/api/addSystemAdmin",this.newSysAdmin)
             .then(response => {
                 if(response.data == false) {
                     alert("Username is taken.");

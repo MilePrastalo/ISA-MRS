@@ -171,7 +171,7 @@ export default {
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getFlightReservation/" + this.reservationId)
+        axios.get("/api/getFlightReservation/" + this.reservationId)
         .then(response => {
             this.reservation = response.data;
         });
@@ -183,11 +183,11 @@ export default {
                 return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/cancelFlightReservation/"+ this.reservationId)
+        axios.get("/api/cancelFlightReservation/"+ this.reservationId)
             .then(response => {
                 alert(response.data);
                 if (response.data == "success"){
-                    window.location = "/index"
+                    this.$router.push("/front/index");
                 }
         });
     },

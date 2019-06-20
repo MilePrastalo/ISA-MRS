@@ -62,9 +62,11 @@
 </template>
 
 <script>
-import hotelProfile from './hotelProfile.vue';
+import hotelProfile from "./hotelProfile.vue";
+import axios from "axios";
+
 export default {
-  name: 'hotelReservation',
+  name: "hotelReservation",
   props: ["location","passangers","firstDay"],
   components: {
       hotelProfile
@@ -105,7 +107,7 @@ mounted(){
             this.searchHotel.cityName = this.location;
             this.searchHotel.search = 1;
 
-            axios.post("http://localhost:8080/api/searchHotels",this.searchHotel)
+            axios.post("/api/searchHotels",this.searchHotel)
             .then(response => {
                 this.hotels = response.data;
             });
@@ -129,7 +131,7 @@ mounted(){
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

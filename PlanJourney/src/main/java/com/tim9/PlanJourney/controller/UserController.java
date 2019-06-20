@@ -70,7 +70,6 @@ public class UserController {
 			user.setFirstName(updatedUser.getFirstName());
 			user.setLastName(updatedUser.getLastName());
 			user.setEmail(updatedUser.getEmail());
-			
 			if (updatedUser.getPassword().equals(updatedUser.getRepeatedPass()) == false) {
 				System.out.println("aaaaaaaaaa");
 				return null;
@@ -79,23 +78,26 @@ public class UserController {
 			if (! updatedUser.getPassword().equals("")) {
 				user.setPassword(bc.encode(updatedUser.getPassword()));
 			}
-			if(!updatedUser.getCity().equals("") && !updatedUser.getPhone().equals("") && user instanceof RegisteredUser) {
-				try {
-					RegisteredUser reg = (RegisteredUser) user;
-					reg.setCity(updatedUser.getCity());
-					reg.setPhone(updatedUser.getPhone());
-					userService.save(reg);
-					UserBean ub = new UserBean(user.getUsername(), "", user.getFirstName(), user.getLastName(), user.getEmail());
-					ub.setCity(reg.getCity());
-					ub.setPhone(reg.getPhone());
-					return ub;
+			if(updatedUser.getCity() != null && updatedUser.getPhone()!=null) {
+				if(!updatedUser.getCity().equals("") && !updatedUser.getPhone().equals("") && user instanceof RegisteredUser) {
+					try {
+						RegisteredUser reg = (RegisteredUser) user;
+						reg.setCity(updatedUser.getCity());
+						reg.setPhone(updatedUser.getPhone());
+						userService.save(reg);
+						UserBean ub = new UserBean(user.getUsername(), "", user.getFirstName(), user.getLastName(), user.getEmail());
+						ub.setCity(reg.getCity());
+						ub.setPhone(reg.getPhone());
+						return ub;
 
-				}
-				catch (Exception e) {
-					// TODO: handle exception
-					System.out.println("Nije reg");
+					}
+					catch (Exception e) {
+						// TODO: handle exception
+						System.out.println("Nije reg");
+					}
 				}
 			}
+			
 			
 			userService.save(user);
 			UserBean ub = new UserBean(user.getUsername(), "", user.getFirstName(), user.getLastName(), user.getEmail());

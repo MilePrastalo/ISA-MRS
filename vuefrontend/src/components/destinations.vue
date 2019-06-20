@@ -104,6 +104,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "flightCompanyProfile",
   components: { },
@@ -125,11 +127,11 @@ mounted(){
          return localStorage.getItem("jwtToken");
     };
     axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-    axios.get("http://localhost:8080/api/getDestinations")
+    axios.get("/api/getDestinations")
         .then(response => {
             this.destinations = response.data
           }); 
-    axios.get("http://localhost:8080/api/getAllCities")
+    axios.get("/api/getAllCities")
         .then(response => {
             this.cities = response.data
           });  
@@ -137,14 +139,13 @@ mounted(){
     methods:{
         addNewDestination: function(e){
             e.preventDefault()
-            alert(JSON.stringify(this.DestCity));
             var newDestination = {name: this.DestName, cityId :this.DestCity.id, description: this.DestDescription, longitude: this.DestLongitude,
                                     latitude: this.DestLatitude, address: this.DestAddress};
             var getJwtToken = function() {
                 return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-             axios.post("http://localhost:8080/api/addDestination",newDestination)
+             axios.post("/api/addDestination",newDestination)
             .then(response => {
                 alert("New destination added!")
                 this.destinations.push(newDestination);
@@ -166,7 +167,7 @@ mounted(){
                 return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-            axios.post("http://localhost:8080/api/editDestination",destination)
+            axios.post("/api/editDestination",destination)
             .then(response => {
                 alert(response.data)
             });
@@ -178,7 +179,7 @@ mounted(){
                 return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-            axios.get("http://localhost:8080/api/removeDestination" + "/" + destination.id)
+            axios.get("/api/removeDestination" + "/" + destination.id)
             .then(response => {
                 alert(response.data)
                 if (response.data == "success"){

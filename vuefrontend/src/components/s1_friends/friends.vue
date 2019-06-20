@@ -37,6 +37,7 @@ import SearchUsers from "./searchUsers.vue";
 import FriendRequests from "./friendRequests.vue";
 import MyFriends from "./myFriends.vue";
 import navbar from "../navbar.vue";
+import axios from "axios";
 
 export default {
 

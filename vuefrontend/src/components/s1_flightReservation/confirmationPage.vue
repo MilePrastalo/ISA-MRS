@@ -162,9 +162,9 @@ export default {
         }
     },
     created: function(){
-        if (document.referrer == "http://localhost:8081/invites"){
+        if (document.referrer == "http://localhost:8080/front/index"){
             axios.defaults.headers.common["Authorization"] = "Bearer " + localStorage.getItem("jwtToken");
-                axios.get("http://localhost:8080/api/getReservationRequest/" + this.requestId)
+                axios.get("/api/getReservationRequest/" + this.requestId)
                 .then(response => {
                     if (response.data == ""){
                         alert("You didn't sign in or it's not your invitation")
@@ -186,7 +186,7 @@ export default {
             
             if (div == 2){
                 axios.defaults.headers.common["Authorization"] = "Bearer " + localStorage.getItem("jwtToken");
-                axios.get("http://localhost:8080/api/getReservationRequest/" + this.requestId)
+                axios.get("/api/getReservationRequest/" + this.requestId)
                 .then(response => {
                     if (response.data == ""){
                         alert("You didn't sign in or it's not your invitation")
@@ -205,7 +205,7 @@ export default {
             return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-            axios.get("http://localhost:8080/api/confirmReservationRequest/" + this.requestId )
+            axios.get("/api/confirmReservationRequest/" + this.requestId )
             .then(response => {
                 alert(response.data)
                 if (response.data == "success"){
@@ -219,7 +219,7 @@ export default {
             return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-            axios.get("http://localhost:8080/api/refuseReservationRequest/" + this.requestId )
+            axios.get("/api/refuseReservationRequest/" + this.requestId )
             .then(response => {
                 alert(response.data)
                 if (response.data == "success"){

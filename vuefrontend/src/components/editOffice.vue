@@ -50,6 +50,7 @@
 </template>
 
 <script>
+import axios from "axios";
 
 export default {
   name: "editOffice",
@@ -77,7 +78,7 @@ export default {
             return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-            axios.post("http://localhost:8080/api/editOffice",{id:this.id,name:this.name,destination:this.destination,address:this.address,longitude:this.longitude, latitude:this.latitude})
+            axios.post("/api/editOffice",{id:this.id,name:this.name,destination:this.destination,address:this.address,longitude:this.longitude, latitude:this.latitude})
             .then(function(){
               alert("Office has been edited");
               a.$emit("vedited");

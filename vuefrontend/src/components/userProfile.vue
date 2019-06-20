@@ -48,6 +48,8 @@
 
 <script>
 import navbar from "./navbar.vue";
+import axios from "axios";
+
 export default {
   name: "userProfile",
   components: {
@@ -70,7 +72,7 @@ mounted(){
             return localStorage.getItem("jwtToken");
         };
     axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-    axios.get("http://localhost:8080/api/getLogUser")
+    axios.get("/api/getLogUser")
         .then(response => {
             this.firstName = response.data.firstName
             this.lastName = response.data.lastName
@@ -82,7 +84,7 @@ mounted(){
     console.log(error.response.data)
 }}
 ); 
-    axios.get("http://localhost:8080/api/getUserRole")
+    axios.get("/api/getUserRole")
         .then(response => {
             if(response.data=="REGISTERED"){
                 this.isRegistered = true;
@@ -103,7 +105,7 @@ mounted(){
                     return localStorage.getItem("jwtToken");
                 };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-                axios.post("http://localhost:8080/api/updateUserProfile",{firstName : this.firstName, lastName: this.lastName, email:this.email, password:this.password, repeatedPass: this.password,city:this.city,phone:this.phone})
+                axios.post("/api/updateUserProfile",{firstName : this.firstName, lastName: this.lastName, email:this.email, password:this.password, repeatedPass: this.password,city:this.city,phone:this.phone})
             .then(response => {
                 this.firstName = response.data.firstName
                 this.lastName = response.data.lastName

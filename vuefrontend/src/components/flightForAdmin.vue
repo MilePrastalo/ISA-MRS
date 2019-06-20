@@ -86,6 +86,8 @@
 <script>
 import EditSeats from "./editSeatsOnFlight.vue";
 import navbar from "./navbar.vue";
+import axios from "axios";
+
 export default {
     name: "flightForAdmin",
     components: {
@@ -115,7 +117,7 @@ export default {
             var getJwtToken = function() {
                 return localStorage.getItem("jwtToken");
             };
-            axios.get("http://localhost:8080/api/getFlight/" + this.id)
+            axios.get("/api/getFlight/" + this.id)
             .then(response => {
                 this.flight = response.data
             });
@@ -128,7 +130,7 @@ export default {
             return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-            axios.get("http://localhost:8080/api/editSeat/" + seat.id)
+            axios.get("/api/editSeat/" + seat.id)
             .then(response => {
                 if (response.data != null){
                     if (seat.unavailable == true){
@@ -158,7 +160,7 @@ export default {
                  this.flight.endDate_str = this.endDate +  " " + this.endTime;
             }
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-            axios.post("http://localhost:8080/api/editFlight", this.flight)
+            axios.post("/api/editFlight", this.flight)
             .then(response => {
                 if (response.data == "success"){
                     alert("Successfuly updated!");
@@ -175,12 +177,12 @@ export default {
                 return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-            axios.get("http://localhost:8080/api/removeFlight/" + id)
+            axios.get("/api/removeFlight/" + id)
             
             .then(response => {
                 if (response.data == "success"){
                     alert("Flight is removed.");
-                    window.location = "/flightAdmin"
+                    this.$router.push("/front/flightAdmin");
                 }
                 else{
                     alert(response.data);

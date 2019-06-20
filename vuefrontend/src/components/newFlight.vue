@@ -99,6 +99,7 @@
 </template>
 
 <script>
+import axios from "axios";
 
 export default {
   name: "addFlight",
@@ -134,7 +135,7 @@ mounted(){
         return localStorage.getItem("jwtToken");
     };
     axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-    axios.get("http://localhost:8080/api/getDestinations")
+    axios.get("/api/getDestinations")
         .then(response => {
             this.destinations = response.data
           }); 
@@ -180,7 +181,7 @@ mounted(){
                 return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-            axios.post("http://localhost:8080/api/addFlight", newFlight)
+            axios.post("/api/addFlight", newFlight)
             .then(response => {
                 alert(response.data);
             });; 
@@ -200,7 +201,7 @@ mounted(){
             if (this.transitions == "0" || this.transitions == ""){
                 this.transitions = "0"
                 return true;
-            }addFlight
+            }
             var list;
             try{
                 

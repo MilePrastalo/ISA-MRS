@@ -43,6 +43,7 @@ import vehicleAdminTab from "./vehicleAdminTab.vue";
 import quickVehicle from "./quickVehicleReservation.vue";
 import rentACarReport from "./rentACarReport.vue"
 import navbar from "./navbar.vue";
+import axios from "axios";
 
 export default {
   name: "registeredUserFrontPage",
@@ -104,7 +105,7 @@ export default {
       },
       logout :function(){
             localStorage.setItem("jwtToken","");
-            window.location="./";
+            window.location="/";
       }
   }
 }

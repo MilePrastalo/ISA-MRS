@@ -29,7 +29,7 @@
                     <td>Rating</td>
                 </tr>
                 <tr v-for="car in cars" :key="car.id">
-                    <td><img src="../assets/kola.jpg" width="50px" height="50px"/></td>
+                    <td><img :src="sourceImg" width="50px" height="50px"/></td>
                     <td>{{car.name}}</td>
                     <td>{{car.maker}}</td>
                     <td>{{car.type}}</td>
@@ -80,6 +80,8 @@
 import searchRentACarCompany from "./searchRentACarCompany.vue";
 import searchVehicle from "./searchVehicle.vue";
 import rentACarCompanyProfile from "./rentACarCompanyProfile.vue";
+import axios from "axios";
+
 export default {
     name: "rentACarReservation",
     components: {
@@ -104,7 +106,8 @@ export default {
             companySelected:"",
             selected:false,
             rentProfile:false,
-            companyForDetails:{}
+            companyForDetails:{},
+            sourceImg:"../kola.jpg"
         };
     },
     mounted(){
@@ -158,7 +161,7 @@ export default {
                         return localStorage.getItem("jwtToken");
                     };
                     axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-                    axios.post("http://localhost:8080/api/getQuickReservations",{id:this.id,dateFrom:this.datefrom,dateTo:this.dateto})
+                    axios.post("/api/getQuickReservations",{id:this.id,dateFrom:this.datefrom,dateTo:this.dateto})
                         .then(response => {
                             console.log(response.data);
                             this.quickReservations = response.data;
@@ -171,20 +174,35 @@ export default {
                     return localStorage.getItem("jwtToken");
                 };
                 axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-                axios.post("http://localhost:8080/api/reserveVehicle",{id:carid,dateFrom:this.datefrom,dateTo:this.dateto,officePick:this.pickoffice,officeReturn:this.returnoffice})
+                axios.post("/api/reserveVehicle",{id:carid,dateFrom:this.datefrom,dateTo:this.dateto,officePick:this.pickoffice,officeReturn:this.returnoffice})
                     .then(response => {
                         console.log(response);
                         alert("Success");
                         this.$emit("vehicleReserved",response.data);
+                    }).catch(function(){
+                        alert("Reservation failed");
                     }); 
             },
             reserveQuick : function(res){
-                axios.post("http://localhost:8080/api/quickReserveVehicle",{id:res.id})
+                axios.post("/api/quickReserveVehicle",{id:res.id})
                     .then(response => {
-                        console.log(response);
-                        alert("Success");
+                        console.log(response.data);
+                        alert("Reserved");
                         this.$emit("vehicleReserved",response.data);
-                    }); 
+                        for(var i = 0; i<this.quickReservations.length;i++ ){
+                            console.log(this.quickReservations[i]);
+                            if(this.quickReservations[i].id == res.id){
+                                this.quickReservations.splice(i,1);
+                            }
+                        }
+                    }).catch(function(){
+                        alert("Reservation failed");
+                        for(var i = 0; i<this.quickReservations.length;i++ ){
+                            if(this.quickReservations[i].id == res.id){
+                                this.quickReservations.splice(i,1);
+                            }
+                        }
+                    });; 
             },
             companyDetails(company){
                 this.companyForDetails = company;

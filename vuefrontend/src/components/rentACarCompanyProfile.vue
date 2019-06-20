@@ -1,5 +1,6 @@
 <template>
     <div id="rentACarCompanyProfile">
+        <navbar/>
         <div class="row">
             <button @click="back">Back</button>
         </div>
@@ -85,7 +86,7 @@
                         <td>Rating</td>
                     </tr>
                     <tr v-for="car in vehicles" :key="car.id">
-                        <td><img src="../assets/kola.jpg" width="50px" height="50px"/></td>
+                        <td><img :src="sourceImg" width="50px" height="50px"/></td>
                         <td>{{car.name}}</td>
                         <td>{{car.maker}}</td>
                         <td>{{car.type}}</td>
@@ -101,10 +102,13 @@
 </template>
 
 <script>
+import axios from "axios";
+import navbar from "./navbar.vue";
 
 export default {
   name: "rentACarCompanyProfile",
   components: {
+      navbar
   },
   props:["icompany"],
   data: function () {
@@ -118,11 +122,13 @@ export default {
         address:"",
         rating:"",
         longitude:0,
-        latitude:0
+        latitude:0,
+        sourceImg:"../kola.jpg"
+
     }
   },
     mounted(){
-            axios.get("http://localhost:8080/api/getRentACarCompanyInfo/"+this.company.id)
+            axios.get("/api/getRentACarCompanyInfo/"+this.company.id)
                 .then(response => {
                     console.log(response.data);
                     this.name = response.data.name;

@@ -73,6 +73,7 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
 				//.antMatchers("/api/**").permitAll()
 				.antMatchers(HttpMethod.POST,"/api/searchHotels/**").permitAll()
 				.antMatchers(HttpMethod.GET,"/api/getHotel/**").permitAll()
+				.antMatchers(HttpMethod.GET,"/front/**").permitAll()
 				.antMatchers(HttpMethod.GET,"/api/getDiscounts/**").permitAll()
 				
 				
@@ -92,7 +93,7 @@ public class WebSecurityConf extends WebSecurityConfigurerAdapter {
 			// TokenAuthenticationFilter ce ignorisati sve ispod navedene putanje
 			web.ignoring().antMatchers(HttpMethod.POST,"/","/api/flightSearch","/api/vehicleSearch","/api/getRentACarCompanies");
 
-			web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js","/api/vehicleSearch","/api/getProducers","/api/getTypes","/api/addRC","/api/testFlightData","/api/getFlight/{id}","/api/searchFlightCompanies/{companyName}","/api/getRentACarCompanyInfo/{id}");
+			web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html","/*.jpg","/*.png", "/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js","/api/vehicleSearch","/api/getProducers","/api/getTypes","/api/addRC","/api/testFlightData","/api/getFlight/{id}","/api/searchFlightCompanies/{companyName}","/api/getRentACarCompanyInfo/{id}");
 			web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**","/","/api/*");
 		}
 

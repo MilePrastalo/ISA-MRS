@@ -57,6 +57,7 @@
 <script>
 import navbar from "../navbar.vue";
 import FriendRequests from "../s1_friends/friendRequests.vue";
+import axios from "axios";
 
 export default {
   name: "invites",
@@ -78,7 +79,7 @@ created(){
             return localStorage.getItem("jwtToken");
         };
     axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-    axios.get("http://localhost:8080/api/getMyReservationRequests")
+    axios.get("/api/getMyReservationRequests")
             .then(response => {
                 this.reservationRequests = response.data;
                 });   
@@ -103,7 +104,7 @@ created(){
             return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-            axios.get("http://localhost:8080/api/confirmReservationRequest/" + id )
+            axios.get("/api/confirmReservationRequest/" + id )
             .then(response => {
                 alert(response.data)
                 if (response.data == "success"){
@@ -117,7 +118,7 @@ created(){
             return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-            axios.get("http://localhost:8080/api/refuseReservationRequest/" + id )
+            axios.get("/api/refuseReservationRequest/" + id )
             .then(response => {
                 alert(response.data)
                 if (response.data == "success"){
@@ -127,7 +128,7 @@ created(){
         },
 
          flightReservationDetails: function(id){
-            window.location = "/confirmationPage/" + id;
+            this.$router.push("/front/confirmationPage/" + id);
         }
     }
 }

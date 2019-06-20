@@ -20,16 +20,16 @@
                 <allFlights :idCompany = "this.companyId"></allFlights>
             </div>
 
-            <div  v-if="currentTab == 2" id = "quickReservations" class="centered col-lg-10" role="tabpanel" aria-labelledby="quick">
+            <div  v-if="currentTab == 2" id = "quickReservations" role="tabpanel" aria-labelledby="quick">
                 <quickReservations :idCompany = "this.companyId"></quickReservations>
             </div>
 
 
-            <div  v-if="currentTab == 3" id = "info" class="centered col-lg-10" role="tabpanel" aria-labelledby="info">
+            <div  v-if="currentTab == 3" id = "info"  role="tabpanel" aria-labelledby="info">
                 <br><br>
                 <div class = "row" style="width: 1100px">
                     <div class="span4" style=" width: 100%;">
-                        <img style="height: 350px; width: 400px;" class="rounded float-right" src="../../assets/flightCompany.jpg"/>
+                        <img style="height: 350px; width: 400px;" class="rounded float-right" :src="source"/>
                         <div class="content-heading"><h1>Rating: {{company.rating}}</h1></div>
                         <p>Address: {{company.address}}</p><br>
                         <p style="text-align: justify; padding-left: 2%; padding-right: 40%;">{{company.description}}</p>
@@ -89,6 +89,8 @@
 import allFlights from "../allFlights.vue"
 import QuickReservations from "../quickReservations.vue"
 import navbar from "../navbar.vue";
+import axios from "axios";
+
 export default {
   name: "CompanyProfile",
   components: {
@@ -104,7 +106,8 @@ export default {
         company: {},
         currentTab: 3,
         longitude: 0,
-        latitude: 0
+        latitude: 0,
+        source: "../flightCompany.jpg"
     }
 },
 created: function(){
@@ -114,7 +117,7 @@ created: function(){
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getFlightCompanyProfileRegitered/"+ this.companyId)
+        axios.get("/api/getFlightCompanyProfileRegitered/"+ this.companyId)
         .then(response => {
             this.company = response.data
         });    

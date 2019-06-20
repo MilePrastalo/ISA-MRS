@@ -190,6 +190,7 @@
 import haQuickReservation from "./haQuickReservation.vue"
 import haReportsRedesigned from "./haReportsRedesigned.vue"
 import { constants } from "crypto";
+import axios from "axios";
 
 export default {
   name: "haHotel",
@@ -262,7 +263,7 @@ mounted(){
 
             this.room.additionalCharges = this.acList;
             
-            axios.post("http://localhost:8080/api/addHotelRoom/",this.room)
+            axios.post("/api/addHotelRoom/",this.room)
             .then(response => {
                 if(response.data == true) {
                     alert("Hotel room was successfully added.");
@@ -273,6 +274,7 @@ mounted(){
             })
             this.hotel.rooms.push({roomNumber: this.room.roomNumber,numberOfBeds:this.room.numberOfBeds,pricePerDay:this.room.pricePerDay,additionalCharges:this.acList,rating:0});
             this.room = {};
+            this.acLIST = [];
         },
         findQuickReservations: function() {
             this.quickReservations = [];
@@ -284,7 +286,7 @@ mounted(){
         });
         },
         cancelQuickReservation: function(r) {
-            axios.post("http://localhost:8080/api/cancelQuickHotelReservation",r)
+            axios.post("/api/cancelQuickHotelReservation",r)
             .then(response => {
                 if(response.data == true) {
                     alert("Quick reservation has been successfully canceled.");
@@ -317,7 +319,7 @@ mounted(){
             if(this.hotel.name == "") {
                 alert("Hotel name must not be empty.")
             }
-            axios.post("http://localhost:8080/api/updateHotelProfile",{oldName:this.oldHotel.name,newName:this.hotel.name,cityName:this.hotel.cityName,newDescription:this.hotel.description})
+            axios.post("/api/updateHotelProfile",{oldName:this.oldHotel.name,newName:this.hotel.name,cityName:this.hotel.cityName,newDescription:this.hotel.description})
             .then(response => {
                 if(response.data == true) {
                     alert("Hotel profile update was successful.");
@@ -340,7 +342,7 @@ mounted(){
                 return;
             }
 
-            axios.post("http://localhost:8080/api/updateHotelRoom/",this.editRoom)
+            axios.post("/api/updateHotelRoom/",this.editRoom)
             .then(response => {
                 if(response.data == true) {
                     alert("Room update was a success.");
@@ -356,7 +358,7 @@ mounted(){
             this.editingRoom = false;
         },
         removeRoom: function(roomNumber) {
-            axios.delete("http://localhost:8080/api/removeHotelRoom/" + roomNumber)
+            axios.delete("/api/removeHotelRoom/" + roomNumber)
             .then(response => {
                 if(response.data == true) {
                     var index;

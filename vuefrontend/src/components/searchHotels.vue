@@ -59,6 +59,7 @@
 </template>
 
 <script>
+import axios from "axios";
 
 export default {
   name: "searchHotels",
@@ -95,13 +96,13 @@ mounted(){
             }
             this.searchHotel.search = 0;
 
-            axios.post("http://localhost:8080/api/searchHotels",this.searchHotel)
+            axios.post("/api/searchHotels",this.searchHotel)
             .then(response => {
                 this.hotels = response.data;
             })  
         },
         showDetails: function(chosenHotel) {
-            window.location ="./unregisteredHotelProfile/"+ chosenHotel;
+            window.location ="/front/unregisteredHotelProfile/"+ chosenHotel;
         },
         clearSearch: function() {
             this.searchHotel = {};

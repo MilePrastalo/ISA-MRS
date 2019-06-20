@@ -86,6 +86,7 @@
 </template>
 
 <script>
+import axios from "axios";
 
 export default {
   name: "saDestinations",
@@ -106,7 +107,7 @@ mounted(){
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getAllDestinations")
+        axios.get("/api/getAllDestinations")
             .then(response => {
                 this.destinations = response.data;
             })
@@ -135,7 +136,7 @@ mounted(){
                 }
             }
 
-            axios.post("http://localhost:8080/api/sysAdminAddDestination",this.newDestination)
+            axios.post("/api/sysAdminAddDestination",this.newDestination)
             .then(response => {
                 if(response.data == -1) {
                     alert("Destination with given name already exists.");
@@ -189,7 +190,7 @@ mounted(){
                     }
             }
 
-            axios.post("http://localhost:8080/api/sysAdminEditDestination",this.ed)
+            axios.post("/api/sysAdminEditDestination",this.ed)
             .then(response => {
                 if(response.data == -1) {
                     alert("Destination with given name already exists.");

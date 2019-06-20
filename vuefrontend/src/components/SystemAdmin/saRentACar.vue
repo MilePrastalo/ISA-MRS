@@ -126,6 +126,7 @@
 </template>
 
 <script>
+import axios from "axios";
 
 export default {
   name: "saRentACar",
@@ -151,12 +152,12 @@ mounted(){
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getAllRentACars")
+        axios.get("/api/getAllRentACars")
             .then(response => {
                 this.racs = response.data;
             });
 
-        axios.get("http://localhost:8080/api/getAllRACAdmins")
+        axios.get("/api/getAllRACAdmins")
             .then(response => {
                 this.racAdmins = response.data;
             });
@@ -166,26 +167,28 @@ mounted(){
             this.currentTab = tabId;
         },
         addRentACar: function() {
-            if(this.newFC.name == null || this.newFC.name == "") {
+            if(this.newRac.name == null || this.newRac.name == "") {
                 alert("Please enter rent a car company name.");
                 return;
             }
-            if(this.newFC.address == null || this.newFC.address == "") {
+            if(this.newRac.address == null || this.newRac.address == "") {
                 alert("Please enter rent a car company address");
                 return;
             }
 
-            axios.post("http://localhost:8080/api/addRentACarCompany",this.newRac).
+            axios.post("/api/addRentACarCompany",this.newRac).
             then(response =>{
                 alert(response.data.name + " has been successfully added.");
                     this.racs.push(this.newRac);
                     this.newRac = {};
-            })
+            });
+
         },
         removeRAC: function(name) {
-            axios.delete("http://localhost:8080/api/removeRentACarCompany/"+ name)
+            axios.delete("/api/removeRentACarCompany/"+ name)
             .then(response => {
-                var index;
+                if(response.data == true) {
+                    var index;
                 for(let r in this.racs) {
                     if(this.racs[r].name == name) {
                         index = r;
@@ -193,7 +196,10 @@ mounted(){
                     }
                 }
                 this.racs.splice(index,1);
-                alert(response.data.name + " has been successfully removed.");
+                alert("Rent a car company has been successfully removed.");
+                } else {
+                     alert("You can't remove rent a car company with existing reservations.");
+                }             
             })
         },
         addRACAdminDiv: function(name) {
@@ -233,7 +239,7 @@ mounted(){
             }
 
 
-            axios.post("http://localhost:8080/api/addRentACarAdmin",{username:this.admin.username,password:this.admin.password,firstName:this.admin.firstName,lastName:this.admin.lastName,email:this.admin.email,companyName:this.rentACarName}).
+            axios.post("/api/addRentACarAdmin",{username:this.admin.username,password:this.admin.password,firstName:this.admin.firstName,lastName:this.admin.lastName,email:this.admin.email,companyName:this.rentACarName}).
             then(response =>{
                 if(response.data === true) {
                     alert("Rent a car admin has been successfully added.");
@@ -244,7 +250,7 @@ mounted(){
             })
         },
         removeAdmin: function(name) {
-            axios.delete("http://localhost:8080/api/removeRentACarAdmin/"+ name)
+            axios.delete("/api/removeRentACarAdmin/"+ name)
             .then(response => {
                 var index;
                 for(let a in this.racAdmins) {

@@ -174,10 +174,6 @@ mounted(){
                 alert("Please enter flight company address");
                 return;
             }
-            if(this.newFC.description == null || this.newFC.description == "") {
-                alert("Please enter flight company description.");
-                return;
-            }
 
             axios.post("http://localhost:8080/api/addFlightCompany",this.newFC).
             then(response =>{
@@ -189,6 +185,7 @@ mounted(){
         removeFlightCompany: function(name) {
             axios.delete("http://localhost:8080/api/removeFlightCompany/"+ name)
             .then(response => {
+                if(response.data == true) {
                 var index;
                 for(let f in this.fcs) {
                     if(this.fcs[f].name == name) {
@@ -197,7 +194,10 @@ mounted(){
                     }
                 }
                 this.fcs.splice(index,1);
-                alert(response.data.name + " has been successfully removed.");
+                alert("Flight company has been successfully removed.");
+                } else {
+                    alert("You can't remove flight company with existing reservations.");
+                }
             })
         },
         addFCAdminDiv: function(name) {

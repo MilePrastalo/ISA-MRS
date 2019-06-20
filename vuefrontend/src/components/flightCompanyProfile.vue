@@ -31,6 +31,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "flightCompanyProfile",
   components: {},
@@ -46,7 +48,7 @@ mounted(){
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getFlightCompanyProfile")
+        axios.get("/api/getFlightCompanyProfile")
             .then(response => {
                 this.name = response.data.name
                 this.address = response.data.address
@@ -59,7 +61,7 @@ mounted(){
               return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.post["Authorization"] = "Bearer " + getJwtToken();
-            axios.post("http://localhost:8080/api/updateFlightCompanyProfile",{name:this.name, address: this.address, description: this.description})
+            axios.post("/api/updateFlightCompanyProfile",{name:this.name, address: this.address, description: this.description})
             .then(response => {
                 this.name = response.data.name
                 this.address = response.data.address

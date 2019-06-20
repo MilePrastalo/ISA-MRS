@@ -78,12 +78,15 @@ public class FlightService {
 		repository.deleteById(id);
 	}
 
-	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
 	public String makeReservation(FlightReservationBean reservationBean, RegisteredUser loggedUser) {
-
+		
 		Flight flight = findOne(reservationBean.getFlightId());
 		double total = 0;
 		Seat main_seat = seatService.findOne(reservationBean.getPassangers().get(0).getSeatId());
+		if (main_seat.isTaken()) {
+			return "Seat = " + main_seat.getTravelClassa() + " (" + main_seat.getSeatRow() + " , " + main_seat.getSeatColumn() + ") is already taken!";
+		}
 		main_seat.setTaken(true);
 		seatService.save(main_seat);
 
@@ -101,6 +104,9 @@ public class FlightService {
 
 			total += passanger.getPrice();
 			Seat seat = seatService.findOne(passanger.getSeatId());
+			if (main_seat.getId().equals(seat.getId()) == false && seat.isTaken()) {
+				return "Seat = " + seat.getTravelClassa() + " (" + seat.getSeatRow() + " , " + seat.getSeatColumn() + ") is already taken!";
+			}
 			seat.setTaken(true);
 			seats.add(seat);
 			Passanger pass = null;
@@ -128,8 +134,6 @@ public class FlightService {
 		if (loggedUser.getFlightReservations().size() >= discounts.getNumberOfFlightReservations()) {
 			reservation.setDiscount(discounts.getRentACarDiscount());
 		}
-		reservationService.save(reservation);
-		flightCompanyService.save(flight.getFlightCompany());
 		for (RegisteredUser friend : friends) {
 			try {
 				emailService.sendReservationRequest(friend, reservation.getId());
@@ -146,6 +150,8 @@ public class FlightService {
 			System.out.println("Error while sending email: " + e.getMessage());
 			return "Reservation is made but we didn't succeed to send the email!";
 		}
+		reservationService.save(reservation);
+		flightCompanyService.save(flight.getFlightCompany());
 		return "success";
 	}
 

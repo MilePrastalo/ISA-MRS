@@ -20,7 +20,7 @@
         </div>
         <div v-if="currentStep == 4">
             <button @click="goToNextStep(5)"> Finish >> </button>
-            <rentACarReservation :iflightDateArrive="flight.startDate_str" :iflightDateLeaving="flight.endDate_str" v-on:vehicleReserved="carReserved" :ilocation="destination"/>
+            <rentACarReservation :iflightDateArrive="flight.startDate_str" :iflightDateLeaving="flight.endDate_str" v-on:vehicleReserved="carReserved" :ilocation="cityName"/>
         </div>
         		
          
@@ -33,6 +33,8 @@ import Passangers from "./passangers.vue";
 import rentACarReservation from ".././rentACarReservation.vue";
 import navbar from ".././navbar.vue";
 import hotelReservation from ".././hotelReservation";
+import axios from "axios";
+import { equal } from 'assert';
 
 export default {
 
@@ -56,7 +58,8 @@ export default {
             flight: {},
             hotelReservations: [],
             vehicleReservations: [],
-            currentStep: 1
+            currentStep: 1,
+            cityName:""
         }
     },
     created:function(){
@@ -68,17 +71,18 @@ export default {
     mounted(){
 
         var flightID = localStorage.getItem("flightID");
-        axios.get("http://localhost:8080/api/getFlight/" + flightID)
+        axios.get("/api/getFlight/" + flightID)
         .then(response => {
             this.flight = response.data
             console.log(this.flight);
             this.destination = this.flight.endDestination;
+            this.cityName = this.flight.cityName;
           }); 
     }, 
     methods: {
 
          getPrice: function( travelClass ){
-
+            
             if (travelClass == "economic"){
                 return this.flight.economicPrice;
             }
@@ -102,14 +106,14 @@ export default {
             var idx;
             var passangerSeat = [];
             for (idx in this.passangers){
-                var price = this.getPrice(this.passangers[idx].seat.travelClass);
+                var price = this.getPrice(this.passangers[idx].seat.travelClassa);
                 var obj = {price: price, seatId: this.passangers[idx].seat.id, 
                            firstName: this.passangers[idx].firstName, lastName: this.passangers[idx].lastName,
                            passport: this.passangers[idx].passport, friendId: this.passangers[idx].friendID};
                 passangerSeat.push(obj);     
             }
             if (passangerSeat.length == 0){
-                 var price = this.getPrice(this.selected_seats[0].travelClass);
+                 var price = this.getPrice(this.selected_seats[0].travelClassa);
                  var obj = {price: price, seatId: this.selected_seats[0].id, firstName: "", lastName: "", passport: "", friendId: -1};
                 passangerSeat.push(obj);
             }
@@ -117,12 +121,15 @@ export default {
                 return localStorage.getItem("jwtToken");
             };
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-            axios.post("http://localhost:8080/api/makeFlightReservation", {flightId: this.id, passangers: passangerSeat,
+            axios.post("/api/makeFlightReservation", {flightId: this.id, passangers: passangerSeat,
                         hotelReservations: this.hotelReservations, rentReservations: this.vehicleReservations})
             .then(response => {
                  alert(response.data);
+            }).catch({function () {
+                alert("Reservation failed!");
+            }
             });
-            window.location = "/flight"
+            this.$router.push("/front/flight");
         },
 
         goToNextStep: function(option){
@@ -163,7 +170,7 @@ export default {
 
         goBack: function(current){
             if (current == 1){
-                window.location = "/flight"
+                window.location = "/front/flight"
             }
             else if (current == 2){
                 this.currentStep = 1;

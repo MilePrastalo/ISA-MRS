@@ -42,6 +42,7 @@
 
 <script>
 import navbar from "./navbar.vue";
+import axios from "axios";
 
 export default {
   name: "searchFlightCompany",
@@ -56,7 +57,7 @@ export default {
 },
 mounted(){
     var name = "-";
-    axios.get("http://localhost:8080/api/searchFlightCompanies/" + name)
+    axios.get("/api/searchFlightCompanies/" + name)
         .then(response => {
         console.log(response);
         this.companies = response.data
@@ -70,14 +71,14 @@ methods:{
     search: function(){
         if (this.companyName == ""){
             var name = "-";
-            axios.get("http://localhost:8080/api/searchFlightCompanies/" + name)
+            axios.get("/api/searchFlightCompanies/" + name)
             .then(response => {
             console.log(response);
             this.companies = response.data
         }); 
         }
         else{
-            axios.get("http://localhost:8080/api/searchFlightCompanies/" + this.companyName)
+            axios.get("/api/searchFlightCompanies/" + this.companyName)
             .then(response => {
             console.log(response);
             this.companies = response.data
@@ -86,7 +87,7 @@ methods:{
     },
     goToDetails: function(id){
         localStorage.setItem("idCompany", id);
-        window.location = "./CompanyProfile";
+        this.$router.push("/front/CompanyProfile");
     }
 }
 }

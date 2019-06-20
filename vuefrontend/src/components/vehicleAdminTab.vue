@@ -1,7 +1,7 @@
 <template>
     <div id="vehicleAdmin">
         <h2 class="centered">Vehicles</h2>
-        <addvehicle class="centered" v-if="selected == 1"></addvehicle>
+        <addvehicle v-on:added="addedCar" class="centered" v-if="selected == 1"></addvehicle>
         <editVehicle class="centered" v-on:back="back" v-on:vedited="veditedDraw" v-if="selected == 2" :iid="id" v-bind:iname="name" v-bind:imaker="maker" v-bind:itype="type" :iyear="year" v-bind:iprice="price" v-bind:idateto="dateTo" v-bind:idatefrom="dateFrom"></editVehicle>
         <table class="table centered">
             <tr>
@@ -34,6 +34,7 @@
 
 import addvehicle from "./addvehicle.vue";
 import editVehicle from "./editVehicle.vue";
+import axios from "axios";
 
 export default {
   name: "vehicleAdmin",
@@ -60,12 +61,16 @@ export default {
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getCarsByAdmin")
+        axios.get("/api/getCarsByAdmin")
             .then(response => {
                 this.cars = response.data;
             }); 
   },
   methods : {
+    addedCar:function(car){
+      console.log("added");
+      this.cars.push(car);
+    },
       editVehicleMethod : function(id_,name_,maker_,type_,year_,price_,dateFrom_,dateTo_){    
           this.selected=2;  
           this.id = id_;
@@ -84,7 +89,7 @@ export default {
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getCarsByAdmin")
+        axios.get("/api/getCarsByAdmin")
             .then(response => {
                 this.cars = response.data;
             }); 
@@ -104,11 +109,20 @@ export default {
           var getJwtToken = function() {
             return localStorage.getItem("jwtToken");
         };
+        var t = this;
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.delete("http://localhost:8080/api/removeCar/"+id)
+        axios.delete("/api/removeCar/"+id)
             .then(response => {
-                alert("Success");
-                console.log(response);
+                if(response.data == true){
+                  for( var i = 0; i < t.cars.length; i++){ 
+                        if ( t.cars[i].id === id) {
+                            t.cars.splice(i, 1); 
+                            break;
+                        }
+                    }
+                }else{
+                  alert("Not possible");
+                }
             }); 
       }
   }

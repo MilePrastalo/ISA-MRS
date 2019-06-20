@@ -14,176 +14,176 @@ export default new Router({
       component: () => import('./components/unregisteredUserFrontPage.vue')
     },
     {
-      path: '/about',
+      path: '/front/about',
       name: 'about',
 
       component: () => import('./views/About.vue')
     },
     {
-      path: '/searchVehicle',
+      path: '/front/searchVehicle',
       name: 'searchVehicle',
       component: () => import('./components/searchVehicle.vue')
     },
     {
-      path: '/userProfile',
+      path: '/front/userProfile',
       name: 'userProfile',
       component: () => import('./components/userProfile.vue')
     },
     {
-      path: '/flightCompanyProfile',
+      path: '/front/flightCompanyProfile',
       name: 'flightCompanyProfile',
       component: () => import('./components/flightCompanyProfile.vue')
     },
     {
-      path: '/rentacarprofile',
+      path: '/front/rentacarprofile',
       name: 'rentacarprofile',
       component: () => import('./components/rentacarprofile.vue')
     },
     {
-      path: '/flight',
+      path: '/front/flight',
       name: 'flight',
       component: () => import('./components/flight.vue')
     },
     {
-      path: '/searchFlights',
+      path: '/front/searchFlights',
       name: 'searchFlights',
       component: () => import('./components/searchFlights.vue')
     },
     {
-      path: '/searchRentACarCompany',
+      path: '/front/searchRentACarCompany',
       name: 'searchRentACarCompany',
       component: () => import('./components/searchRentACarCompany.vue')
     },
     {
-      path: '/hotelProfile/:hotelName',
+      path: '/front/hotelProfile/:hotelName',
       name: 'hotelProfile',
       component: () => import('./components/hotelProfile.vue')
     },
     {
-      path: '/unregisteredHotelProfile/:hotelName',
+      path: '/front/unregisteredHotelProfile/:hotelName',
       name: 'unregisteredHotelProfile',
       component: () => import('./components/unregisteredHotelProfile.vue')
     },
     {
-      path: '/unregisteredHotelRoom/:hotelName/:roomNumber',
+      path: '/front/unregisteredHotelRoom/:hotelName/:roomNumber',
       name: 'unregisteredHotelRoom',
       component: () => import('./components/unregisteredHotelRoom.vue')
     },
     {
-      path: '/hotelAdminProfile',
+      path: '/front/hotelAdminProfile',
       name: 'hotelAdminProfile',
       component: () => import('./components/hotelAdminProfile.vue')
     },
     {
-      path: '/loginPage',
+      path: '/front/loginPage',
       name: 'loginPage',
       component: () => import('./components/loginPage.vue')
     },
     {
-      path: '/registerPage',
+      path: '/front/registerPage',
       name: 'registerPage',
       component: () => import('./components/registerPage.vue')
     },
     {
-      path: '/addHotel',
+      path: '/front/addHotel',
       name: 'addHotel',
       component: () => import('./components/addHotel.vue')
     },
     {
-      path: '/addVehicle',
+      path: '/front/addVehicle',
       name: 'addbehicle',
       component: () => import('./components/addvehicle.vue')
     },
     {
-      path: '/index',
+      path: '/front/index',
       name: 'registeredFrontPage',
       component: () => import('./components/registeredFrontPage.vue')
     },
     {
-      path: '/searchHotels',
+      path: '/front/searchHotels',
       name: 'searchHotels',
       component: () => import('./components/searchHotels.vue')
     },
     {
-      path: '/flightAdmin',
+      path: '/front/flightAdmin',
       name: 'flightAdmin',
       component: () => import('./components/flightAdmin.vue')
     },
     {
-      path: '/flightForAdmin',
+      path: '/front/flightForAdmin',
       name: 'flightForAdmin',
       component: () => import('./components/flightForAdmin.vue')
     }
     ,
     {
-      path: '/systemAdminPage',
+      path: '/front/systemAdminPage',
       name: 'systemAdminPage',
       component: () => import('./components/SystemAdmin/systemAdminPage.vue')
     },
     {
-      path: '/RAindex',
+      path: '/front/RAindex',
       name: 'rentACarAdminIndex',
       component: () => import('./components/rentACarAdminIndex.vue')
     },
     {
-      path: '/searchFlightCompany',
+      path: '/front/searchFlightCompany',
       name: 'searchFlightCompany',
       component: () => import('./components/searchFlightCompany.vue')
 
     },
     {
-      path: '/registeredHotelSearch',
+      path: '/front/registeredHotelSearch',
       name: 'registeredHotelSearch',
       component: () => import('./components/registeredHotelSearch.vue')
 
     },
     {
-      path: '/hotelAdminPage',
+      path: '/front/hotelAdminPage',
       name: 'hotelAdminPage',
       component: () => import('./components/HotelAdmin/hotelAdminPage.vue')
     },
     {
-      path:'/rentacar',
-      name: 'rentACarReservation',
-      component: () => import('./components/rentACarReservation.vue')
+      path:'/front/rentacar',
+      name: 'rentACarSearchPage',
+      component: () => import('./components/rentACarSearchPage.vue')
     },
     {
-      path: '/friends',
+      path: '/front/friends',
       name: 'friends',
       component: () => import('./components/s1_friends/friends.vue')
     },
     {
-      path: '/flightReservation',
+      path: '/front/flightReservation',
       name: 'flightReservation',
       component: () => import('./components/s1_flightReservation/flightReservation.vue')
     },
     {
-      path: '/confirmationPage/:requestId',
+      path: '/front/confirmationPage/:requestId',
       name: 'confirmationPage',
       component: () => import('./components/s1_flightReservation/confirmationPage.vue')
     },
     {
-      path: '/hotelRoom/:hotelName/:roomNumber',
+      path: '/front/hotelRoom/:hotelName/:roomNumber',
       name: 'hotelRoom',
       component: () => import('./components/hotelRoom.vue')
     },
     {
-      path: '/CompanyProfile',
+      path: '/front/CompanyProfile',
       name: 'CompanyProfile',
       component: () => import('./components/s1_flightCompany/CompanyProfile.vue')
     },
     {
-      path: '/flightReservationDetails/:reservationId',
+      path: '/front/flightReservationDetails/:reservationId',
       name: 'flightReservationDetails',
       component: () => import('./components/s1_flightReservation/flightReservationDetails.vue')
     },
     {
-      path: '/FirstLogin',
+      path: '/front/FirstLogin',
       name: 'FirstLogin',
       component: () => import('./components/FirstLogin.vue')
     },
     {
-      path: '/invites',
+      path: '/front/invites',
       name: 'invites',
       component: () => import('./components/s1_flightReservation/invites.vue')
     },

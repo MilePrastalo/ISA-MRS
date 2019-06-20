@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import axios from "axios";
 
 export default {
   name: 'addHotel',
@@ -46,7 +47,7 @@ export default {
 },
     methods:{
         addHotel: function(){
-             axios.post("http://localhost:8080/api/addHotel",{name:this.name, address: this.address, description: this.description,longitude:this.longitude,latitude:this.latitude})
+             axios.post("/api/addHotel",{name:this.name, address: this.address, description: this.description,longitude:this.longitude,latitude:this.latitude})
             .then(response => {
                 this.name = response.data.name
                 this.address = response.data.address

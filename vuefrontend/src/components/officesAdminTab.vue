@@ -1,7 +1,7 @@
 <template>
     <div id="officeAdmin">
         <h2>Branch Offices</h2>
-        <addOffice v-if="selected == 1"></addOffice>
+        <addOffice v-on:added="addedOffice" v-if="selected == 1"></addOffice>
         <editOffice v-on:backadd="backAdd" v-on:vedited="veditedDraw" v-if="selected == 2" :iid="id" v-bind:iname="name" v-bind:idestination="destination" v-bind:iaddress="address" :ilongitude="longitude" :ilatitude="latitude"></editOffice>
         <table class="table centered">
             <tr>
@@ -26,6 +26,7 @@
 
 import addOffice from "./addOffice.vue";
 import editOffice from "./editOffice.vue";
+import axios from "axios";
 
 export default {
   name: "officeAdmin",
@@ -51,12 +52,15 @@ export default {
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getOfficessByAdmin")
+        axios.get("/api/getOfficessByAdmin")
             .then(response => {
                 this.officess = response.data;
             }); 
   },
   methods : {
+      addedOffice(office){
+        this.officess.push(office);  
+      },
       editOfficeMethod : function(id_,name_,destination_,address_,latitude,longitude){
           this.selected=2;
           this.id = id_;
@@ -71,7 +75,7 @@ export default {
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getOfficessByAdmin")
+        axios.get("/api/getOfficessByAdmin")
             .then(response => {
                 this.officess = response.data;
             }); 
@@ -84,11 +88,21 @@ export default {
           var getJwtToken = function() {
             return localStorage.getItem("jwtToken");
         };
+        var t = this;
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.delete("http://localhost:8080/api/removeOffice/"+id)
+        axios.delete("/api/removeOffice/"+id)
             .then(response => {
-                alert("Success");
-                console.log(response);
+                if(response.data == true){
+                    for( var i = 0; i < t.officess.length; i++){ 
+                        if ( t.officess[i].id === id) {
+                            t.officess.splice(i, 1); 
+                            break;
+                        }
+                    }
+                }
+                else{
+                    alert("Not possible");
+                }
             }); 
       }
   }

@@ -35,7 +35,9 @@ import com.tim9.PlanJourney.beans.VehicleSearchReturnBean;
 import com.tim9.PlanJourney.models.City;
 import com.tim9.PlanJourney.models.RegisteredUser;
 import com.tim9.PlanJourney.models.Review;
+import com.tim9.PlanJourney.models.flight.Flight;
 import com.tim9.PlanJourney.models.flight.FlightCompany;
+import com.tim9.PlanJourney.models.flight.FlightReservation;
 import com.tim9.PlanJourney.models.rentacar.BranchOffice;
 import com.tim9.PlanJourney.models.rentacar.QuickVehicleReservation;
 import com.tim9.PlanJourney.models.rentacar.RentACarAdmin;
@@ -44,6 +46,8 @@ import com.tim9.PlanJourney.models.rentacar.Vehicle;
 import com.tim9.PlanJourney.models.rentacar.VehicleReservation;
 import com.tim9.PlanJourney.service.BranchOfficeService;
 import com.tim9.PlanJourney.service.CityService;
+import com.tim9.PlanJourney.service.FlightReservationService;
+import com.tim9.PlanJourney.service.FlightService;
 import com.tim9.PlanJourney.service.QuickVehicleReservationService;
 import com.tim9.PlanJourney.service.RegisteredUserService;
 import com.tim9.PlanJourney.service.RentACarAdminService;
@@ -72,6 +76,9 @@ public class RentACarController {
 	private RentACarCompanyService companyService;
 	@Autowired
 	private RegisteredUserService userService;
+	
+	@Autowired
+	private FlightReservationService flightReservationService;
 
 	@Autowired
 	private QuickVehicleReservationService quickService;
@@ -93,13 +100,14 @@ public class RentACarController {
 		System.out.println("Poziv");
 		// Needs optimization
 		for (Vehicle vehicle : vehicles) {
-			if ((vehicle.getMaker().equals(search.getProducer()) || search.getProducer().equals(""))
-					&& (vehicle.getPrice() > search.getPriceFrom() || search.getPriceFrom() == 0)
-					&& (vehicle.getPrice() < search.getPriceTo() || search.getPriceTo() == 0)
-					&& (vehicle.getYear() > search.getNewer() || search.getNewer() == 0)
-					&& (vehicle.getYear() < search.getOlder() || search.getOlder() == 0)
-					&& (vehicle.getType().equals(search.getType()) || search.getType().equals(""))
-					&& (vehicle.getSeats() == search.getSeats()) || (search.getSeats() == 0)) {
+			boolean maker = (vehicle.getMaker().equals(search.getProducer()) || search.getProducer().equals(""));
+			boolean priceFrom = (vehicle.getPrice() >= search.getPriceFrom() || search.getPriceFrom() == 0);
+			boolean priceTo = (vehicle.getPrice() <= search.getPriceTo() || search.getPriceTo() == 0);
+			boolean yearNewer = (vehicle.getYear() >= search.getNewer() || search.getNewer() == 0);
+			boolean yearOlder = (vehicle.getYear() <= search.getOlder() || search.getOlder() == 0);
+			boolean type = (vehicle.getType().equals(search.getType()) || search.getType().equals(""));
+			boolean seats = (vehicle.getSeats() == search.getSeats()) || (search.getSeats() == 0);
+			if (maker && priceFrom && priceTo && yearNewer && yearOlder && type && seats) {
 				VehicleSearchReturnBean bean = new VehicleSearchReturnBean(vehicle.getName(), vehicle.getMaker(),
 						vehicle.getType(), vehicle.getYear(), vehicle.getPrice(), vehicle.getRating());
 				bean.setId(Long.toString(vehicle.getId()));
@@ -304,12 +312,19 @@ public class RentACarController {
 		Vehicle vehicle = vehicleService.findOne(bean.getVehicleId());
 		RegisteredUser user = getRegisteredUser();
 		VehicleReservation reservation = reservationService.findOne(bean.getId());
-
+		if(!reservation.getQuick().equals(-1l)) {
+			QuickVehicleReservation quick = quickService.findOne(reservation.getQuick());
+			quick.setTaken(false);
+			quickService.save(quick);
+		}
 		user.getVehicleReservations().remove(reservation);
 		userService.save(user);
 		vehicle.getCompany().getReservations().remove(reservation);
 		companyService.save(vehicle.getCompany());
 		vehicle.getReservations().remove(reservation);
+		FlightReservation flight = reservation.getFlightReservation();
+		flight.getVehicleReservations().remove(reservation);
+		flightReservationService.save(flight);
 		vehicleService.save(vehicle);
 		reservationService.remove(bean.getId());
 
@@ -428,19 +443,23 @@ public class RentACarController {
 	@RequestMapping(value = "/api/removeRentACarCompany/{name}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('SYS_ADMIN')")
-	public ResponseEntity<RentACarCompany> removeRentACarCompany(@PathVariable("name") String name) {
+	public boolean removeRentACarCompany(@PathVariable("name") String name) {
 
 		RentACarCompany rentACarCompany = companyService.findByName(name);
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
 			if (rentACarCompany == null) {
-				return new ResponseEntity<RentACarCompany>(rentACarCompany, HttpStatus.CONFLICT);
+				return false;
+			}
+			
+			if(!rentACarCompany.getReservations().isEmpty()) {
+				return false;
 			}
 
 			companyService.remove(rentACarCompany.getId());
-			return new ResponseEntity<RentACarCompany>(rentACarCompany, HttpStatus.OK);
+			return true;
 		}
-		return new ResponseEntity<RentACarCompany>(rentACarCompany, HttpStatus.CONFLICT);
+		return false;
 	}
 
 	@RequestMapping(value = "/api/getAllRentACars", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -462,7 +481,7 @@ public class RentACarController {
 	@RequestMapping(value = "/api/addCar", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('RENT_ADMIN')")
-	public void addCar(@RequestBody AddVehicleBean vehicleBean) throws Exception {
+	public @ResponseBody EditVehicleBean addCar(@RequestBody AddVehicleBean vehicleBean) throws Exception {
 		RentACarAdmin admin = getAdmin();
 		RentACarCompany company = admin.getService();
 		Vehicle v = new Vehicle(vehicleBean.getName(), vehicleBean.getMaker(), vehicleBean.getType(),
@@ -472,8 +491,26 @@ public class RentACarController {
 		v.setAvaiableTo(sdf.parse(vehicleBean.getDateTo()));
 		company.getVehicles().add(v);
 		v.setCompany(company);
-		vehicleService.save(v);
+		v = vehicleService.save(v);
 		companyService.save(company);
+		
+		sdf = new SimpleDateFormat("dd-MM-yyyy");
+		EditVehicleBean evb = new EditVehicleBean();
+		evb.setDateFrom(vehicleBean.getDateFrom());
+		String dateFrom = sdf.format(v.getAvaiableFrom());
+		String dateTo = sdf.format(v.getAvaiableTo());
+
+		evb.setDateFrom(dateFrom);
+		evb.setDateTo(dateTo);
+		evb.setId(v.getId());
+		evb.setMaker(v.getMaker());
+		evb.setName(v.getName());
+		evb.setPrice(Double.toString(v.getPrice()));
+		evb.setRating(v.getRating());
+		evb.setType(v.getType());
+		evb.setYear(Integer.toString(v.getYear()));
+		return evb;
+		
 	}
 
 	// Admin edits vehicle
@@ -575,21 +612,29 @@ public class RentACarController {
 	@RequestMapping(value = "/api/addOffice", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('RENT_ADMIN')")
-	public void addOffice(@RequestBody BranchOfficeBean bean) throws Exception {
+	public @ResponseBody BranchOfficeBean addOffice(@RequestBody BranchOfficeBean bean) throws Exception {
 		RentACarAdmin admin = getAdmin();
 		RentACarCompany company = admin.getService();
 		City destination = ds.findByName(bean.getDestination());
 		BranchOffice bo = new BranchOffice(bean.getName(), bean.getAddress(), company, destination);
 		bo.setLatitude(bean.getLatitude());
 		bo.setLongitude(bean.getLongitude());
-		bs.save(bo);
+		bo = bs.save(bo);
 		companyService.save(company);
+		BranchOfficeBean ob = new BranchOfficeBean();
+		ob.setId(bo.getId());
+		ob.setName(bo.getName());
+		ob.setAddress(bo.getAddress());
+		ob.setDestination(bo.getDestination().getName());
+		ob.setLatitude(bo.getLatitude());
+		ob.setLongitude(bo.getLongitude());
+		return ob;
 	}
 
 	@RequestMapping(value = "/api/removeOffice/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('RENT_ADMIN')")
-	public boolean removeOffice(@PathVariable Long id) throws Exception {
+	public boolean removeOffice(@PathVariable("id") Long id) throws Exception {
 		return bs.removeOffice(id);
 	}
 
@@ -604,17 +649,17 @@ public class RentACarController {
 		Date dateFrom = sdf.parse(bean.getDateFrom());
 		Date dateTo = sdf.parse(bean.getDateTo());
 		if (dateFrom.after(dateTo)) {
-			return "Neodgovarajuci datum";
+			return "Wrong date";
 		}
 		for (VehicleReservation reservation : vehicle.getReservations()) {
 			if (!(dateTo.before(reservation.getDateFrom()) || dateFrom.after(reservation.getDateTo()))) {
-				return "Vec postoji rezervacija za taj period";
+				return "There is already reservation for this date";
 
 			}
 		}
 		for (QuickVehicleReservation reservation : vehicle.getQuickReservations()) {
 			if (!(dateTo.before(reservation.getDateFrom()) || dateFrom.after(reservation.getDateTo()))) {
-				return "Vec postoji rezervacija za taj period";
+				return "There is already reservation for this date";
 			}
 		}
 
@@ -627,9 +672,8 @@ public class RentACarController {
 		quick.setOriginalPrice(vehicle.getPrice());
 		vehicle.getQuickReservations().add(quick);
 		officePick.getCompany().getQuickReservations().add(quick);
-		companyService.save(officePick.getCompany());
 		quickService.save(quick);
-		return "Uspesno je rezervisano";
+		return "Succesfuly created quick reservation";
 	}
 
 	@RequestMapping(value = "/api/getQuickReservations", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -648,11 +692,9 @@ public class RentACarController {
 		if (from.equals("") || to.equals("")) {
 			return found;
 		} else {
-			Date fromDate = sdf.parse(from);
-			Date toDate = sdf.parse(to);
 			for (QuickVehicleReservation reservation : reservations) {
-				if (!reservation.isTaken()) {
-					if (fromDate.before(reservation.getDateFrom()) && toDate.after(reservation.getDateTo())) {
+				if (!reservation.isTaken()) {	
+					if (from.equals(sdf.format(reservation.getDateFrom())) && to.equals(sdf.format((reservation.getDateTo())))) {
 						VehicleReservationBean bean = new VehicleReservationBean();
 						bean.setDateFrom(sdf.format(reservation.getDateFrom()));
 						bean.setDateTo(sdf.format(reservation.getDateTo()));
@@ -711,17 +753,13 @@ public class RentACarController {
 
 	@RequestMapping(value = "/api/removeQuickReservation", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	// Makes quick reservation
-	// Creates new reservation and changes bool taken for quick reservation
 	public String removeQuickReservation(@RequestBody QuickVehicleReserveBean bean) throws Exception {
 		return vehicleService.removeQuickReservation(bean);
 	}
 
 	@RequestMapping(value = "/api/editQuickVehicleReservation", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	// Makes quick reservation
-	// Creates new reservation and changes bool taken for quick reservation
-	public String removeQuickReservation(@RequestBody VehicleReservationBean bean) throws Exception {
+	public String editQuickReservation(@RequestBody VehicleReservationBean bean) throws Exception {
 		QuickVehicleReservation quick = quickService.findOne(bean.getId());
 		if (!quick.isTaken()) {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -729,15 +767,48 @@ public class RentACarController {
 			Date dateTo = sdf.parse(bean.getDateTo());
 
 			for (VehicleReservation reservation : quick.getVehicle().getReservations()) {
-				if (!(dateTo.before(reservation.getDateFrom()) || dateFrom.after(reservation.getDateTo()))) {
-					return "Vec postoji rezervacija za taj period";
-
+				if (!(reservation.getDateFrom().after(dateTo) || reservation.getDateTo().after(dateFrom))) {
+					if (!reservation.getId().equals(quick.getId())) {
+						System.out.println(reservation.getId());
+						System.out.println(quick.getId());
+						return "Already exists reservationd";
+					}
+				}
+				if(reservation.getDateFrom().equals(dateFrom) || reservation.getDateFrom().equals(dateTo)) {
+					if (!reservation.getId().equals(quick.getId())) {
+						System.out.println(reservation.getId());
+						System.out.println(quick.getId());
+						return "Already exists reservationd";
+					}
+				}
+				if((sdf.format(reservation.getDateTo()).equals(sdf.format(dateTo)))) {
+					if (!reservation.getId().equals(quick.getId())) {
+						System.out.println(reservation.getId());
+						System.out.println(quick.getId());
+						return "Already exists reservationd";
+					}
 				}
 			}
 			for (QuickVehicleReservation reservation : quick.getVehicle().getQuickReservations()) {
-				if (!(dateTo.before(reservation.getDateFrom()) || dateFrom.after(reservation.getDateTo()))) {
+				if (!(reservation.getDateFrom().after(dateTo) || reservation.getDateTo().after(dateFrom))) {
 					if (!reservation.getId().equals(quick.getId())) {
-						return "Vec postoji rezervacija za taj period";
+						System.out.println(reservation.getId());
+						System.out.println(quick.getId());
+						return "Already exists reservationd";
+					}
+				}
+				if(reservation.getDateFrom().equals(dateFrom) || reservation.getDateFrom().equals(dateTo)) {
+					if (!reservation.getId().equals(quick.getId())) {
+						System.out.println(reservation.getId());
+						System.out.println(quick.getId());
+						return "Already exists reservationd";
+					}
+				}
+				if((sdf.format(reservation.getDateTo()).equals(sdf.format(dateTo)))) {
+					if (!reservation.getId().equals(quick.getId())) {
+						System.out.println(reservation.getId());
+						System.out.println(quick.getId());
+						return "Already exists reservationd";
 					}
 				}
 			}

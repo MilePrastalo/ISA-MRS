@@ -68,7 +68,7 @@ public class VehicleService {
 		repository.deleteById(id);
 	}
 	
-	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW,rollbackFor=Exception.class)
 	public VehicleReservation reserve(VehicleReservationSearchBean search, RegisteredUser user) throws Exception {
 		
 		Vehicle vehicle = findOne(Long.parseLong(search.getId()));
@@ -76,11 +76,7 @@ public class VehicleService {
 		Date dateFrom = sdf.parse(search.getDateFrom());
 		Date dateTo = sdf.parse(search.getDateTo());
 		BranchOffice pick = bs.findOne(Long.parseLong(search.getOfficePick()));
-		BranchOffice ret = bs.findOne(Long.parseLong(search.getOfficeReturn()));
-		
-		if(!checkIfAvaiable(vehicle,dateFrom,dateTo)) {
-			throw new Exception();
-		}
+		BranchOffice ret = bs.findOne(Long.parseLong(search.getOfficeReturn()));	
 		VehicleReservation reservation = new VehicleReservation(vehicle, user,new Date(), dateFrom, dateTo, (double)( (dateTo.getTime() - dateFrom.getTime()) / (1000 * 60 * 60 * 24)) * vehicle.getPrice() );
 		reservation.setOfficePick(pick);
 		reservation.setOfficeReturn(ret);
@@ -90,58 +86,85 @@ public class VehicleService {
 		if (user.getVehicleReservations().size() >= discounts.getNumberOfRACReservations()) {
 			reservation.setDiscount(discounts.getRentACarDiscount());
 		}
-		reservationService.save(reservation);
-		user.getVehicleReservations().add(reservation);
+		if(!checkIfAvaiable(vehicle,dateFrom,dateTo)) {
+			throw new Exception();
+		}
 		vehicle.getReservations().add(reservation);
+		user.getVehicleReservations().add(reservation);
 		company.getReservations().add(reservation);
-		companyService.save(company);
-		userService.save(user);
 		save(vehicle);
 		VehicleReservation reser=  reservationService.save(reservation);
 		return reser;
 	}
 	
-	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW,rollbackFor=Exception.class)
 	public VehicleReservation reserveQuick(@RequestBody QuickVehicleReserveBean bean, RegisteredUser user) throws Exception {
 		
 		QuickVehicleReservation quick = quickService.findOne(bean.getId());
-		if(quick.isTaken()) {
-			throw new Exception();
-		}
 		Vehicle vehicle = quick.getVehicle();
 		Date dateFrom = quick.getDateFrom();
 		Date dateTo = quick.getDateTo();
 		BranchOffice pick =quick.getOfficePick();
 		BranchOffice ret = quick.getOfficeReturn();
-		VehicleReservation reservation = new VehicleReservation(vehicle, user,new Date(), dateFrom, dateTo, quick.getOriginalPrice()*(100-quick.getDiscount()/100) );
+		VehicleReservation reservation = new VehicleReservation(vehicle, user,new Date(), dateFrom, dateTo, quick.getOriginalPrice()*(1.0-quick.getDiscount()/100.0) );
 		reservation.setOfficePick(pick);
 		reservation.setOfficeReturn(ret);
-		reservationService.save(reservation);
+		if(quick.isTaken()) {
+			throw new Exception();
+		}
 		quick.setTaken(true);
+		quickService.save(quick);
+		reservation.setQuick(quick.getId());
 		user.getVehicleReservations().add(reservation);
 		vehicle.getReservations().add(reservation);
 		RentACarCompany company = vehicle.getCompany();
 		company.getReservations().add(reservation);
-		companyService.save(company);
-		userService.save(user);
 		save(vehicle);
+		reservation.setCompany(company);
+		reservation.setDiscount(quick.getDiscount());
 		VehicleReservation vr = reservationService.save(reservation);
 		return vr;
 	}
 	
-	private boolean checkIfAvaiable(Vehicle vehicle, Date dateFrom, Date dateTo) {
+	private boolean checkIfAvaiable(Vehicle v, Date dateFrom, Date dateTo) {
 		ArrayList<VehicleReservation> reservations = new ArrayList<>();
+		Vehicle vehicle = findOne(v.getId());
 		reservations.addAll(vehicle.getReservations());
-		
 		ArrayList<QuickVehicleReservation> quickReservations = new ArrayList<>();
 		quickReservations.addAll(vehicle.getQuickReservations());
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		for (VehicleReservation vehicleReservation : reservations) {
 			if (!(vehicleReservation.getDateFrom().after(dateTo) || vehicleReservation.getDateTo().after(dateFrom))) {
 				return false;
 			}
+			if((sdf.format(vehicleReservation.getDateFrom()).equals(sdf.format(dateTo)))) {
+				return false;
+			}
+			if((sdf.format(vehicleReservation.getDateFrom()).equals(sdf.format(dateFrom)))) {
+				return false;
+			}
+			if((sdf.format(vehicleReservation.getDateTo()).equals(sdf.format(dateFrom)))) {
+				return false;
+			}
+			if((sdf.format(vehicleReservation.getDateTo()).equals(sdf.format(dateTo)))) {
+				return false;
+			}
+			
 		}
 		for (QuickVehicleReservation vehicleReservation : quickReservations) {
 			if (!(vehicleReservation.getDateFrom().after(dateTo) || vehicleReservation.getDateTo().after(dateFrom))) {
+				return false;
+			}
+			if((sdf.format(vehicleReservation.getDateFrom()).equals(sdf.format(dateTo)))) {
+				return false;
+			}
+			if((sdf.format(vehicleReservation.getDateFrom()).equals(sdf.format(dateFrom)))) {
+				return false;
+			}
+			if((sdf.format(vehicleReservation.getDateTo()).equals(sdf.format(dateFrom)))) {
+				return false;
+			}
+			if((sdf.format(vehicleReservation.getDateTo()).equals(sdf.format(dateTo)))) {
 				return false;
 			}
 		}
@@ -155,7 +178,7 @@ public class VehicleService {
 		if(v.getReservations().size()>0) {
 			return false;
 		}
-		remove(id);
+		repository.deleteById(id);
 		return true;
 	}
 	

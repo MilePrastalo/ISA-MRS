@@ -68,6 +68,7 @@
 </template>
 
 <script>
+import axios from "axios";
 
 export default {
   name: "saCities",
@@ -88,7 +89,7 @@ mounted(){
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getAllCities")
+        axios.get("/api/getAllCities")
             .then(response => {
                 this.cities = response.data;
             })
@@ -110,7 +111,7 @@ mounted(){
                 }
             }
 
-            axios.post("http://localhost:8080/api/addCity",this.newCity)
+            axios.post("/api/addCity",this.newCity)
             .then(response => {
                 if(response.data == false) {
                     alert("City with given name already exists.");
@@ -139,7 +140,7 @@ mounted(){
                 }
             }
 
-            axios.post("http://localhost:8080/api/editCity",this.ed)
+            axios.post("/api/editCity",this.ed)
             .then(response => {
                 if(response.data == false) {
                     alert("City with given name already exists.");

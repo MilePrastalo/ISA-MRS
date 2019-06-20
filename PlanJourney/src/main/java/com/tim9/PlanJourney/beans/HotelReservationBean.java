@@ -20,6 +20,8 @@ public class HotelReservationBean {
 	private String lastDay;
 	private ArrayList<String> additionalCharges;
 	private Long flightId;
+	private int status;
+	private int rating;
 
 	public HotelReservationBean(String hotelName, String username, int roomNumber, int fYear, int fMonth, int fDay,
 			int lYear, int lMonth, int lDay, int discount, float paidPrice, int numberOfBeds, ArrayList<String> ac,
@@ -178,5 +180,22 @@ public class HotelReservationBean {
 	public void setFlightId(Long flightId) {
 		this.flightId = flightId;
 	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public int getRating() {
+		return rating;
+	}
+
+	public void setRating(int rating) {
+		this.rating = rating;
+	}
+	
 
 }

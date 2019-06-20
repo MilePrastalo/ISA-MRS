@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import axios from "axios";
 
 export default {
   name: "FirstLogin",
@@ -44,28 +45,28 @@ export default {
             };
       axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
 
-      axios.post("http://localhost:8080/api/firstLogin",{password:this.password,confirmed:this.confirmedPassword})
+      axios.post("/api/firstLogin",{password:this.password,confirmed:this.confirmedPassword})
         .then(response => {
             if(response.data !=="OK"){
                 alert("ERROR");
-                window.location="./";
+                this.$router.push("/");
             }
             else{
-                axios.get("http://localhost:8080/api/getUserRole")
+                axios.get("/api/getUserRole")
                     .then(response => {
                 console.log(response);
                 if(response.data == "RENT_ADMIN"){
-                  window.location ="./RAindex";
+                  this.$router.push("/front/RAindex");
                 }else if (response.data == "FLIGHT_ADMIN"){
-                  window.location ="./flightAdmin";
+                  this.$router.push("/front/flightAdmin");
                 }else if (response.data == "SYS_ADMIN"){
-                  window.location ="./systemAdminPage";
+                  this.$router.push("/front/systemAdminPage");
                 }else if (response.data == "REGISTERED"){
-                  window.location ="./index";
+                  this.$router.push("/front/index");
                 }else if (response.data == "HOTEL_ADMIN"){
-                  window.location ="./hotelAdminPage";
+                 this.$router.push("/front/hotelAdminPage");
                 }else{
-                  window.location ="./";
+                  this.$router.push("/");
                 }
                 
             });

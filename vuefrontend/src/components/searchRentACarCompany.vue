@@ -29,7 +29,7 @@
                 <th></th>
             </tr>
             <tr v-for="company in companies" :key="company.name">  
-                <td><img src="../assets/rent.jpg" width="50px" height="50px" alt=""></td>
+                <td><img :src="'./assets/imgs/' +'rent'+ '.jpg'" width="50px" height="50px" alt=""></td>
                 <td>{{company.name}}</td>
                 <td><table class="table">
                     <tr><th>Office name</th>
@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import axios from "axios";
 
 export default {
   name: "searchRentACarCompany",
@@ -117,7 +118,7 @@ mounted(){
                     }
                }
                
-               axios.post("http://localhost:8080/api/getRentACarCompanies",{name : this.name, location: this.location, dateFrom:this.datefrom, dateTo:this.dateTo})
+               axios.post("/api/getRentACarCompanies",{name : this.name, location: this.location, dateFrom:this.datefrom, dateTo:this.dateTo})
                 .then(response => {
                     this.companies = response.data
                 }); 

@@ -24,6 +24,8 @@ import searchRentACarCompany from './searchRentACarCompany.vue';
 import searchHotels from './searchHotels.vue';
 import navbar from "./navbar.vue";
 import rentACarReservation from "./rentACarReservation.vue";
+import axios from "axios";
+
 export default {
   name: "unregisteredUserFrontPage",
   components: {
@@ -36,10 +38,10 @@ export default {
   },
   methods: {
         logIn: function() {
-            this.$router.push("/loginPage");
+            this.$router.push("front/loginPage");
         },
         register: function() {
-            this.$router.push("/registerPage");
+            this.$router.push("front/registerPage");
         },
         showFlight : function(){
             this.tabSelected = 1;

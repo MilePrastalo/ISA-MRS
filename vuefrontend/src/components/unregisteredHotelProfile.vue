@@ -108,6 +108,7 @@
       </tr>
       </thead>
       <tr v-for="r in quickReservations" :key="r.id">
+        <template v-if="checkToday(r)">
         <td>{{r.roomNumber}}</td>
         <td>{{r.numberOfBeds}}</td>
         <td>{{r.fDay +"."+r.fMonth +"."+r.fYear+"."}}</td>
@@ -115,6 +116,7 @@
         <td>{{r.paidPrice}}</td>
         <td>{{r.discount}}</td>
         <td>{{parseFloat(r.paidPrice) - parseFloat(r.paidPrice) * (parseFloat(r.discount) / 100)}}</td>
+        </template>
       </tr>
     </table>
         </td>
@@ -128,7 +130,7 @@
 
 <script>
 import axios from "axios";
-import unregisteredHotelRoom from './unregisteredHotelRoom.vue';
+import unregisteredHotelRoom from "./unregisteredHotelRoom.vue";
 import navbar from "./navbar.vue";
 export default {
   name: "unregisteredHotelProfile",
@@ -147,10 +149,10 @@ export default {
 },
 mounted(){
          var getJwtToken = function() {
-            return localStorage.getItem('jwtToken');
+            return localStorage.getItem("jwtToken");
         };
-        axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-         axios.get("http://localhost:8080/api/getHotel/" + this.$route.params.hotelName)
+        axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
+         axios.get("/api/getHotel/" + this.$route.params.hotelName)
         .then(response => {
             this.hotel = response.data;
 
@@ -174,7 +176,7 @@ mounted(){
         this.currentPage = 1;
         },
         reserve: function(room) {
-          axios.post("http://localhost:8080/api/buyQuickHotelReservation",{hotelName: room.hotelName,fYear:room.fYear,fMonth: room.fMonth,fDay: room.fDay,lYear: room.lYear,lMonth: room.lMonth,lDay: room.lDay, roomNumber: room.roomNumber})
+          axios.post("/api/buyQuickHotelReservation",{hotelName: room.hotelName,fYear:room.fYear,fMonth: room.fMonth,fDay: room.fDay,lYear: room.lYear,lMonth: room.lMonth,lDay: room.lDay, roomNumber: room.roomNumber})
         .then(response => {
             if(response.data != null) {
               alert("Your reservation is successful.");
@@ -191,7 +193,24 @@ mounted(){
           this.$emit("rr",id);
         },
         backToSearch() {
-            window.location ="../";
+            window.location ="/front/index";
+        },
+        checkToday: function(r) {
+          var today = new Date();
+          var tYear = today.getFullYear();
+          var tMonth = today.getMonth() + 1;
+          var tDay = today.getDate();
+
+          if(r.fYear < tYear) {
+            return false;
+          }
+          if(r.tMonth < tMonth) {
+            return false;
+          }
+          if(r.fDay < tDay) {
+            return false;
+          }
+          return true;
         }
     }
 }

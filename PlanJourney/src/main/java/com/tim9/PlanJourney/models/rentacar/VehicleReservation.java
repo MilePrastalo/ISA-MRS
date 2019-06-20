@@ -37,6 +37,9 @@ public class VehicleReservation extends Reservation {
 	
 	@Column(name = "discount")
 	private int discount;
+	
+	@Column(name = "quickID")
+	private Long quick;
 
 	@ManyToOne
 	private FlightReservation flightReservation;
@@ -54,6 +57,7 @@ public class VehicleReservation extends Reservation {
 		this.dateTo = dateTo;
 		this.cena = cena;
 		setUser(user);
+		this.quick = -1l;
 	}
 
 	public Vehicle getVehicle() {
@@ -127,6 +131,15 @@ public class VehicleReservation extends Reservation {
 	public void setDiscount(int discount) {
 		this.discount = discount;
 	}
+
+	public Long getQuick() {
+		return quick;
+	}
+
+	public void setQuick(Long quick) {
+		this.quick = quick;
+	}
+	
 	
 
 }

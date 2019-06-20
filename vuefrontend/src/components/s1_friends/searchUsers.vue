@@ -58,6 +58,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
 
     name: "searchUsers",
@@ -78,7 +80,7 @@ mounted(){
     };
     axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
     var userBean = {firstName : this.firstName, lastName: this.lastName};
-    axios.post("http://localhost:8080/api/getRegUsers", userBean)
+    axios.post("/api/getRegUsers", userBean)
         .then(response => {
             this.users = response.data
         });
@@ -92,14 +94,14 @@ methods: {
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/addFriend/" + friendId)
+        axios.get("/api/addFriend/" + friendId)
         .then(response => {
             if (response.data == false){
                     alert("Something went wrong!");
                 }
             else{
                 alert("Request is successfuly sent!");
-                window.location = "/friends";
+                window.location = "/front/friends";
             }
         });
     },
@@ -109,14 +111,14 @@ methods: {
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/removeFriend/"+ friendId)
+        axios.get("/api/removeFriend/"+ friendId)
         .then(response => {
             if (response.data == false){
                     alert("Something went wrong!");
                 }
             else{
                 alert("Successfuly removed!");
-                window.location = "/friends";
+                window.location = "/front/friends";
             }
         });
     },
@@ -126,14 +128,14 @@ methods: {
         return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/acceptRequestFromSearch/" + userId)
+        axios.get("/api/acceptRequestFromSearch/" + userId)
             .then(response => {
                 if (response.data == false){
                     alert("Something went wrong!");
                 }
                 else{
                     alert("Successfuly accepted!");
-                    window.location = "/friends";
+                    window.location = "/front/friends";
                 }
             });
 
@@ -151,13 +153,13 @@ methods: {
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
         if (this.check == 1){
-            axios.post("http://localhost:8080/api/getRegUsers", {firstName : this.firstName, lastName: this.lastName})
+            axios.post("/api/getRegUsers", {firstName : this.firstName, lastName: this.lastName})
             .then(response => {
                 this.users = response.data
             });
         }
         else{
-            axios.post("http://localhost:8080/api/getMyFriends", {firstName : this.firstName, lastName: this.lastName})
+            axios.post("/api/getMyFriends", {firstName : this.firstName, lastName: this.lastName})
             .then(response => {
                 this.users = response.data
             });

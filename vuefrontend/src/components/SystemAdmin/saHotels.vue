@@ -142,6 +142,7 @@
 </template>
 
 <script>
+import axios from "axios";
 
 export default {
   name: "saHotels",
@@ -165,12 +166,12 @@ mounted(){
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getAllHotels")
+        axios.get("/api/getAllHotels")
             .then(response => {
                 this.hotels = response.data;
             });
 
-        axios.get("http://localhost:8080/api/getAllHotelAdmins")
+        axios.get("/api/getAllHotelAdmins")
             .then(response => {
                 this.hotelAdmins = response.data;
             });
@@ -201,7 +202,7 @@ mounted(){
                 return;
             }
 
-            axios.post("http://localhost:8080/api/addHotel",this.newHotel).
+            axios.post("/api/addHotel",this.newHotel).
             then(response =>{
                 if(response.data == true) {
                     alert("Hotel has been successfully added.");
@@ -214,9 +215,10 @@ mounted(){
             })
         },
         removeHotel: function(name) {
-            axios.delete("http://localhost:8080/api/removeHotel/"+ name)
+            axios.delete("/api/removeHotel/"+ name)
             .then(response => {
-                var index;
+                if(response.data == true) {
+                    var index;
                 for(let h in this.hotels) {
                     if(this.hotels[h].name == name) {
                         index = h;
@@ -224,7 +226,10 @@ mounted(){
                     }
                 }
                 this.hotels.splice(index,1);
-                alert(response.data.name + " has been successfully removed.");
+                alert("Hotel has been successfully removed.");
+                } else {
+                    alert("You can't remove hotel with existing reservations."); 
+                }  
             })
         },
         addHotelAdminDiv: function(name) {
@@ -263,7 +268,7 @@ mounted(){
                 return;
             }
 
-            axios.post("http://localhost:8080/api/addHotelAdmin",{username:this.admin.username,password:this.admin.password,firstName:this.admin.firstName,lastName:this.admin.lastName,email:this.admin.email,companyName:this.hotelName}).
+            axios.post("/api/addHotelAdmin",{username:this.admin.username,password:this.admin.password,firstName:this.admin.firstName,lastName:this.admin.lastName,email:this.admin.email,companyName:this.hotelName}).
             then(response =>{
                 if(response.data === true) {
                     alert("Hotel admin has been successfully added.");
@@ -274,7 +279,7 @@ mounted(){
             })
         },
         removeAdmin: function(name) {
-            axios.delete("http://localhost:8080/api/removeHotelAdmin/"+ name)
+            axios.delete("/api/removeHotelAdmin/"+ name)
             .then(response => {
                 var index;
                 for(let a in this.hotelAdmins) {

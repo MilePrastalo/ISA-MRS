@@ -36,7 +36,7 @@
                     <td>{{flight.economicPrice}}</td>
                     <td>{{flight.businessPrice}}</td>
                     <td>{{flight.firstClassPrice}}</td>
-                    <td style="font-weight: bold">{{flight.rate}}</td>
+                    <td style="font-weight: bold"> {{flight.rate}}</td>
                 </tr>
                 </tbody>              
             </table>  
@@ -119,6 +119,7 @@
 
 <script>
 import Chart from "chart.js";
+import axios from "axios";
 
 
 export default {
@@ -144,12 +145,12 @@ export default {
         return localStorage.getItem('jwtToken');
     };
     axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-    axios.get("http://localhost:8080/api/getFlightsRate")
+    axios.get("/api/getFlightsRate")
     .then(response => {
         this.flights = response.data 
     });
     axios.defaults.headers.common['Authorization'] = "Bearer " + getJwtToken();
-    axios.get("http://localhost:8080/api/getCompanyAverageRate")
+    axios.get("/api/getCompanyAverageRate")
     .then(response => {
             this.dataForCompanyRates = response.data;
     });
@@ -159,7 +160,7 @@ export default {
   },
 
   methods:{
-        
+      
     selected:function(val){
         
         this.tabSelected = val;
@@ -238,7 +239,7 @@ export default {
         e.preventDefault();
         console.log(localStorage.getItem('jwtToken'));
         axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem('jwtToken');
-        axios.post("http://localhost:8080/api/getSoldTicketReport",{dateFrom: this.dateFrom, dateTo: this.dateTo, kind: this.reportKindTickets})
+        axios.post("/api/getSoldTicketReport",{dateFrom: this.dateFrom, dateTo: this.dateTo, kind: this.reportKindTickets})
         .then(response => {
                 this.dataSoldTickets = response.data;
                 this.soldTicketReport();
@@ -293,7 +294,7 @@ export default {
             return localStorage.getItem('jwtToken');
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.post("http://localhost:8080/api/getEarningsReport",{dateFrom: this.dateFrom, dateTo: this.dateTo})
+        axios.post("/api/getEarningsReport",{dateFrom: this.dateFrom, dateTo: this.dateTo})
         .then(response => {
                 this.earnings = response.data;
                 this.earningsVisible = true;

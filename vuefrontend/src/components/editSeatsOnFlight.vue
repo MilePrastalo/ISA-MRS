@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import axios from "axios";
 
 export default {
   name: "flightForAdmin",
@@ -63,15 +64,15 @@ export default {
             return localStorage.getItem("jwtToken");
         };
         axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-        axios.get("http://localhost:8080/api/getSeatsOnFlight/" +  this.iid + "/economic")
+        axios.get("/api/getSeatsOnFlight/" +  this.iid + "/economic")
         .then(response => {
             this.seatsE = response.data;
         });; 
-        axios.get("http://localhost:8080/api/getSeatsOnFlight/" +  this.iid + "/business" )
+        axios.get("/api/getSeatsOnFlight/" +  this.iid + "/business" )
         .then(response => {
             this.seatsB = response.data;
         });
-        axios.get("http://localhost:8080/api/getSeatsOnFlight/" +  this.iid + "/first class" )
+        axios.get("/api/getSeatsOnFlight/" +  this.iid + "/first class" )
         .then(response => {
             this.seatsF = response.data;
         });
@@ -86,7 +87,7 @@ export default {
                     return localStorage.getItem("jwtToken");
                 };
                 axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken();
-                axios.get("http://localhost:8080/api/editSeat/" + seat.id)
+                axios.get("/api/editSeat/" + seat.id)
                 .then(response => {
                     if (response.data != null){
                         if (seat.unavailable == true){
