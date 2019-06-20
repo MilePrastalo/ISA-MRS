@@ -287,6 +287,10 @@ public class HotelController {
 			if (hotel == null) {
 				return new ResponseEntity<Hotel>(hotel, HttpStatus.CONFLICT);
 			}
+			
+			if(!hotel.getReservations().isEmpty()) {
+				return new ResponseEntity<Hotel>(hotel, HttpStatus.CONFLICT); 
+			}
 
 			service.remove(hotel.getId());
 			return new ResponseEntity<Hotel>(hotel, HttpStatus.OK);

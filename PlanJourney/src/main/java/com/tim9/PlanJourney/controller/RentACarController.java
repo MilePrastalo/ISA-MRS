@@ -437,6 +437,10 @@ public class RentACarController {
 			if (rentACarCompany == null) {
 				return new ResponseEntity<RentACarCompany>(rentACarCompany, HttpStatus.CONFLICT);
 			}
+			
+			if(!rentACarCompany.getReservations().isEmpty()) {
+				return new ResponseEntity<RentACarCompany>(rentACarCompany, HttpStatus.CONFLICT);
+			}
 
 			companyService.remove(rentACarCompany.getId());
 			return new ResponseEntity<RentACarCompany>(rentACarCompany, HttpStatus.OK);

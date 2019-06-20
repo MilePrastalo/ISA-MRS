@@ -749,7 +749,11 @@ public class FlightCompanyController {
 			if (flightCompany == null) {
 				return new ResponseEntity<FlightCompany>(flightCompany, HttpStatus.CONFLICT);
 			}
-
+			
+			if(!flightCompany.getFlightReservation().isEmpty()) {
+				return new ResponseEntity<FlightCompany>(flightCompany, HttpStatus.CONFLICT);
+			}
+			
 			flightCompanyService.remove(flightCompany.getId());
 			return new ResponseEntity<FlightCompany>(flightCompany, HttpStatus.OK);
 		}
