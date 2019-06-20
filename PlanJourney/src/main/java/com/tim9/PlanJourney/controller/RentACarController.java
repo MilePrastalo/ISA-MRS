@@ -429,23 +429,23 @@ public class RentACarController {
 	@RequestMapping(value = "/api/removeRentACarCompany/{name}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('SYS_ADMIN')")
-	public ResponseEntity<RentACarCompany> removeRentACarCompany(@PathVariable("name") String name) {
+	public boolean removeRentACarCompany(@PathVariable("name") String name) {
 
 		RentACarCompany rentACarCompany = companyService.findByName(name);
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
 			if (rentACarCompany == null) {
-				return new ResponseEntity<RentACarCompany>(rentACarCompany, HttpStatus.CONFLICT);
+				return false;
 			}
 			
 			if(!rentACarCompany.getReservations().isEmpty()) {
-				return new ResponseEntity<RentACarCompany>(rentACarCompany, HttpStatus.CONFLICT);
+				return false;
 			}
 
 			companyService.remove(rentACarCompany.getId());
-			return new ResponseEntity<RentACarCompany>(rentACarCompany, HttpStatus.OK);
+			return true;
 		}
-		return new ResponseEntity<RentACarCompany>(rentACarCompany, HttpStatus.CONFLICT);
+		return false;
 	}
 
 	@RequestMapping(value = "/api/getAllRentACars", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
