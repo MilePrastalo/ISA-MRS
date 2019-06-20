@@ -563,6 +563,14 @@ public class HotelController {
 		if (dateBefore3Days.after(new Date())) {
 			return false;
 		}
+
+		// Canceling quick hotel reservation
+		if (hr.getDiscount() > 0 && hr.getUser() != null) {
+			hr.setUser(null);
+
+			return true;
+		}
+
 		// Removing hotel reservation from flight reservation.
 		/*
 		 * ArrayList<HotelReservation> flightsHotelReservations = new
