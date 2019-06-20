@@ -217,7 +217,8 @@ mounted(){
         removeHotel: function(name) {
             axios.delete("/api/removeHotel/"+ name)
             .then(response => {
-                var index;
+                if(response.data == true) {
+                    var index;
                 for(let h in this.hotels) {
                     if(this.hotels[h].name == name) {
                         index = h;
@@ -225,7 +226,10 @@ mounted(){
                     }
                 }
                 this.hotels.splice(index,1);
-                alert(response.data.name + " has been successfully removed.");
+                alert("Hotel has been successfully removed.");
+                } else {
+                    alert("You can't remove hotel with existing reservations."); 
+                }  
             })
         },
         addHotelAdminDiv: function(name) {

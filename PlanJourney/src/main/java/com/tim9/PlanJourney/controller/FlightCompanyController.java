@@ -741,19 +741,23 @@ public class FlightCompanyController {
 	@RequestMapping(value = "/api/removeFlightCompany/{name}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('SYS_ADMIN')")
-	public ResponseEntity<FlightCompany> removeFlightCompany(@PathVariable("name") String name) {
+	public boolean removeFlightCompany(@PathVariable("name") String name) {
 
 		FlightCompany flightCompany = flightCompanyService.findByName(name);
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
 			if (flightCompany == null) {
-				return new ResponseEntity<FlightCompany>(flightCompany, HttpStatus.CONFLICT);
+				return false;
 			}
-
+			
+			if(!flightCompany.getFlightReservation().isEmpty()) {
+				return false;
+			}
+			
 			flightCompanyService.remove(flightCompany.getId());
-			return new ResponseEntity<FlightCompany>(flightCompany, HttpStatus.OK);
+			return true;
 		}
-		return new ResponseEntity<FlightCompany>(flightCompany, HttpStatus.CONFLICT);
+		return false;
 	}
 
 	@RequestMapping(value = "/api/getAllFlightCompanies", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

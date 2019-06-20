@@ -279,19 +279,23 @@ public class HotelController {
 	@RequestMapping(value = "/api/removeHotel/{name}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
 	@PreAuthorize("hasAuthority('SYS_ADMIN')")
-	public ResponseEntity<Hotel> removeHotel(@PathVariable("name") String name) {
+	public boolean removeHotel(@PathVariable("name") String name) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Hotel hotel = service.findByName(name);
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
 
 			if (hotel == null) {
-				return new ResponseEntity<Hotel>(hotel, HttpStatus.CONFLICT);
+				return false;
+			}
+			
+			if(!hotel.getReservations().isEmpty()) {
+				return false; 
 			}
 
 			service.remove(hotel.getId());
-			return new ResponseEntity<Hotel>(hotel, HttpStatus.OK);
+			return true;
 		}
-		return new ResponseEntity<Hotel>(hotel, HttpStatus.CONFLICT);
+		return false;
 	}
 
 	// Metod za izmenu osnovnih podataka hotela.
