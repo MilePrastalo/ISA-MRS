@@ -168,7 +168,7 @@ mounted(){
             .then(response=>{
               
               alert(response.data);
-              if(response.data=="Uspesno je rezervisano"){
+              if(response.data=="Succesfuly created quick reservation"){
                 this.dateFrom = this.dateFrom.split('-');
                 this.dateFrom = this.dateFrom[2]+"-"+this.dateFrom[1]+'-'+this.dateFrom[0];
 
@@ -220,6 +220,7 @@ mounted(){
             axios.defaults.headers.common["Authorization"] = "Bearer " + getJwtToken(); 
             axios.post("/api/editQuickVehicleReservation",{id:this.quickId,dateFrom:this.dateFrom,dateTo:this.dateTo,vehicleName:this.vehicleName,discount:this.discount})
             .then(response=>{
+              console.log(response);
                 if(response.data == "OK"){
                   this.quickReservations.forEach(element => {
                     if(element.id == this.quickId){

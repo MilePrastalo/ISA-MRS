@@ -56,15 +56,15 @@ export default {
                     .then(response => {
                 console.log(response);
                 if(response.data == "RENT_ADMIN"){
-                  this.$router.push("front/RAindex");
+                  this.$router.push("/front/RAindex");
                 }else if (response.data == "FLIGHT_ADMIN"){
-                  this.$router.push("front/flightAdmin");
+                  this.$router.push("/front/flightAdmin");
                 }else if (response.data == "SYS_ADMIN"){
-                  this.$router.push("front/systemAdminPage");
+                  this.$router.push("/front/systemAdminPage");
                 }else if (response.data == "REGISTERED"){
-                  this.$router.push("front/index");
+                  this.$router.push("/front/index");
                 }else if (response.data == "HOTEL_ADMIN"){
-                 this.$router.push("front/hotelAdminPage");
+                 this.$router.push("/front/hotelAdminPage");
                 }else{
                   this.$router.push("/");
                 }

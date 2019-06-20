@@ -97,30 +97,31 @@ public class VehicleService {
 		return reser;
 	}
 	
-	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW,rollbackFor=Exception.class)
 	public VehicleReservation reserveQuick(@RequestBody QuickVehicleReserveBean bean, RegisteredUser user) throws Exception {
 		
 		QuickVehicleReservation quick = quickService.findOne(bean.getId());
-		if(quick.isTaken()) {
-			throw new Exception();
-		}
 		Vehicle vehicle = quick.getVehicle();
 		Date dateFrom = quick.getDateFrom();
 		Date dateTo = quick.getDateTo();
 		BranchOffice pick =quick.getOfficePick();
 		BranchOffice ret = quick.getOfficeReturn();
-		VehicleReservation reservation = new VehicleReservation(vehicle, user,new Date(), dateFrom, dateTo, quick.getOriginalPrice()*(100-quick.getDiscount()/100) );
+		VehicleReservation reservation = new VehicleReservation(vehicle, user,new Date(), dateFrom, dateTo, quick.getOriginalPrice()*(1.0-quick.getDiscount()/100.0) );
 		reservation.setOfficePick(pick);
 		reservation.setOfficeReturn(ret);
-		reservationService.save(reservation);
+		if(quick.isTaken()) {
+			throw new Exception();
+		}
 		quick.setTaken(true);
+		quickService.save(quick);
+		reservation.setQuick(quick.getId());
 		user.getVehicleReservations().add(reservation);
 		vehicle.getReservations().add(reservation);
 		RentACarCompany company = vehicle.getCompany();
 		company.getReservations().add(reservation);
-		companyService.save(company);
-		userService.save(user);
 		save(vehicle);
+		reservation.setCompany(company);
+		reservation.setDiscount(quick.getDiscount());
 		VehicleReservation vr = reservationService.save(reservation);
 		return vr;
 	}
@@ -154,10 +155,16 @@ public class VehicleService {
 			if (!(vehicleReservation.getDateFrom().after(dateTo) || vehicleReservation.getDateTo().after(dateFrom))) {
 				return false;
 			}
-			if(vehicleReservation.getDateFrom().equals(dateFrom) || vehicleReservation.getDateFrom().equals(dateTo)) {
+			if((sdf.format(vehicleReservation.getDateFrom()).equals(sdf.format(dateTo)))) {
 				return false;
 			}
-			if(vehicleReservation.getDateTo().equals(dateFrom) || vehicleReservation.getDateTo().equals(dateTo)) {
+			if((sdf.format(vehicleReservation.getDateFrom()).equals(sdf.format(dateFrom)))) {
+				return false;
+			}
+			if((sdf.format(vehicleReservation.getDateTo()).equals(sdf.format(dateFrom)))) {
+				return false;
+			}
+			if((sdf.format(vehicleReservation.getDateTo()).equals(sdf.format(dateTo)))) {
 				return false;
 			}
 		}

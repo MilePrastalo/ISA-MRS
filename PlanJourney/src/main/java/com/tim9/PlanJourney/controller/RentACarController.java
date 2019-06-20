@@ -305,7 +305,11 @@ public class RentACarController {
 		Vehicle vehicle = vehicleService.findOne(bean.getVehicleId());
 		RegisteredUser user = getRegisteredUser();
 		VehicleReservation reservation = reservationService.findOne(bean.getId());
-
+		if(!reservation.getQuick().equals(-1l)) {
+			QuickVehicleReservation quick = quickService.findOne(reservation.getQuick());
+			quick.setTaken(false);
+			quickService.save(quick);
+		}
 		user.getVehicleReservations().remove(reservation);
 		userService.save(user);
 		vehicle.getCompany().getReservations().remove(reservation);
@@ -631,17 +635,17 @@ public class RentACarController {
 		Date dateFrom = sdf.parse(bean.getDateFrom());
 		Date dateTo = sdf.parse(bean.getDateTo());
 		if (dateFrom.after(dateTo)) {
-			return "Neodgovarajuci datum";
+			return "Wrong date";
 		}
 		for (VehicleReservation reservation : vehicle.getReservations()) {
 			if (!(dateTo.before(reservation.getDateFrom()) || dateFrom.after(reservation.getDateTo()))) {
-				return "Vec postoji rezervacija za taj period";
+				return "There is already reservation for this date";
 
 			}
 		}
 		for (QuickVehicleReservation reservation : vehicle.getQuickReservations()) {
 			if (!(dateTo.before(reservation.getDateFrom()) || dateFrom.after(reservation.getDateTo()))) {
-				return "Vec postoji rezervacija za taj period";
+				return "There is already reservation for this date";
 			}
 		}
 
@@ -654,9 +658,8 @@ public class RentACarController {
 		quick.setOriginalPrice(vehicle.getPrice());
 		vehicle.getQuickReservations().add(quick);
 		officePick.getCompany().getQuickReservations().add(quick);
-		companyService.save(officePick.getCompany());
 		quickService.save(quick);
-		return "Uspesno je rezervisano";
+		return "Succesfuly created quick reservation";
 	}
 
 	@RequestMapping(value = "/api/getQuickReservations", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -675,11 +678,9 @@ public class RentACarController {
 		if (from.equals("") || to.equals("")) {
 			return found;
 		} else {
-			Date fromDate = sdf.parse(from);
-			Date toDate = sdf.parse(to);
 			for (QuickVehicleReservation reservation : reservations) {
-				if (!reservation.isTaken()) {
-					if (fromDate.before(reservation.getDateFrom()) && toDate.after(reservation.getDateTo())) {
+				if (!reservation.isTaken()) {	
+					if (from.equals(sdf.format(reservation.getDateFrom())) && to.equals(sdf.format((reservation.getDateTo())))) {
 						VehicleReservationBean bean = new VehicleReservationBean();
 						bean.setDateFrom(sdf.format(reservation.getDateFrom()));
 						bean.setDateTo(sdf.format(reservation.getDateTo()));
@@ -738,17 +739,13 @@ public class RentACarController {
 
 	@RequestMapping(value = "/api/removeQuickReservation", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	// Makes quick reservation
-	// Creates new reservation and changes bool taken for quick reservation
 	public String removeQuickReservation(@RequestBody QuickVehicleReserveBean bean) throws Exception {
 		return vehicleService.removeQuickReservation(bean);
 	}
 
 	@RequestMapping(value = "/api/editQuickVehicleReservation", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@CrossOrigin()
-	// Makes quick reservation
-	// Creates new reservation and changes bool taken for quick reservation
-	public String removeQuickReservation(@RequestBody VehicleReservationBean bean) throws Exception {
+	public String editQuickReservation(@RequestBody VehicleReservationBean bean) throws Exception {
 		QuickVehicleReservation quick = quickService.findOne(bean.getId());
 		if (!quick.isTaken()) {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -756,15 +753,48 @@ public class RentACarController {
 			Date dateTo = sdf.parse(bean.getDateTo());
 
 			for (VehicleReservation reservation : quick.getVehicle().getReservations()) {
-				if (!(dateTo.before(reservation.getDateFrom()) || dateFrom.after(reservation.getDateTo()))) {
-					return "Vec postoji rezervacija za taj period";
-
+				if (!(reservation.getDateFrom().after(dateTo) || reservation.getDateTo().after(dateFrom))) {
+					if (!reservation.getId().equals(quick.getId())) {
+						System.out.println(reservation.getId());
+						System.out.println(quick.getId());
+						return "Already exists reservationd";
+					}
+				}
+				if(reservation.getDateFrom().equals(dateFrom) || reservation.getDateFrom().equals(dateTo)) {
+					if (!reservation.getId().equals(quick.getId())) {
+						System.out.println(reservation.getId());
+						System.out.println(quick.getId());
+						return "Already exists reservationd";
+					}
+				}
+				if((sdf.format(reservation.getDateTo()).equals(sdf.format(dateTo)))) {
+					if (!reservation.getId().equals(quick.getId())) {
+						System.out.println(reservation.getId());
+						System.out.println(quick.getId());
+						return "Already exists reservationd";
+					}
 				}
 			}
 			for (QuickVehicleReservation reservation : quick.getVehicle().getQuickReservations()) {
-				if (!(dateTo.before(reservation.getDateFrom()) || dateFrom.after(reservation.getDateTo()))) {
+				if (!(reservation.getDateFrom().after(dateTo) || reservation.getDateTo().after(dateFrom))) {
 					if (!reservation.getId().equals(quick.getId())) {
-						return "Vec postoji rezervacija za taj period";
+						System.out.println(reservation.getId());
+						System.out.println(quick.getId());
+						return "Already exists reservationd";
+					}
+				}
+				if(reservation.getDateFrom().equals(dateFrom) || reservation.getDateFrom().equals(dateTo)) {
+					if (!reservation.getId().equals(quick.getId())) {
+						System.out.println(reservation.getId());
+						System.out.println(quick.getId());
+						return "Already exists reservationd";
+					}
+				}
+				if((sdf.format(reservation.getDateTo()).equals(sdf.format(dateTo)))) {
+					if (!reservation.getId().equals(quick.getId())) {
+						System.out.println(reservation.getId());
+						System.out.println(quick.getId());
+						return "Already exists reservationd";
 					}
 				}
 			}

@@ -65,6 +65,8 @@ export default {
                         else{
                           alert("Wrong username or password");
                         }
+                    }).catch(function(){
+                      alert("Something went wrong");
                     }); 
       }else{
         alert("All fields must be filled");

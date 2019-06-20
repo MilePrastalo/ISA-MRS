@@ -186,11 +186,22 @@ export default {
             reserveQuick : function(res){
                 axios.post("/api/quickReserveVehicle",{id:res.id})
                     .then(response => {
-                        console.log(response);
-                        alert("Success");
+                        console.log(response.data);
+                        alert("Reserved");
                         this.$emit("vehicleReserved",response.data);
+                        for(var i = 0; i<this.quickReservations.length;i++ ){
+                            console.log(this.quickReservations[i]);
+                            if(this.quickReservations[i].id == res.id){
+                                this.quickReservations.splice(i,1);
+                            }
+                        }
                     }).catch(function(){
                         alert("Reservation failed");
+                        for(var i = 0; i<this.quickReservations.length;i++ ){
+                            if(this.quickReservations[i].id == res.id){
+                                this.quickReservations.splice(i,1);
+                            }
+                        }
                     });; 
             },
             companyDetails(company){
